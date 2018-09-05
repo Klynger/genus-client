@@ -1,5 +1,15 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
+# The best pattern people should follow is ignoring the editors' files in their
+# global .gitignore configuration file.
+# However, in order to prevent issues. We also ignore editors' files here.
+.idea
+.vscode
+
+# lock files
+package-lock.json
+yarn.lock
+
 # dependencies
 /node_modules
 
@@ -8,6 +18,10 @@
 
 # production
 /build
+/dist
+
+# lint
+.eslintcache
 
 # misc
 .DS_Store
