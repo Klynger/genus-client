@@ -1,16 +1,31 @@
 {
   "name": "genus-client",
+  "description": "A client for the Genus API",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Klynger/genus-client.git"
+  },
   "dependencies": {
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-scripts": "1.1.5"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "react-start": "react-scripts start",
+    "react-build": "react-scripts build",
+    "react-test": "react-scripts test --env=jsdom",
+    "react-eject": "react-scripts eject",
+    "start": "yarn react-start",
+    "eject": "react-scripts eject",
+    "test": "yarn lint",
+    "release": "yarn react-build",
+    "build": "yarn react-scripts build",
+    "lint": "eslint . --cache && echo \"eslint: no lint errors\"",
+    "lint:fix": "eslint . --cache --fix && echo \"eslint: no lint errors\"",
+    "prettier": "find . -name \"*.js\" -o -name \"*.d.ts\" -o -name \"*.tsx\" | grep -v -f .eslintignore | xargs prettier --write"
+  },
+  "devDependencies": {
   }
 }
