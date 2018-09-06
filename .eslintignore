@@ -1,0 +1,10 @@
+/.git
+/node_modules
+/src/registerServiceWorker.js
+/flow
+/flow-typed
+/public/*
+
+# production
+/build
+/dist
