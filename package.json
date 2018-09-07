@@ -19,6 +19,7 @@
     "react-eject": "react-scripts eject",
     "start": "yarn react-start",
     "eject": "react-scripts eject",
+    "spellcheck": "eslint . --config .eslintrc.spellcheck.js && echo \"eslint: no lint errors\"",
     "test": "yarn lint",
     "release": "yarn react-build",
     "build": "yarn react-scripts build",
@@ -37,7 +38,7 @@
     "eslint-plugin-material-ui": "^1.0.1",
     "eslint-plugin-mocha": "^5.2.0",
     "eslint-plugin-react": "^7.11.1",
-    "eslint-plugin-spellcheck": "^0.0.10"
+    "eslint-plugin-spellcheck": "^0.0.11"
   },
   "engines": {
     "node": ">=8.0.0"

@@ -80,7 +80,7 @@ module.exports = {
     'react/no-find-dom-node': 'off', // airbnb use error
     'react/sort-prop-types': 'error', // airbnb use off
 
-    'material-ui/docgen-ignore-before-comment': 'error',
+    // 'material-ui/docgen-ignore-before-comment': 'error',
 
     'mocha/handle-done-callback': 'error',
     'mocha/no-exclusive-tests': 'error',
