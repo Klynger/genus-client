@@ -25,7 +25,10 @@
     "build": "yarn react-scripts build",
     "lint": "eslint . --cache && echo \"eslint: no lint errors\"",
     "lint:fix": "eslint . --cache --fix && echo \"eslint: no lint errors\"",
-    "prettier": "find . -name \"*.js\" -o -name \"*.d.ts\" -o -name \"*.tsx\" | grep -v -f .eslintignore | xargs prettier --write"
+    "prettier": "find . -name \"*.js\" | grep -v -f .eslintignore | xargs prettier --write",
+    "prettier:files": "find . -name \"*.js\" | grep -v -f .eslintignore",
+    "prettier:check": "yarn --silent prettier:files | xargs prettier --list-different",
+    "prettier:ci": "prettier --list-different"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -38,7 +41,8 @@
     "eslint-plugin-material-ui": "^1.0.1",
     "eslint-plugin-mocha": "^5.2.0",
     "eslint-plugin-react": "^7.11.1",
-    "eslint-plugin-spellcheck": "^0.0.11"
+    "eslint-plugin-spellcheck": "^0.0.11",
+    "prettier": "^1.8.2"
   },
   "engines": {
     "node": ">=8.0.0"
