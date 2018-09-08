@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import Loadable from 'react-loadable';
-import LoadingPage from '../utils/LoadingPage';
+import LoadingPage from '../LoadingPage';
 
 const AsyncLandingPage = Loadable({
   loader: () => import('../LandingPage'),
