@@ -24,7 +24,7 @@
     "react-test": "react-scripts test --env=jsdom",
     "react-eject": "react-scripts eject",
     "start:dev": "yarn react-start",
-    "start": "yarn build && serve -s -p 3000 build",
+    "start": "yarn build && serve -s build",
     "eject": "react-scripts eject",
     "spellcheck": "eslint . --config .eslintrc.spellcheck.js && echo \"eslint: no lint errors\"",
     "test": "yarn lint",
