@@ -5,6 +5,6 @@ const defaultReducer = (state = {}, action) => {
     default:
       return state;
   }
-}
+};
 
 export default combineReducers({ defaultReducer });
