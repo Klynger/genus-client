@@ -16,7 +16,8 @@
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.5",
     "redux": "^4.0.0",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "serve": "^10.0.0"
   },
   "scripts": {
     "react-start": "react-scripts start",
@@ -24,12 +25,12 @@
     "react-test": "react-scripts test --env=jsdom",
     "react-eject": "react-scripts eject",
     "start:dev": "yarn react-start",
-    "start": "yarn build && serve -s -p 3000 build",
+    "start": "npm run build && serve -s build",
     "eject": "react-scripts eject",
     "spellcheck": "eslint . --config .eslintrc.spellcheck.js && echo \"eslint: no lint errors\"",
     "test": "yarn lint",
     "release": "yarn react-build",
-    "build": "yarn react-scripts build",
+    "build": "npm run react-build",
     "lint": "eslint . --cache && echo \"eslint: no lint errors\"",
     "lint:fix": "eslint . --cache --fix && echo \"eslint: no lint errors\"",
     "prettier": "find . -name \"*.js\" | grep -v -f .eslintignore | xargs prettier --write",
@@ -44,7 +45,6 @@
   },
   "engines": {
     "node": ">=8.0.0",
-    "npm": ">=6.1.0",
-    "yarn": ">= 1.6.0"
+    "npm": ">=6.1.0"
   }
 }
