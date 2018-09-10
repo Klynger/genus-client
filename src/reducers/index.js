@@ -1,3 +1,10 @@
 import { combineReducers } from 'redux';
 
-export default combineReducers({});
+const defaultReducer = (state = {}, action) => {
+  switch (action.type) {
+    default:
+      return state;
+  }
+}
+
+export default combineReducers({ defaultReducer });
