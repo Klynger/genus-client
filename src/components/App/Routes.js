@@ -13,9 +13,15 @@ const AsyncNotFound = Loadable({
   loading: LoadingPage,
 });
 
+const AsyncTestingPage = Loadable({
+  loader: () => import('../TestingPage'),
+  loading: LoadingPage,
+});
+
 export default () => (
   <Switch>
     <Route path="/landing" component={AsyncLandingPage} />
+    <Route path="/testing" component={AsyncTestingPage} />
     <Route component={AsyncNotFound} />
   </Switch>
 );
