@@ -8,8 +8,8 @@ const AsyncLandingPage = Loadable({
   loading: LoadingPage,
 });
 
-const AsyncNotFound = Loadable({
-  loader: () => import('../NotFound'),
+const AsyncNotFoundPage = Loadable({
+  loader: () => import('../NotFoundPage'),
   loading: LoadingPage,
 });
 
@@ -22,6 +22,6 @@ export default () => (
   <Switch>
     <Route path="/landing" component={AsyncLandingPage} />
     <Route path="/testing" component={AsyncTestingPage} />
-    <Route component={AsyncNotFound} />
+    <Route component={AsyncNotFoundPage} />
   </Switch>
 );
