@@ -1,6 +1,4 @@
-const domain = {
-  development: 'localhost:8080',
-  production: '',
+export const domain = {
+  development: 'http://localhost:8080/graphql',
+  production: 'https://genuss.herokuapp.com/graphql',
 };
-
-export default domain;
