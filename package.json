@@ -31,7 +31,7 @@
     "start": "npm run build && serve -s build",
     "eject": "react-scripts eject",
     "spellcheck": "eslint . --config .eslintrc.spellcheck.js && echo \"eslint: no lint errors\"",
-    "test": "npm run lint",
+    "test": "yarn lint",
     "release": "npm run react-build",
     "build": "npm run react-build",
     "lint": "eslint . --cache && echo \"eslint: no lint errors\"",
