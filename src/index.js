@@ -10,18 +10,9 @@ import reducer from './reducers';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // eslint-disable-line
 
-const middlewares = [];
-
-if (process.env.NODE_ENV === 'development') {
-  const { logger } = require('redux-logger'); // eslint-disable-line
-  middlewares.push(logger);
-}
-
-middlewares.push(thunk);
-
 const store = createStore(
   reducer,
-  composeEnhancers(applyMiddleware(...middlewares)));
+  composeEnhancers(applyMiddleware(thunk)));
 
 ReactDOM.render(
   <Provider store={store}>
