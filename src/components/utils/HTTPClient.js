@@ -8,7 +8,15 @@ const headers = {
   'Content-type': 'application/json',
 };
 
-export default axios.create({
-  baseURL: endpoint,
-  headers,
+const axiosConfig = (token = null) => axios.create({
+    baseURL: endpoint,
+    headers: {
+      ...headers,
+      ...(token !== null ? { Authorization: `Bearer ${token}` } : {}),
+    },
 });
+
+export const requestGraphql = (body, token) => axiosConfig(token)
+                                            .post('/', body);
+
+export default axiosConfig;
