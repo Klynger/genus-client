@@ -1,30 +1,8 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Button, IconButton, Snackbar } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
-import { withStyles } from '@material-ui/core/styles';
+import { Button, Snackbar } from '@material-ui/core';
 import Signup from './Signup';
 import Signin from './Signin';
-
-const snackbarButtons = (handleSnackbarClose, { close }) => ([
-  <Button
-    onClick={handleSnackbarClose}
-    key="ok"
-    color="primary"
-    size="small"
-  >OK
-  </Button>,
-  <IconButton
-    key="close"
-    aria-label="Close"
-    color="inherit"
-    className={close}
-    onClick={handleSnackbarClose}
-  >
-    <CloseIcon />
-  </IconButton>,
-]);
 
 const LandingContainer = styled.div`
   align-items: center;
@@ -35,13 +13,6 @@ const LandingContainer = styled.div`
   min-width: 100vw;
   width: 100%;
 `;
-
-const styles = theme => ({
-  close: {
-    height: theme.spacing.unit * 4,
-    width: theme.spacing.unit * 4,
-  },
-});
 
 class LandingPage extends Component {
   constructor(props) {
@@ -80,7 +51,6 @@ class LandingPage extends Component {
 
   render() {
     const { signinOpen, openSnackbar } = this.state;
-    const { classes } = this.props;
 
     return (
       <LandingContainer>
@@ -101,15 +71,18 @@ class LandingPage extends Component {
             'aria-describedby': 'signup__message-id',
           }}
           message={<span id="signup__message-id">User created</span>}
-          action={snackbarButtons(this.handleSnackbarClose, classes)}
+          action={
+          <Button
+            onClick={this.handleSnackbarClose}
+            key="ok"
+            color="primary"
+            size="small"
+          >OK
+          </Button>}
         />
       </LandingContainer>
     );
   }
 }
 
-LandingPage.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(LandingPage);
+export default LandingPage;
