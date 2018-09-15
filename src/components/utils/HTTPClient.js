@@ -16,7 +16,7 @@ const axiosConfig = (token = null) => axios.create({
     },
 });
 
-const requestGraphql = (body, token) => axiosConfig(token)
+export const requestGraphql = (body, token) => axiosConfig(token)
                                             .post('/', body);
 
-export default requestGraphql;
+export default axiosConfig;

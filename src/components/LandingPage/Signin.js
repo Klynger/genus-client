@@ -7,7 +7,7 @@ import {
   withStyles,
 } from '@material-ui/core';
 import { Form, withFormik } from 'formik';
-import requestGraphql from '../utils/HTTPClient';
+import { requestGraphql } from '../utils/HTTPClient';
 import loginQuery from '../../queryGenerators/user';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -133,7 +133,7 @@ export default withStyles(styles)(withMobileDialog()(withRouter(withFormik({
     username: Yup.string().required('Username is required'),
   }),
   handleSubmit(values, { setSubmitting, props }) {
-    requestGraphql(loginQuery(values.username, values.password))
+    requestGraphql(loginQuery(...values))
       .then(response => {
         setSubmitting(false);
         if (response.data && response.data) {
