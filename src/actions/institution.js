@@ -32,7 +32,6 @@ export const fetchInstitutionsByOwner = ownerId => dispatch => (
         });
         return res;
       }
-      console.log('res', res);
       return Promise.reject(new Error('400'));
     })
 );

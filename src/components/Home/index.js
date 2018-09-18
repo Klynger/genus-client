@@ -120,8 +120,6 @@ Home.propTypes = {
   classes: PropTypes.object.isRequired,
   getInstitutions: PropTypes.func.isRequired,
   getLoggedUser: PropTypes.func.isRequired,
-  userId: PropTypes.string,
-
 };
 
 function mapStateToProps({ user }) {
