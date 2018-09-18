@@ -8,7 +8,7 @@ import {
   FormControl, InputLabel, FormHelperText, Input,
 } from '@material-ui/core';
 import { FadeInButton } from '../utils/SharedComponents';
-import Axios from '../utils/HTTPClient';
+import { requestGraphql } from '../utils/HTTPClient';
 
 const DEFAULT_ANIMATION_TIMING = 700;
 
@@ -205,7 +205,7 @@ export default withFormik({
       .required('Name is required'),
   }),
   handleSubmit(values, { setSubmitting, props }) {
-    Axios.post('/', mutationCreateUser(values))
+    requestGraphql(mutationCreateUser(values))
       .then(({ data }) => {
         if (data.data.createUser) {
           props.handleSnackbarOpen();
