@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 import ApplicationBar from './ApplicationBar';
 import MenuDrawer from './MenuDrawer';
 // import HomeRoutes from './HomeRoutes';
 import CreateInstitutionPage from '../CreateInstitutionPage';
 import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import InstitutionDetailsPage from '../InstitutionDetailsPage';
+import { fetchLoggedUser } from '../../actions/user';
+import { fetchInstitutionsByOwner } from '../../actions/institution';
 
 const Wrapper = styled.div`
   align-items: center;
@@ -54,6 +58,15 @@ class Home extends Component {
     this.handleCreateInstitutionToggle = this.handleCreateInstitutionToggle.bind(this);
   }
 
+  componentDidMount() {
+    const { getLoggedUser, getInstitutions } = this.props;
+
+    getLoggedUser()
+      .then((res) => {
+        getInstitutions(res.data.data.findLoggedUser.id);
+      });
+  }
+
   handleCreateInstitutionToggle() {
     this.setState(
       ({ openCreateInstitution }) => ({
@@ -68,6 +81,7 @@ class Home extends Component {
   handleActiveDrawerToggle() {
     this.handleDrawerToggle();
   }
+
 
   render() {
     const { classes } = this.props;
@@ -94,6 +108,7 @@ class Home extends Component {
               open={openCreateInstitution}
               onClose={this.handleCreateInstitutionToggle}
             />
+            <InstitutionDetailsPage />
           </MainContainer>
         </ContentContainer>
       </Wrapper>
@@ -103,6 +118,23 @@ class Home extends Component {
 
 Home.propTypes = {
   classes: PropTypes.object.isRequired,
+  getInstitutions: PropTypes.func.isRequired,
+  getLoggedUser: PropTypes.func.isRequired,
+  userId: PropTypes.string,
+
 };
 
-export default withStyles(styles)(Home);
+function mapStateToProps({ user }) {
+  return {
+    userId: user.loggedUserId,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    getLoggedUser: () => dispatch(fetchLoggedUser()),
+    getInstitutions: (ownerId) => dispatch(fetchInstitutionsByOwner(ownerId)),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Home));

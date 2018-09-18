@@ -10,7 +10,8 @@ import { withStyles } from '@material-ui/core/styles';
 import { Form, withFormik } from 'formik';
 import * as Yup from 'yup';
 import styled from 'styled-components';
-// import { requestGraphql } from '../utils/HTTPClient';
+import { connect } from 'react-redux';
+import { addInstitution } from '../../actions/institution';
 
 const StyledForm = styled(Form)`
   display: flex;
@@ -176,24 +177,15 @@ CreateInstituionPage.propTypes = {
   }).isRequired,
 };
 
-// const mutationCreateInstitution = input => ({
-//   query: `
-//     mutation createNewInstitution($input: CreateInstitutionInput!) {
-//       createInstitution(input: $input) {
-//         name
-//         email
-//         address
-//         phone
-//       }
-//     }
-//   `,
-//   variables: {
-//     input,
-//   },
-// });
+function mapDispatchToProps(dispatch) {
+  return {
+    addNewInstitution: institutionInput =>
+      dispatch(addInstitution(institutionInput)),
+  };
+}
 
 export default withStyles(styles)(withMobileDialog()(
-  withFormik({
+  connect(null, mapDispatchToProps)(withFormik({
     mapPropsToValues({ name, email, phone, address }) {
       return {
         address: address || '',
@@ -219,11 +211,13 @@ export default withStyles(styles)(withMobileDialog()(
         .required('Phone is required.'),
     }),
     handleSubmit(values, { setSubmitting, props }) {
-      // requestGraphql(mutationCreateInstitution(values))
-      //   .then((res) => {
-      //     console.log('data', res);
-      //   });
-        setSubmitting(false);
-        props.onClose();
+      props.addNewInstitution(values)
+        .then(() => {
+          setSubmitting(false);
+          props.onClose();
+        })
+        .catch(() => {
+          setSubmitting(false);
+        });
     },
-  })(CreateInstituionPage)));
+  })(CreateInstituionPage))));
