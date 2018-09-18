@@ -53,16 +53,16 @@ const Signin = ({ classes, errors, fullScreen, handleChange, handleReset, handle
         <StyledForm>
           <FormControl
             className={classes.formControl}
-            error={errors.username !== undefined}
+            error={errors.email !== undefined}
           >
             <InputLabel>Email: </InputLabel>
             <Input
-              name="username"
-              value={values.username || ''}
+              name="email"
+              value={values.email || ''}
               onChange={handleChange}
             />
-            {touched.username && errors.username &&
-              <FormHelperText id="signin__email-error-text">{errors.username}</FormHelperText>}
+            {touched.email && errors.email &&
+              <FormHelperText id="signin__email-error-text">{errors.email}</FormHelperText>}
           </FormControl>
           <FormControl
             className={classes.formControl}
@@ -100,8 +100,8 @@ Signin.defaultProps = {
 Signin.propTypes = {
   classes: PropTypes.object,
   errors: PropTypes.shape({
+    email: PropTypes.string,
     password: PropTypes.string,
-    username: PropTypes.string,
   }),
   fullScreen: PropTypes.bool,
   handleChange: PropTypes.func,
@@ -111,29 +111,29 @@ Signin.propTypes = {
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool,
   touched: PropTypes.shape({
+    email: PropTypes.bool,
     password: PropTypes.bool,
-    username: PropTypes.bool,
   }),
   values: PropTypes.shape({
+    email: PropTypes.string,
     password: PropTypes.string,
-    username: PropTypes.string,
   }),
 };
 
 export default withStyles(styles)(withMobileDialog()(withRouter(withFormik({
-  mapPropsToValues({ username }) {
+  mapPropsToValues({ email }) {
     return {
-      username: username || '',
+      email: email || '',
       password: '',
     };
   },
   validationSchema: Yup.object().shape({
+    email: Yup.string().email('Invalid email').required('Email is required'),
     password: Yup.string().min(6, 'Password must be 6 charcters or longer')
                   .required('Password is required'),
-    username: Yup.string().required('Username is required'),
   }),
   handleSubmit(values, { setSubmitting, props }) {
-    requestGraphql(loginQuery(...values))
+    requestGraphql(loginQuery(values))
       .then(response => {
         setSubmitting(false);
         if (response.data && response.data) {

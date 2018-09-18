@@ -1,12 +1,16 @@
-const loginQuery = (username = '', password = '') => ({
-    query: `
-      query {
-        login(auth: {
-          username: "${username}"
-          password: "${password}"
-        })
-      }
-    `,
+const loginQuery = userBean => ({
+  query: `
+  mutation createNewUser($userBean: UserBean!) {
+    createUser(userBean: $userBean) {
+      id
+      username
+      email
+    }
+  }
+  `,
+  variables: {
+    userBean,
+  },
 });
 
 export default loginQuery;
