@@ -5,7 +5,7 @@ const AuthRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={props => (
-      localStorage.getItem('token') ? (
+      localStorage.getItem('token') && localStorage.getItem('token') !== 'undefined' ? (
         <Component {...props} />
       ) : (
         <Redirect
