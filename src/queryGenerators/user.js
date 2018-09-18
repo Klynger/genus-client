@@ -1,15 +1,11 @@
-const loginQuery = userBean => ({
+const loginQuery = authenticationBean => ({
   query: `
-  mutation createNewUser($userBean: UserBean!) {
-    createUser(userBean: $userBean) {
-      id
-      username
-      email
-    }
+  query getToken($authenticationBean: AuthenticationBean!) {
+    login(auth: $authenticationBean)
   }
   `,
   variables: {
-    userBean,
+    authenticationBean,
   },
 });
 
