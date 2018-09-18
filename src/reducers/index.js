@@ -1,10 +1,8 @@
 import { combineReducers } from 'redux';
+import institution from './institution';
+import user from './user';
 
-const defaultReducer = (state = {}, action) => {
-  switch (action.type) {
-    default:
-      return state;
-  }
-};
-
-export default combineReducers({ defaultReducer });
+export default combineReducers({
+  user,
+  institution,
+});

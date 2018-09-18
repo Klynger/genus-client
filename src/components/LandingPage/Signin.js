@@ -136,8 +136,8 @@ export default withStyles(styles)(withMobileDialog()(withRouter(withFormik({
     requestGraphql(loginQuery(values))
       .then(response => {
         setSubmitting(false);
-        if (response.data && response.data) {
-          localStorage.setItem('token', response.data.login);
+        if (response.data && response.data.data) {
+          localStorage.setItem('token', response.data.data.login);
           props.history.push('/');
         }
       })
