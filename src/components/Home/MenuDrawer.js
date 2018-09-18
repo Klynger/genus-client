@@ -1,14 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Drawer } from '@material-ui/core';
+import { SwipeableDrawer } from '@material-ui/core';
+import DrawerContent from './DrawerContent';
 
 const MenuDrawer = ({ open, onDrawerToggle }) => (
-  <Drawer
+  <SwipeableDrawer
     open={open}
     onClose={onDrawerToggle}
+    onOpen={onDrawerToggle}
   >
-    Drawer works
-  </Drawer>
+    <DrawerContent onDrawerToggle={onDrawerToggle} />
+  </SwipeableDrawer>
 );
 
 MenuDrawer.propTypes = {
