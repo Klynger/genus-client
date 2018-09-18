@@ -8,25 +8,19 @@ import {
 import { withStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import styled from 'styled-components';
-
-const CustomIconButton = styled(IconButton)`
-  margin-left: -12px;
-  margin-right: 20px;
-`;
-
-const FlexTypo = styled(Typography)`
-  flex: 1;
-`;
 
 const styles = theme => ({
+  appTitle: {
+    color: theme.palette.common.white,
+    flex: 1,
+  },
+  iconButton: {
+    marginLeft: -theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+  },
   userIcon: {
     color: theme.palette.common.white,
   },
-  // iconButton: {
-  //   marginLeft: -12,
-  //   marginRight: 20,
-  // },
 });
 
 class ApplicationBar extends Component {
@@ -36,9 +30,9 @@ class ApplicationBar extends Component {
       anchorEl: null,
     };
 
-    this.handleMenu.bind(this);
-    this.handleLogout.bind(this);
-    this.handleClose.bind(this);
+    this.handleMenu = this.handleMenu.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
+    this.handleClose = this.handleClose.bind(this);
   }
 
   handleMenu(event) {
@@ -65,39 +59,39 @@ class ApplicationBar extends Component {
     return (
       <AppBar position="fixed">
         <Toolbar>
-          <CustomIconButton
+          <IconButton
+          className={classes.iconButton}
             color="inherit"
             aria-label="Menu"
             onClick={onDrawerToggle}
           >
             <MenuIcon />
-          </CustomIconButton>
-          <FlexTypo>
-            <div>
-              <IconButton
-                aria-owns={open ? 'appbar__user-menu' : null}
-                aria-haspopup="true"
-                onClick={this.handleMenu}
-                color="inherit"
-              >
-                <AccountCircle className={classes.userIcon} />
-              </IconButton>
-              <Menu
-                id="appbar__user-menu"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={open}
-                onClose={this.handleClose}
-              >
-                <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                <MenuItem onClick={this.handleClose}>My account</MenuItem>
-                <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
-              </Menu>
-            </div>
-          </FlexTypo>
+          </IconButton>
+          <Typography className={classes.appTitle} color="textSecondary">Genus</Typography>
+          <div>
+            <IconButton
+              aria-owns={open ? 'appbar__user-menu' : null}
+              aria-haspopup="true"
+              onClick={this.handleMenu}
+              color="inherit"
+            >
+              <AccountCircle className={classes.userIcon} />
+            </IconButton>
+            <Menu
+              id="appbar__user-menu"
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={open}
+              onClose={this.handleClose}
+            >
+              <MenuItem onClick={this.handleClose}>Profile</MenuItem>
+              <MenuItem onClick={this.handleClose}>My account</MenuItem>
+              <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
+            </Menu>
+          </div>
         </Toolbar>
       </AppBar>
     );
@@ -107,7 +101,7 @@ class ApplicationBar extends Component {
 ApplicationBar.propTypes = {
   classes: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
-  onDrawerToggle: PropTypes.object.isRequired,
+  onDrawerToggle: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(withRouter(ApplicationBar));
