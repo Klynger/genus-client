@@ -14,8 +14,6 @@ const LoadingPage = ({ isLoading, error }) => {
     return (
       <div>
         Something went worng while trying to load the page =/
-        <br />
-        <p>{error}</p>
       </div>
     );
   }
@@ -23,7 +21,7 @@ const LoadingPage = ({ isLoading, error }) => {
 };
 
 LoadingPage.propTypes = {
-  error: PropTypes.string,
+  error: PropTypes.object,
   isLoading: PropTypes.bool,
 };
 
