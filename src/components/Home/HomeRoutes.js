@@ -1,16 +1,26 @@
-import React, { Fragment } from 'react';
-import { Route } from 'react-router-dom';
-// import Loadable from 'react-loadable';
-import NotFoundPage from '../NotFoundPage';
-import CreateInstitutionPage from '../CreateInstitutionPage';
+import React from 'react';
+import { Route, Switch, Redirect } from 'react-router-dom';
+import Loadable from 'react-loadable';
+import LoadingPage from '../LoadingPage';
 
-// const AsyncCreateInstitutionPage = Loadable({
-//   loader: () => import('../CreateInstitutionPage'),
-// });
+const AsyncOverviewPage = Loadable({
+  loader: () => import('../OverviewPage'),
+  loading: LoadingPage,
+});
 
-export default () => (
-  <Fragment>
-    <Route path="/institution/create" exact component={CreateInstitutionPage} />
-    <Route component={NotFoundPage} />
-  </Fragment>
-);
+const AsyncInstitutionPage = Loadable({
+  loader: () => import('../InstitutionPage'),
+  loading: LoadingPage,
+});
+
+const HomeRoutes = () => {
+  return (
+    <Switch>
+      <Route path="/" exact component={AsyncOverviewPage} />
+      <Route path="/institutions" component={AsyncInstitutionPage} />
+      <Redirect to={{ pathname: '/' }} />
+    </Switch>
+  );
+};
+
+export default HomeRoutes;
