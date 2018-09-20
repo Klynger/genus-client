@@ -5,54 +5,66 @@ import { Form, withFormik } from 'formik';
 import * as Yup from 'yup';
 import { withStyles } from '@material-ui/core/styles';
 import {
-  FormControl, InputLabel, FormHelperText, Input,
+  FormControl, InputLabel, FormHelperText,
+  Input, Paper,
 } from '@material-ui/core';
 import { FadeInButton } from '../utils/SharedComponents';
 import { requestGraphql } from '../utils/HTTPClient';
 
 const DEFAULT_ANIMATION_TIMING = 700;
 
-const SignupContainer = styled.div`
+const SignupContainer = styled(Paper)`
   animation: translatedFadein ${DEFAULT_ANIMATION_TIMING}ms 1;
   border-radius: 5px;
-  background: rgba(255, 255, 255, 0.4);
   padding: 12px;
-  width: 30%;
 
   @keyframes translatedFadein {
     0% {
       animation-timing-function: ease-in-out;
       opacity: 0;
-      transform: translateY(${props => props.totalTranslation}px);
+      transform: translateY(100px);
     }
 
     50% {
       opacity: 0.8;
-      transform: translateY(${props => props.totalTranslation * 0.2}px);
+      transform: translateY(20px);
     }
     70% {
       opacity: 0.9;
-      transform: translateY(${props => props.totalTranslation * 0.1}px);
+      transform: translateY(10px);
     }
     100% {
       opacity: 1;
       transform: translateY(0);
     }
   }
+
+  @media screen and (min-width: 1300px) {
+    width: 30%;
+  }
+
+  @media screen and (min-width: 800px) and (max-width: 1299px) {
+    width: 40%;
+  }
+
+  @media screen and (min-width: 700px) and (max-width: 799px) {
+    width: 50%;
+  }
+
+  @media screen and (min-width: 600px) and (max-width: 699px) {
+    width: 70%;
+  }
+
+  @media screen and (max-width: 599px) {
+    width: 95%;
+  }
 `;
 
 const StyledForm = styled(Form)`
   display: flex;
   flex-direction: column;
+  margin-top: 20px;
 `;
-
-SignupContainer.defaultProps = {
-  totalTranslation: 100,
-};
-
-SignupContainer.propTypes = {
-  totalTranslation: PropTypes.number,
-};
 
 const styles = theme => ({
   formControl: {

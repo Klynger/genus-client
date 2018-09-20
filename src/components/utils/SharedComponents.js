@@ -1,5 +1,7 @@
+import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from '@material-ui/core';
+import { Button, withWidth, Typography } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
 
 export const FadeInButton = styled(Button)`
@@ -28,4 +30,33 @@ FadeInButton.propTypes = {
   delay: PropTypes.number,
 };
 
-export default {};
+const titleVariant = {
+  xs: 'display1',
+  sm: 'display2',
+  md: 'display2',
+  lg: 'display3',
+  xl: 'display3',
+};
+
+const styles = theme => ({
+  title: {
+    marginLeft: theme.spacing.unit * 2,
+    marginRight: theme.spacing.unit * 2,
+  },
+});
+
+export const ResponsiveTitle = withWidth()(withStyles(styles)(
+  ({ children, classes, width }) => (
+  <Typography
+    className={classes.title}
+    variant={titleVariant[width]}
+  >
+    {children}
+  </Typography>
+)));
+
+ResponsiveTitle.propTypes = {
+  children: PropTypes.string.isRequired,
+  classes: PropTypes.object,
+  width: PropTypes.string,
+};

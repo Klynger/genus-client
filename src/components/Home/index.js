@@ -4,11 +4,7 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import ApplicationBar from './ApplicationBar';
 import MenuDrawer from './MenuDrawer';
-// import HomeRoutes from './HomeRoutes';
-import CreateInstitutionPage from '../CreateInstitutionPage';
-import { Button } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import InstitutionDetailsPage from '../InstitutionDetailsPage';
+import HomeRoutes from './HomeRoutes';
 import { fetchLoggedUser } from '../../actions/user';
 import { fetchInstitutionsByOwner } from '../../actions/institution';
 
@@ -21,7 +17,6 @@ const Wrapper = styled.div`
   width: 100%;
 `;
 
-
 const ContentContainer = styled.div`
   bakcground-color: inherit;
   display: flex;
@@ -29,7 +24,7 @@ const ContentContainer = styled.div`
   width: 100%;
 `;
 
-const MainContainer = styled.div`
+const MainContainer = styled.main`
   align-items: center;
   background-color: inherit;
   display: flex;
@@ -38,24 +33,14 @@ const MainContainer = styled.div`
   width: 100%;
 `;
 
-const styles = theme => ({
-  button: {
-    margin: theme.spacing.unit,
-  },
-});
-
 class Home extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      openDrawer: false,
-      openCreateInstitution: false,
-    };
+    this.state = { openDrawer: false };
 
     this.handleDrawerToggle = this.handleDrawerToggle.bind(this);
     this.handleActiveDrawerToggle = this.handleActiveDrawerToggle.bind(this);
-    this.handleCreateInstitutionToggle = this.handleCreateInstitutionToggle.bind(this);
   }
 
   componentDidMount() {
@@ -65,13 +50,6 @@ class Home extends Component {
       .then((res) => {
         getInstitutions(res.data.data.findLoggedUser.id);
       });
-  }
-
-  handleCreateInstitutionToggle() {
-    this.setState(
-      ({ openCreateInstitution }) => ({
-        openCreateInstitution: !openCreateInstitution,
-      }));
   }
 
   handleDrawerToggle() {
@@ -84,9 +62,7 @@ class Home extends Component {
 
 
   render() {
-    const { classes } = this.props;
-    const { openDrawer, openCreateInstitution } = this.state;
-
+    const { openDrawer } = this.state;
     return (
       <Wrapper>
         <ApplicationBar onDrawerToggle={this.handleActiveDrawerToggle} />
@@ -96,19 +72,7 @@ class Home extends Component {
             open={openDrawer}
           />
           <MainContainer>
-            <Button
-              className={classes.button}
-              aria-label="Create a new institution"
-              variant="extendedFab"
-              onClick={this.handleCreateInstitutionToggle}
-            >
-              Create a New Institution
-            </Button>
-            <CreateInstitutionPage
-              open={openCreateInstitution}
-              onClose={this.handleCreateInstitutionToggle}
-            />
-            <InstitutionDetailsPage />
+            <HomeRoutes />
           </MainContainer>
         </ContentContainer>
       </Wrapper>
@@ -117,7 +81,6 @@ class Home extends Component {
 }
 
 Home.propTypes = {
-  classes: PropTypes.object.isRequired,
   getInstitutions: PropTypes.func.isRequired,
   getLoggedUser: PropTypes.func.isRequired,
 };
@@ -135,4 +98,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Home));
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
