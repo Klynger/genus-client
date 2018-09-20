@@ -9,11 +9,6 @@ const AsyncLandingPage = Loadable({
   loading: LoadingPage,
 });
 
-const AsyncNotFoundPage = Loadable({
-  loader: () => import('../NotFoundPage'),
-  loading: LoadingPage,
-});
-
 const AsyncTestingPage = Loadable({
   loader: () => import('../TestingPage'),
   loading: LoadingPage,
@@ -27,9 +22,8 @@ const AsyncHome = Loadable({
 export default () => (
   <Switch>
     <Route path="/landing" exact component={AsyncLandingPage} />
-    <AuthRoute path="/" exact component={AsyncHome} />
     {process.env.NODE_ENV === 'development'
       && <Route path="/testing" component={AsyncTestingPage} />}
-    <Route component={AsyncNotFoundPage} />
+    <AuthRoute component={AsyncHome} />
   </Switch>
 );

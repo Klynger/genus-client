@@ -9,6 +9,7 @@ injectGlobal([`
     background-color: ${theme.palette.background.default};
     box-sizing: border-box;
     margin: 0;
+    min-width: 100%;
     padding: 0;
   }
 
