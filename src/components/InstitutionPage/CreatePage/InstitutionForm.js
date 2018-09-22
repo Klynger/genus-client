@@ -192,7 +192,7 @@ export default withStyles(styles)(
         props.addNewInstitution(values)
           .then(() => {
             setSubmitting(false);
-            props.history.push('/institutions');
+            props.history.push('/institution/details');
           })
           .catch(() => {
             setSubmitting(false);

@@ -14,21 +14,20 @@ const AsyncDetailsPage = Loadable({
   loading: LoadingPage,
 });
 
-const AsyncListingPage = Loadable({
-  loader: () => import('./ListingPage'),
-  loading: LoadingPage,
-});
+// const AsyncListingPage = Loadable({
+//   loader: () => import('./ListingPage'),
+//   loading: LoadingPage,
+// });
 
-const InstitutionRoute = ({ match }) => {
-  return (
-    <Switch>
-      <Route path={match.path} exact component={AsyncListingPage} />
-      <Route path={`${match.path}/new`} component={AsyncCreatePage} />
-      <Route path={`${match.path}/details/:institutionId`} component={AsyncDetailsPage} />
-      <Redirect to={{ pathname: match.path }} />
-    </Switch>
-  );
-};
+const InstitutionRoute = ({ match }) => (
+  <Switch>
+    {/* <Route path={match.path} exact component={AsyncListingPage} /> */}
+    <Route path={`${match.path}/new`} component={AsyncCreatePage} />
+    <Route path={`${match.path}/details`} component={AsyncDetailsPage} /> :
+    <Redirect to={`${match.path}/details`}
+    />
+  </Switch>
+);
 
 InstitutionRoute.propTypes = {
   match: PropTypes.object.isRequired,

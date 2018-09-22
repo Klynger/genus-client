@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import InstitutionRoute from './InstitutionRoute';
+import InstitutionRoute from './InstitutionRoutes';
 
 const InstitutionContainer = styled.div`
   align-items: center;

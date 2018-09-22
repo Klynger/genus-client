@@ -17,7 +17,7 @@ const HomeRoutes = () => {
   return (
     <Switch>
       <Route path="/" exact component={AsyncOverviewPage} />
-      <Route path="/institutions" component={AsyncInstitutionPage} />
+      <Route path="/institution" component={AsyncInstitutionPage} />
       <Redirect to={{ pathname: '/' }} />
     </Switch>
   );
