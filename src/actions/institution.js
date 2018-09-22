@@ -11,46 +11,60 @@ export const selectInstitution = id => dispatch => {
   });
 };
 
-export const addInstitution = institutionInput => (dispatch, getState) => (
-  requestGraphql(mutationCreateInstitution(institutionInput),
-    localStorage.getItem('token'))
-    .then(res => {
-      if (res.data.data && res.data.data.createInstitution) {
-        dispatch({
-          type: SAVE_INSTITUTION,
-          institution: res.data.data.createInstitution,
-        });
-        if (getState().institution.selectedInstitution === NO_INSTUTION_SELECTED) {
-          dispatch({
-            type: SELECT_INSTITUTION,
-            id: res.data.data.createInstitution.id,
-          });
-        }
-        return res;
-      }
-      return Promise.reject(new Error('400'));
-    })
-);
-
-export const fetchInstitutionsByOwner = ownerId => (dispatch, getState) => (
-  requestGraphql(queryFindInstitutionsByOwner(ownerId),
-    localStorage.getItem('token'))
-    .then(res => {
-      if (res.data.data && res.data.data.findInstitutionsByOwner) {
-        res.data.data.findInstitutionsByOwner.forEach(institution => {
+export const addInstitution = institutionInput => (dispatch, getState) => {
+  return (
+    requestGraphql(mutationCreateInstitution(institutionInput),
+      localStorage.getItem('token'))
+      .then(res => {
+        let result;
+        if (res.data.data && res.data.data.createInstitution) {
           dispatch({
             type: SAVE_INSTITUTION,
-            institution,
+            institution: res.data.data.createInstitution,
           });
           if (getState().institution.selectedInstitution === NO_INSTUTION_SELECTED) {
             dispatch({
               type: SELECT_INSTITUTION,
-              id: institution.id,
+              id: res.data.data.createInstitution.id,
             });
           }
-        });
-        return res;
-      }
-      return Promise.reject(new Error('400'));
-    })
-);
+          result = res;
+        } else {
+          result = Promise.reject(new Error('400'));
+        }
+        return result;
+      })
+  );
+};
+
+export const fetchInstitutionsByOwner = ownerId => (dispatch, getState) => {
+  return (
+    requestGraphql(queryFindInstitutionsByOwner(ownerId),
+      localStorage.getItem('token'))
+      .then(res => {
+        let result;
+        if (res.data.data && res.data.data.findInstitutionsByOwner) {
+          res.data.data.findInstitutionsByOwner.forEach(institution => {
+            dispatch({
+              type: SAVE_INSTITUTION,
+              institution,
+            });
+          });
+
+          const state = getState();
+          if (state.institution.allIds.length > 0
+            && state.institution.selectedInstitution === NO_INSTUTION_SELECTED) {
+            dispatch({
+              type: SELECT_INSTITUTION,
+              id: state.institution.allIds[0],
+            });
+          }
+          result = res;
+        } else {
+          result = Promise.reject(new Error('400'));
+        }
+
+        return result;
+      })
+  );
+};
