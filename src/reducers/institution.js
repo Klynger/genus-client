@@ -1,8 +1,11 @@
-import { SAVE_INSTITUTION } from '../actions/actionTypes';
+import { SAVE_INSTITUTION, SELECT_INSTITUTION } from '../actions/actionTypes';
+
+export const NO_INSTUTION_SELECTED = '-1';
 
 const DEFAULT_STATE = {
   byId: {},
   allIds: [],
+  selectedInstitution: NO_INSTUTION_SELECTED,
 };
 
 function concatIdIfNotContain(allIds, id) {
@@ -25,6 +28,12 @@ function institution(state = DEFAULT_STATE, action) {
           },
         },
         allIds: concatIdIfNotContain(state.allIds, action.institution.id),
+      };
+
+    case SELECT_INSTITUTION:
+      return {
+        ...state,
+        selectedInstitution: action.id,
       };
     default:
       return state;
