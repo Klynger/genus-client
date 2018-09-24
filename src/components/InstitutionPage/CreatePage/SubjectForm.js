@@ -63,7 +63,7 @@ const SubjectForm = ({ classes, errors, fullScreen, handleChange, handleReset, h
             disabled={isSubmitting}
             onClick={() => { onClose(); handleReset(); }}
           >
-            Cancel
+            Cancelar
           </Button>
           <Button
             color="primary"

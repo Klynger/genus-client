@@ -63,7 +63,7 @@ const GradeForm = ({ classes, errors, fullScreen, handleChange, handleReset, han
             disabled={isSubmitting}
             onClick={() => { onClose(); handleReset(); }}
           >
-            Cancel
+            Cancelar
           </Button>
           <Button
             color="primary"
