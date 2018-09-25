@@ -1,48 +1,22 @@
 import React from 'react';
-import axios from '../utils/HTTPClient';
+import styled from 'styled-components';
 
-const queryHello = {
-  query: `
-    query {
-      getHello,
-      getP1
-    }
-  `,
+const LandingContainer = styled.div`
+  align-items: center;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  min-height: 100vh;
+  min-width: 100vw;
+  width: 100%;
+`;
+
+const TestingPage = () => {
+  return (
+    <LandingContainer>
+      TestingPage works
+    </LandingContainer>
+  );
 };
-
-const btnStyle = {
-  marginLeft: '10px',
-  marginTop: '10px',
-};
-
-class TestingPage extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      msg: '',
-    };
-  }
-
-  call() {
-    axios.post('/', queryHello)
-      .then((data) => {
-        this.setState({
-          msg: `${data.data.data.getHello} ${data.data.data.getP1}`,
-        });
-      });
-  }
-
-  render() {
-    return (
-      <div>
-        TestingPage works
-        <div>
-          <button type="submit" style={btnStyle} onClick={() => this.call()}>Click Here</button>
-          <p>{this.state.msg}</p>
-        </div>
-      </div>
-    );
-  }
-}
 
 export default TestingPage;
