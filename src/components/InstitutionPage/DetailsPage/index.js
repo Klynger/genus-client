@@ -145,7 +145,7 @@ class DetailsPage extends Component {
                           grade.subjects.map(sub => (
                             <Typography gutterBottom variant="subheading" key={sub.id}>
                               {sub.name}
-                              </Typography>
+                            </Typography>
                           ))}
                       </div>
                     ))}
