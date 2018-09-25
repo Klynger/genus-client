@@ -1,7 +1,7 @@
 const loginQuery = authenticationBean => ({
   query: `
-  query getToken($authenticationBean: AuthenticationBean!) {
-    login(auth: $authenticationBean)
+  query getToken($authenticationBean: AuthenticationInput!) {
+    login(input: $authenticationBean)
   }
   `,
   variables: {
