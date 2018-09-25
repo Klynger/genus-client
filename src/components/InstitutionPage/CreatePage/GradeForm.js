@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, withFormik } from 'formik';
+import { connect } from 'react-redux';
 import {
   Button,
   Dialog, DialogTitle,
@@ -12,6 +13,8 @@ import {
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import * as Yup from 'yup';
+import { requestGraphql } from '../../utils/HTTPClient';
+import { mutationCreateGrade } from '../../../queryGenerators/GradeMutations';
 
 const StyledForm = styled(Form)`
   display: flex;
@@ -31,7 +34,7 @@ const styles = theme => ({
 });
 
 const GradeForm = ({ classes, errors, fullScreen, handleChange, handleReset, handleSubmit,
-  isSubmitting, values, open, onClose, touched }) => (
+   isSubmitting, values, open, onClose, touched }) => (
     <Dialog
       fullScreen={fullScreen}
       open={open}
@@ -84,8 +87,7 @@ GradeForm.defaultProps = {
 GradeForm.propTypes = {
   classes: PropTypes.object,
   errors: PropTypes.shape({
-    email: PropTypes.string,
-    password: PropTypes.string,
+    name: PropTypes.string,
   }),
   fullScreen: PropTypes.bool,
   handleChange: PropTypes.func,
@@ -95,16 +97,22 @@ GradeForm.propTypes = {
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool,
   touched: PropTypes.shape({
-    email: PropTypes.bool,
-    password: PropTypes.bool,
+    name: PropTypes.bool,
   }),
   values: PropTypes.shape({
-    email: PropTypes.string,
-    password: PropTypes.string,
+    name: PropTypes.string,
   }),
 };
 
-export default withStyles(styles)(withMobileDialog()(withRouter(withFormik({
+function mapStateToProps({ institution }) {
+  const { byId, selectedInstitution } = institution;
+  return {
+    institution: byId[selectedInstitution],
+  };
+}
+
+export default connect(mapStateToProps)(
+  withStyles(styles)(withMobileDialog()(withRouter(withFormik({
   mapPropsToValues({ name }) {
     return {
       name: name || '',
@@ -115,8 +123,17 @@ export default withStyles(styles)(withMobileDialog()(withRouter(withFormik({
   }),
   handleSubmit(values, { setSubmitting, props }) {
     // TODO
-    setSubmitting(false);
-    props.onClose();
+    setSubmitting(true);
+    const input = {
+      institutionId: props.institution.id,
+      name: values.name,
+    };
+    requestGraphql(mutationCreateGrade(input),
+      localStorage.getItem('token'))
+      .then(() => {
+        setSubmitting(false);
+        props.onClose();
+      });
   },
   enableReinitialize: true,
-})(GradeForm))));
+})(GradeForm)))));

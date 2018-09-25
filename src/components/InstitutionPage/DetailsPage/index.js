@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import GradeForm from '../CreatePage/GradeForm';
+import SubjectForm from '../CreatePage/SubjectForm';
 import { Fade, Paper, Typography, withStyles, Button } from '@material-ui/core';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
@@ -62,33 +64,35 @@ const styles = theme => ({
 });
 
 class DetailsPage extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
-      gradeButtonOpen: false,
-      subjectButtonOpen: false,
+      gradeOpen: false,
+      subjectOpen: false,
     };
 
-    this.handleGradeButtonOpen = this.handleGradeButtonOpen.bind(this);
-    this.handleSubjectButtonOpen = this.handleSubjectButtonOpen.bind(this);
+    this.handleGradeOpen = this.handleGradeOpen.bind(this);
+    this.handleSubjectOpen = this.handleSubjectOpen.bind(this);
   }
 
-  handleGradeButtonOpen() {
-    this.setState(prevState => ({ gradeButtonOpen: !prevState.gradeButtonOpen }));
+  handleGradeOpen() {
+    this.setState(prevState => ({ gradeOpen: !prevState.gradeOpen }));
   }
 
-  handleSubjectButtonOpen() {
-    this.setState(prevState => ({ subjectButtonOpen: !prevState.subjectButtonOpen }));
+  handleSubjectOpen() {
+    this.setState(prevState => ({ subjectOpen: !prevState.subjectOpen }));
   }
 
   render() {
     const { classes, institution } = this.props;
+    const { gradeOpen, subjectOpen } = this.state;
     let toRender;
 
-    if (institution) { // TIRAR A NEGAÇÃO
+    if (institution) {
       toRender = (
         <Wrapper>
+          <SubjectForm open={subjectOpen} onClose={this.handleSubjectOpen} />
+          <GradeForm open={gradeOpen} onClose={this.handleGradeOpen} />
           <Paper className={classes.root}>
             <ContentContainer>
               <img
@@ -125,7 +129,7 @@ class DetailsPage extends Component {
           <Button
             className={classes.button}
             color="primary"
-            onClick={this.handleGradeButtonOpen}
+            onClick={this.handleGradeOpen}
             variant="contained"
             size="small"
           >
@@ -134,7 +138,7 @@ class DetailsPage extends Component {
           <Button
             className={classes.button}
             color="primary"
-            onClick={this.handleSubjectButtonOpen}
+            onClick={this.handleSubjectOpen}
             variant="contained"
             size="small"
           >
