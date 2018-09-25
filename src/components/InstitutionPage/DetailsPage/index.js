@@ -1,8 +1,15 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Fade, Paper, Typography, withStyles } from '@material-ui/core';
+import { Fade, Paper, Typography, withStyles, Button } from '@material-ui/core';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  width: 75%
+  flex-wrap: wrap;
+`;
 
 const ContentContainer = styled.div`
   bakcground-color: inherit;
@@ -31,6 +38,11 @@ const contentContainerBreakpoints = theme => ({
 });
 
 const styles = theme => ({
+  button: {
+    marginBottom: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    marginTop: theme.spacing.unit,
+  },
   institutionInfos: {
     marginBottom: theme.spacing.unit * 3,
     marginTop: theme.spacing.unit * 3,
@@ -45,64 +57,102 @@ const styles = theme => ({
   },
   root: {
     marginTop: theme.spacing.unit * 3,
-    width: '75%',
+    width: '100%',
   },
 });
 
-const DetailsPage = ({ classes, institution }) => {
-  let toRender;
-  const institution1 = { // TIRAR ISSO DAQUI
-    name: 'UFCG@Bodocongo',
-    email: 'ufcg@ufcg.com.br',
-    phone: 'ufcg@ufcg.com.br',
-    address: 'rua aprigio veloso',
-  };
-  if (!institution) { // TIRAR A NEGAÇÃO
-    toRender = (
-      <Paper className={classes.root}>
-        <ContentContainer>
-          <img
-            alt="Institution"
-            className={classes.photo}
-            src="https://s3.amazonaws.com/tinycards/image/f8bda7d1c863b4f42adf2d1e5d72ff14" />
-          <InstitutionInfos className={classes.institutionInfos}>
-            <Typography
-              variant="title"
-              gutterBottom
-            >
-                {institution1.name}
-            </Typography>
-            <Typography
-              variant="subheading"
-              gutterBottom
-            >
-                Email: {institution1.email}
-            </Typography>
-            <Typography
-              variant="subheading"
-              gutterBottom
-            >
-                Telefone: {institution1.phone}
-            </Typography>
-            <Typography
-              variant="subheading"
-            >
-                Endereço: {institution1.address}
-            </Typography>
-          </InstitutionInfos>
-        </ContentContainer>
-      </Paper>
-    );
-  } else {
-    toRender = <p>Não há nenhuma instituição selecionada</p>;
+class DetailsPage extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      gradeButtonOpen: false,
+      subjectButtonOpen: false,
+    };
+
+    this.handleGradeButtonOpen = this.handleGradeButtonOpen.bind(this);
+    this.handleSubjectButtonOpen = this.handleSubjectButtonOpen.bind(this);
   }
 
-  return (
-    <Fade in>
-      {toRender}
-    </Fade>
-  );
-};
+  handleGradeButtonOpen() {
+    this.setState(prevState => ({ gradeButtonOpen: !prevState.gradeButtonOpen }));
+  }
+
+  handleSubjectButtonOpen() {
+    this.setState(prevState => ({ subjectButtonOpen: !prevState.subjectButtonOpen }));
+  }
+
+  render() {
+    const { classes, institution } = this.props;
+    let toRender;
+
+    if (institution) { // TIRAR A NEGAÇÃO
+      toRender = (
+        <Wrapper>
+          <Paper className={classes.root}>
+            <ContentContainer>
+              <img
+                alt="Institution"
+                className={classes.photo}
+                src="https://s3.amazonaws.com/tinycards/image/f8bda7d1c863b4f42adf2d1e5d72ff14" />
+              <InstitutionInfos className={classes.institutionInfos}>
+                <Typography
+                  variant="title"
+                  gutterBottom
+                >
+                  {institution.name}
+                </Typography>
+                <Typography
+                  variant="subheading"
+                  gutterBottom
+                >
+                  Email: {institution.email}
+                </Typography>
+                <Typography
+                  variant="subheading"
+                  gutterBottom
+                >
+                  Telefone: {institution.phone}
+                </Typography>
+                <Typography
+                  variant="subheading"
+                >
+                  Endereço: {institution.address}
+                </Typography>
+              </InstitutionInfos>
+            </ContentContainer>
+          </Paper>
+          <Button
+            className={classes.button}
+            color="primary"
+            onClick={this.handleGradeButtonOpen}
+            variant="contained"
+            size="small"
+          >
+            Criar Série
+          </Button>
+          <Button
+            className={classes.button}
+            color="primary"
+            onClick={this.handleSubjectButtonOpen}
+            variant="contained"
+            size="small"
+          >
+            Criar Disciplina
+          </Button>
+        </Wrapper>
+      );
+    } else {
+      toRender = <p>Não há nenhuma instituição selecionada</p>;
+    }
+
+    return (
+      <Fade in>
+        {toRender}
+      </Fade>
+    );
+  }
+}
 
 DetailsPage.propTypes = {
   classes: PropTypes.object,
