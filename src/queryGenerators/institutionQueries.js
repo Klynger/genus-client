@@ -1,18 +1,23 @@
-export const queryFindInstitutionsByOwner = ownerId => ({
+export const queryFindInstitutionsByOwner = () => ({
   query: `
-    query findMyInstitutions($ownerId: ID!) {
-      findInstitutionsByOwner(ownerId: $ownerId) {
+    query findMyInstitutions {
+      getInstitutionsFromLoggedUser {
         id
         name
         email
-        address
         phone
+        address
+        grades {
+          id
+          name
+          subjects {
+            id
+            name
+          }
+        }
       }
     }
   `,
-  variables: {
-    ownerId,
-  },
 });
 
 export default {};

@@ -184,8 +184,8 @@ Signup.propTypes = {
 
 const mutationCreateUser = userBean => ({
   query: `
-    mutation createNewUser($userBean: UserBean!) {
-      createUser(userBean: $userBean) {
+    mutation createNewUser($userBean: CreateUserInput!) {
+      createUser(input: $userBean) {
         id
         username
         email
