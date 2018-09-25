@@ -39,12 +39,12 @@ export const addInstitution = institutionInput => (dispatch, getState) => {
 
 export const fetchInstitutionsByOwner = ownerId => (dispatch, getState) => {
   return (
-    requestGraphql(queryFindInstitutionsByOwner(ownerId),
+    requestGraphql(queryFindInstitutionsByOwner(),
       localStorage.getItem('token'))
       .then(res => {
         let result;
-        if (res.data.data && res.data.data.findInstitutionsByOwner) {
-          res.data.data.findInstitutionsByOwner.forEach(institution => {
+        if (res.data.data && res.data.data.getInstitutionsFromLoggedUser) {
+          res.data.data.getInstitutionsFromLoggedUser.forEach(institution => {
             dispatch({
               type: SAVE_INSTITUTION,
               institution,
