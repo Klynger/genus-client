@@ -47,8 +47,8 @@ class Home extends Component {
     const { getLoggedUser, getInstitutions } = this.props;
 
     getLoggedUser()
-      .then((res) => {
-        getInstitutions(res.data.data.findLoggedUser.id);
+      .then(() => {
+        getInstitutions();
       });
   }
 
@@ -94,7 +94,7 @@ function mapStateToProps({ user }) {
 function mapDispatchToProps(dispatch) {
   return {
     getLoggedUser: () => dispatch(fetchLoggedUser()),
-    getInstitutions: (ownerId) => dispatch(fetchInstitutionsByOwner(ownerId)),
+    getInstitutions: () => dispatch(fetchInstitutionsByOwner()),
   };
 }
 

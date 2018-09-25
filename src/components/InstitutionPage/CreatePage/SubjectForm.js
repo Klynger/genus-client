@@ -121,6 +121,7 @@ class SubjectForm extends Component {
 
 SubjectForm.defaultProps = {
   open: false,
+  grades: [],
 };
 
 SubjectForm.propTypes = {
@@ -128,20 +129,20 @@ SubjectForm.propTypes = {
   errors: PropTypes.shape({
     name: PropTypes.string,
   }),
-  fullScreen: PropTypes.bool,
+  fullScreen: PropTypes.bool.isRequired,
   grades: PropTypes.array,
-  handleChange: PropTypes.func,
-  handleReset: PropTypes.func,
-  handleSubmit: PropTypes.func,
-  isSubmitting: PropTypes.bool,
+  handleChange: PropTypes.func.isRequired,
+  handleReset: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  isSubmitting: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool,
   touched: PropTypes.shape({
     name: PropTypes.bool,
-  }),
+  }).isRequired,
   values: PropTypes.shape({
     name: PropTypes.string,
-  }),
+  }).isRequired,
 };
 
 function mapStateToProps({ institution }) {
@@ -156,18 +157,19 @@ export default connect(mapStateToProps)(
   mapPropsToValues({ name, gradeId, grades }) {
     return {
       name: name || '',
-      gradeId: gradeId || grades ? grades[0].id : null,
+      gradeId: gradeId || grades.length > 0 ? grades[0].id : null,
     };
   },
   validationSchema: Yup.object().shape({
     gradeId: Yup.number().required('Não selecionou a disciplina'),
     name: Yup.string().required('Nome da disciplina é obrigatorio'),
   }),
-  handleSubmit(values, { setSubmitting }) {
+  handleSubmit(values, { setSubmitting, props }) {
     setSubmitting(true);
     requestGraphql(mutationCreateSubject(values),
       localStorage.getItem('token'))
       .then(() => {
+        props.onClose();
         setSubmitting(false);
       })
       .catch(setSubmitting(false));

@@ -37,7 +37,7 @@ export const addInstitution = institutionInput => (dispatch, getState) => {
   );
 };
 
-export const fetchInstitutionsByOwner = ownerId => (dispatch, getState) => {
+export const fetchInstitutionsByOwner = () => (dispatch, getState) => {
   return (
     requestGraphql(queryFindInstitutionsByOwner(),
       localStorage.getItem('token'))
