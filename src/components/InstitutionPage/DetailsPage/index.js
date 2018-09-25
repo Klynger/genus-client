@@ -6,6 +6,8 @@ import { Fade, Paper, Typography, withStyles, Button } from '@material-ui/core';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
+const photoDimension = '140px';
+
 const Wrapper = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -25,9 +27,9 @@ const InstitutionInfos = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  flex-wrap: wrap;
 `;
 
-const photoDimension = '140px';
 
 const contentContainerBreakpoints = theme => ({
   [theme.breakpoints.down('sm')]: {
@@ -91,7 +93,11 @@ class DetailsPage extends Component {
     if (institution) {
       toRender = (
         <Wrapper>
-          <SubjectForm open={subjectOpen} onClose={this.handleSubjectOpen} />
+          <SubjectForm
+            open={subjectOpen}
+            onClose={this.handleSubjectOpen}
+            grades={institution.grades}
+          />
           <GradeForm open={gradeOpen} onClose={this.handleGradeOpen} />
           <Paper className={classes.root}>
             <ContentContainer>
@@ -119,10 +125,30 @@ class DetailsPage extends Component {
                   Telefone: {institution.phone}
                 </Typography>
                 <Typography
+                  gutterBottom
                   variant="subheading"
                 >
                   Endereço: {institution.address}
                 </Typography>
+              </InstitutionInfos>
+              <InstitutionInfos className={classes.institutionInfos}>
+                Séries:
+                {institution.grades && institution.grades[0] &&
+                    institution.grades.map(grade => (
+                      <div
+                        key={grade.id}
+                      >
+                        <Typography gutterBottom variant="subheading" key={grade.id}>
+                          {grade.name}
+                        </Typography>
+                        {grade.subjects && grade.subjects[0] &&
+                          grade.subjects.map(sub => (
+                            <Typography gutterBottom variant="subheading" key={sub.id}>
+                              {sub.name}
+                            </Typography>
+                          ))}
+                      </div>
+                    ))}
               </InstitutionInfos>
             </ContentContainer>
           </Paper>
@@ -140,6 +166,7 @@ class DetailsPage extends Component {
             color="primary"
             onClick={this.handleSubjectOpen}
             variant="contained"
+            disabled={!institution.grades || institution.grades.length === 0}
             size="small"
           >
             Criar Disciplina
@@ -174,4 +201,5 @@ function mapStateToProps({ institution }) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(DetailsPage));
+export default connect(mapStateToProps)(
+  withStyles(styles)(DetailsPage));

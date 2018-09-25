@@ -15,6 +15,7 @@ import styled from 'styled-components';
 import * as Yup from 'yup';
 import { requestGraphql } from '../../utils/HTTPClient';
 import { mutationCreateGrade } from '../../../queryGenerators/GradeMutations';
+import { SAVE_INSTITUTION } from '../../../actions/actionTypes';
 
 const StyledForm = styled(Form)`
   display: flex;
@@ -34,7 +35,7 @@ const styles = theme => ({
 });
 
 const GradeForm = ({ classes, errors, fullScreen, handleChange, handleReset, handleSubmit,
-   isSubmitting, values, open, onClose, touched }) => (
+  isSubmitting, values, open, onClose, touched }) => (
     <Dialog
       fullScreen={fullScreen}
       open={open}
@@ -42,7 +43,7 @@ const GradeForm = ({ classes, errors, fullScreen, handleChange, handleReset, han
       onBackdropClick={handleReset}
     >
     <DialogTitle className={classes.header}>
-        Série
+      Série
     </DialogTitle>
       <DialogContent className={classes.dialogContent}>
         <StyledForm>
@@ -111,29 +112,50 @@ function mapStateToProps({ institution }) {
   };
 }
 
-export default connect(mapStateToProps)(
+function mapDispatchToProps(dispatch) {
+  return {
+    saveInstituion: (institution) => dispatch({
+      type: SAVE_INSTITUTION,
+      institution,
+    }),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(
   withStyles(styles)(withMobileDialog()(withRouter(withFormik({
-  mapPropsToValues({ name }) {
-    return {
-      name: name || '',
-    };
-  },
-  validationSchema: Yup.object().shape({
-    name: Yup.string().required('Nome da disciplina é obrigatorio'),
-  }),
-  handleSubmit(values, { setSubmitting, props }) {
-    // TODO
-    setSubmitting(true);
-    const input = {
-      institutionId: props.institution.id,
-      name: values.name,
-    };
-    requestGraphql(mutationCreateGrade(input),
-      localStorage.getItem('token'))
-      .then(() => {
-        setSubmitting(false);
-        props.onClose();
-      });
-  },
-  enableReinitialize: true,
-})(GradeForm)))));
+    mapPropsToValues({ name }) {
+      return {
+        name: name || '',
+      };
+    },
+    validationSchema: Yup.object().shape({
+      name: Yup.string().required('Nome da disciplina é obrigatorio'),
+    }),
+    handleSubmit(values, { setSubmitting, props }) {
+      // TODO
+      setSubmitting(true);
+      let input = {
+        institutionId: props.institution.id,
+        name: values.name,
+      };
+      requestGraphql(mutationCreateGrade(input),
+        localStorage.getItem('token'))
+        .then(({ data }) => {
+          setSubmitting(false);
+          props.onClose();
+          if (data.data && data.data.createGrade) {
+            input = {
+              ...input,
+              id: data.data.createGrade.id,
+            };
+            const { institution } = props;
+            const newInstitution = {
+              ...institution,
+              grades: institution.grades ? institution.grades.concat([input]) : [input],
+            };
+            props.saveInstituion(newInstitution);
+          }
+        });
+    },
+    enableReinitialize: true,
+  })(GradeForm)))));

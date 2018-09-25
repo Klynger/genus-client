@@ -10,6 +10,10 @@ export const queryFindInstitutionsByOwner = () => ({
         grades {
           id
           name
+          subjects {
+            id
+            name
+          }
         }
       }
     }
