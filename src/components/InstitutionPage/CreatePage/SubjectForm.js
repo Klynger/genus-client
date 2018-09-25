@@ -54,6 +54,8 @@ class SubjectForm extends Component {
 
     const { openSelect } = this.state;
 
+    const gradeIdHasError = Boolean(errors.gradeId);
+
     return (
       <Dialog
         fullScreen={fullScreen}
@@ -88,6 +90,12 @@ class SubjectForm extends Component {
             onChange={handleChange}
             value={values.gradeId}
           >
+            <MenuItem
+              key={-1}
+              value={-1}
+            >
+              Escolha uma Série
+            </MenuItem>
             {grades.map(grade => (
               <MenuItem
                 key={grade.id}
@@ -97,6 +105,10 @@ class SubjectForm extends Component {
               </MenuItem>
             ))}
           </Select>
+          {touched.gradeId && errors.gradeId &&
+            <FormHelperText error={touched.gradeId && gradeIdHasError}>
+              {errors.gradeId}
+            </FormHelperText>}
           <DialogActions>
             <Button
               color="primary"
@@ -145,34 +157,27 @@ SubjectForm.propTypes = {
   }).isRequired,
 };
 
-function mapStateToProps({ institution }) {
-  const { byId, selectedInstitution } = institution;
-  return {
-    grades: byId[selectedInstitution].grades,
-  };
-}
-
-export default connect(mapStateToProps)(
+export default connect()(
   withStyles(styles)(withMobileDialog()(withRouter(withFormik({
-  mapPropsToValues({ name, gradeId, grades }) {
-    return {
-      name: name || '',
-      gradeId: gradeId || grades.length > 0 ? grades[0].id : null,
-    };
-  },
-  validationSchema: Yup.object().shape({
-    gradeId: Yup.number().required('Não selecionou a disciplina'),
-    name: Yup.string().required('Nome da disciplina é obrigatorio'),
-  }),
-  handleSubmit(values, { setSubmitting, props }) {
-    setSubmitting(true);
-    requestGraphql(mutationCreateSubject(values),
-      localStorage.getItem('token'))
-      .then(() => {
-        props.onClose();
-        setSubmitting(false);
-      })
-      .catch(setSubmitting(false));
-  },
-  enableReinitialize: true,
-})(SubjectForm)))));
+    mapPropsToValues({ name, gradeId }) {
+      return {
+        name: name || '',
+        gradeId: gradeId || -1,
+      };
+    },
+    validationSchema: Yup.object().shape({
+      gradeId: Yup.number().positive('Selecione uma Série').required('Não selecionou a Série'),
+      name: Yup.string().required('Nome da disciplina é obrigatorio'),
+    }),
+    handleSubmit(values, { setSubmitting, props }) {
+      setSubmitting(true);
+      requestGraphql(mutationCreateSubject(values),
+        localStorage.getItem('token'))
+        .then(() => {
+          props.onClose();
+          setSubmitting(false);
+        })
+        .catch(setSubmitting(false));
+    },
+    enableReinitialize: true,
+  })(SubjectForm)))));
