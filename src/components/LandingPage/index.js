@@ -1,18 +1,27 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button, Snackbar } from '@material-ui/core';
 import Signup from './Signup';
 import Signin from './Signin';
+import theme from '../utils/theme';
 
 const LandingContainer = styled.div`
   align-items: center;
   display: flex;
-  height: 100%;
+  height: calc(100vh - ${({ unit }) => unit * 2}px);
   justify-content: center;
-  min-height: 100vh;
-  min-width: 100vw;
-  width: 100%;
+  padding: ${({ unit }) => unit}px;
+  width: calc(100% - ${({ unit }) => unit * 2}px);
 `;
+
+LandingContainer.propTypes = {
+  unit: PropTypes.number,
+};
+
+LandingContainer.defaultProps = {
+  unit: theme.spacing.unit,
+};
 
 class LandingPage extends Component {
   constructor(props) {

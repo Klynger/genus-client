@@ -1,4 +1,8 @@
-import { SAVE_INSTITUTION, SELECT_INSTITUTION } from '../actions/actionTypes';
+import {
+  SAVE_INSTITUTION,
+  SELECT_INSTITUTION,
+  REMOVE_ALL_INSTITUTIONS,
+} from '../actions/actionTypes';
 
 export const NO_INSTUTION_SELECTED = '-1';
 
@@ -35,6 +39,10 @@ function institution(state = DEFAULT_STATE, action) {
         ...state,
         selectedInstitution: action.id,
       };
+
+    case REMOVE_ALL_INSTITUTIONS:
+      return DEFAULT_STATE;
+
     default:
       return state;
   }
