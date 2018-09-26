@@ -11,6 +11,7 @@ import { withStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import { selectInstitution } from '../../actions/institution';
+import { clearStore } from '../../actions';
 
 const styles = theme => ({
   appTitle: {
@@ -65,10 +66,12 @@ class ApplicationBar extends Component {
   }
 
   handleLogout() {
-    const { history } = this.props;
+    const { history, resetStore } = this.props;
 
-    this.handleClose();
     localStorage.removeItem('token');
+    console.log('hereee', resetStore);
+    resetStore();
+    this.handleClose();
     history.push('/landing');
   }
 
@@ -180,6 +183,7 @@ ApplicationBar.propTypes = {
   history: PropTypes.object.isRequired,
   institutions: PropTypes.array,
   onDrawerToggle: PropTypes.func.isRequired,
+  resetStore: PropTypes.func.isRequired,
   selectedInstitution: PropTypes.object,
   selectInstitution: PropTypes.func.isRequired,
 };
@@ -199,6 +203,7 @@ function mapStateToProps({ institution }) {
 function mapSDispatchToProps(dispatch) {
   return {
     selectInstitution: id => dispatch(selectInstitution(id)),
+    resetStore: () => clearStore(dispatch),
   };
 }
 

@@ -1,4 +1,4 @@
-import { SAVE_USER, SET_LOGGED_USER } from '../actions/actionTypes';
+import { SAVE_USER, SET_LOGGED_USER, REMOVE_ALL_USERS } from '../actions/actionTypes';
 
 export const NO_USER_LOGGED = null;
 
@@ -32,6 +32,9 @@ function user(state = DEFAULT_STATE, action) {
         ...state,
         loggedUserId: action.id,
       };
+
+    case REMOVE_ALL_USERS:
+      return DEFAULT_STATE;
 
     default:
       return state;
