@@ -249,11 +249,16 @@ export default withFormik({
       .max(50, 'Nome não pode ter mais de 50 caracteres.')
       .required('Nome obrigatório'),
   }),
-  handleSubmit(values, { setSubmitting, props, setErrors }) {
+  handleSubmit(values, { setSubmitting, props, setErrors, resetForm }) {
     requestGraphql(mutationCreateUser(values))
       .then(({ data }) => {
         if (data.data.createUser) {
           props.handleSnackbarOpen(true);
+          resetForm({
+            email: '',
+            username: '',
+            password: '',
+          });
         } else if (data.errors) {
           // TODO in this case the errors must be handle inside the form
           setErrors({ requestError: '400' });
