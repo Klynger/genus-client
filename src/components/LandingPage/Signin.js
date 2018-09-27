@@ -4,8 +4,9 @@ import {
   FormControl, FormHelperText,
   Input, InputLabel,
   withMobileDialog, Slide,
-  withStyles,
+  withStyles, withWidth,
 } from '@material-ui/core';
+import { capitalize } from '@material-ui/core/utils/helpers';
 import { Form, withFormik } from 'formik';
 import { requestGraphql } from '../utils/HTTPClient';
 import loginQuery from '../../queryGenerators/user';
@@ -18,6 +19,7 @@ import * as Yup from 'yup';
 const StyledForm = styled(Form)`
   display: flex;
   flex-direction: column;
+  margin-top: 20px;
 `;
 
 const Transition = props => {
@@ -25,8 +27,23 @@ const Transition = props => {
 };
 
 const styles = theme => ({
-  dialogContent: {
+  singinDialogRoot: {
     minWidth: '30vw',
+  },
+  signinDialogRootXs: {
+    width: '100%',
+  },
+  signinDialogRootSm: {
+    width: '70%',
+  },
+  signinDialogRootMd: {
+    width: '50%',
+  },
+  signinDialogRootLg: {
+    width: '40%',
+  },
+  signinDialogRootXl: {
+    width: '30%',
   },
   formControl: {
     marginBottom: theme.spacing.unit,
@@ -36,8 +53,10 @@ const styles = theme => ({
   },
 });
 
-const Signin = ({ classes, errors, fullScreen, handleChange, handleReset, handleSubmit,
-                  isSubmitting, values, open, onClose, touched }) => {
+const Signin = ({ classes, errors, fullScreen,
+                  handleChange, handleReset, handleSubmit,
+                  isSubmitting, values, open,
+                  onClose, touched, width }) => {
   return (
     <Dialog
       fullScreen={fullScreen}
@@ -45,11 +64,14 @@ const Signin = ({ classes, errors, fullScreen, handleChange, handleReset, handle
       onClose={onClose}
       TransitionComponent={Transition}
       onBackdropClick={handleReset}
+      classes={{
+        paper: classes[`signinDialogRoot${capitalize(width)}`],
+      }}
     >
       <DialogTitle id="Sigin-dialog" className={classes.signinHeader}>
         Sign in
       </DialogTitle>
-      <DialogContent className={classes.dialogContent}>
+      <DialogContent>
         <StyledForm>
           <FormControl
             className={classes.formControl}
@@ -118,9 +140,12 @@ Signin.propTypes = {
     email: PropTypes.string,
     password: PropTypes.string,
   }),
+  width: PropTypes.string.isRequired,
 };
 
-export default withStyles(styles)(withMobileDialog()(withRouter(withFormik({
+export default withStyles(styles)(withWidth()(withMobileDialog({
+  breakpoint: 'xs',
+})(withRouter(withFormik({
   mapPropsToValues({ email }) {
     return {
       email: email || '',
@@ -144,4 +169,4 @@ export default withStyles(styles)(withMobileDialog()(withRouter(withFormik({
       .catch(setSubmitting(false));
   },
   enableReinitialize: true,
-})(Signin))));
+})(Signin)))));
