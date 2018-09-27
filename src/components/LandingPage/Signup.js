@@ -6,7 +6,7 @@ import * as Yup from 'yup';
 import { withStyles } from '@material-ui/core/styles';
 import {
   FormControl, InputLabel, FormHelperText,
-  Input, Paper,
+  Input, Paper, CircularProgress,
 } from '@material-ui/core';
 import { FadeInButton } from '../utils/SharedComponents';
 import { requestGraphql } from '../utils/HTTPClient';
@@ -67,15 +67,38 @@ const StyledForm = styled(Form)`
 `;
 
 const styles = theme => ({
+  signupButtonProgress: {
+    left: '50%',
+    marginLeft: -12,
+    marginTop: -12,
+    position: 'absolute',
+    top: '50%',
+    zIndex: 1,
+  },
   formControl: {
     marginBottom: theme.spacing.unit,
+  },
+  signupButtonWrapper: {
+    margin: theme.spacing.unit,
+    position: 'relative',
+  },
+  signupSubmitButton: {
+    width: '100%',
   },
 });
 
 class Signup extends PureComponent {
   constructor(props) {
     super(props);
-    this.handleDropImage.bind(this);
+    this.handleDropImage = this.handleDropImage.bind(this);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.errors.requestError !== prevProps.errors.requestError
+      && this.props.errors.requestError !== undefined) {
+      this.props.handleSnackbarOpen(
+        new Error(this.props.errors.requestError));
+    }
   }
 
   handleDropImage(files) {
@@ -109,7 +132,7 @@ class Signup extends PureComponent {
             className={classes.formControl}
             error={touched.username && errors.username !== undefined}
           >
-            <InputLabel htmlFor="username">User name</InputLabel>
+            <InputLabel htmlFor="username">Nome</InputLabel>
             <Input name="username" value={values.username} onChange={handleChange} />
             {touched.username && errors.username &&
               <FormHelperText id="signup__username-error-text">{errors.username}</FormHelperText>}
@@ -127,7 +150,7 @@ class Signup extends PureComponent {
             className={classes.formControl}
             error={touched.password && errors.password !== undefined}
           >
-            <InputLabel htmlFor="password">Password</InputLabel>
+            <InputLabel htmlFor="password">Senha</InputLabel>
             <Input
               name="password"
               type="password"
@@ -137,19 +160,27 @@ class Signup extends PureComponent {
             {touched.password && errors.password &&
               <FormHelperText id="signup__password-error-text">{errors.password}</FormHelperText>}
           </FormControl>
-          <FadeInButton
-            color="primary"
-            disabled={isSubmitting}
-            onClick={handleSubmit}
-          >
-            Signup
-          </FadeInButton>
+          <div className={classes.signupButtonWrapper}>
+            <FadeInButton
+              className={classes.signupSubmitButton}
+              color="primary"
+              disabled={isSubmitting}
+              onClick={handleSubmit}
+            >
+              Registrar
+            </FadeInButton>
+            {isSubmitting
+              && <CircularProgress
+                size={24}
+                className={classes.signupButtonProgress}
+              />}
+          </div>
           <FadeInButton
             color="secondary"
             delay={FadeInButton.defaultProps.delay * 1.3}
             onClick={handleSignin}
           >
-            Signin
+            Login
           </FadeInButton>
         </StyledForm>
       </SignupContainer>
@@ -162,6 +193,7 @@ Signup.propTypes = {
   errors: PropTypes.shape({
     email: PropTypes.string,
     password: PropTypes.string,
+    requestError: PropTypes.string,
     username: PropTypes.string,
   }).isRequired,
   handleChange: PropTypes.func.isRequired,
@@ -206,24 +238,30 @@ export default withFormik({
     };
   },
   validationSchema: Yup.object().shape({
-    email: Yup.string().trim().email('You need to pass a valid email')
-      .required('Email is required'),
-    password: Yup.string().min(6, 'Password must be have at least 6 characters')
-      .max(30, 'Password cannot have more than 30 characters')
-      .required('Password is required'),
-    username: Yup.string().trim().min(6, 'User name must have at least 6 characters')
-      .max(50, 'User name cannot be bigger than 50 characters')
+    email: Yup.string().trim().email('Você deve passar um email válido.')
+      .required('Email obrigatório.'),
+    password: Yup.string().min(6, 'A senha deve ter pelo menos 6 caracteres.')
+      .max(30, 'Senha não pode ter mais que 30 caracteres.')
+      .required('Senha obrigatória.'),
+    username: Yup.string().trim()
       .lowercase()
-      .required('Name is required'),
+      .min(6, 'Nome deve ter pelo menos 6 caracteres.')
+      .max(50, 'Nome não pode ter mais de 50 caracteres.')
+      .required('Nome obrigatório'),
   }),
-  handleSubmit(values, { setSubmitting, props }) {
+  handleSubmit(values, { setSubmitting, props, setErrors }) {
     requestGraphql(mutationCreateUser(values))
       .then(({ data }) => {
         if (data.data.createUser) {
-          props.handleSnackbarOpen();
+          props.handleSnackbarOpen(true);
         } else if (data.errors) {
-          // TODO
+          // TODO in this case the errors must be handle inside the form
+          setErrors({ requestError: '400' });
         }
+        setSubmitting(false);
+      })
+      .catch(({ request }) => {
+        setErrors({ requestError: request.status });
         setSubmitting(false);
       });
   },
