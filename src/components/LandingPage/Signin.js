@@ -3,7 +3,7 @@ import {
   DialogContent, DialogActions,
   FormControl, FormHelperText,
   Input, InputLabel,
-  withMobileDialog, Slide,
+  withMobileDialog, Grow,
   withStyles, withWidth,
 } from '@material-ui/core';
 import { capitalize } from '@material-ui/core/utils/helpers';
@@ -23,7 +23,7 @@ const StyledForm = styled(Form)`
 `;
 
 const Transition = props => {
-  return <Slide direction="down" in {...props} />;
+  return <Grow in {...props} />;
 };
 
 const styles = theme => ({
@@ -69,7 +69,7 @@ const Signin = ({ classes, errors, fullScreen,
       }}
     >
       <DialogTitle id="Sigin-dialog" className={classes.signinHeader}>
-        Sign in
+        Login
       </DialogTitle>
       <DialogContent>
         <StyledForm>
@@ -104,7 +104,7 @@ const Signin = ({ classes, errors, fullScreen,
         </StyledForm>
         <DialogActions>
           <Button color="primary" disabled={isSubmitting} onClick={onClose}>
-            Cancel
+            Cancelar
           </Button>
           <Button color="primary" disabled={isSubmitting} onClick={handleSubmit}>
             Login
