@@ -1,4 +1,5 @@
 import {
+  SAVE_GRADE_TO_INSTITUTION,
   SAVE_INSTITUTION,
   SELECT_INSTITUTION,
   REMOVE_ALL_INSTITUTIONS,
@@ -21,6 +22,20 @@ function concatIdIfNotContain(allIds, id) {
 
 function institution(state = DEFAULT_STATE, action) {
   switch (action.type) {
+    case SAVE_GRADE_TO_INSTITUTION:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [state.selectedInstitution]: {
+            ...state.byId[state.selectedInstitution],
+            grades: concatIdIfNotContain(
+              state.byId[state.selectedInstitution].grades,
+              action.gradeId),
+          },
+        },
+      };
+
     case SAVE_INSTITUTION:
       return {
         ...state,
