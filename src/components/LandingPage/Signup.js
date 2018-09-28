@@ -6,7 +6,7 @@ import * as Yup from 'yup';
 import { withStyles } from '@material-ui/core/styles';
 import {
   FormControl, InputLabel, FormHelperText,
-  Input, Paper, CircularProgress,
+  Input, Paper, CircularProgress, Zoom,
 } from '@material-ui/core';
 import { FadeInButton } from '../utils/SharedComponents';
 import { requestGraphql } from '../utils/HTTPClient';
@@ -39,19 +39,19 @@ const SignupContainer = styled(Paper)`
     }
   }
 
-  @media screen and (min-width: 1300px) {
+  @media screen and (min-width: 1920px) {
     width: 30%;
   }
 
-  @media screen and (min-width: 800px) and (max-width: 1299px) {
+  @media screen and (min-width: 1280px) and (max-width: 1919px) {
     width: 40%;
   }
 
-  @media screen and (min-width: 700px) and (max-width: 799px) {
+  @media screen and (min-width: 960px) and (max-width: 1279px) {
     width: 50%;
   }
 
-  @media screen and (min-width: 600px) and (max-width: 699px) {
+  @media screen and (min-width: 600px) and (max-width: 959px) {
     width: 70%;
   }
 
@@ -135,7 +135,9 @@ class Signup extends PureComponent {
             <InputLabel htmlFor="username">Nome</InputLabel>
             <Input name="username" value={values.username} onChange={handleChange} />
             {touched.username && errors.username &&
-              <FormHelperText id="signup__username-error-text">{errors.username}</FormHelperText>}
+              <Zoom in>
+                <FormHelperText id="signup__username-error-text">{errors.username}</FormHelperText>
+              </Zoom>}
           </FormControl>
           <FormControl
             className={classes.formControl}
@@ -144,7 +146,9 @@ class Signup extends PureComponent {
             <InputLabel htmlFor="email">Email</InputLabel>
             <Input name="email" type="email" value={values.email} onChange={handleChange} />
             {touched.email && errors.email &&
-              <FormHelperText id="signup__email-error-text">{errors.email}</FormHelperText>}
+              <Zoom in>
+                <FormHelperText id="signup__email-error-text">{errors.email}</FormHelperText>
+              </Zoom>}
           </FormControl>
           <FormControl
             className={classes.formControl}
@@ -158,7 +162,9 @@ class Signup extends PureComponent {
               onChange={handleChange}
             />
             {touched.password && errors.password &&
-              <FormHelperText id="signup__password-error-text">{errors.password}</FormHelperText>}
+              <Zoom in>
+                <FormHelperText id="signup__password-error-text">{errors.password}</FormHelperText>
+              </Zoom>}
           </FormControl>
           <div className={classes.signupButtonWrapper}>
             <FadeInButton
@@ -253,7 +259,7 @@ export default withFormik({
     requestGraphql(mutationCreateUser(values))
       .then(({ data }) => {
         if (data.data.createUser) {
-          props.handleSnackbarOpen(true);
+          props.handleSnackbarOpen();
           resetForm({
             email: '',
             username: '',
