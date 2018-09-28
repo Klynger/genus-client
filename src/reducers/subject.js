@@ -21,7 +21,7 @@ function subject(state = DEFAULT_STATE, action) {
         byId: {
           ...state.byId,
           [action.subject.id]: {
-            ...state.byId[action.subject.byId] ? state.byId[action.subject.id] : {},
+            ...state.byId[action.subject.id] ? state.byId[action.subject.id] : {},
             ...action.subject,
           },
         },

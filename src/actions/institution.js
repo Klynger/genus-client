@@ -1,4 +1,6 @@
-import { SAVE_INSTITUTION, SELECT_INSTITUTION, SAVE_GRADE, SAVE_SUBJECT, SAVE_GRADE_TO_INSTITUTION } from './actionTypes';
+import { SAVE_INSTITUTION, SELECT_INSTITUTION,
+        SAVE_GRADE, SAVE_SUBJECT,
+        SAVE_GRADE_TO_INSTITUTION } from './actionTypes';
 import { NO_INSTUTION_SELECTED } from '../reducers/institution';
 import { requestGraphql } from '../components/utils/HTTPClient';
 import { mutationCreateInstitution } from '../queryGenerators/institutionMutations';
@@ -46,21 +48,19 @@ export const fetchInstitutionsByOwner = () => (dispatch, getState) => {
         let result;
         if (res.data.data && res.data.data.getInstitutionsFromLoggedUser) {
           res.data.data.getInstitutionsFromLoggedUser.forEach(institution => {
-            const subjects = institution.grades.reduce((subs, grade) =>
-                                    subs.concat(grade.subjects), []);
-            const grades = institution.grades.map(grade => ({
-              ...grade,
-              subjects: grade.subjects.map(sub => sub.id),
+            const subjects = institution.grades.reduce((subs, gradeR) =>
+                                    subs.concat(gradeR.subjects), []);
+            const grades = institution.grades.map(gradeG => ({
+              ...gradeG,
+              subjects: gradeG.subjects.map(sub => sub.id),
             }));
             const newInstitution = {
               ...institution,
               grades: institution.grades.map(grade => grade.id),
             };
-            subjects.forEach(subject => {
-              dispatch({
-                type: SAVE_SUBJECT,
-                subject,
-              });
+            dispatch({
+              type: SAVE_INSTITUTION,
+              institution: newInstitution,
             });
             grades.forEach(grade => {
               dispatch({
@@ -68,9 +68,11 @@ export const fetchInstitutionsByOwner = () => (dispatch, getState) => {
                 grade,
               });
             });
-            dispatch({
-              type: SAVE_INSTITUTION,
-              institution: newInstitution,
+            subjects.forEach(subject => {
+              dispatch({
+                type: SAVE_SUBJECT,
+                subject,
+              });
             });
           });
 

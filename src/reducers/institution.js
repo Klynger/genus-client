@@ -14,8 +14,6 @@ const DEFAULT_STATE = {
 };
 
 function concatIdIfNotContain(allIds, id) {
-  console.log('dasda', id);
-  console.log('allIds', allIds);
   if (allIds.includes(id)) {
     return allIds;
   }

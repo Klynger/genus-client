@@ -1,4 +1,4 @@
-import { SAVE_GRADE, REMOVE_ALL_GRADES } from '../actions/actionTypes';
+import { SAVE_GRADE, REMOVE_ALL_GRADES, SAVE_SUBJECT_TO_GRADE } from '../actions/actionTypes';
 
 const DEFAULT_STATE = {
   byId: {},
@@ -28,6 +28,18 @@ function grade(state = DEFAULT_STATE, action) {
         allIds: concatIdIfNotContain(state.allIds, action.grade.id),
       };
 
+    case SAVE_SUBJECT_TO_GRADE:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.gradeId]: {
+            ...state.byId[action.gradeId],
+            subjects: state.byId[action.gradeId].subjects.concat([action.subjectId]),
+          },
+        },
+        allIds: state.allIds,
+      };
     case REMOVE_ALL_GRADES:
       return DEFAULT_STATE;
 

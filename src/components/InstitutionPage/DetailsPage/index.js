@@ -86,7 +86,7 @@ class DetailsPage extends Component {
   }
 
   render() {
-    const { classes, institution } = this.props;
+    const { classes, grades, institution } = this.props;
     const { gradeOpen, subjectOpen } = this.state;
     let toRender;
 
@@ -96,7 +96,7 @@ class DetailsPage extends Component {
           <SubjectForm
             open={subjectOpen}
             onClose={this.handleSubjectOpen}
-            grades={institution.grades}
+            grades={grades}
           />
           <GradeForm open={gradeOpen} onClose={this.handleGradeOpen} />
           <Paper className={classes.root}>
@@ -133,8 +133,8 @@ class DetailsPage extends Component {
               </InstitutionInfos>
               <InstitutionInfos className={classes.institutionInfos}>
                 Séries:
-                {institution.grades && institution.grades[0] &&
-                    institution.grades.map(grade => (
+                {grades && grades[0] &&
+                    grades.map(grade => (
                       <div
                         key={grade.id}
                       >
@@ -166,7 +166,7 @@ class DetailsPage extends Component {
             color="primary"
             onClick={this.handleSubjectOpen}
             variant="contained"
-            disabled={!institution.grades || institution.grades.length === 0}
+            disabled={!grades || grades.length === 0}
             size="small"
           >
             Criar Disciplina
@@ -187,11 +187,11 @@ class DetailsPage extends Component {
 
 DetailsPage.propTypes = {
   classes: PropTypes.object,
+  grades: PropTypes.array.isRequired,
   institution: PropTypes.shape({
     address: PropTypes.string,
     email: PropTypes.string,
     name: PropTypes.string,
-    username: PropTypes.string,
   }),
 };
 
@@ -199,14 +199,12 @@ function mapStateToProps({ grade, institution, subject }) {
   return {
     institution: {
       ...institution.byId[institution.selectedInstitution],
-      grades: institution.byId[institution.selectedInstitution].grades.map(id => {
-        const completeGrade = grade.byId[id];
-        completeGrade.subjects = completeGrade.subjects
-                                 ? completeGrade.subjects.map(subjectId => subject.byId[subjectId])
-                                 : [];
-        return completeGrade;
-      }),
     },
+    grades: institution.byId[institution.selectedInstitution].grades.map(id => {
+      const completeGrade = grade.byId[id];
+      completeGrade.subjects = completeGrade.subjects.map(subjectId => subject.byId[subjectId]);
+      return completeGrade;
+    }),
   };
 }
 

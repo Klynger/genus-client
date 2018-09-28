@@ -10,7 +10,7 @@ export const REMOVE_ALL_USERS = 'REMOVE_ALL_USERS';
 export const SET_LOGGED_USER = 'SET_LOGGED_USER';
 // Grade action types
 export const SAVE_GRADE = 'SAVE_GRADE';
-export const SAVE_GRADES = 'SAVE_GRADES';
+export const SAVE_SUBJECT_TO_GRADE = 'SAVE_SUBJECT_TO_GRADE';
 export const SELECT_GRADE = 'SELECT_GRADE';
 export const REMOVE_ALL_GRADES = 'REMOVE_ALL_GRADES';
 // Subject action types
