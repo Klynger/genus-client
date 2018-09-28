@@ -6,7 +6,7 @@ const DEFAULT_STATE = {
 };
 
 function concatIdIfNotContain(allIds, id) {
-  if (allIds.contains(id)) {
+  if (allIds.includes(id)) {
     return allIds;
   }
 
