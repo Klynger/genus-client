@@ -13,9 +13,7 @@ import {
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import * as Yup from 'yup';
-import { requestGraphql } from '../../utils/HTTPClient';
-import { mutationCreateGrade } from '../../../queryGenerators/GradeMutations';
-import { SAVE_INSTITUTION } from '../../../actions/actionTypes';
+import { addGradeToInstitution } from '../../../actions/institution';
 
 const StyledForm = styled(Form)`
   display: flex;
@@ -114,10 +112,7 @@ function mapStateToProps({ institution }) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    saveInstituion: (institution) => dispatch({
-      type: SAVE_INSTITUTION,
-      institution,
-    }),
+    saveGrade: newGrade => dispatch(addGradeToInstitution(newGrade)),
   };
 }
 
@@ -133,29 +128,35 @@ export default connect(mapStateToProps, mapDispatchToProps)(
     }),
     handleSubmit(values, { setSubmitting, props }) {
       // TODO
-      setSubmitting(true);
-      let input = {
+      const input = {
         institutionId: props.institution.id,
         name: values.name,
       };
-      requestGraphql(mutationCreateGrade(input),
-        localStorage.getItem('token'))
-        .then(({ data }) => {
-          setSubmitting(false);
-          props.onClose();
-          if (data.data && data.data.createGrade) {
-            input = {
-              ...input,
-              id: data.data.createGrade.id,
-            };
-            const { institution } = props;
-            const newInstitution = {
-              ...institution,
-              grades: institution.grades ? institution.grades.concat([input]) : [input],
-            };
-            props.saveInstituion(newInstitution);
-          }
-        });
+
+      props.saveGrade(input)
+      .then(() => {
+        props.onClose();
+        setSubmitting(false);
+      });
+
+      // requestGraphql(mutationCreateGrade(input),
+      //   localStorage.getItem('token'))
+      //   .then(({ data }) => {
+      //     setSubmitting(false);
+      //     props.onClose();
+      //     if (data.data && data.data.createGrade) {
+      //       input = {
+      //         ...input,
+      //         id: data.data.createGrade.id,
+      //       };
+      //       const { institution } = props;
+      //       const newInstitution = {
+      //         ...institution,
+      //         grades: institution.grades ? institution.grades.concat([input]) : [input],
+      //       };
+      //       props.saveGrade(newInstitution);
+      //     }
+      //   });
     },
     enableReinitialize: true,
   })(GradeForm)))));

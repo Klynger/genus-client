@@ -1,4 +1,4 @@
-import { SAVE_GRADE, SAVE_GRADE_TO_INSTITUTION } from './actionTypes';
+import { SAVE_GRADE } from './actionTypes';
 import { requestGraphql } from '../components/utils/HTTPClient';
 import { mutationCreateGrade } from '../queryGenerators/GradeMutations';
 
@@ -12,10 +12,6 @@ export const addGrade = gradeInput => (dispatch) => {
         dispatch({
           type: SAVE_GRADE,
           grade: res.data.data.createGrade,
-        });
-        dispatch({
-          type: SAVE_GRADE_TO_INSTITUTION,
-          gradeId: res.data.data.createGrade.id,
         });
       } else {
         result = Promise.reject(new Error('404'));

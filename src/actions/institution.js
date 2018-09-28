@@ -1,8 +1,9 @@
-import { SAVE_INSTITUTION, SELECT_INSTITUTION, SAVE_GRADE, SAVE_SUBJECT } from './actionTypes';
+import { SAVE_INSTITUTION, SELECT_INSTITUTION, SAVE_GRADE, SAVE_SUBJECT, SAVE_GRADE_TO_INSTITUTION } from './actionTypes';
 import { NO_INSTUTION_SELECTED } from '../reducers/institution';
 import { requestGraphql } from '../components/utils/HTTPClient';
 import { mutationCreateInstitution } from '../queryGenerators/institutionMutations';
 import { queryFindInstitutionsByOwner } from '../queryGenerators/institutionQueries';
+import { mutationCreateGrade } from '../queryGenerators/GradeMutations';
 
 export const selectInstitution = id => dispatch => {
   dispatch({
@@ -89,5 +90,28 @@ export const fetchInstitutionsByOwner = () => (dispatch, getState) => {
 
         return result;
       })
+  );
+};
+
+export const addGradeToInstitution = newGrade => (dispatch) => {
+  return (
+    requestGraphql(mutationCreateGrade(newGrade),
+    localStorage.getItem('token'))
+    .then(res => {
+      let result = res;
+      if (res.data.data && res.data.data.createGrade) {
+        dispatch({
+          type: SAVE_GRADE,
+          grade: res.data.data.createGrade,
+        });
+        dispatch({
+          type: SAVE_GRADE_TO_INSTITUTION,
+          gradeId: res.data.data.createGrade.id,
+        });
+      } else {
+        result = Promise.reject(new Error('404'));
+      }
+      return result;
+    })
   );
 };

@@ -3,6 +3,7 @@ export const mutationCreateGrade = input => ({
     mutation createNewGrade($input: GradeCreationInput!) {
       createGrade(input: $input) {
         id
+        name
       }
     }
   `,

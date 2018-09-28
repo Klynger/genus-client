@@ -14,6 +14,8 @@ const DEFAULT_STATE = {
 };
 
 function concatIdIfNotContain(allIds, id) {
+  console.log('dasda', id);
+  console.log('allIds', allIds);
   if (allIds.includes(id)) {
     return allIds;
   }
@@ -23,18 +25,20 @@ function concatIdIfNotContain(allIds, id) {
 function institution(state = DEFAULT_STATE, action) {
   switch (action.type) {
     case SAVE_GRADE_TO_INSTITUTION:
-      return {
-        ...state,
-        byId: {
-          ...state.byId,
-          [state.selectedInstitution]: {
-            ...state.byId[state.selectedInstitution],
-            grades: concatIdIfNotContain(
+       return {
+         ...state,
+         byId: {
+           ...state.byId,
+           [state.selectedInstitution]: {
+             ...state.byId[state.selectedInstitution],
+             grades: concatIdIfNotContain(
               state.byId[state.selectedInstitution].grades,
-              action.gradeId),
-          },
-        },
-      };
+              action.gradeId,
+             ),
+           },
+         },
+         allIds: state.allIds,
+       };
 
     case SAVE_INSTITUTION:
       return {

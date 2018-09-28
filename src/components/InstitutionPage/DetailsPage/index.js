@@ -195,9 +195,18 @@ DetailsPage.propTypes = {
   }),
 };
 
-function mapStateToProps({ institution }) {
+function mapStateToProps({ grade, institution, subject }) {
   return {
-    institution: institution.byId[institution.selectedInstitution],
+    institution: {
+      ...institution.byId[institution.selectedInstitution],
+      grades: institution.byId[institution.selectedInstitution].grades.map(id => {
+        const completeGrade = grade.byId[id];
+        completeGrade.subjects = completeGrade.subjects
+                                 ? completeGrade.subjects.map(subjectId => subject.byId[subjectId])
+                                 : [];
+        return completeGrade;
+      }),
+    },
   };
 }
 
