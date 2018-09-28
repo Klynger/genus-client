@@ -30,6 +30,7 @@ class LandingPage extends Component {
     this.state = {
       openSnackbar: false,
       signinOpen: false,
+      snackBarMsg: 'Usuário criado',
     };
 
     this.onSnackbarOpen = this.onSnackbarOpen.bind(this);
@@ -38,8 +39,27 @@ class LandingPage extends Component {
     this.handleCloseSignin = this.handleCloseSignin.bind(this);
   }
 
-  onSnackbarOpen() {
-    this.setState({ openSnackbar: true });
+  onSnackbarOpen(error) {
+    const snackBarOptions = {
+      snackBarMsg: '',
+      openSnackbar: true,
+    };
+    if (!error) {
+      snackBarOptions.snackBarMsg = 'Usuário criado!';
+    } else {
+      switch (error.message) {
+        case '0':
+          snackBarOptions.snackBarMsg = 'Houve algum problema na conexão.';
+          break;
+        default:
+          snackBarOptions.snackBarMsg = 'Algo errado aconteceu.';
+      }
+    }
+    this.setState(snackBarOptions);
+  }
+
+  componentDidCatch(error) {
+    this.onSnackbarOpen(error);
   }
 
   handleSnackbarClose(event, reason) {
@@ -59,7 +79,7 @@ class LandingPage extends Component {
   }
 
   render() {
-    const { signinOpen, openSnackbar } = this.state;
+    const { signinOpen, openSnackbar, snackBarMsg } = this.state;
 
     return (
       <LandingContainer>
@@ -79,7 +99,7 @@ class LandingPage extends Component {
           ContentProps={{
             'aria-describedby': 'signup__message-id',
           }}
-          message={<span id="signup__message-id">User created</span>}
+          message={<span id="signup__message-id">{snackBarMsg}</span>}
           action={
           <Button
             onClick={this.handleSnackbarClose}
