@@ -10,6 +10,8 @@ import {
 } from '@material-ui/core';
 import { FadeInButton } from '../utils/SharedComponents';
 import { requestGraphql } from '../utils/HTTPClient';
+import loginQuery from '../../queryGenerators/user';
+import { withRouter } from 'react-router-dom';
 
 const DEFAULT_ANIMATION_TIMING = 700;
 
@@ -235,7 +237,7 @@ const mutationCreateUser = userBean => ({
   },
 });
 
-export default withFormik({
+export default withRouter(withFormik({
   mapPropsToValues({ username, email }) {
     return {
       username: username || '',
@@ -260,6 +262,17 @@ export default withFormik({
       .then(({ data }) => {
         if (data.data.createUser) {
           props.handleSnackbarOpen();
+          const loginUser = {
+            email: values.email,
+            password: values.password,
+          };
+          requestGraphql(loginQuery(loginUser))
+          .then(res => {
+            if (res.data.data) {
+              localStorage.setItem('token', res.data.data.login);
+              props.history.push('/');
+            }
+          });
           resetForm({
             email: '',
             username: '',
@@ -276,4 +289,4 @@ export default withFormik({
         setSubmitting(false);
       });
   },
-})(withStyles(styles)(Signup));
+})(withStyles(styles)(Signup)));
