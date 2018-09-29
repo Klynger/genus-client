@@ -17,6 +17,7 @@ const SignupContainer = styled(Paper)`
   animation: translatedFadein ${DEFAULT_ANIMATION_TIMING}ms 1;
   border-radius: 5px;
   padding: 12px;
+  z-index: 10;
 
   @keyframes translatedFadein {
     0% {

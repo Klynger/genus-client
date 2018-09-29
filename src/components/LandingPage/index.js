@@ -11,8 +11,20 @@ const LandingContainer = styled.div`
   display: flex;
   height: calc(100vh - ${({ unit }) => unit * 2}px);
   justify-content: center;
+  overflow: hidden;
   padding: ${({ unit }) => unit}px;
+  position: relative;
   width: calc(100% - ${({ unit }) => unit * 2}px);
+`;
+
+const BackgroundImg = styled.img`
+  filter: blur(3px);
+  height: calc(100% + 10px);
+  left: -5px;
+  object-fit: cover;
+  position: absolute;
+  top: -5px;
+  width: calc(100% + 10px);
 `;
 
 LandingContainer.propTypes = {
@@ -83,6 +95,7 @@ class LandingPage extends Component {
 
     return (
       <LandingContainer>
+        <BackgroundImg src="/static/images/landing-background.jpg" />
         <Signup
           handleSignin={this.toggleSignin}
           handleSnackbarOpen={this.onSnackbarOpen}
