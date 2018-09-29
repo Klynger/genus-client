@@ -4,6 +4,9 @@ export const mutationCreateGrade = input => ({
       createGrade(input: $input) {
         id
         name
+        subjects {
+          id
+        }
       }
     }
   `,

@@ -27,11 +27,11 @@ function institution(state = DEFAULT_STATE, action) {
          ...state,
          byId: {
            ...state.byId,
-           [state.selectedInstitution]: {
-             ...state.byId[state.selectedInstitution],
+           [action.payload.institutionId]: {
+             ...state.byId[action.payload.institutionId],
              grades: concatIdIfNotContain(
-              state.byId[state.selectedInstitution].grades,
-              action.gradeId,
+              state.byId[action.payload.institutionId].grades,
+              action.payload.gradeId,
              ),
            },
          },

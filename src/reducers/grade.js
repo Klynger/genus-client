@@ -33,9 +33,12 @@ function grade(state = DEFAULT_STATE, action) {
         ...state,
         byId: {
           ...state.byId,
-          [action.gradeId]: {
-            ...state.byId[action.gradeId],
-            subjects: state.byId[action.gradeId].subjects.concat([action.subjectId]),
+          [action.payload.gradeId]: {
+            ...state.byId[action.payload.gradeId],
+            subjects: concatIdIfNotContain(
+              state.byId[action.payload.gradeId].subjects,
+              action.payload.subjectId,
+            ),
           },
         },
         allIds: state.allIds,

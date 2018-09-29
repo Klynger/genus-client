@@ -13,7 +13,7 @@ import {
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import * as Yup from 'yup';
-import { addSubjectToGrade } from '../../../actions/grade';
+import { saveSubject } from '../../../actions/subject';
 
 const StyledForm = styled(Form)`
   display: flex;
@@ -158,7 +158,7 @@ SubjectForm.propTypes = {
 
 function mapDispatchToProps(dispatch) {
   return {
-    saveSubject: subjectInput => dispatch(addSubjectToGrade(subjectInput)),
+    saveNewSubject: subjectInput => dispatch(saveSubject(subjectInput)),
   };
 }
 
@@ -176,7 +176,7 @@ export default connect(null, mapDispatchToProps)(
     }),
     handleSubmit(values, { setSubmitting, props }) {
       setSubmitting(true);
-      props.saveSubject(values)
+      props.saveNewSubject(values)
         .then(() => {
           props.onClose();
           setSubmitting(false);
