@@ -13,9 +13,7 @@ import {
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import * as Yup from 'yup';
-import { requestGraphql } from '../../utils/HTTPClient';
-import { mutationCreateGrade } from '../../../queryGenerators/GradeMutations';
-import { SAVE_INSTITUTION } from '../../../actions/actionTypes';
+import { createGrade } from '../../../actions/grade';
 
 const StyledForm = styled(Form)`
   display: flex;
@@ -42,9 +40,9 @@ const GradeForm = ({ classes, errors, fullScreen, handleChange, handleReset, han
       onClose={onClose}
       onBackdropClick={handleReset}
     >
-    <DialogTitle className={classes.header}>
-      Série
-    </DialogTitle>
+      <DialogTitle className={classes.header}>
+        Série
+      </DialogTitle>
       <DialogContent className={classes.dialogContent}>
         <StyledForm>
           <FormControl
@@ -114,10 +112,7 @@ function mapStateToProps({ institution }) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    saveInstituion: (institution) => dispatch({
-      type: SAVE_INSTITUTION,
-      institution,
-    }),
+    saveGrade: newGrade => dispatch(createGrade(newGrade)),
   };
 }
 
@@ -133,28 +128,19 @@ export default connect(mapStateToProps, mapDispatchToProps)(
     }),
     handleSubmit(values, { setSubmitting, props }) {
       // TODO
-      setSubmitting(true);
-      let input = {
+      const input = {
         institutionId: props.institution.id,
         name: values.name,
       };
-      requestGraphql(mutationCreateGrade(input),
-        localStorage.getItem('token'))
-        .then(({ data }) => {
-          setSubmitting(false);
+
+      props.saveGrade(input)
+        .then(() => {
           props.onClose();
-          if (data.data && data.data.createGrade) {
-            input = {
-              ...input,
-              id: data.data.createGrade.id,
-            };
-            const { institution } = props;
-            const newInstitution = {
-              ...institution,
-              grades: institution.grades ? institution.grades.concat([input]) : [input],
-            };
-            props.saveInstituion(newInstitution);
-          }
+          setSubmitting(false);
+        })
+        .catch(() => {
+          // TODO
+          setSubmitting(false);
         });
     },
     enableReinitialize: true,

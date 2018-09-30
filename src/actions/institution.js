@@ -1,4 +1,7 @@
-import { SAVE_INSTITUTION, SELECT_INSTITUTION } from './actionTypes';
+import {
+  SAVE_INSTITUTION, SELECT_INSTITUTION,
+  SAVE_GRADE, SAVE_SUBJECT,
+} from './actionTypes';
 import { NO_INSTUTION_SELECTED } from '../reducers/institution';
 import { requestGraphql } from '../components/utils/HTTPClient';
 import { mutationCreateInstitution } from '../queryGenerators/institutionMutations';
@@ -45,9 +48,31 @@ export const fetchInstitutionsByOwner = () => (dispatch, getState) => {
         let result;
         if (res.data.data && res.data.data.getInstitutionsFromLoggedUser) {
           res.data.data.getInstitutionsFromLoggedUser.forEach(institution => {
+            const subjects = institution.grades.reduce((subs, gradeR) =>
+              subs.concat(gradeR.subjects), []);
+            const grades = institution.grades.map(gradeG => ({
+              ...gradeG,
+              subjects: gradeG.subjects.map(sub => sub.id),
+            }));
+            const newInstitution = {
+              ...institution,
+              grades: institution.grades.map(grade => grade.id),
+            };
             dispatch({
               type: SAVE_INSTITUTION,
-              institution,
+              institution: newInstitution,
+            });
+            grades.forEach(grade => {
+              dispatch({
+                type: SAVE_GRADE,
+                grade,
+              });
+            });
+            subjects.forEach(subject => {
+              dispatch({
+                type: SAVE_SUBJECT,
+                subject,
+              });
             });
           });
 
@@ -59,6 +84,7 @@ export const fetchInstitutionsByOwner = () => (dispatch, getState) => {
               id: state.institution.allIds[0],
             });
           }
+
           result = res;
         } else {
           result = Promise.reject(new Error('400'));

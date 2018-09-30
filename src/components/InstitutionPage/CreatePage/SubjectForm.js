@@ -13,8 +13,7 @@ import {
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import * as Yup from 'yup';
-import { requestGraphql } from '../../utils/HTTPClient';
-import { mutationCreateSubject } from '../../../queryGenerators/SubjectMutations';
+import { saveSubject } from '../../../actions/subject';
 
 const StyledForm = styled(Form)`
   display: flex;
@@ -157,7 +156,13 @@ SubjectForm.propTypes = {
   }).isRequired,
 };
 
-export default connect()(
+function mapDispatchToProps(dispatch) {
+  return {
+    saveNewSubject: subjectInput => dispatch(saveSubject(subjectInput)),
+  };
+}
+
+export default connect(null, mapDispatchToProps)(
   withStyles(styles)(withMobileDialog()(withRouter(withFormik({
     mapPropsToValues({ name, gradeId }) {
       return {
@@ -171,8 +176,7 @@ export default connect()(
     }),
     handleSubmit(values, { setSubmitting, props }) {
       setSubmitting(true);
-      requestGraphql(mutationCreateSubject(values),
-        localStorage.getItem('token'))
+      props.saveNewSubject(values)
         .then(() => {
           props.onClose();
           setSubmitting(false);
