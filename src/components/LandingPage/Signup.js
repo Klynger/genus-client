@@ -10,7 +10,8 @@ import {
 } from '@material-ui/core';
 import { FadeInButton } from '../utils/SharedComponents';
 import { requestGraphql } from '../utils/HTTPClient';
-import loginQuery from '../../queryGenerators/user';
+import { mutationCreateUser } from '../../queryGenerators/userMutations';
+import { loginQuery } from '../../queryGenerators/userQueries';
 import { withRouter } from 'react-router-dom';
 
 const DEFAULT_ANIMATION_TIMING = 700;
@@ -222,21 +223,6 @@ Signup.propTypes = {
   }).isRequired,
 };
 
-const mutationCreateUser = userBean => ({
-  query: `
-    mutation createNewUser($userBean: CreateUserInput!) {
-      createUser(input: $userBean) {
-        id
-        username
-        email
-      }
-    }
-  `,
-  variables: {
-    userBean,
-  },
-});
-
 export default withRouter(withFormik({
   mapPropsToValues({ username, email }) {
     return {
@@ -248,7 +234,7 @@ export default withRouter(withFormik({
   validationSchema: Yup.object().shape({
     email: Yup.string().trim().email('Você deve passar um email válido.')
       .required('Email obrigatório.'),
-    password: Yup.string().min(6, 'A senha deve ter pelo menos 6 caracteres.')
+    password: Yup.string().min(5, 'A senha deve ter pelo menos 6 caracteres.')
       .max(30, 'Senha não pode ter mais que 30 caracteres.')
       .required('Senha obrigatória.'),
     username: Yup.string().trim()
@@ -271,7 +257,13 @@ export default withRouter(withFormik({
             if (res.data.data) {
               localStorage.setItem('token', res.data.data.login);
               props.history.push('/');
+            } else if (data.errors) {
+              setErrors({ requestError: '400' }); // handle this error on inside form
             }
+          })
+          .catch(({ request }) => {
+            setErrors({ requestError: request.status });
+            setSubmitting(false);
           });
           resetForm({
             email: '',
