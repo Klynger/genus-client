@@ -1,34 +1,28 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import { Form, withFormik } from 'formik';
 import { connect } from 'react-redux';
-import {
-  Button,
-  Dialog, DialogTitle,
-  DialogContent, DialogActions,
-  FormControl, FormHelperText,
-  Input, InputLabel,
-  withStyles, withMobileDialog, Select, MenuItem,
-} from '@material-ui/core';
-import { withRouter } from 'react-router-dom';
-import styled from 'styled-components';
+import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { saveSubject } from '../../../actions/subject';
-
-const StyledForm = styled(Form)`
-  display: flex;
-  flex-direction: column;
-`;
+import {
+  Button, Dialog, DialogTitle,
+  DialogContent, DialogActions, FormControl,
+  FormHelperText, Input, InputLabel,
+  withStyles, withMobileDialog, Select,
+  MenuItem, withWidth,
+} from '@material-ui/core';
+import { capitalize } from '@material-ui/core/utils/helpers';
+import { defaultDialogBreakpoints } from '../utils/helpers';
+import { saveSubject } from '../../actions/subject';
 
 const styles = theme => ({
-  dialogContent: {
-    minWidth: '25vw',
-  },
+  ...defaultDialogBreakpoints(),
   formControl: {
     marginBottom: theme.spacing.unit,
   },
-  header: {
-    backgroundColor: theme.palette.secondary.main,
+  subjectForm: {
+    display: 'flex',
+    flexDirection: 'column',
   },
 });
 
@@ -48,8 +42,13 @@ class SubjectForm extends Component {
   }
 
   render() {
-    const { classes, errors, fullScreen, handleChange, handleReset, handleSubmit,
-      grades, isSubmitting, values, open, onClose, touched } = this.props;
+    const {
+      handleSubmit, grades, isSubmitting,
+      classes, errors, fullScreen,
+      handleChange, handleReset,
+      values, open, onClose,
+      touched, width,
+    } = this.props;
 
     const { openSelect } = this.state;
 
@@ -61,12 +60,15 @@ class SubjectForm extends Component {
         open={open}
         onClose={onClose}
         onBackdropClick={handleReset}
+        classes={{
+          paper: classes[`dialogRoot${capitalize(width)}`],
+        }}
       >
-        <DialogTitle className={classes.header}>
+        <DialogTitle>
           Disciplina
         </DialogTitle>
-        <DialogContent className={classes.dialogContent}>
-          <StyledForm>
+        <DialogContent>
+          <Form className={classes.subjectForm}>
             <FormControl
               className={classes.formControl}
               error={touched.name && errors.name !== undefined}
@@ -80,7 +82,7 @@ class SubjectForm extends Component {
               {touched.name && errors.name &&
                 <FormHelperText id="subject__name-error-text">{errors.name}</FormHelperText>}
             </FormControl>
-          </StyledForm>
+          </Form>
           <Select
             name="gradeId"
             open={openSelect}
@@ -154,7 +156,21 @@ SubjectForm.propTypes = {
   values: PropTypes.shape({
     name: PropTypes.string,
   }).isRequired,
+  width: PropTypes.string.isRequired,
 };
+
+function mapStateToProps({ grade, institution }) {
+  const { selectedInstituion } = institution;
+
+  if (institution.byId[selectedInstituion]) {
+    return {
+      grades: institution.byId[selectedInstituion].grades
+        .map(gradeId => grade.byId[gradeId]),
+    };
+  }
+  return {};
+}
+
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -162,8 +178,11 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(null, mapDispatchToProps)(
-  withStyles(styles)(withMobileDialog()(withRouter(withFormik({
+
+export default connect(mapStateToProps, mapDispatchToProps)(
+  withStyles(styles)(withWidth()(withMobileDialog({
+    breakpoint: 'xs',
+  })(withRouter(withFormik({
     mapPropsToValues({ name, gradeId }) {
       return {
         name: name || '',
@@ -184,4 +203,4 @@ export default connect(null, mapDispatchToProps)(
         .catch(setSubmitting(false));
     },
     enableReinitialize: true,
-  })(SubjectForm)))));
+  })(SubjectForm))))));

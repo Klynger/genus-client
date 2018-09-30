@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, withWidth, Typography } from '@material-ui/core';
+import {
+  Button, withWidth, Typography,
+  Grow,
+} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
 
@@ -22,12 +25,6 @@ export const FadeInButton = styled(Button)`
   }
 `;
 
-export const ActionsContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-`;
-
 FadeInButton.defaultProps = {
   delay: 700,
 };
@@ -36,7 +33,32 @@ FadeInButton.propTypes = {
   delay: PropTypes.number,
 };
 
-const titleVariant = {
+export const ActionsContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+`;
+
+export const DefaultDialogTransition = props => (
+  <Grow in {...props} />
+);
+
+// -------------------------------------------------------
+const styles = theme => ({
+  title: {
+    margin: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
+  },
+});
+
+const subTitleVariants = {
+  xs: 'headline',
+  sm: 'display1',
+  md: 'display1',
+  lg: 'display2',
+  xl: 'display2',
+};
+
+const titleVariants = {
   xs: 'display1',
   sm: 'display2',
   md: 'display2',
@@ -44,25 +66,27 @@ const titleVariant = {
   xl: 'display3',
 };
 
-const styles = theme => ({
-  title: {
-    marginLeft: theme.spacing.unit * 2,
-    marginRight: theme.spacing.unit * 2,
-  },
-});
-
-export const ResponsiveTitle = withWidth()(withStyles(styles)(
+export const Title = (variants, component) => (withWidth()(withStyles(styles)(
   ({ children, classes, width }) => (
   <Typography
     className={classes.title}
-    variant={titleVariant[width]}
+    variant={variants[width]}
+    component={component}
   >
     {children}
   </Typography>
-)));
-
-ResponsiveTitle.propTypes = {
+))));
+Title.propTypes = {
   children: PropTypes.string.isRequired,
   classes: PropTypes.object,
+  component: PropTypes.string,
   width: PropTypes.string,
 };
+
+Title.defaultProps = {
+  component: 'h1',
+};
+
+export const ResponsiveTitle = Title(titleVariants);
+export const ResponsiveSubTitle = Title(subTitleVariants, 'h2');
+// ----------------------------------------------------------

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import GradeForm from '../CreatePage/GradeForm';
-import SubjectForm from '../CreatePage/SubjectForm';
+import SubjectForm from '../SubjectForm';
 import { Fade, Paper, Typography, withStyles, Button } from '@material-ui/core';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
@@ -76,16 +75,10 @@ class DetailsPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      gradeOpen: false,
       subjectOpen: false,
     };
 
-    this.handleGradeOpen = this.handleGradeOpen.bind(this);
     this.handleSubjectOpen = this.handleSubjectOpen.bind(this);
-  }
-
-  handleGradeOpen() {
-    this.setState(prevState => ({ gradeOpen: !prevState.gradeOpen }));
   }
 
   handleSubjectOpen() {
@@ -93,8 +86,8 @@ class DetailsPage extends Component {
   }
 
   render() {
-    const { classes, grades, institution } = this.props;
-    const { gradeOpen, subjectOpen } = this.state;
+    const { classes, institution } = this.props;
+    const { subjectOpen } = this.state;
     let toRender;
 
     if (institution) {
@@ -103,9 +96,7 @@ class DetailsPage extends Component {
           <SubjectForm
             open={subjectOpen}
             onClose={this.handleSubjectOpen}
-            grades={grades}
           />
-          <GradeForm open={gradeOpen} onClose={this.handleGradeOpen} />
           <Paper className={classes.detailsPagePaper}>
             <div className={classes.detailsPageContentContainer}>
               <img
@@ -144,18 +135,9 @@ class DetailsPage extends Component {
             <Button
               className={classes.button}
               color="primary"
-              onClick={this.handleGradeOpen}
-              variant="contained"
-              size="small"
-            >
-              Criar Série
-            </Button>
-            <Button
-              className={classes.button}
-              color="primary"
               onClick={this.handleSubjectOpen}
               variant="contained"
-              disabled={!grades || grades.length === 0}
+              disabled={institution.grades.length === 0}
               size="small"
             >
               Criar Disciplina
@@ -178,27 +160,21 @@ class DetailsPage extends Component {
 
 DetailsPage.propTypes = {
   classes: PropTypes.object.isRequired,
-  grades: PropTypes.array.isRequired,
   institution: PropTypes.shape({
     address: PropTypes.string,
     email: PropTypes.string,
     name: PropTypes.string,
-  }).isRequired,
+  }),
 };
 
-function mapStateToProps({ grade, institution, subject }) {
-  return {
-    institution: {
-      ...institution.byId[institution.selectedInstitution],
-    },
-    grades: institution.byId[institution.selectedInstitution].grades.map(id => {
-      const completeGrade = {
-        ...grade.byId[id],
-        subjects: grade.byId[id].subjects.map(subjectId => subject.byId[subjectId]),
-      };
-      return completeGrade;
-    }),
-  };
+function mapStateToProps({ institution }) {
+  const { selectedInstitution } = institution;
+  if (institution.byId[selectedInstitution]) {
+    return {
+      institution: institution.byId[selectedInstitution],
+    };
+  }
+  return {};
 }
 
 export default connect(mapStateToProps)(

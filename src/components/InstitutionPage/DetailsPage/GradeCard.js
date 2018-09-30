@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   Card, CardActionArea, CardContent,
-  CardMedia, Typography,
+  CardMedia, Typography, Fade,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
@@ -42,7 +42,7 @@ const styles = () => ({
 
 const GradeCard = ({ classes, grade }) => {
   return (
-    <div className={classes.gradeCardWrapper}>
+    <Fade in>
       <StyledCard className={classes.gradeCardRoot}>
         <CardActionArea className={classes.gradeCardActionArea}>
           <StyledCardMedia
@@ -62,7 +62,7 @@ const GradeCard = ({ classes, grade }) => {
           </CardContent>
         </CardActionArea>
       </StyledCard>
-    </div>
+    </Fade>
   );
 };
 

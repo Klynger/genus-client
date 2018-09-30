@@ -1,14 +1,23 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import CreateGradeButton from './CreateGradeButton';
 import GradeCard from './GradeCard';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
+import GradeForm from '../GradeForm';
+import { ResponsiveSubTitle } from '../../utils/SharedComponents';
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
 
 const GridContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   grid-auto-rows: 1fr;
   grid-gap: 6px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
 
   &:before {
     content: '';
@@ -24,15 +33,38 @@ const GridContainer = styled.div`
   }
 `;
 
-const GradesGrid = ({ gradeIds }) => {
-  return (
-    <GridContainer>
-      {gradeIds.map(id => (
-        <GradeCard key={id} gradeId={id} />
-      ))}
-    </GridContainer>
-  );
-};
+class GradesGrid extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      gradeOpen: false,
+    };
+
+    this.handleGradeOpen = this.handleGradeOpen.bind(this);
+  }
+
+  handleGradeOpen() {
+    this.setState(prevState => ({ gradeOpen: !prevState.gradeOpen }));
+  }
+
+  render() {
+    const { gradeIds } = this.props;
+    const { gradeOpen } = this.state;
+    return (
+      <Wrapper>
+        <ResponsiveSubTitle>Séries</ResponsiveSubTitle>
+        <GridContainer>
+          <GradeForm open={gradeOpen} onClose={this.handleGradeOpen} />
+          {gradeIds.map(id => (
+            <GradeCard key={id} gradeId={id} />
+          ))}
+          <CreateGradeButton onClick={this.handleGradeOpen} key="-1" />
+        </GridContainer>
+      </Wrapper>
+    );
+  }
+}
 
 GradesGrid.propTypes = {
   gradeIds: PropTypes.arrayOf(PropTypes.string),
