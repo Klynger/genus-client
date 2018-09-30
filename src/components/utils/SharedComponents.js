@@ -22,6 +22,12 @@ export const FadeInButton = styled(Button)`
   }
 `;
 
+export const ActionsContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+`;
+
 FadeInButton.defaultProps = {
   delay: 700,
 };
