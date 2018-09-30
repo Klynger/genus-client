@@ -1,50 +1,52 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import { Form, withFormik } from 'formik';
 import { connect } from 'react-redux';
-import {
-  Button,
-  Dialog, DialogTitle,
-  DialogContent, DialogActions,
-  FormControl, FormHelperText,
-  Input, InputLabel,
-  withStyles, withMobileDialog,
-} from '@material-ui/core';
-import { withRouter } from 'react-router-dom';
-import styled from 'styled-components';
 import * as Yup from 'yup';
-import { createGrade } from '../../../actions/grade';
-
-const StyledForm = styled(Form)`
-  display: flex;
-  flex-direction: column;
-`;
+import {
+  Button, Dialog, DialogTitle,
+  DialogContent, DialogActions, FormControl,
+  FormHelperText, Input, InputLabel,
+  withStyles, withMobileDialog, withWidth,
+} from '@material-ui/core';
+import { DefaultDialogTransition } from '../utils/SharedComponents';
+import { capitalize } from '@material-ui/core/utils/helpers';
+import { defaultDialogBreakpoints } from '../utils/helpers';
+import { createGrade } from '../../actions/grade';
 
 const styles = theme => ({
-  dialogContent: {
-    minWidth: '25vw',
-  },
+  ...defaultDialogBreakpoints(),
   formControl: {
     marginBottom: theme.spacing.unit,
   },
-  header: {
-    backgroundColor: theme.palette.secondary.main,
+  gradeForm: {
+    display: 'flex',
+    flexDirection: 'column',
   },
 });
 
-const GradeForm = ({ classes, errors, fullScreen, handleChange, handleReset, handleSubmit,
-  isSubmitting, values, open, onClose, touched }) => (
+const GradeForm = ({
+  classes, errors, fullScreen,
+  handleChange, handleReset, handleSubmit,
+  isSubmitting, values, open,
+  onClose, touched, width,
+}) => (
     <Dialog
       fullScreen={fullScreen}
       open={open}
       onClose={onClose}
+      TransitionComponent={DefaultDialogTransition}
       onBackdropClick={handleReset}
+      classes={{
+        paper: classes[`dialogRoot${capitalize(width)}`],
+      }}
     >
-      <DialogTitle className={classes.header}>
+      <DialogTitle>
         Série
       </DialogTitle>
-      <DialogContent className={classes.dialogContent}>
-        <StyledForm>
+      <DialogContent>
+        <Form className={classes.gradeForm}>
           <FormControl
             className={classes.formControl}
             error={touched.name && errors.name !== undefined}
@@ -58,7 +60,7 @@ const GradeForm = ({ classes, errors, fullScreen, handleChange, handleReset, han
             {touched.name && errors.name &&
               <FormHelperText id="grade__name-error-text">{errors.name}</FormHelperText>}
           </FormControl>
-        </StyledForm>
+        </Form>
         <DialogActions>
           <Button
             color="primary"
@@ -101,6 +103,7 @@ GradeForm.propTypes = {
   values: PropTypes.shape({
     name: PropTypes.string,
   }),
+  width: PropTypes.string.isRequired,
 };
 
 function mapStateToProps({ institution }) {
@@ -117,7 +120,9 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  withStyles(styles)(withMobileDialog()(withRouter(withFormik({
+  withStyles(styles)(withWidth()(withMobileDialog({
+    breakpoint: 'xs',
+  })(withRouter(withFormik({
     mapPropsToValues({ name }) {
       return {
         name: name || '',
@@ -144,4 +149,4 @@ export default connect(mapStateToProps, mapDispatchToProps)(
         });
     },
     enableReinitialize: true,
-  })(GradeForm)))));
+  })(GradeForm))))));
