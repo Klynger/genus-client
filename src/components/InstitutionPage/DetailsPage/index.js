@@ -201,8 +201,10 @@ function mapStateToProps({ grade, institution, subject }) {
       ...institution.byId[institution.selectedInstitution],
     },
     grades: institution.byId[institution.selectedInstitution].grades.map(id => {
-      const completeGrade = grade.byId[id];
-      completeGrade.subjects = completeGrade.subjects.map(subjectId => subject.byId[subjectId]);
+      const completeGrade = {
+        ...grade.byId[id],
+        subjects: grade.byId[id].subjects.map(subjectId => subject.byId[subjectId]),
+      };
       return completeGrade;
     }),
   };
