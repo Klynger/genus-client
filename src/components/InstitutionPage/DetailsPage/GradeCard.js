@@ -54,7 +54,7 @@ const GradeCard = ({ classes, grade }) => {
               {grade.name}
             </UnderlinedTypo>
             <UnderlinedTypo component="p">
-              Disciplinas cadastradas: 7
+              Disciplinas cadastradas: {grade.subjects.length}
             </UnderlinedTypo>
             <UnderlinedTypo component="p">
               Quantidade de alunos: 35

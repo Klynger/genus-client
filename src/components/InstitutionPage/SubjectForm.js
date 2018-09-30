@@ -160,11 +160,11 @@ SubjectForm.propTypes = {
 };
 
 function mapStateToProps({ grade, institution }) {
-  const { selectedInstituion } = institution;
+  const { selectedInstitution } = institution;
 
-  if (institution.byId[selectedInstituion]) {
+  if (institution.byId[selectedInstitution]) {
     return {
-      grades: institution.byId[selectedInstituion].grades
+      grades: institution.byId[selectedInstitution].grades
         .map(gradeId => grade.byId[gradeId]),
     };
   }
