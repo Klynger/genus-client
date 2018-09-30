@@ -260,6 +260,7 @@ export default withRouter(withFormik({
               props.history.push('/');
             } else if (data.errors) {
               setErrors({ requestError: '400' }); // handle this error on inside form
+              setSubmitting(false);
             }
           })
           .catch(({ request }) => {
@@ -274,6 +275,7 @@ export default withRouter(withFormik({
         } else if (data.errors) {
           // TODO in this case the errors must be handle inside the form
           setErrors({ requestError: '400' });
+          setSubmitting(false);
         }
       })
       .catch(({ request }) => {
