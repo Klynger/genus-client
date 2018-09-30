@@ -1,27 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import GradeForm from '../CreatePage/GradeForm';
-import SubjectForm from '../CreatePage/SubjectForm';
+import SubjectForm from '../SubjectForm';
 import { Fade, Paper, Typography, withStyles, Button } from '@material-ui/core';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { ActionsContainer } from '../../utils/SharedComponents';
+import GradesGrid from './GradesGrid';
 
 const photoDimension = '140px';
-
-const Wrapper = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  width: 75%
-  flex-wrap: wrap;
-`;
-
-const ContentContainer = styled.div`
-  bakcground-color: inherit;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  margin: 7px;
-`;
 
 const InstitutionInfos = styled.div`
   display: flex;
@@ -30,12 +16,7 @@ const InstitutionInfos = styled.div`
   flex-wrap: wrap;
 `;
 
-
 const contentContainerBreakpoints = theme => ({
-  [theme.breakpoints.down('sm')]: {
-    marginLeft: 'auto',
-    marginRight: 'auto',
-  },
   [theme.breakpoints.up('sm')]: {
     marginLeft: theme.spacing.unit * 3,
   },
@@ -44,7 +25,7 @@ const contentContainerBreakpoints = theme => ({
 const styles = theme => ({
   button: {
     marginBottom: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
+    marginLeft: theme.spacing.unit,
     marginTop: theme.spacing.unit,
   },
   institutionInfos: {
@@ -59,9 +40,34 @@ const styles = theme => ({
     width: photoDimension,
     ...contentContainerBreakpoints(theme),
   },
-  root: {
+  detailsPageContentContainer: {
+    display: 'flex',
+    margin: theme.spacing.unit,
+    [theme.breakpoints.down('xs')]: {
+      alignItems: 'center',
+      flexDirection: 'column',
+    },
+  },
+  detailsPagePaper: {
+    borderRadius: 0,
     marginTop: theme.spacing.unit * 3,
     width: '100%',
+  },
+  detailsPageRoot: {
+    display: 'flex',
+    flexDirection: 'column',
+    [theme.breakpoints.down('xs')]: {
+      width: '95%',
+    },
+    [theme.breakpoints.up('sm')]: {
+      width: '85%',
+    },
+    [theme.breakpoints.up('lg')]: {
+      width: '70%',
+    },
+    [theme.breakpoints.up('xl')]: {
+      width: '60%',
+    },
   },
 });
 
@@ -69,16 +75,10 @@ class DetailsPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      gradeOpen: false,
       subjectOpen: false,
     };
 
-    this.handleGradeOpen = this.handleGradeOpen.bind(this);
     this.handleSubjectOpen = this.handleSubjectOpen.bind(this);
-  }
-
-  handleGradeOpen() {
-    this.setState(prevState => ({ gradeOpen: !prevState.gradeOpen }));
   }
 
   handleSubjectOpen() {
@@ -87,20 +87,18 @@ class DetailsPage extends Component {
 
   render() {
     const { classes, institution } = this.props;
-    const { gradeOpen, subjectOpen } = this.state;
+    const { subjectOpen } = this.state;
     let toRender;
 
     if (institution) {
       toRender = (
-        <Wrapper>
+        <div className={classes.detailsPageRoot}>
           <SubjectForm
             open={subjectOpen}
             onClose={this.handleSubjectOpen}
-            grades={institution.grades}
           />
-          <GradeForm open={gradeOpen} onClose={this.handleGradeOpen} />
-          <Paper className={classes.root}>
-            <ContentContainer>
+          <Paper className={classes.detailsPagePaper}>
+            <div className={classes.detailsPageContentContainer}>
               <img
                 alt="Institution"
                 className={classes.photo}
@@ -131,47 +129,22 @@ class DetailsPage extends Component {
                   Endereço: {institution.address}
                 </Typography>
               </InstitutionInfos>
-              <InstitutionInfos className={classes.institutionInfos}>
-                Séries:
-                {institution.grades && institution.grades[0] &&
-                    institution.grades.map(grade => (
-                      <div
-                        key={grade.id}
-                      >
-                        <Typography gutterBottom variant="subheading" key={grade.id}>
-                          {grade.name}
-                        </Typography>
-                        {grade.subjects && grade.subjects[0] &&
-                          grade.subjects.map(sub => (
-                            <Typography gutterBottom variant="subheading" key={sub.id}>
-                              {sub.name}
-                            </Typography>
-                          ))}
-                      </div>
-                    ))}
-              </InstitutionInfos>
-            </ContentContainer>
+            </div>
           </Paper>
-          <Button
-            className={classes.button}
-            color="primary"
-            onClick={this.handleGradeOpen}
-            variant="contained"
-            size="small"
-          >
-            Criar Série
-          </Button>
-          <Button
-            className={classes.button}
-            color="primary"
-            onClick={this.handleSubjectOpen}
-            variant="contained"
-            disabled={!institution.grades || institution.grades.length === 0}
-            size="small"
-          >
-            Criar Disciplina
-          </Button>
-        </Wrapper>
+          <ActionsContainer>
+            <Button
+              className={classes.button}
+              color="primary"
+              onClick={this.handleSubjectOpen}
+              variant="contained"
+              disabled={institution.grades.length === 0}
+              size="small"
+            >
+              Criar Disciplina
+            </Button>
+          </ActionsContainer>
+          <GradesGrid />
+        </div>
       );
     } else {
       toRender = <p>Não há nenhuma instituição selecionada</p>;
@@ -186,19 +159,22 @@ class DetailsPage extends Component {
 }
 
 DetailsPage.propTypes = {
-  classes: PropTypes.object,
+  classes: PropTypes.object.isRequired,
   institution: PropTypes.shape({
     address: PropTypes.string,
     email: PropTypes.string,
     name: PropTypes.string,
-    username: PropTypes.string,
   }),
 };
 
 function mapStateToProps({ institution }) {
-  return {
-    institution: institution.byId[institution.selectedInstitution],
-  };
+  const { selectedInstitution } = institution;
+  if (institution.byId[selectedInstitution]) {
+    return {
+      institution: institution.byId[selectedInstitution],
+    };
+  }
+  return {};
 }
 
 export default connect(mapStateToProps)(

@@ -7,6 +7,14 @@ export const mutationCreateInstitution = input => ({
         email
         address
         phone
+        grades {
+          id
+          name
+          subjects {
+            id
+            name
+          }
+        }
       }
     }
   `,

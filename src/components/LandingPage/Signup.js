@@ -10,6 +10,9 @@ import {
 } from '@material-ui/core';
 import { FadeInButton } from '../utils/SharedComponents';
 import { requestGraphql } from '../utils/HTTPClient';
+import { mutationCreateUser } from '../../queryGenerators/userMutations';
+import { loginQuery } from '../../queryGenerators/userQueries';
+import { withRouter } from 'react-router-dom';
 
 const DEFAULT_ANIMATION_TIMING = 700;
 
@@ -17,6 +20,7 @@ const SignupContainer = styled(Paper)`
   animation: translatedFadein ${DEFAULT_ANIMATION_TIMING}ms 1;
   border-radius: 5px;
   padding: 12px;
+  z-index: 10;
 
   @keyframes translatedFadein {
     0% {
@@ -220,22 +224,7 @@ Signup.propTypes = {
   }).isRequired,
 };
 
-const mutationCreateUser = userBean => ({
-  query: `
-    mutation createNewUser($userBean: CreateUserInput!) {
-      createUser(input: $userBean) {
-        id
-        username
-        email
-      }
-    }
-  `,
-  variables: {
-    userBean,
-  },
-});
-
-export default withFormik({
+export default withRouter(withFormik({
   mapPropsToValues({ username, email }) {
     return {
       username: username || '',
@@ -260,6 +249,24 @@ export default withFormik({
       .then(({ data }) => {
         if (data.data.createUser) {
           props.handleSnackbarOpen();
+          const loginUser = {
+            email: values.email,
+            password: values.password,
+          };
+          requestGraphql(loginQuery(loginUser))
+          .then(res => {
+            if (res.data.data) {
+              localStorage.setItem('token', res.data.data.login);
+              props.history.push('/');
+            } else if (data.errors) {
+              setErrors({ requestError: '400' }); // handle this error on inside form
+              setSubmitting(false);
+            }
+          })
+          .catch(({ request }) => {
+            setErrors({ requestError: request.status });
+            setSubmitting(false);
+          });
           resetForm({
             email: '',
             username: '',
@@ -268,12 +275,12 @@ export default withFormik({
         } else if (data.errors) {
           // TODO in this case the errors must be handle inside the form
           setErrors({ requestError: '400' });
+          setSubmitting(false);
         }
-        setSubmitting(false);
       })
       .catch(({ request }) => {
         setErrors({ requestError: request.status });
         setSubmitting(false);
       });
   },
-})(withStyles(styles)(Signup));
+})(withStyles(styles)(Signup)));

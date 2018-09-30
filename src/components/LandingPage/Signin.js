@@ -9,7 +9,7 @@ import {
 import { capitalize } from '@material-ui/core/utils/helpers';
 import { Form, withFormik } from 'formik';
 import { requestGraphql } from '../utils/HTTPClient';
-import loginQuery from '../../queryGenerators/user';
+import { loginQuery } from '../../queryGenerators/userQueries';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
