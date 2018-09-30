@@ -10,6 +10,9 @@ import {
 } from '@material-ui/core';
 import { FadeInButton } from '../utils/SharedComponents';
 import { requestGraphql } from '../utils/HTTPClient';
+import { mutationCreateUser } from '../../queryGenerators/userMutations';
+import { loginQuery } from '../../queryGenerators/userQueries';
+import { withRouter } from 'react-router-dom';
 
 const DEFAULT_ANIMATION_TIMING = 700;
 
@@ -221,22 +224,7 @@ Signup.propTypes = {
   }).isRequired,
 };
 
-const mutationCreateUser = userBean => ({
-  query: `
-    mutation createNewUser($userBean: CreateUserInput!) {
-      createUser(input: $userBean) {
-        id
-        username
-        email
-      }
-    }
-  `,
-  variables: {
-    userBean,
-  },
-});
-
-export default withFormik({
+export default withRouter(withFormik({
   mapPropsToValues({ username, email }) {
     return {
       username: username || '',
@@ -261,6 +249,23 @@ export default withFormik({
       .then(({ data }) => {
         if (data.data.createUser) {
           props.handleSnackbarOpen();
+          const loginUser = {
+            email: values.email,
+            password: values.password,
+          };
+          requestGraphql(loginQuery(loginUser))
+          .then(res => {
+            if (res.data.data) {
+              localStorage.setItem('token', res.data.data.login);
+              props.history.push('/');
+            } else if (data.errors) {
+              setErrors({ requestError: '400' }); // handle this error on inside form
+            }
+          })
+          .catch(({ request }) => {
+            setErrors({ requestError: request.status });
+            setSubmitting(false);
+          });
           resetForm({
             email: '',
             username: '',
@@ -270,11 +275,10 @@ export default withFormik({
           // TODO in this case the errors must be handle inside the form
           setErrors({ requestError: '400' });
         }
-        setSubmitting(false);
       })
       .catch(({ request }) => {
         setErrors({ requestError: request.status });
         setSubmitting(false);
       });
   },
-})(withStyles(styles)(Signup));
+})(withStyles(styles)(Signup)));
