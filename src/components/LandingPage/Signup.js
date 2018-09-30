@@ -234,7 +234,7 @@ export default withRouter(withFormik({
   validationSchema: Yup.object().shape({
     email: Yup.string().trim().email('Você deve passar um email válido.')
       .required('Email obrigatório.'),
-    password: Yup.string().min(5, 'A senha deve ter pelo menos 6 caracteres.')
+    password: Yup.string().min(6, 'A senha deve ter pelo menos 6 caracteres.')
       .max(30, 'Senha não pode ter mais que 30 caracteres.')
       .required('Senha obrigatória.'),
     username: Yup.string().trim()
@@ -274,7 +274,6 @@ export default withRouter(withFormik({
           // TODO in this case the errors must be handle inside the form
           setErrors({ requestError: '400' });
         }
-        setSubmitting(false);
       })
       .catch(({ request }) => {
         setErrors({ requestError: request.status });
