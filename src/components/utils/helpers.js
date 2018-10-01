@@ -3,7 +3,7 @@ export const defaultDialogBreakpoints = () => ({
     minWidth: '30vw',
   },
   dialogRootXs: {
-    width: '100%',
+    width: '95%',
   },
   dialogRootSm: {
     width: '70%',

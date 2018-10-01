@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import {
   AppBar, Toolbar, IconButton,
   Typography, MenuItem, Menu,
   Button, Select,
 } from '@material-ui/core';
+import { selectInstitution } from '../../actions/institution';
+import AccountCircle from '@material-ui/icons/AccountCircle';
 import { withStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import { selectInstitution } from '../../actions/institution';
 import { clearStore } from '../../actions';
+import AssociateDialog from '../InstitutionPage/EntryCode/AssociateDialog';
 
 const styles = theme => ({
   appTitle: {
@@ -37,11 +38,11 @@ const styles = theme => ({
       maxWidth: 110,
     },
   },
-  selectUnderline: {
-    borderBottomColor: 'red',
-  },
   selectIcon: {
     color: theme.palette.common.white,
+  },
+  userMenu: {
+    minWidth: 200,
   },
 });
 
@@ -50,6 +51,7 @@ class ApplicationBar extends Component {
     super(props);
     this.state = {
       anchorEl: null,
+      associateDialogOpen: false,
       institutionSelectOpen: false,
     };
 
@@ -57,6 +59,7 @@ class ApplicationBar extends Component {
     this.handleMenu = this.handleMenu.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
+    this.handleAssociateOpenToggle = this.handleAssociateOpenToggle.bind(this);
     this.handleInstitutionSelectToggle = this.handleInstitutionSelectToggle.bind(this);
     this.handleSelectInstitutionChange = this.handleSelectInstitutionChange.bind(this);
   }
@@ -84,11 +87,17 @@ class ApplicationBar extends Component {
   }
 
   handleInstitutionSelectToggle() {
-    this.setState(prevState => ({ institutionSelectOpen: !prevState.institutionSelectOpen }));
+    this.setState(({ institutionSelectOpen }) =>
+      ({ institutionSelectOpen: !institutionSelectOpen }));
   }
 
   handleSelectInstitutionChange(event) {
     this.props.selectInstitution(event.target.value);
+  }
+
+  handleAssociateOpenToggle() {
+    this.setState(({ associateDialogOpen }) =>
+    ({ associateDialogOpen: !associateDialogOpen }));
   }
 
   renderInstitutionMenu() {
@@ -131,11 +140,15 @@ class ApplicationBar extends Component {
 
   render() {
     const { classes, onDrawerToggle } = this.props;
-    const { anchorEl } = this.state;
+    const { anchorEl, associateDialogOpen } = this.state;
     const open = Boolean(anchorEl);
 
     return (
       <AppBar position="fixed">
+      <AssociateDialog
+        open={associateDialogOpen}
+        onClose={this.handleAssociateOpenToggle}
+      />
         <Toolbar>
           <IconButton
             className={classes.iconButton}
@@ -159,6 +172,7 @@ class ApplicationBar extends Component {
           </IconButton>
           <Menu
             id="appbar__user-menu"
+            classes={{ paper: classes.userMenu }}
             anchorEl={anchorEl}
             anchorOrigin={{
               vertical: 'top',
@@ -167,9 +181,13 @@ class ApplicationBar extends Component {
             open={open}
             onClose={this.handleClose}
           >
-            {/* <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-              <MenuItem onClick={this.handleClose}>My account</MenuItem> */}
-            <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
+            {/* <MenuItem onClick={this.handleClose}>Profile</MenuItem> */}
+            <MenuItem
+              onClick={this.handleAssociateOpenToggle}
+            >
+              Vincular a uma instituição
+            </MenuItem>
+            <MenuItem onClick={this.handleLogout}>Sair</MenuItem>
           </Menu>
         </Toolbar>
       </AppBar>

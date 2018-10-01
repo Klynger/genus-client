@@ -4,7 +4,9 @@ import {
 } from './actionTypes';
 import { NO_INSTUTION_SELECTED } from '../reducers/institution';
 import { requestGraphql } from '../components/utils/HTTPClient';
-import { mutationCreateInstitution } from '../queryGenerators/institutionMutations';
+import {
+  mutationCreateInstitution, mutationJoinInstitution,
+} from '../queryGenerators/institutionMutations';
 import { queryFindInstitutionsByOwner } from '../queryGenerators/institutionQueries';
 
 export const selectInstitution = id => dispatch => {
@@ -39,6 +41,39 @@ export const addInstitution = institutionInput => (dispatch, getState) => {
       })
   );
 };
+
+export const joinInstitution = code => (dispatch) => (
+  requestGraphql(mutationJoinInstitution(code),
+    localStorage.getItem('token'))
+    .then(res => {
+      if (res.data.data && res.data.data.joinInstitution) {
+        const grades = res.data.data.joinInstitution.grades;
+        const institution = {
+          ...res.data.data.joinInstitution,
+          grades: res.data.data.joinInstitution.grades.map(grade => grade.id),
+        };
+        dispatch({
+          type: SAVE_INSTITUTION,
+          institution,
+        });
+
+        grades.forEach(grade => {
+          grade.subjects.forEach(subject => {
+            dispatch({
+              type: SAVE_SUBJECT,
+              subject,
+            });
+          });
+          grade.subjects = grade.subjects.map(sub => sub.id);
+          dispatch({
+            type: SAVE_GRADE,
+            grade,
+          });
+        });
+      }
+      return res;
+    })
+);
 
 export const fetchInstitutionsByOwner = () => (dispatch, getState) => {
   return (
