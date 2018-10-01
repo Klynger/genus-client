@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { ActionsContainer } from '../../utils/SharedComponents';
 import GradesGrid from './GradesGrid';
+import CreateEntryCodeDialog from '../EntryCode/CreateEntryCodeDialog';
+import DisplayCodeDialog from '../EntryCode/DisplayCodeDialog';
 
 const photoDimension = '140px';
 
@@ -42,7 +44,6 @@ const styles = theme => ({
   },
   detailsPageContentContainer: {
     display: 'flex',
-    margin: theme.spacing.unit,
     [theme.breakpoints.down('xs')]: {
       alignItems: 'center',
       flexDirection: 'column',
@@ -50,8 +51,11 @@ const styles = theme => ({
   },
   detailsPagePaper: {
     borderRadius: 0,
+    display: 'flex',
+    flexDirection: 'column',
     marginTop: theme.spacing.unit * 3,
-    width: '100%',
+    padding: theme.spacing.unit,
+    width: `calc(100% - ${theme.spacing.unit * 2}px)`,
   },
   detailsPageRoot: {
     display: 'flex',
@@ -69,33 +73,72 @@ const styles = theme => ({
       width: '60%',
     },
   },
+  actionsDetailsButton: {
+    marginLeft: theme.spacing.unit,
+  },
 });
 
 class DetailsPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      entryCodeCreateOpen: false,
       subjectOpen: false,
+      currentGeneratedCode: null,
+      displayCodeOpen: false,
     };
 
+    this.handleCreateEntryOpenToggle = this.handleCreateEntryOpenToggle.bind(this);
+    this.handleDisplayCodeOpenToggle = this.handleDisplayCodeOpenToggle.bind(this);
     this.handleSubjectOpen = this.handleSubjectOpen.bind(this);
   }
 
+  handleDisplayCodeOpenToggle() {
+    this.setState(({ displayCodeOpen }) =>
+      ({ displayCodeOpen: !displayCodeOpen }));
+  }
+
+  handleCreateEntryOpenToggle(currentGeneratedCode = null) {
+    if (currentGeneratedCode && typeof currentGeneratedCode === 'string') {
+      this.setState({
+        entryCodeCreateOpen: false,
+        displayCodeOpen: true,
+        currentGeneratedCode,
+      });
+    } else {
+      this.setState(({ entryCodeCreateOpen }) => ({
+        entryCodeCreateOpen: !entryCodeCreateOpen,
+      }));
+    }
+  }
+
   handleSubjectOpen() {
-    this.setState(prevState => ({ subjectOpen: !prevState.subjectOpen }));
+    this.setState(({ subjectOpen }) => ({ subjectOpen: !subjectOpen }));
   }
 
   render() {
     const { classes, institution } = this.props;
-    const { subjectOpen } = this.state;
+    const {
+      subjectOpen, entryCodeCreateOpen, displayCodeOpen,
+      currentGeneratedCode,
+    } = this.state;
     let toRender;
 
     if (institution) {
       toRender = (
         <div className={classes.detailsPageRoot}>
+          <DisplayCodeDialog
+            open={displayCodeOpen}
+            code={currentGeneratedCode}
+            onClose={this.handleDisplayCodeOpenToggle}
+          />
           <SubjectForm
             open={subjectOpen}
             onClose={this.handleSubjectOpen}
+          />
+          <CreateEntryCodeDialog
+            open={entryCodeCreateOpen}
+            onClose={this.handleCreateEntryOpenToggle}
           />
           <Paper className={classes.detailsPagePaper}>
             <div className={classes.detailsPageContentContainer}>
@@ -130,6 +173,15 @@ class DetailsPage extends Component {
                 </Typography>
               </InstitutionInfos>
             </div>
+            <ActionsContainer>
+              <Button
+                className={classes.actionsDetailsButton}
+                color="primary"
+                onClick={this.handleCreateEntryOpenToggle}
+              >
+                Gerar Código de Vínculo
+              </Button>
+            </ActionsContainer>
           </Paper>
           <ActionsContainer>
             <Button

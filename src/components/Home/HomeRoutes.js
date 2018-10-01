@@ -13,11 +13,18 @@ const AsyncInstitutionPage = Loadable({
   loading: LoadingPage,
 });
 
+const AsyncTestingPage = Loadable({
+  loader: () => import('../TestingPage'),
+  loading: LoadingPage,
+});
+
 const HomeRoutes = () => {
   return (
     <Switch>
       <Route path="/" exact component={AsyncOverviewPage} />
       <Route path="/institution" component={AsyncInstitutionPage} />
+      {process.env.NODE_ENV === 'development'
+      && <Route path="/testing" component={AsyncTestingPage} />}
       <Redirect to={{ pathname: '/' }} />
     </Switch>
   );
