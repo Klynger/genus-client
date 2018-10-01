@@ -119,7 +119,7 @@ AssociateDialog.propTypes = {
   handleChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   isSubmitting: PropTypes.bool.isRequired,
-  joinNewInstitution: PropTypes.func.isRequired,
+  joinNewInstitution: PropTypes.func.isRequired, // eslint-disable-line
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool,
   touched: PropTypes.shape({
