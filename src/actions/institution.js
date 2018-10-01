@@ -70,6 +70,10 @@ export const joinInstitution = code => (dispatch) => (
             grade,
           });
         });
+        dispatch({
+          type: SELECT_INSTITUTION,
+          id: institution.id,
+        });
       }
       return res;
     })
