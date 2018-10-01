@@ -110,9 +110,9 @@ const Signin = ({ classes, errors, fullScreen,
             className={classes.formControl}
             error={touched.password && errors.password !== undefined}
           >
-            <InputLabel htmlFor="signin_password">Password</InputLabel>
+            <InputLabel htmlFor="signin__password">Senha</InputLabel>
             <Input
-              id="sigin__password"
+              id="signin__password"
               name="password"
               type="password"
               value={values.password}
