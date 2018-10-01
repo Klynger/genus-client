@@ -5,20 +5,25 @@ import { Dialog, DialogTitle,
   ListItem, ListItemText,
   withMobileDialog, withStyles,
   DialogActions, Button, Typography } from '@material-ui/core';
-import { capitalize } from '@material-ui/core/utils/helpers';
+import { DefaultDialogTransition } from '../../utils/SharedComponents';
 import { defaultDialogBreakpoints } from '../../utils/helpers';
+import { capitalize } from '@material-ui/core/utils/helpers';
 import { connect } from 'react-redux';
 
 const styles = () => ({
-  ...defaultDialogBreakpoints,
+  ...defaultDialogBreakpoints(),
 });
 
-const SubjectDialog = ({ classes, fullScreen, gradeName, open, onClose,
-                        subjects, width }) => (
+const SubjectDialog = ({
+  classes, fullScreen, gradeName,
+  open, onClose, subjects,
+  width,
+}) => (
   <Dialog
     fullScreen={fullScreen}
     open={open}
     onClose={onClose}
+    TransitionComponent={DefaultDialogTransition}
     classes={{
       paper: classes[`dialogRoot${capitalize(width)}`],
     }}
