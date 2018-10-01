@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { List, ListItem, ListItemIcon, ListItemText, withStyles } from '@material-ui/core';
-import HomeIcon from '@material-ui/icons/Home';
+import { AddBox, Flight, Home, School } from '@material-ui/icons';
 
 const itemWidth = 240;
 
@@ -27,12 +27,47 @@ class DrawerContent extends Component {
     const { classes } = this.props;
     return (
       <List>
-        <ListItem className={classes.item} button onClick={() => this.handleGoToPath()}>
+        <ListItem
+          className={classes.item}
+          button
+          onClick={() => this.handleGoToPath()}
+        >
          <ListItemIcon>
-           <HomeIcon />
+           <Home />
          </ListItemIcon>
-         <ListItemText primary="Home" />
+         <ListItemText primary="Página Inicial" />
         </ListItem>
+        <ListItem
+          className={classes.item}
+          button
+          onClick={() => this.handleGoToPath('/institution/details')}
+        >
+          <ListItemIcon>
+            <School />
+          </ListItemIcon>
+          <ListItemText primary="Instituição" />
+        </ListItem>
+        <ListItem
+          className={classes.item}
+          button
+          onClick={() => this.handleGoToPath('/institution/new')}
+        >
+          <ListItemIcon>
+            <AddBox />
+          </ListItemIcon>
+          <ListItemText primary="Criar Instituição" />
+        </ListItem>
+        {process.env.NODE_ENV === 'development' &&
+          <ListItem
+            className={classes.item}
+            button
+            onClick={() => this.handleGoToPath('/testing')}
+          >
+            <ListItemIcon>
+              <Flight />
+            </ListItemIcon>
+            <ListItemText primary="Test" />
+          </ListItem>}
       </List>
     );
   }
@@ -44,4 +79,4 @@ DrawerContent.propTypes = {
  onDrawerToggle: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(withRouter(DrawerContent));
+export default withStyles(styles, { withTheme: true })(withRouter(DrawerContent));
