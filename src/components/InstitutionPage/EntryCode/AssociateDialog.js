@@ -158,7 +158,7 @@ export default connect(null, mapDispatchToProps)(withStyles(styles)(withWidth()(
           }
           setSubmitting(false);
         })
-        .catch((error) => {
+        .catch(() => {
           // setErrors({ requestError: request.status.toString() });
           setSubmitting(false);
         });
