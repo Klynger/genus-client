@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
+import SubjectDialog from './SubjectDialog';
 
 const StyledCard = styled(Card)``;
 
@@ -15,7 +16,7 @@ const StyledCardMedia = styled(CardMedia)`
   opacity: 0.5;
   transition: opacity ${props =>
     props.transitionHoverDuration || 250}ms ${props =>
-    props.transitionHoverFunction || 'cubic-bezier(0.4, 0, 0.2, 1)'};
+      props.transitionHoverFunction || 'cubic-bezier(0.4, 0, 0.2, 1)'};
 
   ${StyledCard}:hover & {
     opacity: 1;
@@ -40,31 +41,60 @@ const styles = () => ({
   },
 });
 
-const GradeCard = ({ classes, grade }) => {
-  return (
-    <Fade in>
-      <StyledCard className={classes.gradeCardRoot}>
-        <CardActionArea className={classes.gradeCardActionArea}>
-          <StyledCardMedia
-            title={grade.name}
-            image="/static/images/grade-default-img.jpg"
-          />
-          <CardContent>
-            <UnderlinedTypo variant="headline" component="h2">
-              {grade.name}
-            </UnderlinedTypo>
-            <UnderlinedTypo component="p">
-              Disciplinas cadastradas: {grade.subjects.length}
-            </UnderlinedTypo>
-            <UnderlinedTypo component="p">
-              Quantidade de alunos: 35
-            </UnderlinedTypo>
-          </CardContent>
-        </CardActionArea>
-      </StyledCard>
-    </Fade>
-  );
-};
+class GradeCard extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      openSubjectDialog: false,
+    };
+
+    this.handleSubjectSelectToggle = this.handleSubjectSelectToggle.bind(this);
+  }
+
+  handleSubjectSelectToggle() {
+    this.setState(prevState => ({ openSubjectDialog: !prevState.openSubjectDialog }));
+  }
+
+  render() {
+    const { classes, grade } = this.props;
+    const { openSubjectDialog } = this.state;
+
+    return (
+      <div>
+        <Fade in>
+          <StyledCard
+            className={classes.gradeCardRoot}
+            onClick={this.handleSubjectSelectToggle}
+          >
+            <CardActionArea className={classes.gradeCardActionArea}>
+              <StyledCardMedia
+                title={grade.name}
+                image="/static/images/grade-default-img.jpg"
+              />
+              <CardContent>
+                <UnderlinedTypo variant="headline" component="h2">
+                  {grade.name}
+                </UnderlinedTypo>
+                <UnderlinedTypo component="p">
+                  Disciplinas cadastradas: {grade.subjects.length}
+                </UnderlinedTypo>
+                <UnderlinedTypo component="p">
+                  Quantidade de alunos: 35
+                </UnderlinedTypo>
+              </CardContent>
+            </CardActionArea>
+          </StyledCard>
+        </Fade>
+        <SubjectDialog
+          gradeId={grade.id}
+          open={openSubjectDialog}
+          onClose={this.handleSubjectSelectToggle}
+        />
+      </div>
+    );
+  }
+}
 
 GradeCard.propTypes = {
   classes: PropTypes.object.isRequired,
