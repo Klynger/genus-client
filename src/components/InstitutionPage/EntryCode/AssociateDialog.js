@@ -150,10 +150,8 @@ export default connect(null, mapDispatchToProps)(withStyles(styles)(withWidth()(
     handleSubmit(values, { setSubmitting, props, setErrors }) {
       props.joinNewInstitution(values.code)
         .then(res => {
-          console.log('here', res);
           if (res.data.data && res.data.data.joinInstitution) {
             // TODO tell the user that everything is ok
-            console.log('everything is ok');
             props.onClose();
           } else {
             setErrors({ requestError: '400' });
@@ -161,7 +159,6 @@ export default connect(null, mapDispatchToProps)(withStyles(styles)(withWidth()(
           setSubmitting(false);
         })
         .catch((error) => {
-          console.log('errou', error);
           // setErrors({ requestError: request.status.toString() });
           setSubmitting(false);
         });
