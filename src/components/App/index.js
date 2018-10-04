@@ -8,8 +8,9 @@ injectGlobal([`
   html, body {
     background-color: ${theme.palette.background.default};
     box-sizing: border-box;
+    display: block !important;
     margin: 0;
-    min-width: 100%;
+    min-width: 100% !important;
     padding: 0;
   }
 
