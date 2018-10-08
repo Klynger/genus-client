@@ -4,7 +4,8 @@ import GradeCard from './GradeCard';
 import GradeForm from '../GradeForm';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import CreateGradeButton from './CreateGradeButton';
+import GridButton from '../../utils/GridButton';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 import {
   GridContainer, ResponsiveSubTitle,
 } from '../../utils/SharedComponents';
@@ -41,7 +42,11 @@ class GradesGrid extends Component {
           {gradeIds.map(id => (
             <GradeCard key={id} gradeId={id} />
           ))}
-          <CreateGradeButton onClick={this.handleGradeOpen} key="-1" />
+          <GridButton
+            key="-1"
+            Icon={AddCircleIcon}
+            onClick={this.handleGradeOpen}
+          />
         </GridContainer>
       </Wrapper>
     );
