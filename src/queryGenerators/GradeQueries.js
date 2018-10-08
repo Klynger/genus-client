@@ -4,7 +4,10 @@ export const queryFindGrade = id => ({
       findGrade(input: $id) {
         id
         name
-        subjects
+        subjects {
+          id
+          name
+        }
       }
     }
   `,

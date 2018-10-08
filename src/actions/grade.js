@@ -7,6 +7,7 @@ import {
 import { requestGraphql } from '../components/utils/HTTPClient';
 import { mutationCreateGrade } from '../queryGenerators/GradeMutations';
 import { mutationCreateSubject } from '../queryGenerators/SubjectMutations';
+import { queryFindGrade } from '../queryGenerators/GradeQueries';
 
 export const addGrade = gradeInput => dispatch => {
   return (
@@ -72,6 +73,42 @@ export const createGrade = newGrade => dispatch => {
         return result;
       })
   );
+};
+
+export const fetchGrade = id => dispatch => {
+  return requestGraphql(queryFindGrade(id),
+    localStorage.getItem('token'))
+    .then(res => {
+      let result;
+      if (res.data.data && res.data.data.findGrade) {
+        const subjects = res.data.data.findGrade.subjects;
+        subjects.forEach(sub => {
+          const subject = {
+            ...sub,
+            grade: res.data.data.findGrade.id,
+          };
+          dispatch({
+            type: SAVE_SUBJECT,
+            subject,
+          });
+        });
+
+        const grade = {
+          ...res.data.data.findGrade,
+          subjects: subjects.map(sub => sub.id),
+        };
+        dispatch({
+          type: SAVE_GRADE,
+          grade,
+        });
+
+        result = res;
+      } else {
+        result = Promise.reject(new Error('400'));
+      }
+
+      return result;
+    });
 };
 
 export default {};

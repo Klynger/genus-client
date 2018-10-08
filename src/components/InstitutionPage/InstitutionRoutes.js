@@ -13,12 +13,17 @@ const AsyncDetailsPage = Loadable({
   loading: () => null,
 });
 
+const AysncGradePage = Loadable({
+  loader: () => import('./DetailsPage/GradePage'),
+  loading: () => null,
+});
+
 const InstitutionRoute = ({ match }) => (
   <Switch>
     <Route path={`${match.path}/new`} component={AsyncCreatePage} />
-    <Route path={`${match.path}/details`} component={AsyncDetailsPage} /> :
-    <Redirect to={`${match.path}/details`}
-    />
+    <Route path={`${match.path}/details`} component={AsyncDetailsPage} />
+    <Route path={`${match.path}/grade/:gradeId`} component={AysncGradePage} />
+    <Redirect to={`${match.path}/details`} />
   </Switch>
 );
 
