@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import SubjectGrid from './SubjectGrid';
-import { Zoom } from '@material-ui/core';
+import { Fade } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { fetchGrade } from '../../../../../actions/grade';
 import { ResponsiveTitle } from '../../../../utils/SharedComponents';
@@ -58,9 +58,9 @@ class GradeDetailsPage extends Component {
       );
     }
     return (
-      <Zoom in>
+      <Fade in>
         {toRender}
-      </Zoom>
+      </Fade>
     );
   }
 }
