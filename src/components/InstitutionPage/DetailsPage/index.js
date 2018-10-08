@@ -8,6 +8,8 @@ import { ActionsContainer } from '../../utils/SharedComponents';
 import GradesGrid from './GradesGrid';
 import CreateEntryCodeDialog from '../EntryCode/CreateEntryCodeDialog';
 import DisplayCodeDialog from '../EntryCode/DisplayCodeDialog';
+import { getTeacherOfInstitutionId } from '../../../actions/user';
+import EmployeeList from './employeeList';
 
 const photoDimension = '140px';
 
@@ -86,11 +88,24 @@ class DetailsPage extends Component {
       subjectOpen: false,
       currentGeneratedCode: null,
       displayCodeOpen: false,
+      users: [],
     };
 
     this.handleCreateEntryOpenToggle = this.handleCreateEntryOpenToggle.bind(this);
     this.handleDisplayCodeOpenToggle = this.handleDisplayCodeOpenToggle.bind(this);
     this.handleSubjectOpen = this.handleSubjectOpen.bind(this);
+  }
+
+  shouldComponentUpdate() {
+    const { getTeacherOfInstitutionId, institution } = this.props;
+
+    if (institution) {
+      getTeacherOfInstitutionId(institution.id)
+      .then(res => {
+        this.setState({ users: res.data.data.getUserOfInstitutionByRole });
+      })
+      .catch();
+    }
   }
 
   handleDisplayCodeOpenToggle() {
@@ -121,8 +136,16 @@ class DetailsPage extends Component {
     const {
       subjectOpen, entryCodeCreateOpen, displayCodeOpen,
       currentGeneratedCode,
+      users,
     } = this.state;
     let toRender;
+
+    const teachers = users ? users.filter(user => {
+      return user.role === 'TEACHER';
+    }) : [];
+
+    console.log('techears', teachers);
+    console.log('userrs', users);
 
     if (institution) {
       toRender = (
@@ -196,6 +219,8 @@ class DetailsPage extends Component {
             </Button>
           </ActionsContainer>
           <GradesGrid />
+          {/* {teachers.length > 0 && */}
+            <EmployeeList employees={teachers} headTitle="Professores" />
         </div>
       );
     } else {
@@ -212,6 +237,7 @@ class DetailsPage extends Component {
 
 DetailsPage.propTypes = {
   classes: PropTypes.object.isRequired,
+  getTeacherOfInstitutionId: PropTypes.func.isRequired,
   institution: PropTypes.shape({
     address: PropTypes.string,
     email: PropTypes.string,
@@ -229,5 +255,11 @@ function mapStateToProps({ institution }) {
   return {};
 }
 
-export default connect(mapStateToProps)(
+function mapDispatchToProps(dispatch) {
+  return {
+    getTeacherOfInstitutionId: institutionId => dispatch(getTeacherOfInstitutionId(institutionId)),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(
   withStyles(styles)(DetailsPage));
