@@ -97,9 +97,11 @@ export const fetchInstitutionsByOwner = () => (dispatch, getState) => {
               ...institution,
               grades: institution.grades.map(grade => grade.id),
             };
-            dispatch({
-              type: SAVE_INSTITUTION,
-              institution: newInstitution,
+            subjects.forEach(subject => {
+              dispatch({
+                type: SAVE_SUBJECT,
+                subject,
+              });
             });
             grades.forEach(grade => {
               dispatch({
@@ -107,11 +109,9 @@ export const fetchInstitutionsByOwner = () => (dispatch, getState) => {
                 grade,
               });
             });
-            subjects.forEach(subject => {
-              dispatch({
-                type: SAVE_SUBJECT,
-                subject,
-              });
+            dispatch({
+              type: SAVE_INSTITUTION,
+              institution: newInstitution,
             });
           });
 

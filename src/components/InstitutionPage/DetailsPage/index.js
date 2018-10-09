@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import SubjectForm from '../SubjectForm';
 import { Fade, Paper, Typography, withStyles, Button } from '@material-ui/core';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
@@ -8,6 +7,9 @@ import { ActionsContainer } from '../../utils/SharedComponents';
 import GradesGrid from './GradesGrid';
 import CreateEntryCodeDialog from '../EntryCode/CreateEntryCodeDialog';
 import DisplayCodeDialog from '../EntryCode/DisplayCodeDialog';
+import EmployeeList from './EmployeeList';
+import { requestGraphql } from '../../utils/HTTPClient';
+import { getUsersFromInstitutionByRole } from '../../../queryGenerators/userQueries';
 
 const photoDimension = '140px';
 
@@ -83,14 +85,60 @@ class DetailsPage extends Component {
     super(props);
     this.state = {
       entryCodeCreateOpen: false,
-      subjectOpen: false,
       currentGeneratedCode: null,
       displayCodeOpen: false,
+      teachers: [],
+      admins: [],
     };
 
     this.handleCreateEntryOpenToggle = this.handleCreateEntryOpenToggle.bind(this);
     this.handleDisplayCodeOpenToggle = this.handleDisplayCodeOpenToggle.bind(this);
-    this.handleSubjectOpen = this.handleSubjectOpen.bind(this);
+    this.fetchData = this.fetchData.bind(this);
+  }
+
+  componentDidMount() {
+    if (this.props.institution && this.props.institution.id) {
+      this.fetchData();
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.institution &&
+      prevProps.institution &&
+      this.props.institution.id !== prevProps.institution.id) {
+      this.fetchData();
+    }
+  }
+
+  fetchData() {
+    const teacherInput = {
+      institutionId: this.props.institution.id,
+      role: 'TEACHER',
+    };
+    requestGraphql(getUsersFromInstitutionByRole(teacherInput),
+    localStorage.getItem('token'))
+    .then(res => {
+      if (res.data.data && res.data.data.getUsersFromInstitutionByRole) {
+        this.setState({ teachers: [...res.data.data.getUsersFromInstitutionByRole] });
+      } else {
+        // TODO error treatment
+      }
+    })
+    .catch();
+    const adminInput = {
+      institutionId: this.props.institution.id,
+      role: 'ADMIN',
+    };
+    requestGraphql(getUsersFromInstitutionByRole(adminInput),
+    localStorage.getItem('token'))
+    .then(res => {
+      if (res.data.data && res.data.data.getUsersFromInstitutionByRole) {
+        this.setState({ admins: [...res.data.data.getUsersFromInstitutionByRole] });
+      } else {
+        // TODO error treatment
+      }
+    })
+    .catch();
   }
 
   handleDisplayCodeOpenToggle() {
@@ -112,15 +160,11 @@ class DetailsPage extends Component {
     }
   }
 
-  handleSubjectOpen() {
-    this.setState(({ subjectOpen }) => ({ subjectOpen: !subjectOpen }));
-  }
-
   render() {
     const { classes, institution } = this.props;
     const {
-      subjectOpen, entryCodeCreateOpen, displayCodeOpen,
-      currentGeneratedCode,
+      entryCodeCreateOpen, displayCodeOpen,
+      currentGeneratedCode, teachers, admins,
     } = this.state;
     let toRender;
 
@@ -131,10 +175,6 @@ class DetailsPage extends Component {
             open={displayCodeOpen}
             code={currentGeneratedCode}
             onClose={this.handleDisplayCodeOpenToggle}
-          />
-          <SubjectForm
-            open={subjectOpen}
-            onClose={this.handleSubjectOpen}
           />
           <CreateEntryCodeDialog
             open={entryCodeCreateOpen}
@@ -183,19 +223,9 @@ class DetailsPage extends Component {
               </Button>
             </ActionsContainer>
           </Paper>
-          <ActionsContainer>
-            <Button
-              className={classes.button}
-              color="primary"
-              onClick={this.handleSubjectOpen}
-              variant="contained"
-              disabled={institution.grades.length === 0}
-              size="small"
-            >
-              Criar Disciplina
-            </Button>
-          </ActionsContainer>
           <GradesGrid />
+          <EmployeeList employees={teachers} headTitle="Professores" />
+          <EmployeeList employees={admins} headTitle="Administradores" />
         </div>
       );
     } else {
@@ -215,6 +245,7 @@ DetailsPage.propTypes = {
   institution: PropTypes.shape({
     address: PropTypes.string,
     email: PropTypes.string,
+    id: PropTypes.string,
     name: PropTypes.string,
   }),
 };
