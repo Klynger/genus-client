@@ -120,7 +120,6 @@ class DetailsPage extends Component {
     .then(res => {
       if (res.data.data && res.data.data.getUsersFromInstitutionByRole) {
         this.setState({ teachers: [...res.data.data.getUsersFromInstitutionByRole] });
-        console.log('vaaGIIIIIIIIIIIIIIIIIIIIIIII');
       } else {
         // TODO error treatment
       }
@@ -133,7 +132,6 @@ class DetailsPage extends Component {
     requestGraphql(getUsersFromInstitutionByRole(adminInput),
     localStorage.getItem('token'))
     .then(res => {
-      console.log('vaaaaaaaaaaaaaaaaaaaaaaaaaaaai');
       if (res.data.data && res.data.data.getUsersFromInstitutionByRole) {
         this.setState({ admins: [...res.data.data.getUsersFromInstitutionByRole] });
       } else {

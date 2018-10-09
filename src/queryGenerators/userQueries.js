@@ -23,20 +23,17 @@ export const findLoggedUserQuery = () => ({
 
 export const getUsersFromInstitutionByRole = input => ({
   query: `
-      query {
-        getUsersFromInstitutionByRole(input: {
-          institutionId: ${Number(input.institutionId)}
-          role: ${input.role}
-        }) {
+      query getUsersFromInstitutionByRole($input: GetUsersFromInstitutionByRoleInput!){
+        getUsersFromInstitutionByRole(input: $input) {
           id
           email
           username
         }
       }
   `,
-  // variables: {
-  //   input,
-  // },
+  variables: {
+    input,
+  },
 });
 
 export default {};
