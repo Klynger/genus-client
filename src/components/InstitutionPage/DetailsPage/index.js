@@ -7,6 +7,9 @@ import { ActionsContainer } from '../../utils/SharedComponents';
 import GradesGrid from './GradesGrid';
 import CreateEntryCodeDialog from '../EntryCode/CreateEntryCodeDialog';
 import DisplayCodeDialog from '../EntryCode/DisplayCodeDialog';
+import EmployeeList from './EmployeeList';
+import { requestGraphql } from '../../utils/HTTPClient';
+import { getUsersFromInstitutionByRole } from '../../../queryGenerators/userQueries';
 
 const photoDimension = '140px';
 
@@ -84,10 +87,58 @@ class DetailsPage extends Component {
       entryCodeCreateOpen: false,
       currentGeneratedCode: null,
       displayCodeOpen: false,
+      teachers: [],
+      admins: [],
     };
 
     this.handleCreateEntryOpenToggle = this.handleCreateEntryOpenToggle.bind(this);
     this.handleDisplayCodeOpenToggle = this.handleDisplayCodeOpenToggle.bind(this);
+    this.fetchData = this.fetchData.bind(this);
+  }
+
+  componentDidMount() {
+    if (this.props.institution && this.props.institution.id) {
+      this.fetchData();
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.institution &&
+      prevProps.institution &&
+      this.props.institution.id !== prevProps.institution.id) {
+      this.fetchData();
+    }
+  }
+
+  fetchData() {
+    const teacherInput = {
+      institutionId: this.props.institution.id,
+      role: 'TEACHER',
+    };
+    requestGraphql(getUsersFromInstitutionByRole(teacherInput),
+    localStorage.getItem('token'))
+    .then(res => {
+      if (res.data.data && res.data.data.getUsersFromInstitutionByRole) {
+        this.setState({ teachers: [...res.data.data.getUsersFromInstitutionByRole] });
+      } else {
+        // TODO error treatment
+      }
+    })
+    .catch();
+    const adminInput = {
+      institutionId: this.props.institution.id,
+      role: 'ADMIN',
+    };
+    requestGraphql(getUsersFromInstitutionByRole(adminInput),
+    localStorage.getItem('token'))
+    .then(res => {
+      if (res.data.data && res.data.data.getUsersFromInstitutionByRole) {
+        this.setState({ admins: [...res.data.data.getUsersFromInstitutionByRole] });
+      } else {
+        // TODO error treatment
+      }
+    })
+    .catch();
   }
 
   handleDisplayCodeOpenToggle() {
@@ -113,7 +164,7 @@ class DetailsPage extends Component {
     const { classes, institution } = this.props;
     const {
       entryCodeCreateOpen, displayCodeOpen,
-      currentGeneratedCode,
+      currentGeneratedCode, teachers, admins,
     } = this.state;
     let toRender;
 
@@ -173,6 +224,8 @@ class DetailsPage extends Component {
             </ActionsContainer>
           </Paper>
           <GradesGrid />
+          <EmployeeList employees={teachers} headTitle="Professores" />
+          <EmployeeList employees={admins} headTitle="Administradores" />
         </div>
       );
     } else {
@@ -192,6 +245,7 @@ DetailsPage.propTypes = {
   institution: PropTypes.shape({
     address: PropTypes.string,
     email: PropTypes.string,
+    id: PropTypes.string,
     name: PropTypes.string,
   }),
 };
