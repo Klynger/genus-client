@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import { DefaultDialogTransition } from '../utils/SharedComponents';
+import { capitalize } from '@material-ui/core/utils/helpers';
+import { defaultDialogBreakpoints } from '../utils/helpers';
+import { saveSubject } from '../../actions/subject';
 import { withRouter } from 'react-router-dom';
 import { Form, withFormik } from 'formik';
 import { connect } from 'react-redux';
@@ -11,9 +15,6 @@ import {
   withStyles, withMobileDialog, Select,
   MenuItem, withWidth,
 } from '@material-ui/core';
-import { capitalize } from '@material-ui/core/utils/helpers';
-import { defaultDialogBreakpoints } from '../utils/helpers';
-import { saveSubject } from '../../actions/subject';
 
 const styles = theme => ({
   ...defaultDialogBreakpoints(),
@@ -56,10 +57,11 @@ class SubjectForm extends Component {
 
     return (
       <Dialog
+      TransitionComponent={DefaultDialogTransition}
+      onBackdropClick={handleReset}
         fullScreen={fullScreen}
-        open={open}
         onClose={onClose}
-        onBackdropClick={handleReset}
+        open={open}
         classes={{
           paper: classes[`dialogRoot${capitalize(width)}`],
         }}

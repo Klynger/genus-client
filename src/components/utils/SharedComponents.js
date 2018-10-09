@@ -43,6 +43,26 @@ export const DefaultDialogTransition = props => (
   <Grow in {...props} />
 );
 
+export const GridContainer = styled.div`
+  display: grid;
+  grid-auto-rows: 1fr;
+  grid-gap: 6px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+
+  &:before {
+    content: '';
+    width: 0;
+    padding-bottom: 100%;
+    grid-row: 1 / 1;
+    grid-column: 1 / 1;
+  }
+
+  & > *:first-child {
+    grid-row: 1 / 1;
+    grid-column: 1 / 1;
+  }
+`;
+
 // -------------------------------------------------------
 const styles = theme => ({
   title: {

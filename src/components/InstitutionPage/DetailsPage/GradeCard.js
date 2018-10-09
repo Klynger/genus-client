@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from 'react-router-dom';
+import styled from 'styled-components';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import {
   Card, CardActionArea, CardContent,
   CardMedia, Typography, Fade,
 } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import styled from 'styled-components';
-import SubjectDialog from './SubjectDialog';
 
 const StyledCard = styled(Card)``;
 
@@ -45,53 +45,45 @@ class GradeCard extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      openSubjectDialog: false,
-    };
-
     this.handleSubjectSelectToggle = this.handleSubjectSelectToggle.bind(this);
   }
 
   handleSubjectSelectToggle() {
-    this.setState(prevState => ({ openSubjectDialog: !prevState.openSubjectDialog }));
+    const {
+      history: { push },
+      gradeId,
+    } = this.props;
+    push(`/institution/grade/${gradeId}`);
   }
 
   render() {
     const { classes, grade } = this.props;
-    const { openSubjectDialog } = this.state;
 
     return (
-      <div>
-        <Fade in>
-          <StyledCard
-            className={classes.gradeCardRoot}
-            onClick={this.handleSubjectSelectToggle}
-          >
-            <CardActionArea className={classes.gradeCardActionArea}>
-              <StyledCardMedia
-                title={grade.name}
-                image="/static/images/grade-default-img.jpg"
-              />
-              <CardContent>
-                <UnderlinedTypo variant="headline" component="h2">
-                  {grade.name}
-                </UnderlinedTypo>
-                <UnderlinedTypo component="p">
-                  Disciplinas cadastradas: {grade.subjects.length}
-                </UnderlinedTypo>
-                <UnderlinedTypo component="p">
-                  Quantidade de alunos: 35
-                </UnderlinedTypo>
-              </CardContent>
-            </CardActionArea>
-          </StyledCard>
-        </Fade>
-        <SubjectDialog
-          gradeId={grade.id}
-          open={openSubjectDialog}
-          onClose={this.handleSubjectSelectToggle}
-        />
-      </div>
+      <Fade in>
+        <StyledCard
+          className={classes.gradeCardRoot}
+          onClick={this.handleSubjectSelectToggle}
+        >
+          <CardActionArea className={classes.gradeCardActionArea}>
+            <StyledCardMedia
+              title={grade.name}
+              image="/static/images/grade-default-img.jpg"
+            />
+            <CardContent>
+              <UnderlinedTypo variant="headline" component="h2">
+                {grade.name}
+              </UnderlinedTypo>
+              <UnderlinedTypo component="p">
+                Disciplinas cadastradas: {grade.subjects.length}
+              </UnderlinedTypo>
+              <UnderlinedTypo component="p">
+                Quantidade de alunos: 35
+              </UnderlinedTypo>
+            </CardContent>
+          </CardActionArea>
+        </StyledCard>
+      </Fade>
     );
   }
 }
@@ -99,7 +91,10 @@ class GradeCard extends Component {
 GradeCard.propTypes = {
   classes: PropTypes.object.isRequired,
   grade: PropTypes.object.isRequired,
-  gradeId: PropTypes.string.isRequired, // eslint-disable-line
+  gradeId: PropTypes.string.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 function mapStateToProps({ grade }, { gradeId }) {
@@ -108,4 +103,5 @@ function mapStateToProps({ grade }, { gradeId }) {
   };
 }
 
-export default withStyles(styles)(connect(mapStateToProps)(GradeCard));
+export default withRouter(withStyles(styles)(
+  connect(mapStateToProps)(GradeCard)));
