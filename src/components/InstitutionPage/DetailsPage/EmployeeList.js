@@ -26,8 +26,14 @@ const styles = theme => ({
     },
   },
   deleteIcon: {
-    marginLeft: 'auto',
-    marginRigt: 'auto',
+    [theme.breakpoints.up('xs')]: {
+      marginLeft: 'auto',
+      marginRigt: 'auto',
+    },
+    [theme.breakpoints.down('xs')]: {
+      marginLeft: 0,
+      marginRight: theme.spacing.unit * 3,
+    },
   },
   emptyView: {
     marginLeft: theme.spacing.unit * 3,
@@ -69,7 +75,7 @@ class EmployeeList extends Component {
               <TableRow>
                 <TableCell variant="head">Nome</TableCell>
                 <TableCell variant="head" className={classes.middleColumns}>email</TableCell>
-                <TableCell variant="head">Remover</TableCell>
+                <TableCell variant="head" className={classes.deleteIcon}>Remover</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

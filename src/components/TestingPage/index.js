@@ -1,8 +1,12 @@
 import React from 'react';
-// import styled from 'styled-components';
+import styled from 'styled-components';
 // import { Button } from '@material-ui/core';
 // import CreateEntryCodeDialog from '../InstitutionPage/EntryCode/CreateEntryCodeDialog';
-import EmployeeList from '../InstitutionPage/DetailsPage/employeeList';
+import EmployeeList from '../InstitutionPage/DetailsPage/EmployeeList';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { requestGraphql } from '../utils/HTTPClient';
+import { getUsersFromInstitutionByRole } from '../../queryGenerators/userQueries';
 
 // const LandingContainer = styled.div`
 //   align-items: center;
@@ -13,6 +17,10 @@ import EmployeeList from '../InstitutionPage/DetailsPage/employeeList';
 //   min-width: 100vw;
 //   width: 100%;
 // `;
+
+const LandingContainer = styled.div`
+  width: 70%;
+`;
 
 // const TestingPage = () => {
 //   return (
@@ -28,60 +36,81 @@ class TestingPage extends React.Component {
   constructor(props) {
     super(props);
 
-    // this.state = {
-    //   openCreate: false,
-    // };
+    this.state = {
+      admins: [],
+      teachers: [],
+    };
 
-    this.handleOpenCreateToggle = this.handleOpenCreateToggle.bind(this);
+    this.fetchData = this.fetchData.bind(this);
+    // this.handleOpenCreateToggle = this.handleOpenCreateToggle.bind(this);
   }
 
-  handleOpenCreateToggle() {
-    this.setState(({ openCreate }) => ({ openCreate: !openCreate }));
+  // handleOpenCreateToggle() {
+  //   this.setState(({ openCreate }) => ({ openCreate: !openCreate }));
+  // }
+
+  componentDidMount() {
+    if (this.props.institutionId) {
+      this.fetchData();
+    }
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.institutionId !== prevProps.institutionId) {
+      this.fetchData();
+    }
+  }
+
+  fetchData() {
+    const teacherInput = {
+      institutionId: this.props.institutionId,
+      role: 'TEACHER',
+    };
+    requestGraphql(getUsersFromInstitutionByRole(teacherInput),
+    localStorage.getItem('token'))
+    .then(res => {
+      if (res.data.data && res.data.data.getUsersFromInstitutionByRole) {
+        this.setState({ teachers: [...res.data.data.getUsersFromInstitutionByRole] });
+      } else {
+        // TODO error treatment
+      }
+    })
+    .catch();
+    const adminInput = {
+      institutionId: this.props.institutionId,
+      role: 'ADMIN',
+    };
+    requestGraphql(getUsersFromInstitutionByRole(adminInput),
+    localStorage.getItem('token'))
+    .then(res => {
+      if (res.data.data && res.data.data.getUsersFromInstitutionByRole) {
+        this.setState({ admins: [...res.data.data.getUsersFromInstitutionByRole] });
+      } else {
+        // TODO error treatment
+      }
+    })
+    .catch();
+  }
 
   render() {
-    // const { openCreate } = this.state;
-
-    const employees = [
-      {
-        username: 'teste',
-        email: 'teste@teste.com',
-      },
-      {
-        username: 'teste1',
-        email: 'teste@teste.com',
-      },
-      {
-        username: 'teste2',
-        email: 'teste@teste.com',
-      },
-      {
-        username: 'teste3',
-        email: 'teste@teste.com',
-      },
-      {
-        username: 'teste4',
-        email: 'teste@teste.com',
-      },
-      {
-        username: 'teste5',
-        email: 'teste@teste.com',
-      },
-      {
-        username: 'teste6',
-        email: 'teste@teste.com',
-      },
-      {
-        username: 'teste7',
-        email: 'teste@teste.com',
-      },
-    ];
-
+    const { teachers, admins } = this.state;
     return (
-      <EmployeeList employees={employees} headTitle="Professor" />
+      <LandingContainer>
+        <EmployeeList employees={teachers} headTitle="Professores" />
+        <EmployeeList employees={admins} headTitle="Administradores" />
+      </LandingContainer>
     );
   }
 }
 
-export default TestingPage;
+TestingPage.propTypes = {
+  institutionId: PropTypes.string.isRequired,
+};
+
+function mapStateToProps({ institution }) {
+  return {
+    institutionId: institution.selectedInstitution,
+  };
+}
+
+export default connect(mapStateToProps)(TestingPage);
