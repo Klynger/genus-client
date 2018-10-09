@@ -39,17 +39,17 @@ function institution(state = DEFAULT_STATE, action) {
        };
 
     case SAVE_INSTITUTION:
-      return {
-        ...state,
-        byId: {
-          ...state.byId,
-          [action.institution.id]: {
-            ...state.byId[action.institution.id] ? state.byId[action.institution.id] : {},
-            ...action.institution,
-          },
-        },
-        allIds: concatIdIfNotContain(state.allIds, action.institution.id),
-      };
+       return {
+         ...state,
+         byId: {
+           ...state.byId,
+           [action.institution.id]: {
+             ...state.byId[action.institution.id] ? state.byId[action.institution.id] : {},
+             ...action.institution,
+           },
+         },
+         allIds: concatIdIfNotContain(state.allIds, action.institution.id),
+       };
 
     case SELECT_INSTITUTION:
       return {
