@@ -1,23 +1,48 @@
-import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import styled from 'styled-components';
 import SubjectGrid from './SubjectGrid';
+import React, { Component } from 'react';
 import { Fade } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { fetchGrade } from '../../../../../actions/grade';
 import { ResponsiveTitle } from '../../../../utils/SharedComponents';
 
+const Container = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding: ${({ unit }) => unit || 8}px;
+ 
+  @media screen and (min-width: 1920px) {
+    width: calc(50% - ${({ unit }) => (unit || 8) * 2}px);
+  }
+
+  @media screen and (min-width: 1280px) and (max-width: 1919px) {
+    width: calc(60% - ${({ unit }) => (unit || 8) * 2}px);
+  }
+
+  @media screen and (min-width: 960px) and (max-width: 1279px) {
+    width: calc(70% - ${({ unit }) => (unit || 8) * 2}px);
+  }
+
+  @media screen and (min-width: 700px) and (max-width: 959px) {
+    width: calc(80% - ${({ unit }) => (unit || 8) * 2}px);
+  }
+
+  @media screen and (min-width: 600px) and (max-width: 699px) {
+    width: calc(85% - ${({ unit }) => (unit || 8) * 2}px);
+  }
+
+  @media screen and (max-width: 599px) {
+    width: calc(95% - ${({ unit }) => (unit || 8) * 2}px);
+  }
+`;
+
 const styles = theme => ({
   emptyGradeDetails: {
     display: 'flex',
     justifyContent: 'center',
-    padding: theme.spacing.unit,
-    width: `calc(100% - ${theme.spacing.unit * 2}px)`,
-  },
-  container: {
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'column',
     padding: theme.spacing.unit,
     width: `calc(100% - ${theme.spacing.unit * 2}px)`,
   },
@@ -40,15 +65,15 @@ class GradeDetailsPage extends Component {
       grade,
       classes,
       match: { params: { gradeId } },
+      theme: { spacing: { unit } },
     } = this.props;
-
     let toRender;
     if (grade) {
       toRender = (
-        <div className={classes.container}>
+        <Container unit={unit}>
           <ResponsiveTitle>{grade.name}</ResponsiveTitle>
           <SubjectGrid gradeId={gradeId} />
-        </div>
+        </Container>
       );
     } else {
       toRender = (
@@ -72,6 +97,11 @@ GradeDetailsPage.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
       gradeId: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
+  theme: PropTypes.shape({
+    spacing: PropTypes.shape({
+      unit: PropTypes.number.isRequired,
     }).isRequired,
   }).isRequired,
 };
@@ -98,5 +128,5 @@ function mapDispatchToProps(dispatch) {
 }
 
 
-export default withStyles(styles)(
+export default withStyles(styles, { withTheme: true })(
   connect(mapToProps, mapDispatchToProps)(GradeDetailsPage));
