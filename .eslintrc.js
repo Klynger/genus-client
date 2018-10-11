@@ -18,7 +18,7 @@ module.exports = {
     ecmaVersion: 7,
     sourceType: 'module',
   },
-  plugins: ['babel', 'import', 'jsx-a11y', 'mocha', 'material-ui'],
+  plugins: ['babel', 'import', 'jsx-a11y', 'mocha', 'prettier', 'material-ui'],
   rules: {
     'linebreak-style': 'off', // Don't play nicely with Windows
     'arrow-body-style': 'off', // Incompatible with prettier
@@ -91,5 +91,7 @@ module.exports = {
     'jsx-a11y/label-has-associated-control': 'off',
     'jsx-a11y/label-has-for': 'off',
     'jsx-a11y/no-autofocus': 'off', // We are a library, people do what they want.
+    'prettier/prettier': 'error',
+    'arrow-parens': ['error', 'as-needed']
   },
 };
