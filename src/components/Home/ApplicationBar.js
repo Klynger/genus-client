@@ -1,18 +1,20 @@
-import React, { Component } from 'react';
+import UserMenu from './UserMenu';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import MenuIcon from '@material-ui/icons/Menu';
+import { withStyles } from '@material-ui/core/styles';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import { selectInstitution } from '../../actions/institution';
+import { NO_INSTUTION_SELECTED } from '../../reducers/institution';
 import {
   AppBar, Toolbar, IconButton,
-  Typography, MenuItem, Menu,
+  Typography, MenuItem,
   Button, Select,
 } from '@material-ui/core';
-import { selectInstitution } from '../../actions/institution';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import { withStyles } from '@material-ui/core/styles';
-import MenuIcon from '@material-ui/icons/Menu';
-import { clearStore } from '../../actions';
-import AssociateDialog from '../InstitutionPage/EntryCode/AssociateDialog';
+
+const USER_MENU_ID = 'appbar__user-menu';
 
 const styles = theme => ({
   appTitle: {
@@ -41,9 +43,6 @@ const styles = theme => ({
   selectIcon: {
     color: theme.palette.common.white,
   },
-  userMenu: {
-    minWidth: 200,
-  },
 });
 
 class ApplicationBar extends Component {
@@ -51,59 +50,35 @@ class ApplicationBar extends Component {
     super(props);
     this.state = {
       anchorEl: null,
-      associateDialogOpen: false,
       institutionSelectOpen: false,
     };
-
-    this.goToRoute = this.goToRoute.bind(this);
-    this.handleMenu = this.handleMenu.bind(this);
-    this.handleClose = this.handleClose.bind(this);
-    this.handleLogout = this.handleLogout.bind(this);
-    this.handleAssociateOpenToggle = this.handleAssociateOpenToggle.bind(this);
-    this.handleInstitutionSelectToggle = this.handleInstitutionSelectToggle.bind(this);
-    this.handleSelectInstitutionChange = this.handleSelectInstitutionChange.bind(this);
   }
 
-  handleMenu(event) {
+  handleOpenUserMenu = event => {
     this.setState({ anchorEl: event.currentTarget });
   }
 
-  handleLogout() {
-    const { history, resetStore } = this.props;
-
-    localStorage.removeItem('token');
-    resetStore();
-    this.handleClose();
-    history.push('/landing');
-  }
-
-
-  handleClose() {
+  handleCloseUserMenu = () => {
     this.setState({ anchorEl: null });
   }
 
-  goToRoute(path = '/') {
+  goToRoute = (path = '/') => {
     this.props.history.push(path);
   }
 
-  handleInstitutionSelectToggle() {
+  handleInstitutionSelectToggle = () => {
     this.setState(({ institutionSelectOpen }) =>
       ({ institutionSelectOpen: !institutionSelectOpen }));
   }
 
-  handleSelectInstitutionChange(event) {
+  handleSelectInstitutionChange = (event) => {
     this.props.selectInstitution(event.target.value);
-  }
-
-  handleAssociateOpenToggle() {
-    this.setState(({ associateDialogOpen }) =>
-    ({ associateDialogOpen: !associateDialogOpen }));
   }
 
   renderInstitutionMenu() {
     const { institutions, selectedInstitution, classes } = this.props;
     const { institutionSelectOpen } = this.state;
-    if (institutions.length > 0 && selectedInstitution) {
+    if (institutions.length > 0) {
       return (
         <Select
           open={institutionSelectOpen}
@@ -140,15 +115,11 @@ class ApplicationBar extends Component {
 
   render() {
     const { classes, onDrawerToggle } = this.props;
-    const { anchorEl, associateDialogOpen } = this.state;
+    const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
 
     return (
       <AppBar position="fixed">
-      <AssociateDialog
-        open={associateDialogOpen}
-        onClose={this.handleAssociateOpenToggle}
-      />
         <Toolbar>
           <IconButton
             className={classes.iconButton}
@@ -158,37 +129,27 @@ class ApplicationBar extends Component {
           >
             <MenuIcon />
           </IconButton>
-          <Typography className={classes.appTitle} variant="title" color="textSecondary">
+          <Typography
+            className={classes.appTitle}
+            variant="h6"
+            color="textSecondary"
+          >
             Genus
           </Typography>
           {this.renderInstitutionMenu()}
           <IconButton
-            aria-owns={open ? 'appbar__user-menu' : null}
+            aria-owns={open ? USER_MENU_ID : null}
             aria-haspopup="true"
-            onClick={this.handleMenu}
+            onClick={this.handleOpenUserMenu}
             color="inherit"
           >
             <AccountCircle className={classes.userIcon} />
           </IconButton>
-          <Menu
-            id="appbar__user-menu"
-            classes={{ paper: classes.userMenu }}
+          <UserMenu
             anchorEl={anchorEl}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            open={open}
-            onClose={this.handleClose}
-          >
-            {/* <MenuItem onClick={this.handleClose}>Profile</MenuItem> */}
-            <MenuItem
-              onClick={this.handleAssociateOpenToggle}
-            >
-              Vincular a uma instituição
-            </MenuItem>
-            <MenuItem onClick={this.handleLogout}>Sair</MenuItem>
-          </Menu>
+            menuId={USER_MENU_ID}
+            onClose={this.handleCloseUserMenu}
+          />
         </Toolbar>
       </AppBar>
     );
@@ -200,7 +161,6 @@ ApplicationBar.propTypes = {
   history: PropTypes.object.isRequired,
   institutions: PropTypes.array,
   onDrawerToggle: PropTypes.func.isRequired,
-  resetStore: PropTypes.func.isRequired,
   selectedInstitution: PropTypes.object,
   selectInstitution: PropTypes.func.isRequired,
 };
@@ -211,18 +171,21 @@ ApplicationBar.defaultProps = {
 
 function mapStateToProps({ institution }) {
   const { allIds, byId, selectedInstitution } = institution;
-  return {
-    institutions: allIds.map(id => byId[id]),
-    selectedInstitution: byId[selectedInstitution],
-  };
+  if (selectedInstitution !== NO_INSTUTION_SELECTED) {
+    return {
+      institutions: allIds.map(id => byId[id]),
+      selectedInstitution: byId[selectedInstitution],
+    };
+  }
+
+  return {};
 }
 
-function mapSDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch) {
   return {
     selectInstitution: id => dispatch(selectInstitution(id)),
-    resetStore: () => clearStore(dispatch),
   };
 }
 
-export default connect(mapStateToProps, mapSDispatchToProps)(
+export default connect(mapStateToProps, mapDispatchToProps)(
   withStyles(styles)(withRouter(ApplicationBar)));
