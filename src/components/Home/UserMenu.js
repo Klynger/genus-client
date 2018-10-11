@@ -38,6 +38,7 @@ class UserMenu extends Component {
   handleAssociateOpenToggle = () => {
     this.setState(({ associateDialogOpen }) =>
     ({ associateDialogOpen: !associateDialogOpen }));
+    this.props.onClose();
   }
 
   render() {

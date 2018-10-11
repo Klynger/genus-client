@@ -7,6 +7,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { withStyles } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import { selectInstitution } from '../../actions/institution';
+import { NO_INSTUTION_SELECTED } from '../../reducers/institution';
 import {
   AppBar, Toolbar, IconButton,
   Typography, MenuItem,
@@ -77,7 +78,7 @@ class ApplicationBar extends Component {
   renderInstitutionMenu() {
     const { institutions, selectedInstitution, classes } = this.props;
     const { institutionSelectOpen } = this.state;
-    if (institutions.length > 0 && selectedInstitution) {
+    if (institutions.length > 0) {
       return (
         <Select
           open={institutionSelectOpen}
@@ -128,7 +129,11 @@ class ApplicationBar extends Component {
           >
             <MenuIcon />
           </IconButton>
-          <Typography className={classes.appTitle} variant="title" color="textSecondary">
+          <Typography
+            className={classes.appTitle}
+            variant="h6"
+            color="textSecondary"
+          >
             Genus
           </Typography>
           {this.renderInstitutionMenu()}
@@ -166,10 +171,14 @@ ApplicationBar.defaultProps = {
 
 function mapStateToProps({ institution }) {
   const { allIds, byId, selectedInstitution } = institution;
-  return {
-    institutions: allIds.map(id => byId[id]),
-    selectedInstitution: byId[selectedInstitution],
-  };
+  if (selectedInstitution !== NO_INSTUTION_SELECTED) {
+    return {
+      institutions: allIds.map(id => byId[id]),
+      selectedInstitution: byId[selectedInstitution],
+    };
+  }
+
+  return {};
 }
 
 function mapDispatchToProps(dispatch) {
