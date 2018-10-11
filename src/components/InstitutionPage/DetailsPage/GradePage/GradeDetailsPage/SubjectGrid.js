@@ -8,7 +8,7 @@ import {
 } from '../../../../utils/SharedComponents';
 import GridButton from '../../../../utils/GridButton';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-import SubjectForm from '../../../SubjectForm';
+import SubjectCreateDialog from '../../../SubjectCreateDialog';
 
 const Container = styled.div`
   display: flex;
@@ -33,13 +33,14 @@ class SubjectGrid extends Component {
   }
 
   render() {
-    const { subjectIds } = this.props;
+    const { gradeId, subjectIds } = this.props;
     const { subjectDialogOpen } = this.state;
 
     return (
       <Container>
         <ResponsiveSubTitle>Disciplinas</ResponsiveSubTitle>
-        <SubjectForm
+        <SubjectCreateDialog
+          gradeId={gradeId}
           open={subjectDialogOpen}
           onClose={this.handleSubjectDialogToggle}
         />
@@ -59,7 +60,7 @@ class SubjectGrid extends Component {
 }
 
 SubjectGrid.propTypes = {
-  gradeId: PropTypes.string.isRequired, // eslint-disable-line
+  gradeId: PropTypes.string.isRequired,
   subjectIds: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 

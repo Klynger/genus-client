@@ -1,19 +1,18 @@
-import React, { Component } from 'react';
-import { DefaultDialogTransition } from '../utils/SharedComponents';
-import { capitalize } from '@material-ui/core/utils/helpers';
-import { defaultDialogBreakpoints } from '../utils/helpers';
-import { saveSubject } from '../../actions/subject';
-import { withRouter } from 'react-router-dom';
-import { Form, withFormik } from 'formik';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import * as Yup from 'yup';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import React, { Component } from 'react';
+import { Form, withFormik } from 'formik';
+import { withRouter } from 'react-router-dom';
+import { saveSubject } from '../../actions/subject';
+import { defaultDialogBreakpoints } from '../utils/helpers';
+import { capitalize } from '@material-ui/core/utils/helpers';
+import { DefaultDialogTransition } from '../utils/SharedComponents';
 import {
   Button, Dialog, DialogTitle,
   DialogContent, DialogActions, FormControl,
   FormHelperText, Input, InputLabel,
-  withStyles, withMobileDialog, Select,
-  MenuItem, withWidth,
+  withStyles, withMobileDialog, withWidth,
 } from '@material-ui/core';
 
 const styles = theme => ({
@@ -27,38 +26,32 @@ const styles = theme => ({
   },
 });
 
-class SubjectForm extends Component {
+class SubjectCreateDialog extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       openSelect: false,
     };
-
-    this.handleGradeSelectToggle = this.handleGradeSelectToggle.bind(this);
   }
 
-  handleGradeSelectToggle() {
+  handleGradeSelectToggle = () => {
     this.setState(prevState => ({ openSelect: !prevState.openSelect }));
   }
 
   render() {
     const {
-      handleSubmit, grades, isSubmitting,
+      handleSubmit, isSubmitting,
       classes, errors, fullScreen,
       handleChange, handleReset,
       values, open, onClose,
       touched, width,
     } = this.props;
 
-    const { openSelect } = this.state;
-
-    const gradeIdHasError = Boolean(errors.gradeId);
-
     return (
       <Dialog
-      TransitionComponent={DefaultDialogTransition}
-      onBackdropClick={handleReset}
+        TransitionComponent={DefaultDialogTransition}
+        onBackdropClick={handleReset}
         fullScreen={fullScreen}
         onClose={onClose}
         open={open}
@@ -75,7 +68,7 @@ class SubjectForm extends Component {
               className={classes.formControl}
               error={touched.name && errors.name !== undefined}
             >
-              <InputLabel htmlFor="name">Nome </InputLabel>
+              <InputLabel htmlFor="name">Nome</InputLabel>
               <Input
                 name="name"
                 value={values.name}
@@ -85,33 +78,6 @@ class SubjectForm extends Component {
                 <FormHelperText id="subject__name-error-text">{errors.name}</FormHelperText>}
             </FormControl>
           </Form>
-          <Select
-            name="gradeId"
-            open={openSelect}
-            onOpen={this.handleGradeSelectToggle}
-            onClose={this.handleGradeSelectToggle}
-            onChange={handleChange}
-            value={values.gradeId}
-          >
-            <MenuItem
-              key={-1}
-              value={-1}
-            >
-              Escolha uma Série
-            </MenuItem>
-            {grades.map(grade => (
-              <MenuItem
-                key={grade.id}
-                value={grade.id}
-              >
-                {grade.name}
-              </MenuItem>
-            ))}
-          </Select>
-          {touched.gradeId && errors.gradeId &&
-            <FormHelperText error={touched.gradeId && gradeIdHasError}>
-              {errors.gradeId}
-            </FormHelperText>}
           <DialogActions>
             <Button
               color="primary"
@@ -134,18 +100,17 @@ class SubjectForm extends Component {
   }
 }
 
-SubjectForm.defaultProps = {
+SubjectCreateDialog.defaultProps = {
   open: false,
-  grades: [],
 };
 
-SubjectForm.propTypes = {
+SubjectCreateDialog.propTypes = {
   classes: PropTypes.object,
   errors: PropTypes.shape({
     name: PropTypes.string,
   }),
   fullScreen: PropTypes.bool.isRequired,
-  grades: PropTypes.array,
+  gradeId: PropTypes.string.isRequired, // eslint-disable-line
   handleChange: PropTypes.func.isRequired,
   handleReset: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
@@ -180,29 +145,35 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-
 export default connect(mapStateToProps, mapDispatchToProps)(
   withStyles(styles)(withWidth()(withMobileDialog({
     breakpoint: 'xs',
   })(withRouter(withFormik({
-    mapPropsToValues({ name, gradeId }) {
+    mapPropsToValues({ name }) {
       return {
         name: name || '',
-        gradeId: gradeId || -1,
       };
     },
     validationSchema: Yup.object().shape({
-      gradeId: Yup.number().positive('Selecione uma Série').required('Não selecionou a Série'),
       name: Yup.string().required('Nome da disciplina é obrigatorio'),
     }),
-    handleSubmit(values, { setSubmitting, props }) {
+    handleSubmit(
+      values,
+      {
+        setSubmitting,
+        props: { gradeId, onClose, saveNewSubject },
+      }) {
+      values = {
+        ...values,
+        gradeId,
+      };
       setSubmitting(true);
-      props.saveNewSubject(values)
+      saveNewSubject(values)
         .then(() => {
-          props.onClose();
+          onClose();
           setSubmitting(false);
         })
         .catch(setSubmitting(false));
     },
     enableReinitialize: true,
-  })(SubjectForm))))));
+  })(SubjectCreateDialog))))));
