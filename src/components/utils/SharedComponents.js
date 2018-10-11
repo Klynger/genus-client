@@ -47,7 +47,7 @@ export const GridContainer = styled.div`
   display: grid;
   grid-auto-rows: 1fr;
   grid-gap: 6px;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(225px, 1fr));
 
   &:before {
     content: '';
