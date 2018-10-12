@@ -65,7 +65,7 @@ class EmployeeList extends Component {
       <Paper className={classes.root}>
         <Typography
           className={classes.title}
-          variant="title"
+          variant="h6"
         >
           {headTitle}
         </Typography>

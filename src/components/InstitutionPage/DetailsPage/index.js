@@ -56,11 +56,11 @@ class DetailsPage extends Component {
   }
 
   fetchData = () => {
-    const teacherInput = {
+    const TEACHER_INPUT = {
       institutionId: this.props.institution.id,
       role: 'TEACHER',
     };
-    requestGraphql(getUsersFromInstitutionByRole(teacherInput),
+    requestGraphql(getUsersFromInstitutionByRole(TEACHER_INPUT),
     localStorage.getItem('token'))
     .then(res => {
       if (res.data.data && res.data.data.getUsersFromInstitutionByRole) {
@@ -70,11 +70,11 @@ class DetailsPage extends Component {
       }
     })
     .catch();
-    const adminInput = {
+    const ADMIN_INPUT = {
       institutionId: this.props.institution.id,
       role: 'ADMIN',
     };
-    requestGraphql(getUsersFromInstitutionByRole(adminInput),
+    requestGraphql(getUsersFromInstitutionByRole(ADMIN_INPUT),
     localStorage.getItem('token'))
     .then(res => {
       if (res.data.data && res.data.data.getUsersFromInstitutionByRole) {
