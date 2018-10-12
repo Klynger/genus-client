@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import SubjectCard from './SubjectCard';
+import GridCard from '../../../../utils/GridCard';
 import {
   GridContainer, ResponsiveSubTitle,
 } from '../../../../utils/SharedComponents';
@@ -33,7 +33,7 @@ class SubjectGrid extends Component {
   }
 
   render() {
-    const { gradeId, subjectIds } = this.props;
+    const { gradeId, subjects } = this.props;
     const { subjectDialogOpen } = this.state;
 
     return (
@@ -45,11 +45,11 @@ class SubjectGrid extends Component {
           onClose={this.handleSubjectDialogToggle}
         />
         <GridContainer>
-          {subjectIds.map(id => (
-            <SubjectCard key={id} subjectId={id} />
+          {subjects.map(({ id, name }) => (
+            <GridCard key={id} title={name} />
           ))}
           <GridButton
-            key="-1"
+            key="-10"
             Icon={AddCircleIcon}
             onClick={this.handleSubjectDialogToggle}
           />
@@ -61,13 +61,21 @@ class SubjectGrid extends Component {
 
 SubjectGrid.propTypes = {
   gradeId: PropTypes.string.isRequired,
-  subjectIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+  subjects: PropTypes.arrayOf(PropTypes.object),
 };
 
-function mapToProps({ grade: { byId } }, { gradeId }) {
+SubjectGrid.subjects = {
+  subjects: [],
+};
+
+function mapToProps({ grade, subject }, { gradeId }) {
+  if (grade.byId[gradeId] && grade.byId[gradeId].subjects) {
     return {
-      subjectIds: byId[gradeId] ? byId[gradeId].subjects : [],
+      subjects: grade.byId[gradeId].subjects.map(id => subject.byId[id]),
     };
+  }
+
+  return {};
 }
 
 export default connect(mapToProps)(SubjectGrid);

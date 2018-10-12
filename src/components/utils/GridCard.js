@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import {
   Card, CardActionArea, CardContent,
   CardMedia, Typography, Fade,
@@ -28,6 +27,16 @@ const UnderlinedTypo = styled(Typography)`
   }
 `;
 
+export const CardLine = ({ children, ...rest }) => (
+  <UnderlinedTypo {...rest} component="span">
+    {children}
+  </UnderlinedTypo>
+);
+
+CardLine.propTypes = {
+  children: PropTypes.string.isRequired,
+};
+
 const styles = () => ({
   subjectCardRoot: {
     borderRadius: 0,
@@ -40,21 +49,32 @@ const styles = () => ({
   },
 });
 
-const SubjectCard = ({ classes, subject }) => (
+const GridCard = ({
+  classes,
+  children,
+  imgAlt,
+  imgSrc,
+  onCardClick,
+  title,
+}) => (
   <div>
     <Fade in>
       <StyledCard
         className={classes.subjectCardRoot}
       >
-        <CardActionArea className={classes.subjectCardActionArea}>
+        <CardActionArea
+          className={classes.subjectCardActionArea}
+          onClick={onCardClick}
+        >
           <StyledCardMedia
-            title={subject.name}
-            image="/static/images/grade-default-img.jpg"
+            title={imgAlt}
+            image={imgSrc}
           />
           <CardContent>
-            <UnderlinedTypo variant="h5" component="h2">
-              {subject.name}
+            <UnderlinedTypo variant="h5" component="h3">
+              {title}
             </UnderlinedTypo>
+            {children}
           </CardContent>
         </CardActionArea>
       </StyledCard>
@@ -62,16 +82,18 @@ const SubjectCard = ({ classes, subject }) => (
   </div>
 );
 
-SubjectCard.propTypes = {
+GridCard.propTypes = {
+  children: PropTypes.arrayOf(PropTypes.node),
   classes: PropTypes.object.isRequired,
-  subject: PropTypes.object.isRequired,
-  subjectId: PropTypes.string.isRequired, // eslint-disable-line
+  imgAlt: PropTypes.string,
+  imgSrc: PropTypes.string,
+  onCardClick: PropTypes.func,
+  title: PropTypes.string,
 };
 
-function mapToProps({ subject: { byId } }, { subjectId }) {
-  return {
-    subject: byId[subjectId],
-  };
-}
+GridCard.defaultProps = {
+  imgSrc: '/static/images/grade-default-img.jpg',
+  onCardClick: () => undefined,
+};
 
-export default withStyles(styles)(connect(mapToProps)(SubjectCard));
+export default withStyles(styles)(GridCard);
