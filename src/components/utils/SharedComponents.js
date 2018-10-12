@@ -71,19 +71,19 @@ const styles = theme => ({
 });
 
 const subTitleVariants = {
-  xs: 'headline',
-  sm: 'display1',
-  md: 'display1',
-  lg: 'display2',
-  xl: 'display2',
+  xs: 'h5',
+  sm: 'h4',
+  md: 'h4',
+  lg: 'h3',
+  xl: 'h3',
 };
 
 const titleVariants = {
-  xs: 'display1',
-  sm: 'display2',
-  md: 'display2',
-  lg: 'display3',
-  xl: 'display3',
+  xs: 'h4',
+  sm: 'h3',
+  md: 'h3',
+  lg: 'h2',
+  xl: 'h2',
 };
 
 export const Title = (variants, component) => (withWidth()(withStyles(styles)(
@@ -99,7 +99,7 @@ export const Title = (variants, component) => (withWidth()(withStyles(styles)(
 Title.propTypes = {
   children: PropTypes.string.isRequired,
   classes: PropTypes.object,
-  component: PropTypes.string,
+  component: PropTypes.oneOfType([PropTypes.string, PropTypes.func, PropTypes.object]),
   width: PropTypes.string,
 };
 
