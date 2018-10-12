@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import SubjectGrid from './SubjectGrid';
+import SubjectsGrid from './SubjectsGrid';
 import React, { Component } from 'react';
 import { Fade } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
@@ -72,7 +72,7 @@ class GradeDetailsPage extends Component {
       toRender = (
         <Container unit={unit}>
           <ResponsiveTitle>{grade.name}</ResponsiveTitle>
-          <SubjectGrid gradeId={gradeId} />
+          <SubjectsGrid gradeId={gradeId} />
         </Container>
       );
     } else {

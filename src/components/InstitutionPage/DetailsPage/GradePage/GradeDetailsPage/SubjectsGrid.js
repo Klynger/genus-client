@@ -16,7 +16,7 @@ const Container = styled.div`
   width: 97%;
 `;
 
-class SubjectGrid extends Component {
+class SubjectsGrid extends Component {
   constructor(props) {
     super(props);
 
@@ -59,12 +59,12 @@ class SubjectGrid extends Component {
   }
 }
 
-SubjectGrid.propTypes = {
+SubjectsGrid.propTypes = {
   gradeId: PropTypes.string.isRequired,
   subjects: PropTypes.arrayOf(PropTypes.object),
 };
 
-SubjectGrid.subjects = {
+SubjectsGrid.subjects = {
   subjects: [],
 };
 
@@ -78,4 +78,4 @@ function mapToProps({ grade, subject }, { gradeId }) {
   return {};
 }
 
-export default connect(mapToProps)(SubjectGrid);
+export default connect(mapToProps)(SubjectsGrid);

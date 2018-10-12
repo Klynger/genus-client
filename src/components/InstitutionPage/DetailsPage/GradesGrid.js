@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
-import GradeForm from '../GradeForm';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import GridButton from '../../utils/GridButton';
+import GradeCreateDialog from '../GradeCreateDialog';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import GridCard, { CardLine } from '../../utils/GridCard';
 import { NO_INSTUTION_SELECTED } from '../../../reducers/institution';
@@ -42,7 +42,10 @@ class GradesGrid extends Component {
       <Container>
         <ResponsiveSubTitle>Séries</ResponsiveSubTitle>
         <GridContainer>
-          <GradeForm open={gradeOpen} onClose={this.handleGradeOpen} />
+          <GradeCreateDialog
+            open={gradeOpen}
+            onClose={this.handleGradeOpen}
+          />
           {grades.map(({ id, name, subjects }) => (
             <GridCard
               key={id}
