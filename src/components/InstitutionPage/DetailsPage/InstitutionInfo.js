@@ -66,24 +66,28 @@ const InstitutionInfo = ({ classes, onHandleCreateEntryOpenToggle, institution }
         src="https://s3.amazonaws.com/tinycards/image/f8bda7d1c863b4f42adf2d1e5d72ff14" />
       <InstitutionInfos className={classes.institutionInfos}>
         <Typography
+          component="h2"
           variant="h6"
           gutterBottom
         >
           {institution.name}
         </Typography>
         <Typography
+          component="span"
           variant="subtitle1"
           gutterBottom
         >
           Email: {institution.email}
         </Typography>
         <Typography
+          component="span"
           variant="subtitle1"
           gutterBottom
         >
           Telefone: {institution.phone}
         </Typography>
         <Typography
+          component="span"
           gutterBottom
           variant="subtitle1"
         >
