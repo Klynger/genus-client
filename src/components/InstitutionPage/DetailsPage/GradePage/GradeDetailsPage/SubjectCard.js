@@ -52,7 +52,7 @@ const SubjectCard = ({ classes, subject }) => (
             image="/static/images/grade-default-img.jpg"
           />
           <CardContent>
-            <UnderlinedTypo variant="headline" component="h2">
+            <UnderlinedTypo variant="h5" component="h2">
               {subject.name}
             </UnderlinedTypo>
           </CardContent>
