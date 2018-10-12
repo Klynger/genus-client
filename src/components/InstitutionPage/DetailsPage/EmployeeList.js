@@ -65,7 +65,8 @@ class EmployeeList extends Component {
       <Paper className={classes.root}>
         <Typography
           className={classes.title}
-          variant="title"
+          component="span"
+          variant="h6"
         >
           {headTitle}
         </Typography>
@@ -115,7 +116,9 @@ class EmployeeList extends Component {
             onChangePage={this.handleChangePage}
           />}
         {employees.length === 0 &&
-          <Typography className={classes.emptyView}>
+          <Typography
+            className={classes.emptyView}
+          >
             A instituição não possui {headTitle.toLowerCase()}
           </Typography>
         }
