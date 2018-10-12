@@ -34,7 +34,7 @@ export const CardLine = ({ children, ...rest }) => (
 );
 
 CardLine.propTypes = {
-  children: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
 };
 
 const styles = () => ({
@@ -54,7 +54,7 @@ const GridCard = ({
   children,
   imgAlt,
   imgSrc,
-  onCardClick,
+  onClick,
   title,
 }) => (
   <div>
@@ -64,7 +64,7 @@ const GridCard = ({
       >
         <CardActionArea
           className={classes.subjectCardActionArea}
-          onClick={onCardClick}
+          onClick={onClick}
         >
           <StyledCardMedia
             title={imgAlt}
@@ -87,13 +87,13 @@ GridCard.propTypes = {
   classes: PropTypes.object.isRequired,
   imgAlt: PropTypes.string,
   imgSrc: PropTypes.string,
-  onCardClick: PropTypes.func,
+  onClick: PropTypes.func,
   title: PropTypes.string,
 };
 
 GridCard.defaultProps = {
   imgSrc: '/static/images/grade-default-img.jpg',
-  onCardClick: () => undefined,
+  onClick: () => undefined,
 };
 
 export default withStyles(styles)(GridCard);

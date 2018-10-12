@@ -1,16 +1,18 @@
-import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import GradeCard from './GradeCard';
 import GradeForm from '../GradeForm';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import GridButton from '../../utils/GridButton';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import GridCard, { CardLine } from '../../utils/GridCard';
+import { NO_INSTUTION_SELECTED } from '../../../reducers/institution';
 import {
   GridContainer, ResponsiveSubTitle,
 } from '../../utils/SharedComponents';
 
-const Wrapper = styled.div`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -23,24 +25,37 @@ class GradesGrid extends Component {
     this.state = {
       gradeOpen: false,
     };
-
-    this.handleGradeOpen = this.handleGradeOpen.bind(this);
   }
 
-  handleGradeOpen() {
+  handleGradeOpen = () => {
     this.setState(prevState => ({ gradeOpen: !prevState.gradeOpen }));
   }
 
+  goToGrade = gradeId => {
+    this.props.history.push(`/institution/grade/${gradeId}`);
+  }
+
   render() {
-    const { gradeIds } = this.props;
+    const { grades } = this.props;
     const { gradeOpen } = this.state;
     return (
-      <Wrapper>
+      <Container>
         <ResponsiveSubTitle>Séries</ResponsiveSubTitle>
         <GridContainer>
           <GradeForm open={gradeOpen} onClose={this.handleGradeOpen} />
-          {gradeIds.map(id => (
-            <GradeCard key={id} gradeId={id} />
+          {grades.map(({ id, name, subjects }) => (
+            <GridCard
+              key={id}
+              title={name}
+              onClick={() => this.goToGrade(id)}
+            >
+              <CardLine>
+                Disciplinas cadastradas: {subjects.length}
+              </CardLine>
+              <CardLine>
+                Quantidade de alunos: 35
+              </CardLine>
+            </GridCard>
           ))}
           <GridButton
             key="-1"
@@ -48,24 +63,34 @@ class GradesGrid extends Component {
             onClick={this.handleGradeOpen}
           />
         </GridContainer>
-      </Wrapper>
+      </Container>
     );
   }
 }
 
 GradesGrid.propTypes = {
-  gradeIds: PropTypes.arrayOf(PropTypes.string),
+  grades: PropTypes.arrayOf(PropTypes.object),
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 GradesGrid.defaultProps = {
-  gradeIds: [],
+  grades: [],
 };
 
-function mapStateToProps({ institution }) {
+function mapStateToProps({ institution, grade }) {
   const { selectedInstitution } = institution;
-  return {
-    gradeIds: institution.byId[selectedInstitution].grades,
-  };
+
+  if (selectedInstitution !== NO_INSTUTION_SELECTED
+  && institution.byId[selectedInstitution].grades) {
+    const { grades } = institution.byId[selectedInstitution];
+    return {
+      grades: grades.map(id => grade.byId[id]),
+    };
+  }
+
+  return {};
 }
 
-export default connect(mapStateToProps)(GradesGrid);
+export default connect(mapStateToProps)(withRouter(GradesGrid));
