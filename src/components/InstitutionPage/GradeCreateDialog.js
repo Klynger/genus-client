@@ -26,7 +26,7 @@ const styles = theme => ({
   },
 });
 
-const GradeForm = ({
+const GradeCreateDialog = ({
   classes, errors, fullScreen,
   handleChange, handleReset, handleSubmit,
   isSubmitting, values, open,
@@ -81,11 +81,11 @@ const GradeForm = ({
     </Dialog>
   );
 
-GradeForm.defaultProps = {
+  GradeCreateDialog.defaultProps = {
   open: false,
 };
 
-GradeForm.propTypes = {
+GradeCreateDialog.propTypes = {
   classes: PropTypes.object,
   errors: PropTypes.shape({
     name: PropTypes.string,
@@ -149,4 +149,4 @@ export default connect(mapStateToProps, mapDispatchToProps)(
         });
     },
     enableReinitialize: true,
-  })(GradeForm))))));
+  })(GradeCreateDialog))))));
