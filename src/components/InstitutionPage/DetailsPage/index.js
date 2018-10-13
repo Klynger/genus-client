@@ -7,6 +7,7 @@ import CreateEntryCodeDialog from '../EntryCode/CreateEntryCodeDialog';
 import DisplayCodeDialog from '../EntryCode/DisplayCodeDialog';
 import EmployeeList from './EmployeeList';
 import InstitutionInfos from './InstitutionInfo';
+import { removeUserOfInstitutionId } from '../../../actions/user';
 
 const styles = theme => ({
   detailsPageRoot: {
@@ -56,6 +57,17 @@ class DetailsPage extends Component {
     }
   }
 
+  handleRemoverUserFromInstitution = (userId, institutionName, password) => {
+    const input = {
+      institutionId: this.props.institution.id,
+      institutionName,
+      password,
+      toBeRemovedId: userId,
+    };
+
+    this.removeUser(input); // TODO then
+  };
+
   render() {
     const { classes, institution, teachers, admins } = this.props;
     const {
@@ -81,7 +93,11 @@ class DetailsPage extends Component {
             onHandleCreateEntryOpenToggle={this.handleCreateEntryOpenToggle}
           />
           <GradesGrid />
-          <EmployeeList employees={teachers} headTitle="Professores" />
+          <EmployeeList
+            employees={teachers}
+            onHandleRemoveUser={this.handleRemoverUserFromInstitution}
+            headTitle="Professores"
+          />
           <EmployeeList employees={admins} headTitle="Administradores" />
         </div>
       );
@@ -114,6 +130,7 @@ DetailsPage.propTypes = {
     id: PropTypes.string,
     name: PropTypes.string,
   }),
+  removeUser: PropTypes.func.isRequired, // eslint-disable-line
   teachers: PropTypes.arrayOf(PropTypes.shape({
     email: PropTypes.string.isRequired,
     username: PropTypes.string.isRequired,
@@ -124,13 +141,19 @@ function mapStateToProps({ institution, user }) {
   const { selectedInstitution } = institution;
   if (institution.byId[selectedInstitution]) {
     return {
-      admins: institution.byId[selectedInstitution].adminList.map(id => user.byId[id]),
+      admins: institution.byId[selectedInstitution].admins.map(id => user.byId[id]),
       institution: institution.byId[selectedInstitution],
-      teachers: institution.byId[selectedInstitution].teacherList.map(id => user.byId[id]),
+      teachers: institution.byId[selectedInstitution].teachers.map(id => user.byId[id]),
     };
   }
   return {};
 }
 
-export default connect(mapStateToProps)(
+function mapDispatchToProps(dispatch) {
+  return {
+    removeUser: input => dispatch(removeUserOfInstitutionId(input)),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(
   withStyles(styles)(DetailsPage));
