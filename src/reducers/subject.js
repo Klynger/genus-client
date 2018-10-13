@@ -1,17 +1,10 @@
 import { SAVE_SUBJECT, REMOVE_ALL_SUBJECTS } from '../actions/actionTypes';
+import { concatIdIfNotContain } from '../components/utils/helpers';
 
 const DEFAULT_STATE = {
   byId: {},
   allIds: [],
 };
-
-function concatIdIfNotContain(allIds, id) {
-  if (allIds.includes(id)) {
-    return allIds;
-  }
-
-  return allIds.concat([id]);
-}
 
 function subject(state = DEFAULT_STATE, action) {
   switch (action.type) {

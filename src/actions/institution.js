@@ -1,6 +1,6 @@
 import {
   SAVE_INSTITUTION, SELECT_INSTITUTION,
-  SAVE_GRADE, SAVE_SUBJECT,
+  SAVE_GRADE, SAVE_SUBJECT, SAVE_USER,
 } from './actionTypes';
 import { NO_INSTUTION_SELECTED } from '../reducers/institution';
 import { requestGraphql } from '../components/utils/HTTPClient';
@@ -56,7 +56,6 @@ export const joinInstitution = code => (dispatch) => (
           type: SAVE_INSTITUTION,
           institution,
         });
-
         grades.forEach(grade => {
           grade.subjects.forEach(subject => {
             dispatch({
@@ -93,9 +92,13 @@ export const fetchInstitutionsByOwner = () => (dispatch, getState) => {
               ...gradeG,
               subjects: gradeG.subjects.map(sub => sub.id),
             }));
+            const adminList = [...institution.adminList];
+            const teacherList = [...institution.teacherList];
             const newInstitution = {
               ...institution,
               grades: institution.grades.map(grade => grade.id),
+              adminList: adminList.map(admin => admin.id),
+              teacherList: teacherList.map(teacher => teacher.id),
             };
             subjects.forEach(subject => {
               dispatch({
@@ -107,6 +110,18 @@ export const fetchInstitutionsByOwner = () => (dispatch, getState) => {
               dispatch({
                 type: SAVE_GRADE,
                 grade,
+              });
+            });
+            adminList.forEach(user => {
+              dispatch({
+                type: SAVE_USER,
+                user,
+              });
+            });
+            teacherList.forEach(user => {
+              dispatch({
+                type: SAVE_USER,
+                user,
               });
             });
             dispatch({

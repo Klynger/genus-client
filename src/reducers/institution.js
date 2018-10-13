@@ -4,6 +4,7 @@ import {
   SELECT_INSTITUTION,
   REMOVE_ALL_INSTITUTIONS,
 } from '../actions/actionTypes';
+import { concatIdIfNotContain } from '../components/utils/helpers';
 
 export const NO_INSTUTION_SELECTED = '-1';
 
@@ -12,13 +13,6 @@ const DEFAULT_STATE = {
   allIds: [],
   selectedInstitution: NO_INSTUTION_SELECTED,
 };
-
-function concatIdIfNotContain(allIds, id) {
-  if (allIds.includes(id)) {
-    return allIds;
-  }
-  return allIds.concat([id]);
-}
 
 function institution(state = DEFAULT_STATE, action) {
   switch (action.type) {
