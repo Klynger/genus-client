@@ -20,9 +20,12 @@ function user(state = DEFAULT_STATE, action) {
     case SAVE_USER:
       return {
         ...state,
-        [action.user.id]: {
-          ...state.byId[action.user.id] ? state.byId[action.user.id] : {},
-          ...action.user,
+        byId: {
+          ...state.byId,
+          [action.user.id]: {
+            ...state.byId[action.user.id] ? state.byId[action.user.id] : {},
+            ...action.user,
+          },
         },
         allIds: concatIdIfNotContain(state.allIds, action.user.id),
       };

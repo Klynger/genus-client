@@ -1,3 +1,11 @@
+const userFragment = `
+  fragment userFields on User {
+    id
+    username
+    email
+  }
+`;
+
 export const queryFindInstitutionsByOwner = () => ({
   query: `
     query findMyInstitutions {
@@ -15,8 +23,16 @@ export const queryFindInstitutionsByOwner = () => ({
             name
           }
         }
+        adminList {
+          ...userFields
+        }
+        teacherList {
+          ...userFields
+        }
       }
     }
+
+    ${userFragment}
   `,
 });
 

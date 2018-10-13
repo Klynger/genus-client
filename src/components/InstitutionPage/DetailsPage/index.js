@@ -6,8 +6,6 @@ import GradesGrid from './GradesGrid';
 import CreateEntryCodeDialog from '../EntryCode/CreateEntryCodeDialog';
 import DisplayCodeDialog from '../EntryCode/DisplayCodeDialog';
 import EmployeeList from './EmployeeList';
-import { requestGraphql } from '../../utils/HTTPClient';
-import { getUsersFromInstitutionByRole } from '../../../queryGenerators/userQueries';
 import InstitutionInfos from './InstitutionInfo';
 
 const styles = theme => ({
@@ -36,54 +34,7 @@ class DetailsPage extends Component {
       entryCodeCreateOpen: false,
       currentGeneratedCode: null,
       displayCodeOpen: false,
-      teachers: [],
-      admins: [],
     };
-  }
-
-  componentDidMount() {
-    if (this.props.institution && this.props.institution.id) {
-      this.fetchData();
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.institution &&
-      prevProps.institution &&
-      this.props.institution.id !== prevProps.institution.id) {
-      this.fetchData();
-    }
-  }
-
-  fetchData = () => {
-    const TEACHER_INPUT = {
-      institutionId: this.props.institution.id,
-      role: 'TEACHER',
-    };
-    requestGraphql(getUsersFromInstitutionByRole(TEACHER_INPUT),
-    localStorage.getItem('token'))
-    .then(res => {
-      if (res.data.data && res.data.data.getUsersFromInstitutionByRole) {
-        this.setState({ teachers: [...res.data.data.getUsersFromInstitutionByRole] });
-      } else {
-        // TODO error treatment
-      }
-    })
-    .catch();
-    const ADMIN_INPUT = {
-      institutionId: this.props.institution.id,
-      role: 'ADMIN',
-    };
-    requestGraphql(getUsersFromInstitutionByRole(ADMIN_INPUT),
-    localStorage.getItem('token'))
-    .then(res => {
-      if (res.data.data && res.data.data.getUsersFromInstitutionByRole) {
-        this.setState({ admins: [...res.data.data.getUsersFromInstitutionByRole] });
-      } else {
-        // TODO error treatment
-      }
-    })
-    .catch();
   }
 
   handleDisplayCodeOpenToggle = () => {
@@ -106,10 +57,10 @@ class DetailsPage extends Component {
   }
 
   render() {
-    const { classes, institution } = this.props;
+    const { classes, institution, teachers, admins } = this.props;
     const {
       entryCodeCreateOpen, displayCodeOpen,
-      currentGeneratedCode, teachers, admins,
+      currentGeneratedCode,
     } = this.state;
     let toRender;
 
@@ -146,7 +97,16 @@ class DetailsPage extends Component {
   }
 }
 
+DetailsPage.defaultProps = {
+  admins: [],
+  teachers: [],
+};
+
 DetailsPage.propTypes = {
+  admins: PropTypes.arrayOf(PropTypes.shape({
+    email: PropTypes.string.isRequired,
+    username: PropTypes.string.isRequired,
+  })),
   classes: PropTypes.object.isRequired,
   institution: PropTypes.shape({
     address: PropTypes.string,
@@ -154,13 +114,19 @@ DetailsPage.propTypes = {
     id: PropTypes.string,
     name: PropTypes.string,
   }),
+  teachers: PropTypes.arrayOf(PropTypes.shape({
+    email: PropTypes.string.isRequired,
+    username: PropTypes.string.isRequired,
+  })),
 };
 
-function mapStateToProps({ institution }) {
+function mapStateToProps({ institution, user }) {
   const { selectedInstitution } = institution;
   if (institution.byId[selectedInstitution]) {
     return {
+      admins: institution.byId[selectedInstitution].adminList.map(id => user.byId[id]),
       institution: institution.byId[selectedInstitution],
+      teachers: institution.byId[selectedInstitution].teacherList.map(id => user.byId[id]),
     };
   }
   return {};
