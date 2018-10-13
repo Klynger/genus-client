@@ -23,9 +23,14 @@ export const addInstitution = institutionInput => (dispatch, getState) => {
       .then(res => {
         let result;
         if (res.data.data && res.data.data.createInstitution) {
+          const admins = [...res.data.data.createInstitution.admins];
+          const institution = {
+            ...res.data.data.createInstitution,
+            admins: admins.map(user => user.id),
+          };
           dispatch({
             type: SAVE_INSTITUTION,
-            institution: res.data.data.createInstitution,
+            institution,
           });
           if (getState().institution.selectedInstitution === NO_INSTUTION_SELECTED) {
             dispatch({
@@ -92,13 +97,13 @@ export const fetchInstitutionsByOwner = () => (dispatch, getState) => {
               ...gradeG,
               subjects: gradeG.subjects.map(sub => sub.id),
             }));
-            const adminList = [...institution.adminList];
-            const teacherList = [...institution.teacherList];
+            const admins = [...institution.admins];
+            const teachers = [...institution.teachers];
             const newInstitution = {
               ...institution,
               grades: institution.grades.map(grade => grade.id),
-              adminList: adminList.map(admin => admin.id),
-              teacherList: teacherList.map(teacher => teacher.id),
+              admins: admins.map(admin => admin.id),
+              teachers: teachers.map(teacher => teacher.id),
             };
             subjects.forEach(subject => {
               dispatch({
@@ -112,13 +117,13 @@ export const fetchInstitutionsByOwner = () => (dispatch, getState) => {
                 grade,
               });
             });
-            adminList.forEach(user => {
+            admins.forEach(user => {
               dispatch({
                 type: SAVE_USER,
                 user,
               });
             });
-            teacherList.forEach(user => {
+            teachers.forEach(user => {
               dispatch({
                 type: SAVE_USER,
                 user,
