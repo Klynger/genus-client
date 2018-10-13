@@ -112,16 +112,16 @@ export const fetchInstitutionsByOwner = () => (dispatch, getState) => {
                 grade,
               });
             });
-            adminList.forEach(admin => {
+            adminList.forEach(user => {
               dispatch({
                 type: SAVE_USER,
-                user: admin,
+                user,
               });
             });
-            teacherList.forEach(teacher => {
+            teacherList.forEach(user => {
               dispatch({
                 type: SAVE_USER,
-                user: teacher,
+                user,
               });
             });
             dispatch({
