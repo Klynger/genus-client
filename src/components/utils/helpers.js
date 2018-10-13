@@ -1,3 +1,11 @@
+export const concatIdIfNotContain = (allIds, id) => {
+  if (allIds.includes(id)) {
+    return allIds;
+  }
+
+  return allIds.concat([id]);
+};
+
 export const defaultDialogBreakpoints = () => ({
   dialogRoot: {
     minWidth: '30vw',

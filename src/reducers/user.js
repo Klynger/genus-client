@@ -1,4 +1,5 @@
 import { SAVE_USER, SET_LOGGED_USER, REMOVE_ALL_USERS } from '../actions/actionTypes';
+import { concatIdIfNotContain } from '../components/utils/helpers';
 
 export const NO_USER_LOGGED = null;
 
@@ -7,13 +8,6 @@ const DEFAULT_STATE = {
   allIds: [],
   loggedUserId: NO_USER_LOGGED,
 };
-
-function concatIdIfNotContain(allIds, id) {
-  if (allIds.includes(id)) {
-    return allIds;
-  }
-  return allIds.concat([id]);
-}
 
 function user(state = DEFAULT_STATE, action) {
   switch (action.type) {
