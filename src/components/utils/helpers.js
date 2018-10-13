@@ -1,3 +1,5 @@
+export const DEFAULT_PHOTO_CLASS_SRC = '/static/images/grade-default-img.jpg';
+
 export const concatIdIfNotContain = (allIds, id) => {
   if (allIds.includes(id)) {
     return allIds;

@@ -6,17 +6,9 @@ import {
   withStyles,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { ActionsContainer } from '../../utils/SharedComponents';
 
 const photoDimension = '140px';
-
-const InstitutionInfos = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  flex-wrap: wrap;
-`;
 
 const contentContainerBreakpoints = theme => ({
   [theme.breakpoints.up('sm')]: {
@@ -26,6 +18,10 @@ const contentContainerBreakpoints = theme => ({
 
 const styles = theme => ({
   institutionInfos: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
     marginBottom: theme.spacing.unit * 3,
     marginTop: theme.spacing.unit * 3,
     ...contentContainerBreakpoints(theme),
@@ -64,7 +60,7 @@ const InstitutionInfo = ({ classes, onHandleCreateEntryOpenToggle, institution }
         alt="Institution"
         className={classes.photo}
         src="https://s3.amazonaws.com/tinycards/image/f8bda7d1c863b4f42adf2d1e5d72ff14" />
-      <InstitutionInfos className={classes.institutionInfos}>
+      <div className={classes.institutionInfos}>
         <Typography
           component="h2"
           variant="h6"
@@ -93,7 +89,7 @@ const InstitutionInfo = ({ classes, onHandleCreateEntryOpenToggle, institution }
         >
           Endereço: {institution.address}
         </Typography>
-      </InstitutionInfos>
+      </div>
     </div>
     <ActionsContainer>
       <Button
