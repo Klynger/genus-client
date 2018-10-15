@@ -13,4 +13,15 @@ export const mutationCreateUser = userInput => ({
   },
 });
 
+export const removerUserFromInstitution = input => ({
+  query: `
+    mutation removeUserFromInstitution($input: RemoveUserFromInstitutionInput!) {
+      removeUserFromInstitution(input: $input)
+    }
+  `,
+  variables: {
+    input,
+  },
+});
+
 export default {};

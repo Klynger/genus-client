@@ -124,9 +124,9 @@ function mapStateToProps({ institution, user }) {
   const { selectedInstitution } = institution;
   if (institution.byId[selectedInstitution]) {
     return {
-      admins: institution.byId[selectedInstitution].adminList.map(id => user.byId[id]),
+      admins: institution.byId[selectedInstitution].admins.map(id => user.byId[id]),
       institution: institution.byId[selectedInstitution],
-      teachers: institution.byId[selectedInstitution].teacherList.map(id => user.byId[id]),
+      teachers: institution.byId[selectedInstitution].teachers.map(id => user.byId[id]),
     };
   }
   return {};

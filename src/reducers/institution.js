@@ -3,6 +3,7 @@ import {
   SAVE_INSTITUTION,
   SELECT_INSTITUTION,
   REMOVE_ALL_INSTITUTIONS,
+  REMOVE_USER_FROM_INSTITUION,
 } from '../actions/actionTypes';
 import { concatIdIfNotContain } from '../components/utils/helpers';
 
@@ -49,6 +50,20 @@ function institution(state = DEFAULT_STATE, action) {
       return {
         ...state,
         selectedInstitution: action.id,
+      };
+
+    case REMOVE_USER_FROM_INSTITUION:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [state.selectedInstitution]: {
+            ...state.byId[state.selectedInstitution],
+            admins: action.users.admins,
+            teachers: action.users.teachers,
+          },
+        },
+        allIds: state.allIds,
       };
 
     case REMOVE_ALL_INSTITUTIONS:

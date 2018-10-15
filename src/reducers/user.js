@@ -1,4 +1,4 @@
-import { SAVE_USER, SET_LOGGED_USER, REMOVE_ALL_USERS } from '../actions/actionTypes';
+import { SAVE_USER, SET_LOGGED_USER, REMOVE_USER, REMOVE_ALL_USERS } from '../actions/actionTypes';
 import { concatIdIfNotContain } from '../components/utils/helpers';
 
 export const NO_USER_LOGGED = null;
@@ -22,6 +22,16 @@ function user(state = DEFAULT_STATE, action) {
           },
         },
         allIds: concatIdIfNotContain(state.allIds, action.user.id),
+      };
+
+    case REMOVE_USER:
+      return {
+        ...state,
+        byId: action.userList.reduce((obj, key) => ({
+          ...obj,
+          [key]: state.byId[key],
+        }), {}),
+        allIds: action.userList,
       };
 
     case SET_LOGGED_USER:
