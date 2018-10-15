@@ -26,7 +26,7 @@ class SubjectsGrid extends Component {
     };
     this.handleSubjectDialogToggle = this.handleSubjectDialogToggle.bind(this);
   }
-  
+
   goToSubject = (id) => {
     const { push, location: { pathname } } = this.props.history;
     push(`${pathname}/subject/${id}`);

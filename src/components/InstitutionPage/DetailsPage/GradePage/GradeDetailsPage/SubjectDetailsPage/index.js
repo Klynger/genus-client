@@ -97,7 +97,7 @@ SubjectDetailsPage.propTypes = {
 };
 
 function mapToProps(
-  { institution, subject },
+  { subject },
   { match: { params: { subjectId } } }) {
   const sub = subject.byId[subjectId];
   if (sub) {
