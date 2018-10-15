@@ -1,8 +1,10 @@
-import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import SubjectInfo from './SubjectInfo';
+import AddteacherDialog from './AddTeacherDialog';
+import React, { Component, Fragment } from 'react';
+import { Fade } from '@material-ui/core';
 
 const Container = styled.div`
   align-items: center;
@@ -42,20 +44,50 @@ const Container = styled.div`
 * own data.
 */
 class SubjectDetailsPage extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      openAddTeacher: false,
+    };
+  }
+
   handleAddTeacherClick = () => {
-    // TODO
+    this.setState(({ openAddTeacher }) => ({
+      openAddTeacher: !openAddTeacher,
+    }));
   }
 
   render() {
     const { subject } = this.props;
+    const { openAddTeacher } = this.state;
+
+    let toRender;
+
+    if (subject) {
+      toRender = (
+        <Fragment>
+          <AddteacherDialog
+            subject={subject}
+            open={openAddTeacher}
+            onDialogCloseClick={this.handleAddTeacherClick}
+          />
+          <SubjectInfo
+            subject={subject}
+            onAddTeacherClick={this.handleAddTeacherClick}
+          />
+        </Fragment>
+      );
+    } else {
+      toRender = null;
+    }
+
     return (
+      <Fade in>
       <Container>
-        {subject &&
-        <SubjectInfo
-          subject={subject}
-          onAddTeacherClick={this.handleAddTeacherClick}
-        />}
+        {toRender}
       </Container>
+      </Fade>
     );
   }
 }
@@ -64,7 +96,9 @@ SubjectDetailsPage.propTypes = {
   subject: PropTypes.object,
 };
 
-function mapToProps({ subject }, { match: { params: { subjectId } } }) {
+function mapToProps(
+  { institution, subject },
+  { match: { params: { subjectId } } }) {
   const sub = subject.byId[subjectId];
   if (sub) {
     return {
