@@ -1,4 +1,4 @@
-const userFragment = `
+export const userFragment = `
   fragment userFields on User {
     id
     username
@@ -23,10 +23,10 @@ export const queryFindInstitutionsByOwner = () => ({
             name
           }
         }
-        adminList {
+        admins {
           ...userFields
         }
-        teacherList {
+        teachers {
           ...userFields
         }
       }

@@ -6,8 +6,11 @@ import {
   TableCell, TableBody,
   TablePagination, IconButton,
 } from '@material-ui/core';
-import { DeleteForever } from '@material-ui/icons';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { DeleteForever } from '@material-ui/icons';
+import RemoveUserDialog from './RemoveUserDialog';
+import { removeUserOfInstitutionId } from '../../../actions/user';
 
 const styles = theme => ({
   root: {
@@ -48,18 +51,43 @@ class EmployeeList extends Component {
     this.state = {
       page: 0,
       rowsPerPage: 5,
+      openDialog: false,
+      userId: '',
     };
-
-    this.handleChangePage = this.handleChangePage.bind(this);
   }
 
-  handleChangePage(event, page) {
+  handleChangePage = (event, page) => {
     this.setState({ page });
   }
 
+  handleRemoveUserDialogToggle = (formValues = null) => {
+    if (formValues
+      && typeof formValues.institutionName === 'string'
+      && typeof formValues.password === 'string') {
+        const input = {
+          institutionName: formValues.institutionName,
+          institutionId: this.props.selectedInstitution,
+          password: formValues.password,
+          toBeRemovedId: this.state.userId,
+        };
+        this.props.removeUser(input)
+        .then(() => {
+            this.setState(prevState => ({ openDialog: !prevState.openDialog, userId: '' }));
+          });
+    } else {
+      this.setState({ openDialog: false });
+    }
+  }
+
+  openRemoveUserDialog = userId => {
+    if (!this.state.openDialog) {
+      this.setState({ userId, openDialog: true });
+    }
+  }
+
   render() {
-    const { classes, employees, headTitle } = this.props;
-    const { page, rowsPerPage } = this.state;
+    const { ableToRemove, classes, employees, headTitle, institutionName, loggedUser } = this.props;
+    const { page, openDialog, rowsPerPage, userId } = this.state;
 
     return (
       <Paper className={classes.root}>
@@ -92,7 +120,11 @@ class EmployeeList extends Component {
                       {employee.email}
                     </TableCell>
                     <TableCell>
-                      <IconButton className={classes.deleteIcon}>
+                      <IconButton
+                        className={classes.deleteIcon}
+                        onClick={() => this.openRemoveUserDialog(employee.id)}
+                        disabled={employee.id === loggedUser || !ableToRemove}
+                      >
                         <DeleteForever />
                       </IconButton>
                     </TableCell>
@@ -118,10 +150,17 @@ class EmployeeList extends Component {
         {employees.length === 0 &&
           <Typography
             className={classes.emptyView}
+            variant="subtitle1"
           >
             A instituição não possui {headTitle.toLowerCase()}
           </Typography>
         }
+        <RemoveUserDialog
+          onClose={this.handleRemoveUserDialogToggle}
+          open={openDialog}
+          selectedInstitutionName={institutionName}
+          userId={userId}
+        />
       </Paper>
     );
   }
@@ -129,15 +168,41 @@ class EmployeeList extends Component {
 
 EmployeeList.defaultProps = {
   employees: [],
+  selectedInstitution: -1,
 };
 
 EmployeeList.propTypes = {
+  ableToRemove: PropTypes.bool,
   classes: PropTypes.object.isRequired,
   employees: PropTypes.arrayOf(PropTypes.shape({
     email: PropTypes.string.isRequired,
     username: PropTypes.string.isRequired,
   })),
   headTitle: PropTypes.string.isRequired,
+  institutionName: PropTypes.string.isRequired,
+  loggedUser: PropTypes.string.isRequired,
+  selectedInstitution: PropTypes.string,
+  removeUser: PropTypes.func.isRequired, // eslint-disable-line 
 };
 
-export default withStyles(styles)(EmployeeList);
+function mapStateToProps({ institution, user }) {
+  const { selectedInstitution } = institution;
+  let ableToRemove = false;
+  if (institution.byId[selectedInstitution]) {
+    ableToRemove = institution.byId[selectedInstitution].admins.includes(user.loggedUserId);
+  }
+  return {
+    selectedInstitution,
+    institutionName: institution.byId[selectedInstitution].name,
+    loggedUser: user.loggedUserId,
+    ableToRemove,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    removeUser: input => dispatch(removeUserOfInstitutionId(input)),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(EmployeeList));
