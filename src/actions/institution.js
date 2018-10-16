@@ -53,10 +53,39 @@ export const joinInstitution = code => (dispatch) => (
     .then(res => {
       if (res.data.data && res.data.data.joinInstitution) {
         const grades = res.data.data.joinInstitution.grades;
+        const admins = res.data.data.joinInstitution.admins;
+        const students = res.data.data.joinInstitution.students;
+        const teachers = res.data.data.joinInstitution.teachers;
+
         const institution = {
           ...res.data.data.joinInstitution,
           grades: res.data.data.joinInstitution.grades.map(grade => grade.id),
+          admins: admins.map(admin => admin.id),
+          students: students.map(student => student.id),
+          teachers: teachers.map(teacher => teacher.id),
         };
+
+        admins.forEach(user => {
+          dispatch({
+            type: SAVE_USER,
+            user,
+          });
+        });
+
+        students.forEach(user => {
+          dispatch({
+            type: SAVE_USER,
+            user,
+          });
+        });
+
+        teachers.forEach(user => {
+          dispatch({
+            type: SAVE_USER,
+            user,
+          });
+        });
+
         dispatch({
           type: SAVE_INSTITUTION,
           institution,
