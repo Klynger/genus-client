@@ -49,8 +49,19 @@ export const mutationJoinInstitution = code => ({
             name
           }
         }
+        admins {
+          ...userFields
+        }
+
+        teachers {
+          ...userFields
+        }
+        students {
+          ...userFields
+        }
       }
     }
+    ${userFragment}
   `,
   variables: {
     code,
