@@ -24,6 +24,7 @@ import { Form, withFormik } from 'formik';
 import { capitalize } from '@material-ui/core/utils/helpers';
 import { DefaultDialogTransition } from '../../utils/SharedComponents';
 import { defaultDialogBreakpoints } from '../../utils/helpers';
+import { removeUserOfInstitutionId } from '../../../actions/user';
 
 const StyledForm = styled(Form)`
   display: flex;
@@ -42,9 +43,10 @@ const styles = () => ({
 });
 
 const RemoveUserDialog = ({
-  classes, errors, fullScreen, handleSubmit, handleChange, isSubmitting,
-  onClose, open, selectedInstitutionName,
-  values, userName, touched, width }) => (
+  classes, errors, fullScreen,
+  handleSubmit, handleChange, isSubmitting,
+  selectedInstitutionName, open, onClose, values,
+  userName, touched, width }) => (
     <Dialog
       fullScreen={fullScreen}
       open={open}
@@ -60,9 +62,9 @@ const RemoveUserDialog = ({
         <Typography variant="h6">Você tem certeza disso?</Typography>
       </DialogTitle>
       <DialogContent>
+        <DangerText>Cuidado, esta ação não pode ser desfeita! </DangerText>
         <DialogContentText>
-          <DangerText>Cuidado, esta ação não pode ser desfeita! </DangerText>
-          Tem certeza que deseja remover o usuário <DangerText>{userName}? </DangerText>
+          Tem certeza que deseja remover o usuário <DangerText>{userName}</DangerText>?
           Digite o nome da instituição (<DangerText>{selectedInstitutionName}</DangerText>)
             e senha para que a operação possa ser realizada!
         </DialogContentText>
@@ -100,6 +102,10 @@ const RemoveUserDialog = ({
                 </FormHelperText>
               </Zoom>}
           </FormControl>
+          {errors.requestError &&
+            <FormHelperText error={errors.requestError}>
+              {errors.requestError}
+            </FormHelperText>}
           <DialogActions>
             <Button color="secondary" disabled={isSubmitting} onClick={onClose}>
               Cancelar
@@ -118,6 +124,7 @@ RemoveUserDialog.propTypes = {
   errors: PropTypes.shape({
     institutionName: PropTypes.string,
     password: PropTypes.string,
+    requestError: PropTypes.string,
   }).isRequired,
   fullScreen: PropTypes.bool.isRequired,
   handleChange: PropTypes.func.isRequired,
@@ -125,7 +132,8 @@ RemoveUserDialog.propTypes = {
   isSubmitting: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  selectedInstitutionName: PropTypes.string.isRequired,
+  selectedInstitution: PropTypes.string.isRequired, // eslint-disable-line
+  selectedInstitutionName: PropTypes.string.isRequired, // eslint-disable-line
   touched: PropTypes.shape({
     institutionName: PropTypes.bool,
     password: PropTypes.bool,
@@ -139,16 +147,25 @@ RemoveUserDialog.propTypes = {
   width: PropTypes.string.isRequired,
 };
 
-function mapStateToProps({ user }, { userId }) {
+function mapStateToProps({ institution, user }, { userId }) {
+  const { selectedInstitution } = institution;
   if (userId !== '') {
     return {
+      selectedInstitutionName: institution.byId[institution.selectedInstitution].name,
+      selectedInstitution,
       userName: user.byId[userId].username,
     };
   }
   return {};
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(
+function mapDispatchToProps(dispatch) {
+  return {
+    removeUser: input => dispatch(removeUserOfInstitutionId(input)),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(
   withWidth()(
     withMobileDialog({
       breakpoint: 'xs',
@@ -165,8 +182,31 @@ export default connect(mapStateToProps)(withStyles(styles)(
           .max(30, 'Senha não pode ter mais que 30 caracteres.')
           .required('Senha obrigatória.'),
       }),
-      handleSubmit(values, { props }) {
-        props.onClose(values);
+      handleSubmit(values, { props, resetForm, setErrors, setSubmitting }) {
+        if (values.institutionName === props.selectedInstitutionName) {
+          const input = {
+            institutionName: values.institutionName,
+            institutionId: props.selectedInstitution,
+            password: values.password,
+            toBeRemovedId: props.userId,
+          };
+          props.removeUser(input)
+            .then(res => {
+              if (res.data.data.removeUserFromInstitution) {
+                resetForm({
+                  institutionName: '',
+                  password: '',
+                });
+                props.onClose();
+              } else {
+                setErrors({ requestError: 'Usuário não removido! Tente novamente' });
+              }
+              setSubmitting(false);
+            });
+        } else {
+          setErrors({ requestError: 'Nome de instituição inválido! Digite novamente' });
+          setSubmitting(false);
+        }
       },
       enableReinitialize: true,
     })(

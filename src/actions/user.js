@@ -54,28 +54,17 @@ export const getTeacherOfInstitutionId = institutionId =>
 export const getAdminOfInstitutionId = institutionId =>
                 getUserOfInstitutionByRole(institutionId, 'ADMIN');
 
-export const removeUserOfInstitutionId = input => (dispatch, getState) => (
+export const removeUserOfInstitutionId = input => (dispatch) => (
   requestGraphql(removerUserFromInstitution(input),
   localStorage.getItem('token'))
     .then(res => {
-        let result = res;
         if (res.data.data.removeUserFromInstitution) {
-          const selectedInstitution = getState().institution.selectedInstitution;
-          const admins = getState().institution.byId[selectedInstitution].admins
-                          .filter(id => (id !== input.toBeRemovedId));
-          const teachers = getState().institution.byId[selectedInstitution].teachers
-                          .filter(id => (id !== input.toBeRemovedId));
           dispatch({
             type: REMOVE_USER_FROM_INSTITUION,
-            users: {
-              admins,
-              teachers,
-            },
+            toBeRemovedId: input.toBeRemovedId,
           });
-        } else {
-          result = Promise.reject(new Error('400'));
         }
-      return result;
+      return res;
     })
 );
 
