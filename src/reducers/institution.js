@@ -59,8 +59,10 @@ function institution(state = DEFAULT_STATE, action) {
           ...state.byId,
           [state.selectedInstitution]: {
             ...state.byId[state.selectedInstitution],
-            admins: action.users.admins,
-            teachers: action.users.teachers,
+            admins: state.byId[state.selectedInstitution].admins
+                      .filter(id => (id !== action.toBeRemovedId)),
+            teachers: state.byId[state.selectedInstitution].teachers
+                      .filter(id => (id !== action.toBeRemovedId)),
           },
         },
         allIds: state.allIds,

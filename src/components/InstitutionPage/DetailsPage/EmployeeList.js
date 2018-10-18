@@ -10,7 +10,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { DeleteForever } from '@material-ui/icons';
 import RemoveUserDialog from './RemoveUserDialog';
-import { removeUserOfInstitutionId } from '../../../actions/user';
 
 const styles = theme => ({
   root: {
@@ -60,23 +59,8 @@ class EmployeeList extends Component {
     this.setState({ page });
   }
 
-  handleRemoveUserDialogToggle = (formValues = null) => {
-    if (formValues
-      && typeof formValues.institutionName === 'string'
-      && typeof formValues.password === 'string') {
-        const input = {
-          institutionName: formValues.institutionName,
-          institutionId: this.props.selectedInstitution,
-          password: formValues.password,
-          toBeRemovedId: this.state.userId,
-        };
-        this.props.removeUser(input)
-        .then(() => {
-            this.setState(prevState => ({ openDialog: !prevState.openDialog, userId: '' }));
-          });
-    } else {
-      this.setState({ openDialog: false });
-    }
+  handleRemoveUserDialogToggle = () => {
+    this.setState(prevState => ({ openDialog: !prevState.openDialog, userId: '' }));
   }
 
   openRemoveUserDialog = userId => {
@@ -86,7 +70,7 @@ class EmployeeList extends Component {
   }
 
   render() {
-    const { ableToRemove, classes, employees, headTitle, institutionName, loggedUser } = this.props;
+    const { ableToRemove, classes, employees, headTitle, loggedUser } = this.props;
     const { page, openDialog, rowsPerPage, userId } = this.state;
 
     return (
@@ -158,7 +142,6 @@ class EmployeeList extends Component {
         <RemoveUserDialog
           onClose={this.handleRemoveUserDialogToggle}
           open={openDialog}
-          selectedInstitutionName={institutionName}
           userId={userId}
         />
       </Paper>
@@ -168,7 +151,6 @@ class EmployeeList extends Component {
 
 EmployeeList.defaultProps = {
   employees: [],
-  selectedInstitution: -1,
 };
 
 EmployeeList.propTypes = {
@@ -179,10 +161,7 @@ EmployeeList.propTypes = {
     username: PropTypes.string.isRequired,
   })),
   headTitle: PropTypes.string.isRequired,
-  institutionName: PropTypes.string.isRequired,
   loggedUser: PropTypes.string.isRequired,
-  selectedInstitution: PropTypes.string,
-  removeUser: PropTypes.func.isRequired, // eslint-disable-line 
 };
 
 function mapStateToProps({ institution, user }) {
@@ -192,17 +171,9 @@ function mapStateToProps({ institution, user }) {
     ableToRemove = institution.byId[selectedInstitution].admins.includes(user.loggedUserId);
   }
   return {
-    selectedInstitution,
-    institutionName: institution.byId[selectedInstitution].name,
     loggedUser: user.loggedUserId,
     ableToRemove,
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    removeUser: input => dispatch(removeUserOfInstitutionId(input)),
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(EmployeeList));
+export default connect(mapStateToProps)(withStyles(styles)(EmployeeList));
