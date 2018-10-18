@@ -57,7 +57,7 @@ class DetailsPage extends Component {
   }
 
   render() {
-    const { classes, institution, teachers, admins } = this.props;
+    const { classes, institution } = this.props;
     const {
       entryCodeCreateOpen, displayCodeOpen,
       currentGeneratedCode,
@@ -81,8 +81,8 @@ class DetailsPage extends Component {
             onHandleCreateEntryOpenToggle={this.handleCreateEntryOpenToggle}
           />
           <GradesGrid />
-          <EmployeeList employees={teachers} headTitle="Professores" />
-          <EmployeeList employees={admins} headTitle="Administradores" />
+          <EmployeeList employees={institution.teachers} headTitle="Professores" />
+          <EmployeeList employees={institution.admins} headTitle="Administradores" />
         </div>
       );
     } else {
@@ -97,36 +97,33 @@ class DetailsPage extends Component {
   }
 }
 
-DetailsPage.defaultProps = {
-  admins: [],
-  teachers: [],
-};
-
 DetailsPage.propTypes = {
-  admins: PropTypes.arrayOf(PropTypes.shape({
-    email: PropTypes.string.isRequired,
-    username: PropTypes.string.isRequired,
-  })),
   classes: PropTypes.object.isRequired,
   institution: PropTypes.shape({
     address: PropTypes.string,
+    admins: PropTypes.arrayOf(PropTypes.shape({
+      email: PropTypes.string.isRequired,
+      username: PropTypes.string.isRequired,
+    })),
     email: PropTypes.string,
     id: PropTypes.string,
     name: PropTypes.string,
+    teachers: PropTypes.arrayOf(PropTypes.shape({
+      email: PropTypes.string.isRequired,
+      username: PropTypes.string.isRequired,
+    })),
   }),
-  teachers: PropTypes.arrayOf(PropTypes.shape({
-    email: PropTypes.string.isRequired,
-    username: PropTypes.string.isRequired,
-  })),
 };
 
 function mapStateToProps({ institution, user }) {
   const { selectedInstitution } = institution;
   if (institution.byId[selectedInstitution]) {
     return {
-      admins: institution.byId[selectedInstitution].admins.map(id => user.byId[id]),
-      institution: institution.byId[selectedInstitution],
-      teachers: institution.byId[selectedInstitution].teachers.map(id => user.byId[id]),
+      institution: {
+        ...institution.byId[selectedInstitution],
+        admins: institution.byId[selectedInstitution].admins.map(id => user.byId[id]),
+        teachers: institution.byId[selectedInstitution].teachers.map(id => user.byId[id]),
+      },
     };
   }
   return {};
