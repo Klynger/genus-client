@@ -70,7 +70,7 @@ class SubjectDetailsPage extends Component {
           <AddteacherDialog
             subject={subject}
             open={openAddTeacher}
-            onDialogCloseClick={this.handleAddTeacherClick}
+            onClose={this.handleAddTeacherClick}
           />
           <SubjectInfo
             subject={subject}
