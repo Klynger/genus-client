@@ -92,6 +92,10 @@ export const joinInstitution = code => (dispatch) => (
         });
         grades.forEach(grade => {
           grade.subjects.forEach(subject => {
+            subject = {
+              ...subject,
+              teachers: subject.teachers.map(({ id }) => id),
+            };
             dispatch({
               type: SAVE_SUBJECT,
               subject,
@@ -135,6 +139,10 @@ export const fetchInstitutionsByOwner = () => (dispatch, getState) => {
               teachers: teachers.map(teacher => teacher.id),
             };
             subjects.forEach(subject => {
+              subject = {
+                ...subject,
+                teachers: subject.teachers.map(({ id }) => id),
+              };
               dispatch({
                 type: SAVE_SUBJECT,
                 subject,

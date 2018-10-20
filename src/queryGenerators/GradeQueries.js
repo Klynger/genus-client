@@ -7,6 +7,11 @@ export const queryFindGrade = id => ({
         subjects {
           id
           name
+          teachers {
+            id
+            username
+            email
+          }
         }
       }
     }
