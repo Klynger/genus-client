@@ -70,7 +70,7 @@ class SubjectDetailsPage extends Component {
           <AddteacherDialog
             subject={subject}
             open={openAddTeacher}
-            onDialogCloseClick={this.handleAddTeacherClick}
+            onClose={this.handleAddTeacherClick}
           />
           <SubjectInfo
             subject={subject}
@@ -97,12 +97,15 @@ SubjectDetailsPage.propTypes = {
 };
 
 function mapToProps(
-  { subject },
+  { subject, user },
   { match: { params: { subjectId } } }) {
   const sub = subject.byId[subjectId];
   if (sub) {
     return {
-      subject: sub,
+      subject: {
+        ...sub,
+        teachers: sub.teachers.map(id => user.byId[id]),
+      },
     };
   }
 

@@ -19,3 +19,4 @@ export const REMOVE_ALL_GRADES = 'REMOVE_ALL_GRADES';
 // Subject action types
 export const SAVE_SUBJECT = 'SAVE_SUBJECT';
 export const REMOVE_ALL_SUBJECTS = 'REMOVE_ALL_SUBJECTS';
+export const ADD_TEACHER_TO_SUBJECT = 'ADD_TEACHER_TO_SUBJECT';

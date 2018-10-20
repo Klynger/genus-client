@@ -15,6 +15,9 @@ export const mutationCreateInstitution = input => ({
           subjects {
             id
             name
+            teachers {
+              id
+            }
           }
         }
         admins {
@@ -47,6 +50,9 @@ export const mutationJoinInstitution = code => ({
           subjects {
             id
             name
+            teachers {
+              id
+            }
           }
         }
         admins {

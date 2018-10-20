@@ -21,6 +21,9 @@ export const queryFindInstitutionsByOwner = () => ({
           subjects {
             id
             name
+            teachers {
+              id
+            }
           }
         }
         admins {

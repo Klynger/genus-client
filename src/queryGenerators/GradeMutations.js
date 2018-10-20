@@ -6,6 +6,11 @@ export const mutationCreateGrade = input => ({
         name
         subjects {
           id
+          teachers {
+            id
+            username
+            email
+          }
         }
       }
     }

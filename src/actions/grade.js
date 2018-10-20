@@ -3,6 +3,7 @@ import {
   SAVE_SUBJECT,
   SAVE_SUBJECT_TO_GRADE,
   SAVE_GRADE_TO_INSTITUTION,
+  SAVE_USER,
 } from './actionTypes';
 import { requestGraphql } from '../components/utils/HTTPClient';
 import { mutationCreateGrade } from '../queryGenerators/GradeMutations';
@@ -14,14 +15,35 @@ export const addGrade = gradeInput => dispatch => {
     requestGraphql(mutationCreateGrade(gradeInput),
       localStorage.getItem('token'))
       .then(res => {
-        let result = res;
+        const result = res;
         if (res.data.data && res.data.data.createGrade) {
+          const subjects = res.data.data.createGrade.subjects.map(subject => {
+            subject = subject.teachers.map(user => {
+              dispatch({
+                type: SAVE_USER,
+                user,
+              });
+              return user.id;
+            });
+            dispatch({
+              type: SAVE_SUBJECT,
+              subject,
+            });
+
+            return subject.id;
+          });
+
+          const grade = {
+            ...res.data.data.createGrade.subjects,
+            subjects: subjects.map(({ id }) => id),
+          };
           dispatch({
             type: SAVE_GRADE,
-            grade: res.data.data.createGrade,
+            grade,
           });
         } else {
-          result = Promise.reject(new Error('404'));
+          // TODO
+          // result = Promise.reject(new Error('404'));
         }
         return result;
       })
@@ -33,14 +55,26 @@ export const addSubjectToGrade = subjectInput => dispatch => (
     localStorage.getItem('token'))
     .then(res => {
       if (res.data.data && res.data.data.createSubject) {
-        const payload = {
-          gradeId: subjectInput.gradeId,
-          subjectId: res.data.data.createSubject.id,
+        const subject = {
+          ...res.data.data.createSubject,
+          teachers: res.data.data.createSubject.teachers.map(user => {
+            dispatch({
+              type: SAVE_USER,
+              user,
+            });
+            return user.id;
+          }),
         };
+
         dispatch({
           type: SAVE_SUBJECT,
-          subject: res.data.data.createSubject,
+          subject,
         });
+
+        const payload = {
+          gradeId: subjectInput.gradeId,
+          subjectId: subject.id,
+        };
         dispatch({
           type: SAVE_SUBJECT_TO_GRADE,
           payload,
@@ -54,11 +88,31 @@ export const createGrade = newGrade => dispatch => {
     requestGraphql(mutationCreateGrade(newGrade),
       localStorage.getItem('token'))
       .then(res => {
-        let result = res;
+        const result = res;
         if (res.data.data && res.data.data.createGrade) {
+          const grade = {
+            ...res.data.data.createGrade,
+            subjects: res.data.data.createGrade.subjects.map(subject => {
+              subject = {
+                ...subject,
+                teachers: subject.teachers.map(user => {
+                  dispatch({
+                    type: SAVE_USER,
+                    user,
+                  });
+                  return user.id;
+                }),
+              };
+              dispatch({
+                type: SAVE_SUBJECT,
+                subject,
+              });
+              return subject.id;
+            }),
+          };
           dispatch({
             type: SAVE_GRADE,
-            grade: res.data.data.createGrade,
+            grade,
           });
           dispatch({
             type: SAVE_GRADE_TO_INSTITUTION,
@@ -68,7 +122,8 @@ export const createGrade = newGrade => dispatch => {
             },
           });
         } else {
-          result = Promise.reject(new Error('404'));
+          // TODO
+          // result = Promise.reject(new Error('404'));
         }
         return result;
       })
@@ -81,21 +136,21 @@ export const fetchGrade = id => dispatch => {
     .then(res => {
       let result;
       if (res.data.data && res.data.data.findGrade) {
-        const subjects = res.data.data.findGrade.subjects;
-        subjects.forEach(sub => {
-          const subject = {
-            ...sub,
-            grade: res.data.data.findGrade.id,
-          };
-          dispatch({
-            type: SAVE_SUBJECT,
-            subject,
-          });
-        });
-
         const grade = {
-          ...res.data.data.findGrade,
-          subjects: subjects.map(sub => sub.id),
+          ...res.data.data.createGrade,
+          subjects: res.data.data.createGrade.subjects.map(subject => {
+            subject = {
+              ...subject,
+              teachers: subject.teachers.map(user => {
+                dispatch({
+                  type: SAVE_USER,
+                  user,
+                });
+                return user.id;
+              }),
+            };
+            return subject.id;
+          }),
         };
         dispatch({
           type: SAVE_GRADE,
@@ -104,7 +159,8 @@ export const fetchGrade = id => dispatch => {
 
         result = res;
       } else {
-        result = Promise.reject(new Error('400'));
+        // TODO
+        // result = Promise.reject(new Error('400'));
       }
 
       return result;
