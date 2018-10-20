@@ -70,7 +70,9 @@ class EmployeeList extends Component {
   }
 
   render() {
-    const { ableToRemove, classes, employees, headTitle, loggedUser } = this.props;
+    const { ableToRemove, classes,
+            employees, headTitle,
+            loggedUser, selectedInstitution } = this.props;
     const { page, openDialog, rowsPerPage, userId } = this.state;
 
     return (
@@ -139,11 +141,12 @@ class EmployeeList extends Component {
             A instituição não possui {headTitle.toLowerCase()}
           </Typography>
         }
-        <RemoveUserDialog
-          onClose={this.handleRemoveUserDialogToggle}
-          open={openDialog}
-          userId={userId}
-        />
+        {selectedInstitution > -1
+        && <RemoveUserDialog
+            onClose={this.handleRemoveUserDialogToggle}
+            open={openDialog}
+            userId={userId}
+          />}
       </Paper>
     );
   }
@@ -162,6 +165,7 @@ EmployeeList.propTypes = {
   })),
   headTitle: PropTypes.string.isRequired,
   loggedUser: PropTypes.string.isRequired,
+  selectedInstitution: PropTypes.string,
 };
 
 function mapStateToProps({ institution, user }) {
@@ -171,8 +175,9 @@ function mapStateToProps({ institution, user }) {
     ableToRemove = institution.byId[selectedInstitution].admins.includes(user.loggedUserId);
   }
   return {
-    loggedUser: user.loggedUserId,
     ableToRemove,
+    loggedUser: user.loggedUserId,
+    selectedInstitution,
   };
 }
 
