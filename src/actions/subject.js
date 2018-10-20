@@ -14,15 +14,14 @@ export const saveSubject = subjectInput => dispatch => (
       if (res.data.data && res.data.data.createSubject) {
         const subject = {
           ...res.data.data.createSubject,
-          teachers: res.data.data.createSubject.teachers.map(({ id }) => id),
+          teachers: res.data.data.createSubject.teachers.map(user => {
+            dispatch({
+              type: SAVE_USER,
+              user,
+            });
+            return user.id;
+          }),
         };
-
-        res.data.data.createSubject.teachers.forEach(user => {
-          dispatch({
-            type: SAVE_USER,
-            user,
-          });
-        });
         dispatch({
           type: SAVE_SUBJECT,
           subject,
@@ -61,5 +60,3 @@ export const addTeacherToSubject = payload => dispatch => (
     // TODO error handler
   })
 );
-
-export default {};

@@ -29,7 +29,7 @@ function subject(state = DEFAULT_STATE, action) {
           ...state.byId,
           [action.payload.subjectId]: {
             ...state.byId[action.payload.subjectId],
-            users: concatIdIfNotContain(state.byId[action.payload.subjectId].users,
+            teachers: concatIdIfNotContain(state.byId[action.payload.subjectId].teachers,
               action.payload.teacherId),
           },
         },

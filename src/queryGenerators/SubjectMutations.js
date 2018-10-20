@@ -19,7 +19,7 @@ export const mutationCreateSubject = input => ({
 
 export const mutationAddTeacherToSubject = ({ subjectId, teacherId }) => ({
   query: `
-    mutation mutationAddTeacherToSubject($subjectId, $teacherId) {
+    mutation mutationAddTeacherToSubject($subjectId: ID!, $teacherId: ID!) {
       addTeacherToSubject(subjectId: $subjectId, teacherId: $teacherId) {
         teachers {
           id

@@ -61,7 +61,9 @@ const SubjectInfo = ({ classes, onAddTeacherClick, subject }) => (
           variant="subtitle1"
           gutterBottom
         >
-          Nenhum professor vinculado a essa disciplina
+          {subject.teachers.length > 0 ?
+          `Professores: ${subject.teachers.map(({ username }) => username).join(', ')}` :
+          'Nenhum professor vinculado a essa disciplina'}
         </Typography>
       </div>
     </div>
@@ -79,7 +81,11 @@ const SubjectInfo = ({ classes, onAddTeacherClick, subject }) => (
 SubjectInfo.propTypes = {
   classes: PropTypes.object.isRequired,
   onAddTeacherClick: PropTypes.func.isRequired,
-  subject: PropTypes.object.isRequired,
+  subject: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    photo: PropTypes.string,
+    teachers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  }),
 };
 
 export default withStyles(styles)(SubjectInfo);

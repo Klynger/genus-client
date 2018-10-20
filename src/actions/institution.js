@@ -141,7 +141,14 @@ export const fetchInstitutionsByOwner = () => (dispatch, getState) => {
             subjects.forEach(subject => {
               subject = {
                 ...subject,
-                teachers: subject.teachers.map(({ id }) => id),
+                teachers: subject.teachers.map(user => {
+                  dispatch({
+                    type: SAVE_USER,
+                    user,
+                  });
+
+                  return user.id;
+                }),
               };
               dispatch({
                 type: SAVE_SUBJECT,

@@ -103,6 +103,10 @@ export const createGrade = newGrade => dispatch => {
                   return user.id;
                 }),
               };
+              dispatch({
+                type: SAVE_SUBJECT,
+                subject,
+              });
               return subject.id;
             }),
           };
