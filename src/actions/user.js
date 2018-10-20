@@ -1,7 +1,15 @@
-import { SAVE_USER, SET_LOGGED_USER, REMOVE_USER_FROM_INSTITUION } from './actionTypes';
-import { requestGraphql } from '../components/utils/HTTPClient';
-import { findLoggedUserQuery, getUsersFromInstitutionByRole } from '../queryGenerators/userQueries';
 import { removerUserFromInstitution } from '../queryGenerators/userMutations';
+import {
+  SAVE_USER,
+  SET_LOGGED_USER,
+  REMOVE_USER_FROM_INSTITUION,
+} from './actionTypes';
+import { requestGraphql } from '../components/utils/HTTPClient';
+import {
+  findUserById,
+  findLoggedUserQuery,
+  getUsersFromInstitutionByRole,
+} from '../queryGenerators/userQueries';
 
 export const fetchLoggedUser = () => dispatch => (
   requestGraphql(findLoggedUserQuery(),
@@ -24,6 +32,19 @@ export const fetchLoggedUser = () => dispatch => (
     })
 );
 
+export const fetchUserById = id => dispatch => (
+  requestGraphql(findUserById(id),
+  localStorage.getItem('token'))
+  .then(res => {
+    if (res.data && res.data.data.findUser) {
+      dispatch({
+        type: SAVE_USER,
+        user: res.data.data.findUser,
+      });
+    }
+  })
+);
+
 const getUserOfInstitutionByRole = (institutionId, role) => (dispatch) => {
   const input = {
     institutionId,
@@ -44,7 +65,8 @@ const getUserOfInstitutionByRole = (institutionId, role) => (dispatch) => {
         return res;
       }
 
-      return Promise.reject(new Error('400'));
+      // return Promise.reject(new Error('400'));
+      return res;
     });
 };
 
