@@ -1,10 +1,10 @@
 import React from 'react';
 import { MuiThemeProvider } from '@material-ui/core/styles';
-import { injectGlobal } from 'styled-components';
+import { createGlobalStyle } from 'styled-components';
 import Routes from './Routes';
 import theme from '../utils/theme';
 
-injectGlobal([`
+const GlobalStyles = createGlobalStyle`
   html, body {
     background-color: ${theme.palette.background.default};
     box-sizing: border-box;
@@ -22,16 +22,13 @@ injectGlobal([`
     font-family: 'Robot', sans-serif;
     min-height: 100%;
   }
-
-  #root {
-    // min-height: 100vh;
-  }
-`]);
+`;
 
 const App = () => {
   return (
     <MuiThemeProvider theme={theme}>
       <Routes />
+      <GlobalStyles />
     </MuiThemeProvider>
   );
 };
