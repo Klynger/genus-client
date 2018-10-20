@@ -6,7 +6,7 @@ export const mutationCreateSubject = input => ({
         name
         teachers {
           id
-          name
+          username
           email
         }
       }
@@ -23,7 +23,7 @@ export const mutationAddTeacherToSubject = ({ subjectId, teacherId }) => ({
       addTeacherToSubject(subjectId: $subjectId, teacherId: $teacherId) {
         teachers {
           id
-          name
+          username
           email
         }
       }
