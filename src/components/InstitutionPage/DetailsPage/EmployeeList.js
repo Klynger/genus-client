@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { DeleteForever } from '@material-ui/icons';
 import RemoveUserDialog from './RemoveUserDialog';
+import { NO_INSTUTION_SELECTED } from '../../../reducers/institution';
 
 const styles = theme => ({
   root: {
@@ -141,7 +142,7 @@ class EmployeeList extends Component {
             A instituição não possui {headTitle.toLowerCase()}
           </Typography>
         }
-        {selectedInstitution > -1
+        {selectedInstitution !== NO_INSTUTION_SELECTED
         && <RemoveUserDialog
             onClose={this.handleRemoveUserDialogToggle}
             open={openDialog}
