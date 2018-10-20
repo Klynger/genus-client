@@ -132,8 +132,8 @@ RemoveUserDialog.propTypes = {
   isSubmitting: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  selectedInstitution: PropTypes.string.isRequired, // eslint-disable-line
-  selectedInstitutionName: PropTypes.string.isRequired, // eslint-disable-line
+  selectedInstitution: PropTypes.string, // eslint-disable-line
+  selectedInstitutionName: PropTypes.string, // eslint-disable-line
   touched: PropTypes.shape({
     institutionName: PropTypes.bool,
     password: PropTypes.bool,
