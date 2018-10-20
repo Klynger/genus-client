@@ -6,8 +6,10 @@ import {
   TableCell, TableBody,
   TablePagination, IconButton,
 } from '@material-ui/core';
-import { DeleteForever } from '@material-ui/icons';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { DeleteForever } from '@material-ui/icons';
+import RemoveUserDialog from './RemoveUserDialog';
 
 const styles = theme => ({
   root: {
@@ -48,24 +50,35 @@ class EmployeeList extends Component {
     this.state = {
       page: 0,
       rowsPerPage: 5,
+      openDialog: false,
+      userId: '',
     };
-
-    this.handleChangePage = this.handleChangePage.bind(this);
   }
 
-  handleChangePage(event, page) {
+  handleChangePage = (event, page) => {
     this.setState({ page });
   }
 
+  handleRemoveUserDialogToggle = () => {
+    this.setState(prevState => ({ openDialog: !prevState.openDialog, userId: '' }));
+  }
+
+  openRemoveUserDialog = userId => {
+    if (!this.state.openDialog) {
+      this.setState({ userId, openDialog: true });
+    }
+  }
+
   render() {
-    const { classes, employees, headTitle } = this.props;
-    const { page, rowsPerPage } = this.state;
+    const { ableToRemove, classes, employees, headTitle, loggedUser } = this.props;
+    const { page, openDialog, rowsPerPage, userId } = this.state;
 
     return (
       <Paper className={classes.root}>
         <Typography
           className={classes.title}
-          variant="title"
+          component="span"
+          variant="h6"
         >
           {headTitle}
         </Typography>
@@ -91,7 +104,11 @@ class EmployeeList extends Component {
                       {employee.email}
                     </TableCell>
                     <TableCell>
-                      <IconButton className={classes.deleteIcon}>
+                      <IconButton
+                        className={classes.deleteIcon}
+                        onClick={() => this.openRemoveUserDialog(employee.id)}
+                        disabled={employee.id === loggedUser || !ableToRemove}
+                      >
                         <DeleteForever />
                       </IconButton>
                     </TableCell>
@@ -115,10 +132,18 @@ class EmployeeList extends Component {
             onChangePage={this.handleChangePage}
           />}
         {employees.length === 0 &&
-          <Typography className={classes.emptyView}>
+          <Typography
+            className={classes.emptyView}
+            variant="subtitle1"
+          >
             A instituição não possui {headTitle.toLowerCase()}
           </Typography>
         }
+        <RemoveUserDialog
+          onClose={this.handleRemoveUserDialogToggle}
+          open={openDialog}
+          userId={userId}
+        />
       </Paper>
     );
   }
@@ -129,12 +154,26 @@ EmployeeList.defaultProps = {
 };
 
 EmployeeList.propTypes = {
+  ableToRemove: PropTypes.bool,
   classes: PropTypes.object.isRequired,
   employees: PropTypes.arrayOf(PropTypes.shape({
     email: PropTypes.string.isRequired,
     username: PropTypes.string.isRequired,
   })),
   headTitle: PropTypes.string.isRequired,
+  loggedUser: PropTypes.string.isRequired,
 };
 
-export default withStyles(styles)(EmployeeList);
+function mapStateToProps({ institution, user }) {
+  const { selectedInstitution } = institution;
+  let ableToRemove = false;
+  if (institution.byId[selectedInstitution]) {
+    ableToRemove = institution.byId[selectedInstitution].admins.includes(user.loggedUserId);
+  }
+  return {
+    loggedUser: user.loggedUserId,
+    ableToRemove,
+  };
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(EmployeeList));

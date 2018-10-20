@@ -1,6 +1,7 @@
-import { SAVE_USER, SET_LOGGED_USER } from './actionTypes';
+import { SAVE_USER, SET_LOGGED_USER, REMOVE_USER_FROM_INSTITUION } from './actionTypes';
 import { requestGraphql } from '../components/utils/HTTPClient';
 import { findLoggedUserQuery, getUsersFromInstitutionByRole } from '../queryGenerators/userQueries';
+import { removerUserFromInstitution } from '../queryGenerators/userMutations';
 
 export const fetchLoggedUser = () => dispatch => (
   requestGraphql(findLoggedUserQuery(),
@@ -52,5 +53,19 @@ export const getTeacherOfInstitutionId = institutionId =>
 
 export const getAdminOfInstitutionId = institutionId =>
                 getUserOfInstitutionByRole(institutionId, 'ADMIN');
+
+export const removeUserOfInstitutionId = input => (dispatch) => (
+  requestGraphql(removerUserFromInstitution(input),
+  localStorage.getItem('token'))
+    .then(res => {
+        if (res.data.data.removeUserFromInstitution) {
+          dispatch({
+            type: REMOVE_USER_FROM_INSTITUION,
+            toBeRemovedId: input.toBeRemovedId,
+          });
+        }
+      return res;
+    })
+);
 
 export default {};

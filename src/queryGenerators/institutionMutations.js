@@ -1,3 +1,5 @@
+import { userFragment } from './institutionQueries';
+
 export const mutationCreateInstitution = input => ({
   query: `
     mutation createNewInstitution($input: CreateInstitutionInput!) {
@@ -13,10 +15,20 @@ export const mutationCreateInstitution = input => ({
           subjects {
             id
             name
+            teachers {
+              id
+            }
           }
+        }
+        admins {
+          ...userFields
+        }
+        teachers {
+          ...userFields
         }
       }
     }
+    ${userFragment}
   `,
   variables: {
     input,
@@ -38,10 +50,24 @@ export const mutationJoinInstitution = code => ({
           subjects {
             id
             name
+            teachers {
+              id
+            }
           }
+        }
+        admins {
+          ...userFields
+        }
+
+        teachers {
+          ...userFields
+        }
+        students {
+          ...userFields
         }
       }
     }
+    ${userFragment}
   `,
   variables: {
     code,

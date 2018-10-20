@@ -1,3 +1,11 @@
+export const userFragment = `
+  fragment userFields on User {
+    id
+    username
+    email
+  }
+`;
+
 export const queryFindInstitutionsByOwner = () => ({
   query: `
     query findMyInstitutions {
@@ -13,10 +21,21 @@ export const queryFindInstitutionsByOwner = () => ({
           subjects {
             id
             name
+            teachers {
+              id
+            }
           }
+        }
+        admins {
+          ...userFields
+        }
+        teachers {
+          ...userFields
         }
       }
     }
+
+    ${userFragment}
   `,
 });
 

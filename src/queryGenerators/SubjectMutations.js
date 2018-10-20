@@ -4,6 +4,11 @@ export const mutationCreateSubject = input => ({
       createSubject(input: $input) {
         id
         name
+        teachers {
+          id
+          username
+          email
+        }
       }
     }
   `,
@@ -12,4 +17,20 @@ export const mutationCreateSubject = input => ({
   },
 });
 
-export default {};
+export const mutationAddTeacherToSubject = ({ subjectId, teacherId }) => ({
+  query: `
+    mutation mutationAddTeacherToSubject($subjectId: ID!, $teacherId: ID!) {
+      addTeacherToSubject(subjectId: $subjectId, teacherId: $teacherId) {
+        teachers {
+          id
+          username
+          email
+        }
+      }
+    }
+  `,
+  variables: {
+    subjectId,
+    teacherId,
+  },
+});

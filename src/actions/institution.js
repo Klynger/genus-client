@@ -1,6 +1,6 @@
 import {
   SAVE_INSTITUTION, SELECT_INSTITUTION,
-  SAVE_GRADE, SAVE_SUBJECT,
+  SAVE_GRADE, SAVE_SUBJECT, SAVE_USER,
 } from './actionTypes';
 import { NO_INSTUTION_SELECTED } from '../reducers/institution';
 import { requestGraphql } from '../components/utils/HTTPClient';
@@ -23,9 +23,14 @@ export const addInstitution = institutionInput => (dispatch, getState) => {
       .then(res => {
         let result;
         if (res.data.data && res.data.data.createInstitution) {
+          const admins = [...res.data.data.createInstitution.admins];
+          const institution = {
+            ...res.data.data.createInstitution,
+            admins: admins.map(user => user.id),
+          };
           dispatch({
             type: SAVE_INSTITUTION,
-            institution: res.data.data.createInstitution,
+            institution,
           });
           if (getState().institution.selectedInstitution === NO_INSTUTION_SELECTED) {
             dispatch({
@@ -48,17 +53,49 @@ export const joinInstitution = code => (dispatch) => (
     .then(res => {
       if (res.data.data && res.data.data.joinInstitution) {
         const grades = res.data.data.joinInstitution.grades;
+        const admins = res.data.data.joinInstitution.admins;
+        const students = res.data.data.joinInstitution.students;
+        const teachers = res.data.data.joinInstitution.teachers;
+
         const institution = {
           ...res.data.data.joinInstitution,
           grades: res.data.data.joinInstitution.grades.map(grade => grade.id),
+          admins: admins.map(admin => admin.id),
+          students: students.map(student => student.id),
+          teachers: teachers.map(teacher => teacher.id),
         };
+
+        admins.forEach(user => {
+          dispatch({
+            type: SAVE_USER,
+            user,
+          });
+        });
+
+        students.forEach(user => {
+          dispatch({
+            type: SAVE_USER,
+            user,
+          });
+        });
+
+        teachers.forEach(user => {
+          dispatch({
+            type: SAVE_USER,
+            user,
+          });
+        });
+
         dispatch({
           type: SAVE_INSTITUTION,
           institution,
         });
-
         grades.forEach(grade => {
           grade.subjects.forEach(subject => {
+            subject = {
+              ...subject,
+              teachers: subject.teachers.map(({ id }) => id),
+            };
             dispatch({
               type: SAVE_SUBJECT,
               subject,
@@ -93,11 +130,26 @@ export const fetchInstitutionsByOwner = () => (dispatch, getState) => {
               ...gradeG,
               subjects: gradeG.subjects.map(sub => sub.id),
             }));
+            const admins = [...institution.admins];
+            const teachers = [...institution.teachers];
             const newInstitution = {
               ...institution,
               grades: institution.grades.map(grade => grade.id),
+              admins: admins.map(admin => admin.id),
+              teachers: teachers.map(teacher => teacher.id),
             };
             subjects.forEach(subject => {
+              subject = {
+                ...subject,
+                teachers: subject.teachers.map(user => {
+                  dispatch({
+                    type: SAVE_USER,
+                    user,
+                  });
+
+                  return user.id;
+                }),
+              };
               dispatch({
                 type: SAVE_SUBJECT,
                 subject,
@@ -107,6 +159,18 @@ export const fetchInstitutionsByOwner = () => (dispatch, getState) => {
               dispatch({
                 type: SAVE_GRADE,
                 grade,
+              });
+            });
+            admins.forEach(user => {
+              dispatch({
+                type: SAVE_USER,
+                user,
+              });
+            });
+            teachers.forEach(user => {
+              dispatch({
+                type: SAVE_USER,
+                user,
               });
             });
             dispatch({

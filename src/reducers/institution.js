@@ -3,7 +3,9 @@ import {
   SAVE_INSTITUTION,
   SELECT_INSTITUTION,
   REMOVE_ALL_INSTITUTIONS,
+  REMOVE_USER_FROM_INSTITUION,
 } from '../actions/actionTypes';
+import { concatIdIfNotContain } from '../components/utils/helpers';
 
 export const NO_INSTUTION_SELECTED = '-1';
 
@@ -12,13 +14,6 @@ const DEFAULT_STATE = {
   allIds: [],
   selectedInstitution: NO_INSTUTION_SELECTED,
 };
-
-function concatIdIfNotContain(allIds, id) {
-  if (allIds.includes(id)) {
-    return allIds;
-  }
-  return allIds.concat([id]);
-}
 
 function institution(state = DEFAULT_STATE, action) {
   switch (action.type) {
@@ -55,6 +50,22 @@ function institution(state = DEFAULT_STATE, action) {
       return {
         ...state,
         selectedInstitution: action.id,
+      };
+
+    case REMOVE_USER_FROM_INSTITUION:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [state.selectedInstitution]: {
+            ...state.byId[state.selectedInstitution],
+            admins: state.byId[state.selectedInstitution].admins
+                      .filter(id => (id !== action.toBeRemovedId)),
+            teachers: state.byId[state.selectedInstitution].teachers
+                      .filter(id => (id !== action.toBeRemovedId)),
+          },
+        },
+        allIds: state.allIds,
       };
 
     case REMOVE_ALL_INSTITUTIONS:

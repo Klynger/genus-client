@@ -1,17 +1,12 @@
-import { SAVE_SUBJECT, REMOVE_ALL_SUBJECTS } from '../actions/actionTypes';
+import {
+  SAVE_SUBJECT, REMOVE_ALL_SUBJECTS, ADD_TEACHER_TO_SUBJECT,
+} from '../actions/actionTypes';
+import { concatIdIfNotContain } from '../components/utils/helpers';
 
 const DEFAULT_STATE = {
   byId: {},
   allIds: [],
 };
-
-function concatIdIfNotContain(allIds, id) {
-  if (allIds.includes(id)) {
-    return allIds;
-  }
-
-  return allIds.concat([id]);
-}
 
 function subject(state = DEFAULT_STATE, action) {
   switch (action.type) {
@@ -27,7 +22,18 @@ function subject(state = DEFAULT_STATE, action) {
         },
         allIds: concatIdIfNotContain(state.allIds, action.subject.id),
       };
-
+    case ADD_TEACHER_TO_SUBJECT:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.payload.subjectId]: {
+            ...state.byId[action.payload.subjectId],
+            teachers: concatIdIfNotContain(state.byId[action.payload.subjectId].teachers,
+              action.payload.teacherId),
+          },
+        },
+      };
     case REMOVE_ALL_SUBJECTS:
       return DEFAULT_STATE;
     default:
