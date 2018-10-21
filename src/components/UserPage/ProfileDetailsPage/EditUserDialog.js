@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import React, { Component } from 'react';
 import { Form, withFormik } from 'formik';
 import { updateUser } from '../../../actions/user';
 import ProgressButton from '../../utils/ProgressButton';
