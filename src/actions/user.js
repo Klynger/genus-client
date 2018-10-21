@@ -1,4 +1,7 @@
-import { removerUserFromInstitution } from '../queryGenerators/userMutations';
+import {
+  mutationUpdateUser,
+  removerUserFromInstitution,
+} from '../queryGenerators/userMutations';
 import {
   SAVE_USER,
   SET_LOGGED_USER,
@@ -45,6 +48,20 @@ export const fetchUserById = id => dispatch => (
   })
 );
 
+export const updateUser = input => dispatch => (
+  requestGraphql(mutationUpdateUser(input),
+    localStorage.getItem('token'))
+    .then(res => {
+      if (res.data && res.data.data.updateUser) {
+        dispatch({
+          type: SAVE_USER,
+          user: res.data.data.updateUser,
+        });
+      }
+      return res;
+    })
+);
+
 const getUserOfInstitutionByRole = (institutionId, role) => (dispatch) => {
   const input = {
     institutionId,
@@ -89,5 +106,3 @@ export const removeUserOfInstitutionId = input => (dispatch) => (
       return res;
     })
 );
-
-export default {};

@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Route, Switch } from 'react-router-dom';
 import Loadable from 'react-loadable';
+import UserLoading from './UserLoading';
+import { Route, Switch } from 'react-router-dom';
 
 const AsyncProfileDetailsPage = Loadable({
   loader: () => import('./ProfileDetailsPage'),
-  loading: () => null,
+  loading: UserLoading,
 });
 
 const UserRoutes = ({ match }) => (

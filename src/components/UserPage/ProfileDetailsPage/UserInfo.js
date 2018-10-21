@@ -1,5 +1,7 @@
-import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import EditUserDialog from './EditUserDialog';
+import React, { Component, Fragment } from 'react';
 import ImageUploader from '../../utils/ImageUploader';
 import deepOrange from '@material-ui/core/colors/deepOrange';
 import {
@@ -10,6 +12,7 @@ import {
   CardContent,
   CardActions,
 } from '@material-ui/core';
+import { getFirstInitialsCapitalized } from '../../utils/helpers';
 
 const styles = theme => ({
   card: {
@@ -38,38 +41,81 @@ const styles = theme => ({
   },
 });
 
-const UserInfo = ({ classes, user }) => (
-  <Card className={classes.card}>
-    <CardContent className={classes.content}>
-      <div className={classes.imageContainer}>
-        <ImageUploader
-          alt="RK"
-          initials="RK"
-          className={classes.imageUploader}
+class UserInfo extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      editUserOpen: false,
+    };
+  }
+
+  get userInitials() {
+    return getFirstInitialsCapitalized(this.props.user.username);
+  }
+
+  handleEditUserToggle = () => {
+    this.setState(({ editUserOpen }) => ({ editUserOpen: !editUserOpen }));
+  }
+
+  render() {
+    const { classes, loggedUserId, user } = this.props;
+    const { editUserOpen } = this.state;
+
+    return (
+      <Fragment>
+        <EditUserDialog
+          user={user}
+          open={editUserOpen}
+          onClose={this.handleEditUserToggle}
         />
-      </div>
-      <Typography
-        variant="h5"
-        component="h2"
-      >
-        {user.username}
-      </Typography>
-      <Typography
-        variant="subtitle1"
-        component="span"
-      >
-        {user.email}
-      </Typography>
-    </CardContent>
-    <CardActions className={classes.actions}>
-      <Button color="primary">Editar</Button>
-    </CardActions>
-  </Card>
-);
+        <Card className={classes.card}>
+          <CardContent className={classes.content}>
+            <div className={classes.imageContainer}>
+              <ImageUploader
+                alt={this.userInitials}
+                initials={this.userInitials}
+                className={classes.imageUploader}
+              />
+            </div>
+            <Typography
+              variant="h5"
+              component="h2"
+            >
+              {user.username}
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              component="span"
+            >
+              {user.email}
+            </Typography>
+          </CardContent>
+          {loggedUserId === user.id &&
+          <CardActions className={classes.actions}>
+            <Button
+              color="primary"
+              onClick={this.handleEditUserToggle}
+            >
+              Editar
+            </Button>
+          </CardActions>}
+        </Card>
+      </Fragment>
+    );
+  }
+}
 
 UserInfo.propTypes = {
   classes: PropTypes.object.isRequired,
+  loggedUserId: PropTypes.string.isRequired,
   user: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(UserInfo);
+function mapToProps({ user: { loggedUserId } }) {
+  return {
+    loggedUserId,
+  };
+}
+
+export default connect(mapToProps)(withStyles(styles)(UserInfo));

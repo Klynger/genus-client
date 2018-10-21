@@ -35,20 +35,9 @@ const Container = styled.div`
   }
 `;
 
-// class ProfileDetailsPage extends Component {
-//   componentDidMount() {}
-
-//   render() {
-//     const { user } = this.props;
-//     return (
-//       <div>Details works { user.username }</div>
-//     );
-//   }
-// }
-
 const ProfileDetailsPage = ({ user }) => (
   <Container>
-    <UserInfo user={user} />
+    {user && <UserInfo user={user} />}
   </Container>
 );
 
