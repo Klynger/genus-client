@@ -1,4 +1,14 @@
+import * as Yup from 'yup';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import React, { Component } from 'react';
+import { Form, withFormik } from 'formik';
+import ProgressButton from '../../utils/ProgressButton';
+import { capitalize } from '@material-ui/core/utils/helpers';
+import { defaultDialogBreakpoints } from '../../utils/helpers';
+import { updateInstitution } from '../../../actions/institution';
+import { NO_INSTUTION_SELECTED } from '../../../reducers/institution';
+import { DefaultDialogTransition } from '../../utils/SharedComponents';
 import {
   Button,
   Dialog,
@@ -10,28 +20,15 @@ import {
   InputLabel,
   withMobileDialog,
   withStyles,
-  withWidth,
   FormHelperText,
 } from '@material-ui/core';
-import * as Yup from 'yup';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import styled from 'styled-components';
-import { Form, withFormik } from 'formik';
-import ProgressButton from '../../utils/ProgressButton';
-import { capitalize } from '@material-ui/core/utils/helpers';
-import { defaultDialogBreakpoints } from '../../utils/helpers';
-import { updateInstitution } from '../../../actions/institution';
-import { NO_INSTUTION_SELECTED } from '../../../reducers/institution';
-import { DefaultDialogTransition } from '../../utils/SharedComponents';
-
-const StyledForm = styled(Form)`
-  display: flex;
-  flex-direction: column;
-`;
 
 const styles = () => ({
   ...defaultDialogBreakpoints(),
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
 });
 
 class EditInstitutionDialog extends Component {
@@ -70,56 +67,47 @@ class EditInstitutionDialog extends Component {
       >
         <DialogTitle>Atualização de Instituição</DialogTitle>
         <DialogContent>
-          <StyledForm>
+          <Form className={classes.form}>
             <FormControl
               error={touched.name && errors.name !== undefined}
             >
-              <InputLabel htmlFor="update-institution__name">Nome</InputLabel>
+              <InputLabel htmlFor="update-institution__name-field">Nome</InputLabel>
               <Input
-                id="update-institution__name"
+                id="update-institution__name-field"
                 name="name"
                 value={values.name}
                 onChange={handleChange}
               />
               {touched.name && errors.name &&
-                <FormHelperText id="update-institution__name-error-text">
-                  {errors.name}
-                </FormHelperText>
-              }
+                <FormHelperText>{errors.name}</FormHelperText>}
             </FormControl>
             <FormControl
               error={touched.phone && errors.phone !== undefined}
             >
-              <InputLabel htmlFor="update-institution__phone">Telefone</InputLabel>
+              <InputLabel htmlFor="update-institution__phone-field">Telefone</InputLabel>
               <Input
-                id="update-institution__phone"
+                id="update-institution__phone-field"
                 name="phone"
                 value={values.phone}
                 onChange={handleChange}
               />
               {touched.phone && errors.phone &&
-                <FormHelperText id="update-institution__phone-error-text">
-                  {errors.phone}
-                </FormHelperText>
-              }
+                <FormHelperText>{errors.phone}</FormHelperText>}
             </FormControl>
             <FormControl
               error={touched.address && errors.address !== undefined}
             >
-              <InputLabel htmlFor="update-institution__address">Endereço</InputLabel>
+              <InputLabel htmlFor="update-institution__address-field">Endereço</InputLabel>
               <Input
-                id="update-institution__address"
+                id="update-institution__address-field"
                 name="address"
                 value={values.address}
                 onChange={handleChange}
               />
               {touched.address && errors.address &&
-                <FormHelperText id="update-institution__address-error-text">
-                  {errors.address}
-                </FormHelperText>
-              }
+                <FormHelperText>{errors.address}</FormHelperText>}
             </FormControl>
-          </StyledForm>
+          </Form>
           {errors.requestError &&
             <FormHelperText error={errors.requestError}>
               {errors.requestError}
@@ -131,7 +119,7 @@ class EditInstitutionDialog extends Component {
             disabled={isSubmitting}
             onClick={this.handleClose}
           >
-            Resetar
+            Cancelar
           </Button>
           <ProgressButton
             color="primary"
@@ -210,56 +198,54 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  withStyles(styles, { withTheme: true })(
-    withWidth()(
-      withMobileDialog({
-        breakpoint: 'xs',
-      })(withFormik({
-        mapPropsToValues({ institution }) {
-          return {
-            address: institution.address || '',
-            name: institution.name || '',
-            phone: institution.phone || '',
-          };
-        },
-        validationSchema: () => (
-          Yup.object().shape({
-            address: Yup.string()
-              .min(6, 'Endereço deve conter no mínimo 6 caracteres.')
-              .max(50, 'Endereço deve conter no máximo 50 caracteres.')
-              .required('Endereço é obrigatório'),
-            name: Yup.string()
-              .min(6, 'Nome da instituição deve conter no mínimo 6 caracteres.')
-              .max(50, 'Nome da instituição deve conter no máximo 50 caracteres.')
-              .required('Nome é obrigatório'),
-            phone: Yup.string()
-              .min(6, 'Telefone deve conter no mínimo 6 digitos.')
-              .max(50, 'Telefone deve conter no máximo 50 digitos.')
-              .required('Telefone é obrigatório.'),
-          })
-        ),
-        handleSubmit(values, { props, setSubmitting, resetForm, setErrors }) {
-          const input = {
-            ...values,
-            institutionId: props.selectedInstitution,
-          };
-          props.submitUpdate(input)
-            .then(res => {
-              setSubmitting(false);
-              if (res.data.data.updateInstitution) {
-                props.onClose();
-                resetForm({
-                  address: values.address || '',
-                  name: values.name || '',
-                  phone: values.phone || '',
-                });
-              } else {
-                setErrors({ requestError: 'Algo de errado aconteceu. Tente Novamente' });
-              }
-            })
-            .catch(() => {
-              setSubmitting(false);
+  withMobileDialog({
+    breakpoint: 'xs',
+  })(withFormik({
+    mapPropsToValues({ institution }) {
+      return {
+        address: institution.address || '',
+        name: institution.name || '',
+        phone: institution.phone || '',
+      };
+    },
+    validationSchema: () => (
+      Yup.object().shape({
+        address: Yup.string()
+          .min(6, 'Endereço deve conter no mínimo 6 caracteres.')
+          .max(50, 'Endereço deve conter no máximo 50 caracteres.')
+          .required('Endereço é obrigatório'),
+        name: Yup.string()
+          .min(6, 'Nome da instituição deve conter no mínimo 6 caracteres.')
+          .max(50, 'Nome da instituição deve conter no máximo 50 caracteres.')
+          .required('Nome é obrigatório'),
+        phone: Yup.string()
+          .min(6, 'Telefone deve conter no mínimo 6 digitos.')
+          .max(50, 'Telefone deve conter no máximo 50 digitos.')
+          .required('Telefone é obrigatório.'),
+      })
+    ),
+    handleSubmit(values, { props, setSubmitting, resetForm, setErrors }) {
+      const input = {
+        ...values,
+        institutionId: props.selectedInstitution,
+      };
+      props.submitUpdate(input)
+        .then(res => {
+          setSubmitting(false);
+          if (res.data.data.updateInstitution) {
+            props.onClose();
+            resetForm({
+              address: values.address || '',
+              name: values.name || '',
+              phone: values.phone || '',
             });
-        },
-        enableReinitialize: true,
-      })(EditInstitutionDialog)))));
+          } else {
+            setErrors({ requestError: 'Algo de errado aconteceu. Tente Novamente' });
+          }
+        })
+        .catch(() => {
+          setSubmitting(false);
+        });
+    },
+    enableReinitialize: true,
+  })(withStyles(styles, { withTheme: true })(EditInstitutionDialog))));
