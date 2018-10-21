@@ -36,14 +36,16 @@ const styles = theme => ({
 
 class EditUserDialog extends Component {
   handleClose = () => {
-    const DELAY_AFTER_TRANSITION = 20;
+    const DELAY_AFTER_TRANSITION = 50;
     const {
-      onClose, resetForm, user,
+      onClose, handleReset, setSubmitting,
       theme: { transitions: { duration: { leavingScreen } } },
     } = this.props;
+    setSubmitting(true);
     onClose();
     setTimeout(() => {
-      resetForm(user);
+      handleReset();
+      setSubmitting(false);
     }, leavingScreen + DELAY_AFTER_TRANSITION);
   }
 
@@ -123,11 +125,12 @@ EditUserDialog.propTypes = {
   }).isRequired,
   fullScreen: PropTypes.bool.isRequired,
   handleChange: PropTypes.func.isRequired,
+  handleReset: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   isSubmitting: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool,
-  resetForm: PropTypes.func.isRequired,
+  setSubmitting: PropTypes.func.isRequired,
   theme: PropTypes.shape({
     transitions: PropTypes.shape({
       duration: PropTypes.shape({
@@ -152,6 +155,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(null, mapDispatchToProps)(withFormik({
+  enableReinitialize: true,
   mapPropsToValues({ user }) {
     return {
       username: user.username || '',
