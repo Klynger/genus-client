@@ -77,4 +77,20 @@ export const mutationJoinInstitution = code => ({
   },
 });
 
+export const mutationUpdateInstitution = input => ({
+  query: `
+    mutation updateInstitution($input: UpdateInstitutionInput!) {
+      updateInstitution(input: $input) {
+        name
+        email
+        phone
+        address
+      }
+    }
+  `,
+  variables: {
+    input,
+  },
+});
+
 export default {};
