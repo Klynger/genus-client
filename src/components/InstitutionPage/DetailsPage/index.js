@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import GradesGrid from './GradesGrid';
 import CreateEntryCodeDialog from '../EntryCode/CreateEntryCodeDialog';
 import DisplayCodeDialog from '../EntryCode/DisplayCodeDialog';
-import EmployeeList from './EmployeeList';
+import UserList from './UserList';
 import InstitutionInfos from './InstitutionInfo';
 
 const styles = theme => ({
@@ -81,8 +81,9 @@ class DetailsPage extends Component {
             onHandleCreateEntryOpenToggle={this.handleCreateEntryOpenToggle}
           />
           <GradesGrid />
-          <EmployeeList employees={institution.teachers} headTitle="Professores" />
-          <EmployeeList employees={institution.admins} headTitle="Administradores" />
+          <UserList users={institution.teachers} headTitle="Professores" />
+          <UserList users={institution.admins} headTitle="Administradores" />
+          <UserList users={institution.students} headTitle="Alunos" />
         </div>
       );
     } else {
@@ -108,6 +109,10 @@ DetailsPage.propTypes = {
     email: PropTypes.string,
     id: PropTypes.string,
     name: PropTypes.string,
+    students: PropTypes.arrayOf(PropTypes.shape({
+      email: PropTypes.string.isRequired,
+      username: PropTypes.string.isRequired,
+    })),
     teachers: PropTypes.arrayOf(PropTypes.shape({
       email: PropTypes.string.isRequired,
       username: PropTypes.string.isRequired,
@@ -122,6 +127,7 @@ function mapStateToProps({ institution, user }) {
       institution: {
         ...institution.byId[selectedInstitution],
         admins: institution.byId[selectedInstitution].admins.map(id => user.byId[id]),
+        students: institution.byId[selectedInstitution].students.map(id => user.byId[id]),
         teachers: institution.byId[selectedInstitution].teachers.map(id => user.byId[id]),
       },
     };
