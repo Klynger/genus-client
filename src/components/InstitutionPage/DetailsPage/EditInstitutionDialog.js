@@ -224,7 +224,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(
           .required('Telefone é obrigatório.'),
       })
     ),
-    handleSubmit(values, { props, setSubmitting, resetForm, setErrors }) {
+    handleSubmit(values, { handleReset, props, setSubmitting, setErrors }) {
       const input = {
         ...values,
         institutionId: props.selectedInstitution,
@@ -234,11 +234,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(
           setSubmitting(false);
           if (res.data.data.updateInstitution) {
             props.onClose();
-            resetForm({
-              address: values.address || '',
-              name: values.name || '',
-              phone: values.phone || '',
-            });
+            handleReset();
           } else {
             setErrors({ requestError: 'Algo de errado aconteceu. Tente Novamente' });
           }
