@@ -26,6 +26,9 @@ export const mutationCreateInstitution = input => ({
         teachers {
           ...userFields
         }
+        students {
+          ...userFields
+        }
       }
     }
     ${userFragment}

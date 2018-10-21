@@ -16,6 +16,7 @@ const styles = theme => ({
   root: {
     marginTop: theme.spacing.unit * 2,
     overflowX: 'auto',
+    borderRadius: 0,
   },
   table: {
     width: '100%',
@@ -44,7 +45,7 @@ const styles = theme => ({
   },
 });
 
-class EmployeeList extends Component {
+class UserList extends Component {
   constructor(props) {
     super(props);
 
@@ -72,8 +73,8 @@ class EmployeeList extends Component {
 
   render() {
     const { ableToRemove, classes,
-            employees, headTitle,
-            loggedUser, selectedInstitution } = this.props;
+            headTitle, loggedUser,
+            selectedInstitution, users } = this.props;
     const { page, openDialog, rowsPerPage, userId } = this.state;
 
     return (
@@ -85,7 +86,7 @@ class EmployeeList extends Component {
         >
           {headTitle}
         </Typography>
-        {employees.length > 0 &&
+        {users.length > 0 &&
           <Table className={classes.table}>
             <TableHead>
               <TableRow>
@@ -95,22 +96,22 @@ class EmployeeList extends Component {
               </TableRow>
             </TableHead>
             <TableBody>
-              {employees
+              {users
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map(employee => (
+                .map(user => (
                   // change key
-                  <TableRow key={employee.username}>
+                  <TableRow key={user.username}>
                     <TableCell>
-                      {employee.username}
+                      {user.username}
                     </TableCell>
                     <TableCell className={classes.middleColumns}>
-                      {employee.email}
+                      {user.email}
                     </TableCell>
                     <TableCell>
                       <IconButton
                         className={classes.deleteIcon}
-                        onClick={() => this.openRemoveUserDialog(employee.id)}
-                        disabled={employee.id === loggedUser || !ableToRemove}
+                        onClick={() => this.openRemoveUserDialog(user.id)}
+                        disabled={user.id === loggedUser || !ableToRemove}
                       >
                         <DeleteForever />
                       </IconButton>
@@ -120,10 +121,10 @@ class EmployeeList extends Component {
             </TableBody>
           </Table>
         }
-        {employees.length > 0 &&
+        {users.length > 0 &&
           <TablePagination
             component="div"
-            count={employees.length}
+            count={users.length}
             page={page}
             rowsPerPage={rowsPerPage}
             backIconButtonProps={{
@@ -134,7 +135,7 @@ class EmployeeList extends Component {
             }}
             onChangePage={this.handleChangePage}
           />}
-        {employees.length === 0 &&
+        {users.length === 0 &&
           <Typography
             className={classes.emptyView}
             variant="subtitle1"
@@ -153,20 +154,20 @@ class EmployeeList extends Component {
   }
 }
 
-EmployeeList.defaultProps = {
-  employees: [],
+UserList.defaultProps = {
+  users: [],
 };
 
-EmployeeList.propTypes = {
+UserList.propTypes = {
   ableToRemove: PropTypes.bool,
   classes: PropTypes.object.isRequired,
-  employees: PropTypes.arrayOf(PropTypes.shape({
-    email: PropTypes.string.isRequired,
-    username: PropTypes.string.isRequired,
-  })),
   headTitle: PropTypes.string.isRequired,
   loggedUser: PropTypes.string.isRequired,
   selectedInstitution: PropTypes.string,
+  users: PropTypes.arrayOf(PropTypes.shape({
+    email: PropTypes.string.isRequired,
+    username: PropTypes.string.isRequired,
+  })),
 };
 
 function mapStateToProps({ institution, user }) {
@@ -182,4 +183,4 @@ function mapStateToProps({ institution, user }) {
   };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(EmployeeList));
+export default connect(mapStateToProps)(withStyles(styles)(UserList));
