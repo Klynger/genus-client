@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ImageUploader from '../../utils/ImageUploader';
+import deepOrange from '@material-ui/core/colors/deepOrange';
 import {
   Card,
   Button,
@@ -20,6 +21,12 @@ const styles = theme => ({
     padding: theme.spacing.unit * 2,
     paddingTop: 0,
   },
+  imageUploader: {
+    backgroundColor: deepOrange.A400,
+    fontSize: '4.25rem',
+    minHeight: 140,
+    minWidth: 140,
+  },
   content: {
     alignItems: 'center',
     display: 'flex',
@@ -35,7 +42,11 @@ const UserInfo = ({ classes, user }) => (
   <Card className={classes.card}>
     <CardContent className={classes.content}>
       <div className={classes.imageContainer}>
-        <ImageUploader alt="RK" initials="RK" />
+        <ImageUploader
+          alt="RK"
+          initials="RK"
+          className={classes.imageUploader}
+        />
       </div>
       <Typography
         variant="h5"

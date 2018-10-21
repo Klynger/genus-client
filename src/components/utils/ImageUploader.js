@@ -1,19 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import deepOrange from '@material-ui/core/colors/deepOrange';
 import {
   Avatar,
-  withStyles,
 } from '@material-ui/core';
-
-const styles = () => ({
-  avatar: {
-    backgroundColor: deepOrange.A400,
-    fontSize: '4.25rem',
-    height: 140,
-    width: 140,
-  },
-});
 
 class ImageUploader extends Component {
   get fullSrc() {
@@ -29,18 +18,28 @@ class ImageUploader extends Component {
   }
 
   render() {
-    const { alt, classes, initials } = this.props;
+    const {
+      alt, className, initials,
+      style,
+    } = this.props;
 
     if (initials) {
       return (
-        <Avatar className={classes.avatar}>{initials}</Avatar>
+        <Avatar
+          style={style}
+          alt={alt}
+          className={className}
+        >
+          {initials}
+        </Avatar>
       );
     }
     return (
       <Avatar
         alt={alt}
+        style={style}
         src={this.fullSrc}
-        className={classes.avatar}
+        className={className}
       />
     );
   }
@@ -52,7 +51,7 @@ ImageUploader.defaultProps = {
 
 ImageUploader.propTypes = {
   alt: PropTypes.string.isRequired,
-  classes: PropTypes.object.isRequired,
+  className: PropTypes.string,
   // editable: PropTypes.bool,
   imgSrc: PropTypes.string,
   initials: (props, propName, componentName) => {
@@ -69,6 +68,7 @@ ImageUploader.propTypes = {
   },
   mimeType: PropTypes.string,
   path: PropTypes.string,
+  style: PropTypes.object,
 };
 
-export default withStyles(styles)(ImageUploader);
+export default ImageUploader;
