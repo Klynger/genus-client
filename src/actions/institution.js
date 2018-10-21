@@ -1,11 +1,12 @@
 import {
   SAVE_INSTITUTION, SELECT_INSTITUTION,
   SAVE_GRADE, SAVE_SUBJECT, SAVE_USER,
+  UPDATE_INSTITUTION,
 } from './actionTypes';
 import { NO_INSTUTION_SELECTED } from '../reducers/institution';
 import { requestGraphql } from '../components/utils/HTTPClient';
 import {
-  mutationCreateInstitution, mutationJoinInstitution,
+  mutationCreateInstitution, mutationJoinInstitution, mutationUpdateInstitution,
 } from '../queryGenerators/institutionMutations';
 import { queryFindInstitutionsByOwner } from '../queryGenerators/institutionQueries';
 
@@ -203,5 +204,21 @@ export const fetchInstitutionsByOwner = () => (dispatch, getState) => {
 
         return result;
       })
+  );
+};
+
+export const updateInstitution = input => (dispatch) => {
+  return (requestGraphql(mutationUpdateInstitution(input),
+    localStorage.getItem('token'))
+    .then(res => {
+      if (res.data.data.updateInstitution) {
+        dispatch({
+          type: UPDATE_INSTITUTION,
+          institution: res.data.data.updateInstitution,
+        });
+      }
+
+      return res;
+    })
   );
 };

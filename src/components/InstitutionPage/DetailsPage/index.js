@@ -7,6 +7,7 @@ import CreateEntryCodeDialog from '../EntryCode/CreateEntryCodeDialog';
 import DisplayCodeDialog from '../EntryCode/DisplayCodeDialog';
 import UserList from './UserList';
 import InstitutionInfos from './InstitutionInfo';
+import EditInstitutionDialog from './EditInstitutionDialog';
 
 const styles = theme => ({
   detailsPageRoot: {
@@ -34,7 +35,10 @@ class DetailsPage extends Component {
       entryCodeCreateOpen: false,
       currentGeneratedCode: null,
       displayCodeOpen: false,
+      displayUpdateOpen: false,
     };
+
+    this.handleUpdateInstitutionOpenToggle = this.handleUpdateInstitutionOpenToggle.bind(this);
   }
 
   handleDisplayCodeOpenToggle = () => {
@@ -56,11 +60,15 @@ class DetailsPage extends Component {
     }
   }
 
+  handleUpdateInstitutionOpenToggle() {
+    this.setState(({ displayUpdateOpen }) => ({ displayUpdateOpen: !displayUpdateOpen }));
+  }
+
   render() {
     const { classes, institution } = this.props;
     const {
       entryCodeCreateOpen, displayCodeOpen,
-      currentGeneratedCode,
+      displayUpdateOpen, currentGeneratedCode,
     } = this.state;
     let toRender;
 
@@ -76,9 +84,14 @@ class DetailsPage extends Component {
             open={entryCodeCreateOpen}
             onClose={this.handleCreateEntryOpenToggle}
           />
+          <EditInstitutionDialog
+            open={displayUpdateOpen}
+            onClose={this.handleUpdateInstitutionOpenToggle}
+          />
           <InstitutionInfos
             institution={institution}
             onHandleCreateEntryOpenToggle={this.handleCreateEntryOpenToggle}
+            onHandleUpdateInstitutionOpenToggle={this.handleUpdateInstitutionOpenToggle}
           />
           <GradesGrid />
           <UserList users={institution.teachers} headTitle="Professores" />

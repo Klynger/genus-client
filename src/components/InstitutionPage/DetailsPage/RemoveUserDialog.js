@@ -202,6 +202,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(
                 setErrors({ requestError: 'Usuário não removido! Tente novamente' });
               }
               setSubmitting(false);
+            })
+            .catch(() => {
+              setSubmitting(false);
             });
         } else {
           setErrors({ requestError: 'Nome de instituição inválido! Digite novamente' });
