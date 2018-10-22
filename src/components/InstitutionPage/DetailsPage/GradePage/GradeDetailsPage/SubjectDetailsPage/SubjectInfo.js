@@ -40,7 +40,7 @@ const styles = theme => ({
   },
 });
 
-const SubjectInfo = ({ classes, onAddTeacherClick, subject }) => (
+const SubjectInfo = ({ classes, onAddTeacherClick, onEditSubjectClick, subject }) => (
   <Paper className={classes.root}>
     <div className={classes.contentContainer}>
       <img
@@ -70,6 +70,12 @@ const SubjectInfo = ({ classes, onAddTeacherClick, subject }) => (
     <ActionsContainer>
       <Button
         color="primary"
+        onClick={onEditSubjectClick}
+      >
+        Atualizar Informações
+      </Button>
+      <Button
+        color="primary"
         onClick={onAddTeacherClick}
       >
         Vincular professor
@@ -81,6 +87,7 @@ const SubjectInfo = ({ classes, onAddTeacherClick, subject }) => (
 SubjectInfo.propTypes = {
   classes: PropTypes.object.isRequired,
   onAddTeacherClick: PropTypes.func.isRequired,
+  onEditSubjectClick: PropTypes.func.isRequired,
   subject: PropTypes.shape({
     name: PropTypes.string.isRequired,
     photo: PropTypes.string,
