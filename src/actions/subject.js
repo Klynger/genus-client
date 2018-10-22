@@ -1,10 +1,11 @@
 import { requestGraphql } from '../components/utils/HTTPClient';
 import {
-  mutationCreateSubject, mutationAddTeacherToSubject,
+  mutationCreateSubject, mutationAddTeacherToSubject, mutationUpdateSubject,
 } from '../queryGenerators/SubjectMutations';
 import {
   SAVE_SUBJECT, SAVE_SUBJECT_TO_GRADE, SAVE_USER,
   ADD_TEACHER_TO_SUBJECT,
+  UPDATE_SUBJECT,
 } from './actionTypes';
 
 export const saveSubject = subjectInput => dispatch => (
@@ -58,5 +59,19 @@ export const addTeacherToSubject = payload => dispatch => (
     }
     return res;
     // TODO error handler
+  })
+);
+
+export const updateSubject = payload => dispatch => (
+  requestGraphql(mutationUpdateSubject(payload),
+  localStorage.getItem('token'))
+  .then(res => {
+    if (res.data.data.updateSubject) {
+      dispatch({
+        type: UPDATE_SUBJECT,
+        payload,
+      });
+    }
+    return res;
   })
 );

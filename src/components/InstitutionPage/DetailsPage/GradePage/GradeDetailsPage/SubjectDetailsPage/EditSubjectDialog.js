@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { Form, withFormik } from 'formik';
+import { updateSubject } from '../../../../../../actions/subject';
 import ProgressButton from '../../../../../utils/ProgressButton';
 import { capitalize } from '@material-ui/core/utils/helpers';
 import { defaultDialogBreakpoints } from '../../../../../utils/helpers';
@@ -61,7 +62,7 @@ class EditSubjectDialog extends Component {
         onClose={this.handleClose}
         TransitionComponent={DefaultDialogTransition}
         classes={{
-          paper: classes[`dialogRoot${capitalize(width)}`]
+          paper: classes[`dialogRoot${capitalize(width)}`],
         }}
       >
         <DialogTitle>Atualização de Disciplina</DialogTitle>
@@ -146,7 +147,13 @@ function mapStateToProps({ subject }, { subjectId }) {
   };
 }
 
-export default connect(mapStateToProps)(
+function mapDispatchToProps(dispatch) {
+  return {
+    submitUpdate: input => dispatch(updateSubject(input)),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(
   withMobileDialog({
     breakpoint: 'xs',
   })(withFormik({
@@ -164,10 +171,24 @@ export default connect(mapStateToProps)(
       })
     ),
     handleSubmit(values, { handleReset, props, setSubmitting, setErrors }) {
-      // const input = {
-      //   ...values,
-      //   subjectId: props.subjectId,
-      // };
+      const input = {
+        ...values,
+        subjectId: props.subjectId,
+      };
+
+      props.submitUpdate(input)
+        .then(res => {
+          setSubmitting(false);
+          if (res.data.data.updateSubject) {
+            props.onClose();
+            handleReset();
+          } else {
+            setErrors({ requestError: 'Algo de errado aconteceu. Tente Novamente' });
+          }
+        })
+        .catch(() => {
+          setSubmitting(false);
+        });
     },
     enableReinitialize: true,
   })(withStyles(styles, { withTheme: true })(EditSubjectDialog))));
