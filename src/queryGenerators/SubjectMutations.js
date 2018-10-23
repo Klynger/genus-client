@@ -34,3 +34,17 @@ export const mutationAddTeacherToSubject = ({ subjectId, teacherId }) => ({
     teacherId,
   },
 });
+
+export const mutationUpdateSubject = input => ({
+  query: `
+    mutation mutationUpdateSubject($input: UpdateSubjectInput!) {
+      updateSubject(input: $input) {
+        id
+        name
+      }
+    }
+  `,
+  variables: {
+    input,
+  },
+});

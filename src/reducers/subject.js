@@ -1,5 +1,5 @@
 import {
-  SAVE_SUBJECT, REMOVE_ALL_SUBJECTS, ADD_TEACHER_TO_SUBJECT,
+  SAVE_SUBJECT, REMOVE_ALL_SUBJECTS, ADD_TEACHER_TO_SUBJECT, UPDATE_SUBJECT,
 } from '../actions/actionTypes';
 import { concatIdIfNotContain } from '../components/utils/helpers';
 
@@ -34,6 +34,19 @@ function subject(state = DEFAULT_STATE, action) {
           },
         },
       };
+
+    case UPDATE_SUBJECT:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.payload.subjectId]: {
+            ...state.byId[action.payload.subjectId],
+            name: action.payload.name,
+          },
+        },
+      };
+
     case REMOVE_ALL_SUBJECTS:
       return DEFAULT_STATE;
     default:
