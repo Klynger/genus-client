@@ -26,6 +26,9 @@ export const mutationCreateInstitution = input => ({
         teachers {
           ...userFields
         }
+        students {
+          ...userFields
+        }
       }
     }
     ${userFragment}
@@ -71,6 +74,22 @@ export const mutationJoinInstitution = code => ({
   `,
   variables: {
     code,
+  },
+});
+
+export const mutationUpdateInstitution = input => ({
+  query: `
+    mutation updateInstitution($input: UpdateInstitutionInput!) {
+      updateInstitution(input: $input) {
+        name
+        email
+        phone
+        address
+      }
+    }
+  `,
+  variables: {
+    input,
   },
 });
 

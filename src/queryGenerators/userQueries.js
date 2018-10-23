@@ -36,4 +36,17 @@ export const getUsersFromInstitutionByRole = input => ({
   },
 });
 
-export default {};
+export const findUserById = id => ({
+  query: `
+    query findUserById($id: ID!) {
+      findUser(id: $id) {
+        id
+        email
+        username
+      }
+    }
+  `,
+  variables: {
+    id,
+  },
+});

@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 // import { Button } from '@material-ui/core';
 // import CreateEntryCodeDialog from '../InstitutionPage/EntryCode/CreateEntryCodeDialog';
-import EmployeeList from '../InstitutionPage/DetailsPage/EmployeeList';
+import UserList from '../InstitutionPage/DetailsPage/UserList';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { requestGraphql } from '../utils/HTTPClient';
@@ -96,8 +96,8 @@ class TestingPage extends React.Component {
     const { teachers, admins } = this.state;
     return (
       <LandingContainer>
-        <EmployeeList employees={teachers} headTitle="Professores" />
-        <EmployeeList employees={admins} headTitle="Administradores" />
+        <UserList users={teachers} headTitle="Professores" />
+        <UserList users={admins} headTitle="Administradores" />
       </LandingContainer>
     );
   }

@@ -5,6 +5,7 @@ import SubjectInfo from './SubjectInfo';
 import AddteacherDialog from './AddTeacherDialog';
 import React, { Component, Fragment } from 'react';
 import { Fade } from '@material-ui/core';
+import EditSubjectDialog from './EditSubjectDialog';
 
 const Container = styled.div`
   align-items: center;
@@ -49,6 +50,7 @@ class SubjectDetailsPage extends Component {
 
     this.state = {
       openAddTeacher: false,
+      openEditSubject: false,
     };
   }
 
@@ -58,9 +60,15 @@ class SubjectDetailsPage extends Component {
     }));
   }
 
+  handleEditSubjectClick = () => {
+    this.setState(({ openEditSubject }) => ({
+      openEditSubject: !openEditSubject,
+    }));
+  }
+
   render() {
     const { subject } = this.props;
-    const { openAddTeacher } = this.state;
+    const { openAddTeacher, openEditSubject } = this.state;
 
     let toRender;
 
@@ -72,9 +80,15 @@ class SubjectDetailsPage extends Component {
             open={openAddTeacher}
             onClose={this.handleAddTeacherClick}
           />
+          <EditSubjectDialog
+            subjectId={subject.id}
+            open={openEditSubject}
+            onClose={this.handleEditSubjectClick}
+          />
           <SubjectInfo
             subject={subject}
             onAddTeacherClick={this.handleAddTeacherClick}
+            onEditSubjectClick={this.handleEditSubjectClick}
           />
         </Fragment>
       );

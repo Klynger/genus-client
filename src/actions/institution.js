@@ -1,11 +1,12 @@
 import {
   SAVE_INSTITUTION, SELECT_INSTITUTION,
   SAVE_GRADE, SAVE_SUBJECT, SAVE_USER,
+  UPDATE_INSTITUTION,
 } from './actionTypes';
 import { NO_INSTUTION_SELECTED } from '../reducers/institution';
 import { requestGraphql } from '../components/utils/HTTPClient';
 import {
-  mutationCreateInstitution, mutationJoinInstitution,
+  mutationCreateInstitution, mutationJoinInstitution, mutationUpdateInstitution,
 } from '../queryGenerators/institutionMutations';
 import { queryFindInstitutionsByOwner } from '../queryGenerators/institutionQueries';
 
@@ -130,12 +131,14 @@ export const fetchInstitutionsByOwner = () => (dispatch, getState) => {
               ...gradeG,
               subjects: gradeG.subjects.map(sub => sub.id),
             }));
-            const admins = [...institution.admins];
-            const teachers = [...institution.teachers];
+            const admins = institution.admins;
+            const teachers = institution.teachers;
+            const students = institution.students;
             const newInstitution = {
               ...institution,
               grades: institution.grades.map(grade => grade.id),
               admins: admins.map(admin => admin.id),
+              students: students.map(student => student.id),
               teachers: teachers.map(teacher => teacher.id),
             };
             subjects.forEach(subject => {
@@ -173,6 +176,12 @@ export const fetchInstitutionsByOwner = () => (dispatch, getState) => {
                 user,
               });
             });
+            students.forEach(user => {
+              dispatch({
+                type: SAVE_USER,
+                user,
+              });
+            });
             dispatch({
               type: SAVE_INSTITUTION,
               institution: newInstitution,
@@ -195,5 +204,21 @@ export const fetchInstitutionsByOwner = () => (dispatch, getState) => {
 
         return result;
       })
+  );
+};
+
+export const updateInstitution = input => (dispatch) => {
+  return (requestGraphql(mutationUpdateInstitution(input),
+    localStorage.getItem('token'))
+    .then(res => {
+      if (res.data.data.updateInstitution) {
+        dispatch({
+          type: UPDATE_INSTITUTION,
+          institution: res.data.data.updateInstitution,
+        });
+      }
+
+      return res;
+    })
   );
 };

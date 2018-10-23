@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { clearStore } from '../../actions';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import React, { Component, Fragment } from 'react';
 import { Menu, MenuItem } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
@@ -33,6 +33,7 @@ class UserMenu extends Component {
 
   goToRoute = (path = '/') => {
     this.props.history.push(path);
+    this.props.onClose();
   }
 
   handleAssociateOpenToggle = () => {
@@ -66,7 +67,13 @@ class UserMenu extends Component {
           open={open}
           onClose={onClose}
         >
-          {/* <MenuItem onClick={this.handleClose}>Profile</MenuItem> */}
+          <MenuItem
+            component={Link}
+            to="/profile"
+            onClick={onClose}
+          >
+            Perfil
+          </MenuItem>
           <MenuItem
             onClick={this.handleAssociateOpenToggle}
           >

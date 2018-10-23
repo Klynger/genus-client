@@ -4,6 +4,7 @@ import {
   SELECT_INSTITUTION,
   REMOVE_ALL_INSTITUTIONS,
   REMOVE_USER_FROM_INSTITUION,
+  UPDATE_INSTITUTION,
 } from '../actions/actionTypes';
 import { concatIdIfNotContain } from '../components/utils/helpers';
 
@@ -63,6 +64,19 @@ function institution(state = DEFAULT_STATE, action) {
                       .filter(id => (id !== action.toBeRemovedId)),
             teachers: state.byId[state.selectedInstitution].teachers
                       .filter(id => (id !== action.toBeRemovedId)),
+          },
+        },
+        allIds: state.allIds,
+      };
+
+    case UPDATE_INSTITUTION:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [state.selectedInstitution]: {
+            ...state.byId[state.selectedInstitution],
+            ...action.institution,
           },
         },
         allIds: state.allIds,

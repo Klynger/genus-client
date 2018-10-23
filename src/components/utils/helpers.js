@@ -7,6 +7,19 @@ export const concatIdIfNotContain = (allIds, id) => {
   return allIds.concat([id]);
 };
 
+export const getFirstInitialsCapitalized = (fullName = '', amountOfInitials = 2) => {
+  const names = fullName.replace(/\s\s+/g, ' ').split(' ').slice(0, amountOfInitials);
+
+  let output = '';
+  names.forEach(name => {
+    if (name[0]) {
+      output += name[0].toUpperCase();
+    }
+  });
+
+  return output;
+};
+
 export const defaultDialogBreakpoints = () => ({
   dialogRoot: {
     minWidth: '30vw',
@@ -27,5 +40,3 @@ export const defaultDialogBreakpoints = () => ({
     width: '30%',
   },
 });
-
-export default {};

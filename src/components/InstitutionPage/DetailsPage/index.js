@@ -5,8 +5,9 @@ import { connect } from 'react-redux';
 import GradesGrid from './GradesGrid';
 import CreateEntryCodeDialog from '../EntryCode/CreateEntryCodeDialog';
 import DisplayCodeDialog from '../EntryCode/DisplayCodeDialog';
-import EmployeeList from './EmployeeList';
+import UserList from './UserList';
 import InstitutionInfos from './InstitutionInfo';
+import EditInstitutionDialog from './EditInstitutionDialog';
 
 const styles = theme => ({
   detailsPageRoot: {
@@ -34,7 +35,10 @@ class DetailsPage extends Component {
       entryCodeCreateOpen: false,
       currentGeneratedCode: null,
       displayCodeOpen: false,
+      displayUpdateOpen: false,
     };
+
+    this.handleUpdateInstitutionOpenToggle = this.handleUpdateInstitutionOpenToggle.bind(this);
   }
 
   handleDisplayCodeOpenToggle = () => {
@@ -56,11 +60,15 @@ class DetailsPage extends Component {
     }
   }
 
+  handleUpdateInstitutionOpenToggle() {
+    this.setState(({ displayUpdateOpen }) => ({ displayUpdateOpen: !displayUpdateOpen }));
+  }
+
   render() {
     const { classes, institution } = this.props;
     const {
       entryCodeCreateOpen, displayCodeOpen,
-      currentGeneratedCode,
+      displayUpdateOpen, currentGeneratedCode,
     } = this.state;
     let toRender;
 
@@ -76,13 +84,19 @@ class DetailsPage extends Component {
             open={entryCodeCreateOpen}
             onClose={this.handleCreateEntryOpenToggle}
           />
+          <EditInstitutionDialog
+            open={displayUpdateOpen}
+            onClose={this.handleUpdateInstitutionOpenToggle}
+          />
           <InstitutionInfos
             institution={institution}
             onHandleCreateEntryOpenToggle={this.handleCreateEntryOpenToggle}
+            onHandleUpdateInstitutionOpenToggle={this.handleUpdateInstitutionOpenToggle}
           />
           <GradesGrid />
-          <EmployeeList employees={institution.teachers} headTitle="Professores" />
-          <EmployeeList employees={institution.admins} headTitle="Administradores" />
+          <UserList users={institution.teachers} headTitle="Professores" />
+          <UserList users={institution.admins} headTitle="Administradores" />
+          <UserList users={institution.students} headTitle="Alunos" />
         </div>
       );
     } else {
@@ -108,6 +122,10 @@ DetailsPage.propTypes = {
     email: PropTypes.string,
     id: PropTypes.string,
     name: PropTypes.string,
+    students: PropTypes.arrayOf(PropTypes.shape({
+      email: PropTypes.string.isRequired,
+      username: PropTypes.string.isRequired,
+    })),
     teachers: PropTypes.arrayOf(PropTypes.shape({
       email: PropTypes.string.isRequired,
       username: PropTypes.string.isRequired,
@@ -122,6 +140,7 @@ function mapStateToProps({ institution, user }) {
       institution: {
         ...institution.byId[selectedInstitution],
         admins: institution.byId[selectedInstitution].admins.map(id => user.byId[id]),
+        students: institution.byId[selectedInstitution].students.map(id => user.byId[id]),
         teachers: institution.byId[selectedInstitution].teachers.map(id => user.byId[id]),
       },
     };

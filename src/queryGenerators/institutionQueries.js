@@ -32,6 +32,9 @@ export const queryFindInstitutionsByOwner = () => ({
         teachers {
           ...userFields
         }
+        students {
+          ...userFields
+        }
       }
     }
 

@@ -53,7 +53,9 @@ const styles = theme => ({
   },
 });
 
-const InstitutionInfo = ({ classes, onHandleCreateEntryOpenToggle, institution }) => (
+const InstitutionInfo = ({
+  classes, onHandleUpdateInstitutionOpenToggle,
+  onHandleCreateEntryOpenToggle, institution }) => (
   <Paper className={classes.detailsPagePaper}>
     <div className={classes.detailsPageContentContainer}>
       <img
@@ -95,6 +97,13 @@ const InstitutionInfo = ({ classes, onHandleCreateEntryOpenToggle, institution }
       <Button
         className={classes.actionsDetailsButton}
         color="primary"
+        onClick={onHandleUpdateInstitutionOpenToggle}
+      >
+        Atualizar Informações
+      </Button>
+      <Button
+        className={classes.actionsDetailsButton}
+        color="primary"
         onClick={onHandleCreateEntryOpenToggle}
       >
         Gerar Código de Vínculo
@@ -112,6 +121,7 @@ InstitutionInfo.propTypes = {
     phone: PropTypes.string.isRequired,
   }).isRequired,
   onHandleCreateEntryOpenToggle: PropTypes.func.isRequired,
+  onHandleUpdateInstitutionOpenToggle: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(InstitutionInfo);
