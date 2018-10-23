@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { Form, withFormik } from 'formik';
-import { updateSubject } from '../../../../../../actions/subject';
-import ProgressButton from '../../../../../utils/ProgressButton';
 import { capitalize } from '@material-ui/core/utils/helpers';
+import ProgressButton from '../../../../../utils/ProgressButton';
+import { updateSubject } from '../../../../../../actions/subject';
 import { defaultDialogBreakpoints } from '../../../../../utils/helpers';
 import { DefaultDialogTransition } from '../../../../../utils/SharedComponents';
 import {
