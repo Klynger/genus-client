@@ -4,14 +4,7 @@ import EditUserDialog from './EditUserDialog';
 import React, { Component, Fragment } from 'react';
 import ImageUploader from '../../utils/ImageUploader';
 import deepOrange from '@material-ui/core/colors/deepOrange';
-import {
-  Card,
-  Button,
-  withStyles,
-  Typography,
-  CardContent,
-  CardActions,
-} from '@material-ui/core';
+import { Card, Button, withStyles, Typography, CardContent, CardActions } from '@material-ui/core';
 import { getFirstInitialsCapitalized } from '../../utils/helpers';
 
 const styles = theme => ({
@@ -56,7 +49,7 @@ class UserInfo extends Component {
 
   handleEditUserToggle = () => {
     this.setState(({ editUserOpen }) => ({ editUserOpen: !editUserOpen }));
-  }
+  };
 
   render() {
     const { classes, loggedUserId, user } = this.props;
@@ -64,11 +57,7 @@ class UserInfo extends Component {
 
     return (
       <Fragment>
-        <EditUserDialog
-          user={user}
-          open={editUserOpen}
-          onClose={this.handleEditUserToggle}
-        />
+        <EditUserDialog user={user} open={editUserOpen} onClose={this.handleEditUserToggle} />
         <Card className={classes.card}>
           <CardContent className={classes.content}>
             <div className={classes.imageContainer}>
@@ -78,28 +67,20 @@ class UserInfo extends Component {
                 className={classes.imageUploader}
               />
             </div>
-            <Typography
-              variant="h5"
-              component="h2"
-            >
+            <Typography variant="h5" component="h2">
               {user.username}
             </Typography>
-            <Typography
-              variant="subtitle1"
-              component="span"
-            >
+            <Typography variant="subtitle1" component="span">
               {user.email}
             </Typography>
           </CardContent>
-          {loggedUserId === user.id &&
-          <CardActions className={classes.actions}>
-            <Button
-              color="primary"
-              onClick={this.handleEditUserToggle}
-            >
-              Editar
-            </Button>
-          </CardActions>}
+          {loggedUserId === user.id && (
+            <CardActions className={classes.actions}>
+              <Button color="primary" onClick={this.handleEditUserToggle}>
+                Editar
+              </Button>
+            </CardActions>
+          )}
         </Card>
       </Fragment>
     );

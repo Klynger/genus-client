@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import {
-  Paper, withStyles,
-  Table, TableHead,
-  Typography, TableRow,
-  TableCell, TableBody,
-  TablePagination, IconButton,
+  Paper,
+  withStyles,
+  Table,
+  TableHead,
+  Typography,
+  TableRow,
+  TableCell,
+  TableBody,
+  TablePagination,
+  IconButton,
 } from '@material-ui/core';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -59,69 +64,61 @@ class UserList extends Component {
 
   handleChangePage = (event, page) => {
     this.setState({ page });
-  }
+  };
 
   handleRemoveUserDialogToggle = () => {
     this.setState(prevState => ({ openDialog: !prevState.openDialog, userId: '' }));
-  }
+  };
 
   openRemoveUserDialog = userId => {
     if (!this.state.openDialog) {
       this.setState({ userId, openDialog: true });
     }
-  }
+  };
 
   render() {
-    const { ableToRemove, classes,
-            headTitle, loggedUser,
-            selectedInstitution, users } = this.props;
+    const { ableToRemove, classes, headTitle, loggedUser, selectedInstitution, users } = this.props;
     const { page, openDialog, rowsPerPage, userId } = this.state;
 
     return (
       <Paper className={classes.root}>
-        <Typography
-          className={classes.title}
-          component="span"
-          variant="h6"
-        >
+        <Typography className={classes.title} component="span" variant="h6">
           {headTitle}
         </Typography>
-        {users.length > 0 &&
+        {users.length > 0 && (
           <Table className={classes.table}>
             <TableHead>
               <TableRow>
                 <TableCell variant="head">Nome</TableCell>
-                <TableCell variant="head" className={classes.middleColumns}>email</TableCell>
-                <TableCell variant="head" className={classes.deleteIcon}>Remover</TableCell>
+                <TableCell variant="head" className={classes.middleColumns}>
+                  email
+                </TableCell>
+                <TableCell variant="head" className={classes.deleteIcon}>
+                  Remover
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {users
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map(user => (
-                  // change key
-                  <TableRow key={user.username}>
-                    <TableCell>
-                      {user.username}
-                    </TableCell>
-                    <TableCell className={classes.middleColumns}>
-                      {user.email}
-                    </TableCell>
-                    <TableCell>
-                      <IconButton
-                        className={classes.deleteIcon}
-                        onClick={() => this.openRemoveUserDialog(user.id)}
-                        disabled={user.id === loggedUser || !ableToRemove}
-                      >
-                        <DeleteForever />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
+              {users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(user => (
+                // change key
+                <TableRow key={user.username}>
+                  <TableCell>{user.username}</TableCell>
+                  <TableCell className={classes.middleColumns}>{user.email}</TableCell>
+                  <TableCell>
+                    <IconButton
+                      className={classes.deleteIcon}
+                      onClick={() => this.openRemoveUserDialog(user.id)}
+                      disabled={user.id === loggedUser || !ableToRemove}
+                    >
+                      <DeleteForever />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
-        }
-        {users.length > 0 &&
+        )}
+        {users.length > 0 && (
           <TablePagination
             component="div"
             count={users.length}
@@ -134,21 +131,20 @@ class UserList extends Component {
               'aria-label': 'Next Page',
             }}
             onChangePage={this.handleChangePage}
-          />}
-        {users.length === 0 &&
-          <Typography
-            className={classes.emptyView}
-            variant="subtitle1"
-          >
+          />
+        )}
+        {users.length === 0 && (
+          <Typography className={classes.emptyView} variant="subtitle1">
             A instituição não possui {headTitle.toLowerCase()}
           </Typography>
-        }
-        {selectedInstitution !== NO_INSTUTION_SELECTED
-        && <RemoveUserDialog
+        )}
+        {selectedInstitution !== NO_INSTUTION_SELECTED && (
+          <RemoveUserDialog
             onClose={this.handleRemoveUserDialogToggle}
             open={openDialog}
             userId={userId}
-          />}
+          />
+        )}
       </Paper>
     );
   }
@@ -164,10 +160,12 @@ UserList.propTypes = {
   headTitle: PropTypes.string.isRequired,
   loggedUser: PropTypes.string.isRequired,
   selectedInstitution: PropTypes.string,
-  users: PropTypes.arrayOf(PropTypes.shape({
-    email: PropTypes.string.isRequired,
-    username: PropTypes.string.isRequired,
-  })),
+  users: PropTypes.arrayOf(
+    PropTypes.shape({
+      email: PropTypes.string.isRequired,
+      username: PropTypes.string.isRequired,
+    }),
+  ),
 };
 
 function mapStateToProps({ institution, user }) {

@@ -66,30 +66,28 @@ class TestingPage extends React.Component {
       institutionId: this.props.institutionId,
       role: 'TEACHER',
     };
-    requestGraphql(getUsersFromInstitutionByRole(teacherInput),
-    localStorage.getItem('token'))
-    .then(res => {
-      if (res.data.data && res.data.data.getUsersFromInstitutionByRole) {
-        this.setState({ teachers: [...res.data.data.getUsersFromInstitutionByRole] });
-      } else {
-        // TODO error treatment
-      }
-    })
-    .catch();
+    requestGraphql(getUsersFromInstitutionByRole(teacherInput), localStorage.getItem('token'))
+      .then(res => {
+        if (res.data.data && res.data.data.getUsersFromInstitutionByRole) {
+          this.setState({ teachers: [...res.data.data.getUsersFromInstitutionByRole] });
+        } else {
+          // TODO error treatment
+        }
+      })
+      .catch();
     const adminInput = {
       institutionId: this.props.institutionId,
       role: 'ADMIN',
     };
-    requestGraphql(getUsersFromInstitutionByRole(adminInput),
-    localStorage.getItem('token'))
-    .then(res => {
-      if (res.data.data && res.data.data.getUsersFromInstitutionByRole) {
-        this.setState({ admins: [...res.data.data.getUsersFromInstitutionByRole] });
-      } else {
-        // TODO error treatment
-      }
-    })
-    .catch();
+    requestGraphql(getUsersFromInstitutionByRole(adminInput), localStorage.getItem('token'))
+      .then(res => {
+        if (res.data.data && res.data.data.getUsersFromInstitutionByRole) {
+          this.setState({ admins: [...res.data.data.getUsersFromInstitutionByRole] });
+        } else {
+          // TODO error treatment
+        }
+      })
+      .catch();
   }
 
   render() {

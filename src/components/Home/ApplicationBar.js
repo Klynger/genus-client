@@ -9,9 +9,13 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import { selectInstitution } from '../../actions/institution';
 import { NO_INSTUTION_SELECTED } from '../../reducers/institution';
 import {
-  AppBar, Toolbar, IconButton,
-  Typography, MenuItem,
-  Button, Select,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  MenuItem,
+  Button,
+  Select,
 } from '@material-ui/core';
 
 const USER_MENU_ID = 'appbar__user-menu';
@@ -56,24 +60,25 @@ class ApplicationBar extends Component {
 
   handleOpenUserMenu = event => {
     this.setState({ anchorEl: event.currentTarget });
-  }
+  };
 
   handleCloseUserMenu = () => {
     this.setState({ anchorEl: null });
-  }
+  };
 
   goToRoute = (path = '/') => {
     this.props.history.push(path);
-  }
+  };
 
   handleInstitutionSelectToggle = () => {
-    this.setState(({ institutionSelectOpen }) =>
-      ({ institutionSelectOpen: !institutionSelectOpen }));
-  }
+    this.setState(({ institutionSelectOpen }) => ({
+      institutionSelectOpen: !institutionSelectOpen,
+    }));
+  };
 
-  handleSelectInstitutionChange = (event) => {
+  handleSelectInstitutionChange = event => {
     this.props.selectInstitution(event.target.value);
-  }
+  };
 
   renderInstitutionMenu() {
     const { institutions, selectedInstitution, classes } = this.props;
@@ -92,10 +97,7 @@ class ApplicationBar extends Component {
           }}
         >
           {institutions.map(institution => (
-            <MenuItem
-              value={institution.id}
-              key={institution.id}
-            >
+            <MenuItem value={institution.id} key={institution.id}>
               {institution.name}
             </MenuItem>
           ))}
@@ -104,10 +106,7 @@ class ApplicationBar extends Component {
     }
 
     return (
-      <Button
-        color="inherit"
-        onClick={() => this.goToRoute('/institution/new')}
-      >
+      <Button color="inherit" onClick={() => this.goToRoute('/institution/new')}>
         Adicionar Instituição
       </Button>
     );
@@ -129,11 +128,7 @@ class ApplicationBar extends Component {
           >
             <MenuIcon />
           </IconButton>
-          <Typography
-            className={classes.appTitle}
-            variant="h6"
-            color="textSecondary"
-          >
+          <Typography className={classes.appTitle} variant="h6" color="textSecondary">
             Genus
           </Typography>
           {this.renderInstitutionMenu()}
@@ -145,11 +140,7 @@ class ApplicationBar extends Component {
           >
             <AccountCircle className={classes.userIcon} />
           </IconButton>
-          <UserMenu
-            anchorEl={anchorEl}
-            menuId={USER_MENU_ID}
-            onClose={this.handleCloseUserMenu}
-          />
+          <UserMenu anchorEl={anchorEl} menuId={USER_MENU_ID} onClose={this.handleCloseUserMenu} />
         </Toolbar>
       </AppBar>
     );
@@ -187,5 +178,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  withStyles(styles)(withRouter(ApplicationBar)));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withStyles(styles)(withRouter(ApplicationBar)));

@@ -9,7 +9,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   padding: ${({ unit }) => unit || 8}px;
- 
+
   @media screen and (min-width: 1920px) {
     width: calc(50% - ${({ unit }) => (unit || 8) * 2}px);
   }
@@ -35,11 +35,7 @@ const Container = styled.div`
   }
 `;
 
-const ProfileDetailsPage = ({ user }) => (
-  <Container>
-    {user && <UserInfo user={user} />}
-  </Container>
-);
+const ProfileDetailsPage = ({ user }) => <Container>{user && <UserInfo user={user} />}</Container>;
 
 function mapToProps({ user }, { match }) {
   return {

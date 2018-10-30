@@ -24,11 +24,7 @@ const LoadingPage = ({ classes, isLoading, error }) => {
   }
 
   if (error) {
-    return (
-      <div>
-        Something went worng while trying to load the page =/
-      </div>
-    );
+    return <div>Something went worng while trying to load the page =/</div>;
   }
   return null;
 };

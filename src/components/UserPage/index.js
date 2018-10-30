@@ -7,10 +7,13 @@ import { fetchUserById } from '../../actions/user';
 
 class UserPage extends Component {
   componentDidUpdate(prevProps) {
-    if (this.props.match.params.userId
-      && prevProps.match.params.userId !== this.props.loggedUserId
-      && prevProps.match.params.userId !== this.props.match.params.userId) {
-      this.props.fetchUser(this.props.match.params.userId)
+    if (
+      this.props.match.params.userId &&
+      prevProps.match.params.userId !== this.props.loggedUserId &&
+      prevProps.match.params.userId !== this.props.match.params.userId
+    ) {
+      this.props
+        .fetchUser(this.props.match.params.userId)
         .then(() => {
           // TODO
         })
@@ -45,8 +48,13 @@ function mapToProps({ user: { loggedUserId } }) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchUser: (id) => dispatch(fetchUserById(id)),
+    fetchUser: id => dispatch(fetchUserById(id)),
   };
 }
 
-export default withRouter(connect(mapToProps, mapDispatchToProps)(UserPage));
+export default withRouter(
+  connect(
+    mapToProps,
+    mapDispatchToProps,
+  )(UserPage),
+);

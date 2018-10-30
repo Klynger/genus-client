@@ -29,8 +29,9 @@ const HomeRoutes = () => {
       <Route path="/" exact component={AsyncOverviewPage} />
       <Route path="/institution" component={AsyncInstitutionPage} />
       <Route path="/profile" component={AsyncUserPage} />
-      {process.env.NODE_ENV === 'development'
-      && <Route path="/testing" component={AsyncTestingPage} />}
+      {process.env.NODE_ENV === 'development' && (
+        <Route path="/testing" component={AsyncTestingPage} />
+      )}
       <Redirect to={{ pathname: '/' }} />
     </Switch>
   );

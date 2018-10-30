@@ -1,5 +1,8 @@
 import {
-  SAVE_SUBJECT, REMOVE_ALL_SUBJECTS, ADD_TEACHER_TO_SUBJECT, UPDATE_SUBJECT,
+  SAVE_SUBJECT,
+  REMOVE_ALL_SUBJECTS,
+  ADD_TEACHER_TO_SUBJECT,
+  UPDATE_SUBJECT,
 } from '../actions/actionTypes';
 import { concatIdIfNotContain } from '../components/utils/helpers';
 
@@ -16,7 +19,7 @@ function subject(state = DEFAULT_STATE, action) {
         byId: {
           ...state.byId,
           [action.subject.id]: {
-            ...state.byId[action.subject.id] ? state.byId[action.subject.id] : {},
+            ...(state.byId[action.subject.id] ? state.byId[action.subject.id] : {}),
             ...action.subject,
           },
         },
@@ -29,8 +32,10 @@ function subject(state = DEFAULT_STATE, action) {
           ...state.byId,
           [action.payload.subjectId]: {
             ...state.byId[action.payload.subjectId],
-            teachers: concatIdIfNotContain(state.byId[action.payload.subjectId].teachers,
-              action.payload.teacherId),
+            teachers: concatIdIfNotContain(
+              state.byId[action.payload.subjectId].teachers,
+              action.payload.teacherId,
+            ),
           },
         },
       };

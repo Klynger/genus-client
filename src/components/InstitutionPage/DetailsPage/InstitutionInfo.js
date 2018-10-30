@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  Button,
-  Paper,
-  Typography,
-  withStyles,
-} from '@material-ui/core';
+import { Button, Paper, Typography, withStyles } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { ActionsContainer } from '../../utils/SharedComponents';
 
@@ -54,41 +49,29 @@ const styles = theme => ({
 });
 
 const InstitutionInfo = ({
-  classes, onHandleUpdateInstitutionOpenToggle,
-  onHandleCreateEntryOpenToggle, institution }) => (
+  classes,
+  onHandleUpdateInstitutionOpenToggle,
+  onHandleCreateEntryOpenToggle,
+  institution,
+}) => (
   <Paper className={classes.detailsPagePaper}>
     <div className={classes.detailsPageContentContainer}>
       <img
         alt="Institution"
         className={classes.photo}
-        src="https://s3.amazonaws.com/tinycards/image/f8bda7d1c863b4f42adf2d1e5d72ff14" />
+        src="https://s3.amazonaws.com/tinycards/image/f8bda7d1c863b4f42adf2d1e5d72ff14"
+      />
       <div className={classes.institutionInfos}>
-        <Typography
-          component="h2"
-          variant="h6"
-          gutterBottom
-        >
+        <Typography component="h2" variant="h6" gutterBottom>
           {institution.name}
         </Typography>
-        <Typography
-          component="span"
-          variant="subtitle1"
-          gutterBottom
-        >
+        <Typography component="span" variant="subtitle1" gutterBottom>
           Email: {institution.email}
         </Typography>
-        <Typography
-          component="span"
-          variant="subtitle1"
-          gutterBottom
-        >
+        <Typography component="span" variant="subtitle1" gutterBottom>
           Telefone: {institution.phone}
         </Typography>
-        <Typography
-          component="span"
-          gutterBottom
-          variant="subtitle1"
-        >
+        <Typography component="span" gutterBottom variant="subtitle1">
           Endereço: {institution.address}
         </Typography>
       </div>

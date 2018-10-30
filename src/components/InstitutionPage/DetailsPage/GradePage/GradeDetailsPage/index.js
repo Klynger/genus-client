@@ -13,7 +13,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   padding: ${({ unit }) => unit || 8}px;
- 
+
   @media screen and (min-width: 1920px) {
     width: calc(50% - ${({ unit }) => (unit || 8) * 2}px);
   }
@@ -64,8 +64,12 @@ class GradeDetailsPage extends Component {
     const {
       grade,
       classes,
-      match: { params: { gradeId } },
-      theme: { spacing: { unit } },
+      match: {
+        params: { gradeId },
+      },
+      theme: {
+        spacing: { unit },
+      },
     } = this.props;
     let toRender;
     if (grade) {
@@ -76,17 +80,9 @@ class GradeDetailsPage extends Component {
         </Container>
       );
     } else {
-      toRender = (
-        <div className={classes.emptyGradeDetails}>
-          Não encontramos a série desejada
-        </div>
-      );
+      toRender = <div className={classes.emptyGradeDetails}>Não encontramos a série desejada</div>;
     }
-    return (
-      <Fade in>
-        {toRender}
-      </Fade>
-    );
+    return <Fade in>{toRender}</Fade>;
   }
 }
 
@@ -107,7 +103,11 @@ GradeDetailsPage.propTypes = {
 };
 
 function mapToProps({ grade, subject }, ownProps) {
-  const { match: { params: { gradeId } } } = ownProps;
+  const {
+    match: {
+      params: { gradeId },
+    },
+  } = ownProps;
 
   if (grade.byId[gradeId]) {
     const propGrade = grade.byId[gradeId];
@@ -127,6 +127,9 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-
 export default withStyles(styles, { withTheme: true })(
-  connect(mapToProps, mapDispatchToProps)(GradeDetailsPage));
+  connect(
+    mapToProps,
+    mapDispatchToProps,
+  )(GradeDetailsPage),
+);

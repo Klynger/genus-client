@@ -1,10 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Dialog, DialogTitle,
-  DialogContent, List,
-  ListItem, ListItemText,
-  withMobileDialog, withStyles,
-  DialogActions, Button, Typography } from '@material-ui/core';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  List,
+  ListItem,
+  ListItemText,
+  withMobileDialog,
+  withStyles,
+  DialogActions,
+  Button,
+  Typography,
+} from '@material-ui/core';
 import { DefaultDialogTransition } from '../../utils/SharedComponents';
 import { defaultDialogBreakpoints } from '../../utils/helpers';
 import { capitalize } from '@material-ui/core/utils/helpers';
@@ -14,11 +22,7 @@ const styles = () => ({
   ...defaultDialogBreakpoints(),
 });
 
-const SubjectDialog = ({
-  classes, fullScreen, gradeName,
-  open, onClose, subjects,
-  width,
-}) => (
+const SubjectDialog = ({ classes, fullScreen, gradeName, open, onClose, subjects, width }) => (
   <Dialog
     fullScreen={fullScreen}
     open={open}
@@ -28,29 +32,19 @@ const SubjectDialog = ({
       paper: classes[`dialogRoot${capitalize(width)}`],
     }}
   >
-    <DialogTitle>
-     {gradeName}
-    </DialogTitle>
+    <DialogTitle>{gradeName}</DialogTitle>
     <DialogContent>
       <List>
         {subjects.map(subject => (
-          <ListItem
-            key={subject.id}
-            disableGutters
-          >
+          <ListItem key={subject.id} disableGutters>
             <ListItemText primary={subject.name} />
           </ListItem>
         ))}
-        {subjects.length === 0 &&
-          <Typography>
-            Série ainda não possui disciplinas.
-          </Typography>}
+        {subjects.length === 0 && <Typography>Série ainda não possui disciplinas.</Typography>}
       </List>
     </DialogContent>
     <DialogActions>
-      <Button onClick={onClose}>
-        Fechar
-      </Button>
+      <Button onClick={onClose}>Fechar</Button>
     </DialogActions>
   </Dialog>
 );

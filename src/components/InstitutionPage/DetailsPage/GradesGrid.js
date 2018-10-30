@@ -8,9 +8,7 @@ import GradeCreateDialog from '../GradeCreateDialog';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import GridCard, { CardLine } from '../../utils/GridCard';
 import { NO_INSTUTION_SELECTED } from '../../../reducers/institution';
-import {
-  GridContainer, ResponsiveSubTitle,
-} from '../../utils/SharedComponents';
+import { GridContainer, ResponsiveSubTitle } from '../../utils/SharedComponents';
 
 const Container = styled.div`
   display: flex;
@@ -29,11 +27,11 @@ class GradesGrid extends Component {
 
   handleGradeOpen = () => {
     this.setState(prevState => ({ gradeOpen: !prevState.gradeOpen }));
-  }
+  };
 
   goToGrade = gradeId => {
     this.props.history.push(`/institution/grade/${gradeId}`);
-  }
+  };
 
   render() {
     const { grades } = this.props;
@@ -42,29 +40,14 @@ class GradesGrid extends Component {
       <Container>
         <ResponsiveSubTitle>Séries</ResponsiveSubTitle>
         <GridContainer>
-          <GradeCreateDialog
-            open={gradeOpen}
-            onClose={this.handleGradeOpen}
-          />
+          <GradeCreateDialog open={gradeOpen} onClose={this.handleGradeOpen} />
           {grades.map(({ id, name, subjects }) => (
-            <GridCard
-              key={id}
-              title={name}
-              onClick={() => this.goToGrade(id)}
-            >
-              <CardLine>
-                Disciplinas cadastradas: {subjects.length}
-              </CardLine>
-              <CardLine>
-                Quantidade de alunos: 35
-              </CardLine>
+            <GridCard key={id} title={name} onClick={() => this.goToGrade(id)}>
+              <CardLine>Disciplinas cadastradas: {subjects.length}</CardLine>
+              <CardLine>Quantidade de alunos: 35</CardLine>
             </GridCard>
           ))}
-          <GridButton
-            key="-1"
-            Icon={AddCircleIcon}
-            onClick={this.handleGradeOpen}
-          />
+          <GridButton key="-1" Icon={AddCircleIcon} onClick={this.handleGradeOpen} />
         </GridContainer>
       </Container>
     );
@@ -85,8 +68,10 @@ GradesGrid.defaultProps = {
 function mapStateToProps({ institution, grade }) {
   const { selectedInstitution } = institution;
 
-  if (selectedInstitution !== NO_INSTUTION_SELECTED
-  && institution.byId[selectedInstitution].grades) {
+  if (
+    selectedInstitution !== NO_INSTUTION_SELECTED &&
+    institution.byId[selectedInstitution].grades
+  ) {
     const { grades } = institution.byId[selectedInstitution];
     return {
       grades: grades.map(id => grade.byId[id]),

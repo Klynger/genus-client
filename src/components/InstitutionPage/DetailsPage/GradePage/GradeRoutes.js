@@ -17,11 +17,7 @@ const AsyncSubjectDetailsPage = Loadable({
 const GradeRoutes = ({ match }) => (
   <Switch>
     <Route path={match.path} exact component={AsyncGradeDetailsPage} />
-    <Route
-      exact
-      component={AsyncSubjectDetailsPage}
-      path={`${match.path}/subject/:subjectId`}
-    />
+    <Route exact component={AsyncSubjectDetailsPage} path={`${match.path}/subject/:subjectId`} />
     <Redirect to={match.path} />
   </Switch>
 );

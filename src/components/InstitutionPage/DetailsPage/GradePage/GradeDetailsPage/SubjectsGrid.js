@@ -7,9 +7,7 @@ import GridCard from '../../../../utils/GridCard';
 import GridButton from '../../../../utils/GridButton';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import SubjectCreateDialog from '../../../SubjectCreateDialog';
-import {
-  GridContainer, ResponsiveSubTitle,
-} from '../../../../utils/SharedComponents';
+import { GridContainer, ResponsiveSubTitle } from '../../../../utils/SharedComponents';
 
 const Container = styled.div`
   display: flex;
@@ -27,17 +25,19 @@ class SubjectsGrid extends Component {
     this.handleSubjectDialogToggle = this.handleSubjectDialogToggle.bind(this);
   }
 
-  goToSubject = (id) => {
-    const { push, location: { pathname } } = this.props.history;
+  goToSubject = id => {
+    const {
+      push,
+      location: { pathname },
+    } = this.props.history;
     push(`${pathname}/subject/${id}`);
-  }
+  };
 
   handleSubjectDialogToggle() {
     this.setState(({ subjectDialogOpen }) => ({
       subjectDialogOpen: !subjectDialogOpen,
     }));
   }
-
 
   render() {
     const { gradeId, subjects } = this.props;
@@ -53,17 +53,9 @@ class SubjectsGrid extends Component {
         />
         <GridContainer>
           {subjects.map(({ id, name }) => (
-            <GridCard
-              key={id}
-              title={name}
-              onClick={() => this.goToSubject(id)}
-            />
+            <GridCard key={id} title={name} onClick={() => this.goToSubject(id)} />
           ))}
-          <GridButton
-            key="-10"
-            Icon={AddCircleIcon}
-            onClick={this.handleSubjectDialogToggle}
-          />
+          <GridButton key="-10" Icon={AddCircleIcon} onClick={this.handleSubjectDialogToggle} />
         </GridContainer>
       </Container>
     );

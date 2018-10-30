@@ -9,10 +9,18 @@ import { defaultDialogBreakpoints } from '../utils/helpers';
 import { capitalize } from '@material-ui/core/utils/helpers';
 import { DefaultDialogTransition } from '../utils/SharedComponents';
 import {
-  Button, Dialog, DialogTitle,
-  DialogContent, DialogActions, FormControl,
-  FormHelperText, Input, InputLabel,
-  withStyles, withMobileDialog, withWidth,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  FormControl,
+  FormHelperText,
+  Input,
+  InputLabel,
+  withStyles,
+  withMobileDialog,
+  withWidth,
 } from '@material-ui/core';
 
 const styles = theme => ({
@@ -37,15 +45,22 @@ class SubjectCreateDialog extends Component {
 
   handleGradeSelectToggle = () => {
     this.setState(prevState => ({ openSelect: !prevState.openSelect }));
-  }
+  };
 
   render() {
     const {
-      handleSubmit, isSubmitting,
-      classes, errors, fullScreen,
-      handleChange, handleReset,
-      values, open, onClose,
-      touched, width,
+      handleSubmit,
+      isSubmitting,
+      classes,
+      errors,
+      fullScreen,
+      handleChange,
+      handleReset,
+      values,
+      open,
+      onClose,
+      touched,
+      width,
     } = this.props;
 
     return (
@@ -59,9 +74,7 @@ class SubjectCreateDialog extends Component {
           paper: classes[`dialogRoot${capitalize(width)}`],
         }}
       >
-        <DialogTitle>
-          Disciplina
-        </DialogTitle>
+        <DialogTitle>Disciplina</DialogTitle>
         <DialogContent>
           <Form className={classes.subjectForm}>
             <FormControl
@@ -69,28 +82,25 @@ class SubjectCreateDialog extends Component {
               error={touched.name && errors.name !== undefined}
             >
               <InputLabel htmlFor="name">Nome</InputLabel>
-              <Input
-                name="name"
-                value={values.name}
-                onChange={handleChange}
-              />
-              {touched.name && errors.name &&
-                <FormHelperText id="subject__name-error-text">{errors.name}</FormHelperText>}
+              <Input name="name" value={values.name} onChange={handleChange} />
+              {touched.name &&
+                errors.name && (
+                  <FormHelperText id="subject__name-error-text">{errors.name}</FormHelperText>
+                )}
             </FormControl>
           </Form>
           <DialogActions>
             <Button
               color="primary"
               disabled={isSubmitting}
-              onClick={() => { onClose(); handleReset(); }}
+              onClick={() => {
+                onClose();
+                handleReset();
+              }}
             >
               Cancelar
             </Button>
-            <Button
-              color="primary"
-              disabled={isSubmitting}
-              onClick={handleSubmit}
-            >
+            <Button color="primary" disabled={isSubmitting} onClick={handleSubmit}>
               Criar
             </Button>
           </DialogActions>
@@ -131,13 +141,11 @@ function mapStateToProps({ grade, institution }) {
 
   if (institution.byId[selectedInstitution]) {
     return {
-      grades: institution.byId[selectedInstitution].grades
-        .map(gradeId => grade.byId[gradeId]),
+      grades: institution.byId[selectedInstitution].grades.map(gradeId => grade.byId[gradeId]),
     };
   }
   return {};
 }
-
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -145,35 +153,48 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  withStyles(styles)(withWidth()(withMobileDialog({
-    breakpoint: 'xs',
-  })(withRouter(withFormik({
-    mapPropsToValues({ name }) {
-      return {
-        name: name || '',
-      };
-    },
-    validationSchema: Yup.object().shape({
-      name: Yup.string().required('Nome da disciplina é obrigatorio'),
-    }),
-    handleSubmit(
-      values,
-      {
-        setSubmitting,
-        props: { gradeId, onClose, saveNewSubject },
-      }) {
-      values = {
-        ...values,
-        gradeId,
-      };
-      setSubmitting(true);
-      saveNewSubject(values)
-        .then(() => {
-          onClose();
-          setSubmitting(false);
-        })
-        .catch(setSubmitting(false));
-    },
-    enableReinitialize: true,
-  })(SubjectCreateDialog))))));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(
+  withStyles(styles)(
+    withWidth()(
+      withMobileDialog({
+        breakpoint: 'xs',
+      })(
+        withRouter(
+          withFormik({
+            mapPropsToValues({ name }) {
+              return {
+                name: name || '',
+              };
+            },
+            validationSchema: Yup.object().shape({
+              name: Yup.string().required('Nome da disciplina é obrigatorio'),
+            }),
+            handleSubmit(
+              values,
+              {
+                setSubmitting,
+                props: { gradeId, onClose, saveNewSubject },
+              },
+            ) {
+              values = {
+                ...values,
+                gradeId,
+              };
+              setSubmitting(true);
+              saveNewSubject(values)
+                .then(() => {
+                  onClose();
+                  setSubmitting(false);
+                })
+                .catch(setSubmitting(false));
+            },
+            enableReinitialize: true,
+          })(SubjectCreateDialog),
+        ),
+      ),
+    ),
+  ),
+);

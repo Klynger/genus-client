@@ -12,7 +12,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   padding: ${({ unit }) => unit || 8}px;
- 
+
   @media screen and (min-width: 1920px) {
     width: calc(50% - ${({ unit }) => (unit || 8) * 2}px);
   }
@@ -58,13 +58,13 @@ class SubjectDetailsPage extends Component {
     this.setState(({ openAddTeacher }) => ({
       openAddTeacher: !openAddTeacher,
     }));
-  }
+  };
 
   handleEditSubjectClick = () => {
     this.setState(({ openEditSubject }) => ({
       openEditSubject: !openEditSubject,
     }));
-  }
+  };
 
   render() {
     const { subject } = this.props;
@@ -98,9 +98,7 @@ class SubjectDetailsPage extends Component {
 
     return (
       <Fade in>
-      <Container>
-        {toRender}
-      </Container>
+        <Container>{toRender}</Container>
       </Fade>
     );
   }
@@ -112,7 +110,12 @@ SubjectDetailsPage.propTypes = {
 
 function mapToProps(
   { subject, user },
-  { match: { params: { subjectId } } }) {
+  {
+    match: {
+      params: { subjectId },
+    },
+  },
+) {
   const sub = subject.byId[subjectId];
   if (sub) {
     return {

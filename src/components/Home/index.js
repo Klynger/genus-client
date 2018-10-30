@@ -46,10 +46,9 @@ class Home extends Component {
   componentDidMount() {
     const { getLoggedUser, getInstitutions } = this.props;
 
-    getLoggedUser()
-      .then(() => {
-        getInstitutions();
-      });
+    getLoggedUser().then(() => {
+      getInstitutions();
+    });
   }
 
   handleDrawerToggle() {
@@ -60,17 +59,13 @@ class Home extends Component {
     this.handleDrawerToggle();
   }
 
-
   render() {
     const { openDrawer } = this.state;
     return (
       <Wrapper>
         <ApplicationBar onDrawerToggle={this.handleActiveDrawerToggle} />
         <ContentContainer>
-          <MenuDrawer
-            onDrawerToggle={this.handleActiveDrawerToggle}
-            open={openDrawer}
-          />
+          <MenuDrawer onDrawerToggle={this.handleActiveDrawerToggle} open={openDrawer} />
           <MainContainer>
             <HomeRoutes />
           </MainContainer>
@@ -98,4 +93,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Home);

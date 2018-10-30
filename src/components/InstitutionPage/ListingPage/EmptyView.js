@@ -10,9 +10,7 @@ const Container = styled.div`
 
 const EmptyView = () => (
   <Container>
-    <Typography>
-      Você não possui nenhuma instituição
-    </Typography>
+    <Typography>Você não possui nenhuma instituição</Typography>
   </Container>
 );
 

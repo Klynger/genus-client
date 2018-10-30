@@ -9,10 +9,20 @@ import { addTeacherToSubject } from '../../../../../../actions/subject';
 import { defaultDialogBreakpoints } from '../../../../../utils/helpers';
 import { DefaultDialogTransition } from '../../../../../utils/SharedComponents';
 import {
-  Dialog, DialogTitle, DialogContent,
-  DialogActions, Button, withStyles,
-  withMobileDialog, FormControl,
-  InputLabel, Select, MenuItem, Input, Zoom, FormHelperText,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  withStyles,
+  withMobileDialog,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Input,
+  Zoom,
+  FormHelperText,
 } from '@material-ui/core';
 
 const styles = () => ({
@@ -29,10 +39,18 @@ class AddTeacherDialog extends Component {
 
   render() {
     const {
-      open, subject, teachers,
-      onClose, classes, width,
-      fullScreen, values, errors, touched,
-      handleChange, handleSubmit,
+      open,
+      subject,
+      teachers,
+      onClose,
+      classes,
+      width,
+      fullScreen,
+      values,
+      errors,
+      touched,
+      handleChange,
+      handleSubmit,
     } = this.props;
     return (
       <Dialog
@@ -44,14 +62,10 @@ class AddTeacherDialog extends Component {
           paper: classes[`dialogRoot${capitalize(width)}`],
         }}
       >
-        <DialogTitle>
-          {subject.name}
-        </DialogTitle>
-        {teachers.length === 0 ?
-          <AddTeacherEmptyView
-            onDialogCloseClick={onClose}
-          />
-          :
+        <DialogTitle>{subject.name}</DialogTitle>
+        {teachers.length === 0 ? (
+          <AddTeacherEmptyView onDialogCloseClick={onClose} />
+        ) : (
           <Fragment>
             <DialogContent>
               <Form className={classes.form}>
@@ -59,51 +73,40 @@ class AddTeacherDialog extends Component {
                   className={classes.formControl}
                   error={touched.teacherId && errors.teacherId !== undefined}
                 >
-                  <InputLabel htmlFor="add-teacher-dialog__teacher-id-field">
-                    Professor
-                  </InputLabel>
+                  <InputLabel htmlFor="add-teacher-dialog__teacher-id-field">Professor</InputLabel>
                   <Select
                     value={values.teacherId}
                     onChange={handleChange}
-                    input={
-                      <Input
-                        name="teacherId"
-                        id="add-teacher-dialog__teacher-id-field"
-                      />}
+                    input={<Input name="teacherId" id="add-teacher-dialog__teacher-id-field" />}
                   >
-                    <MenuItem
-                      value={AddTeacherDialog.NO_TEACHER_SELECTED}
-                      disabled
-                    >
+                    <MenuItem value={AddTeacherDialog.NO_TEACHER_SELECTED} disabled>
                       Selecione um professor
                     </MenuItem>
                     {teachers.map(({ id, name, username }) => (
-                      <MenuItem key={id} value={id}>{name || username}</MenuItem>
+                      <MenuItem key={id} value={id}>
+                        {name || username}
+                      </MenuItem>
                     ))}
                   </Select>
-                  {touched.teacherId && errors.teacherId &&
-                  <Zoom in>
-                      <FormHelperText>{errors.teacherId}</FormHelperText>
-                  </Zoom>}
+                  {touched.teacherId &&
+                    errors.teacherId && (
+                      <Zoom in>
+                        <FormHelperText>{errors.teacherId}</FormHelperText>
+                      </Zoom>
+                    )}
                 </FormControl>
               </Form>
             </DialogContent>
             <DialogActions>
-            <Button
-                color="primary"
-                onClick={onClose}
-              >
+              <Button color="primary" onClick={onClose}>
                 Cancelar
-            </Button>
-              <Button
-                color="primary"
-                onClick={handleSubmit}
-              >
+              </Button>
+              <Button color="primary" onClick={handleSubmit}>
                 Adicionar
               </Button>
             </DialogActions>
           </Fragment>
-        }
+        )}
       </Dialog>
     );
   }
@@ -144,11 +147,9 @@ function mapToProps({ institution, user }) {
   if (institution.byId[selectedInstitution]) {
     let teachers;
     if (institution.byId[selectedInstitution].teachers) {
-      teachers = institution.byId[selectedInstitution].teachers
-      .map(id => user.byId[id]);
+      teachers = institution.byId[selectedInstitution].teachers.map(id => user.byId[id]);
     } else {
-      teachers = institution.byId[selectedInstitution].teacherList
-          .map(id => user.byId[id]);
+      teachers = institution.byId[selectedInstitution].teacherList.map(id => user.byId[id]);
     }
     return { teachers };
   }
@@ -157,33 +158,42 @@ function mapToProps({ institution, user }) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    addTeacher: (input) => dispatch(addTeacherToSubject(input)),
+    addTeacher: input => dispatch(addTeacherToSubject(input)),
   };
 }
 
-export default connect(mapToProps, mapDispatchToProps)(withFormik({
-  mapPropsToValues({ subject: { id } }) {
-    return {
-      subjectId: id,
-      teacherId: AddTeacherDialog.NO_TEACHER_SELECTED,
-    };
-  },
-  validationSchema: () => {
-    return Yup.object().shape({
-      teacherId: Yup.string()
-        .matches(new RegExp(`[^${AddTeacherDialog.NO_TEACHER_SELECTED}]`),
-          'Selecione um professor.'),
-    });
-  },
-  handleSubmit(values, { props }) {
-    props.addTeacher(values)
-      .then(() => {
-        props.onClose();
-      })
-      .catch(() => {
-        // TODO
+export default connect(
+  mapToProps,
+  mapDispatchToProps,
+)(
+  withFormik({
+    mapPropsToValues({ subject: { id } }) {
+      return {
+        subjectId: id,
+        teacherId: AddTeacherDialog.NO_TEACHER_SELECTED,
+      };
+    },
+    validationSchema: () => {
+      return Yup.object().shape({
+        teacherId: Yup.string().matches(
+          new RegExp(`[^${AddTeacherDialog.NO_TEACHER_SELECTED}]`),
+          'Selecione um professor.',
+        ),
       });
-  },
-})(withMobileDialog({
-  breakpoint: 'xs',
-})(withStyles(styles)(AddTeacherDialog))));
+    },
+    handleSubmit(values, { props }) {
+      props
+        .addTeacher(values)
+        .then(() => {
+          props.onClose();
+        })
+        .catch(() => {
+          // TODO
+        });
+    },
+  })(
+    withMobileDialog({
+      breakpoint: 'xs',
+    })(withStyles(styles)(AddTeacherDialog)),
+  ),
+);
