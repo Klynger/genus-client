@@ -18,11 +18,11 @@ module.exports = {
     ecmaVersion: 7,
     sourceType: 'module',
   },
-  plugins: ['babel', 'import', 'jsx-a11y', 'mocha', 'material-ui'],
+  plugins: ['babel', 'import', 'jsx-a11y', 'mocha', 'prettier', 'material-ui', 'react-hooks'],
   rules: {
     'linebreak-style': 'off', // Don't play nicely with Windows
     'arrow-body-style': 'off', // Incompatible with prettier
-    'arrow-parens': 'off', // Incompatible with prettier
+    'arrow-parens': ['error', 'as-needed'], // Incompatible with prettier
     'object-curly-newline': 'off', // Incompatible with prettier
     'function-paren-newline': 'off', // Incompatible with prettier
     indent: 'off', // Incompatible with prettier
@@ -91,5 +91,7 @@ module.exports = {
     'jsx-a11y/label-has-associated-control': 'off',
     'jsx-a11y/label-has-for': 'off',
     'jsx-a11y/no-autofocus': 'off', // We are a library, people do what they want.
+    'prettier/prettier': 'error',
+    'react-hooks/rules-of-hooks': 'error'
   },
 };

@@ -96,10 +96,7 @@ class LandingPage extends Component {
     return (
       <LandingContainer>
         <BackgroundImg src="/static/images/landing-background.jpg" />
-        <Signup
-          handleSignin={this.toggleSignin}
-          handleSnackbarOpen={this.onSnackbarOpen}
-        />
+        <Signup handleSignin={this.toggleSignin} handleSnackbarOpen={this.onSnackbarOpen} />
         <Signin open={signinOpen} onClose={this.handleCloseSignin} />
         <Snackbar
           anchorOrigin={{
@@ -114,13 +111,10 @@ class LandingPage extends Component {
           }}
           message={<span id="signup__message-id">{snackBarMsg}</span>}
           action={
-          <Button
-            onClick={this.handleSnackbarClose}
-            key="ok"
-            color="primary"
-            size="small"
-          >OK
-          </Button>}
+            <Button onClick={this.handleSnackbarClose} key="ok" color="primary" size="small">
+              OK
+            </Button>
+          }
         />
       </LandingContainer>
     );

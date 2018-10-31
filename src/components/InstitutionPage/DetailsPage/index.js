@@ -42,9 +42,8 @@ class DetailsPage extends Component {
   }
 
   handleDisplayCodeOpenToggle = () => {
-    this.setState(({ displayCodeOpen }) =>
-      ({ displayCodeOpen: !displayCodeOpen }));
-  }
+    this.setState(({ displayCodeOpen }) => ({ displayCodeOpen: !displayCodeOpen }));
+  };
 
   handleCreateEntryOpenToggle = (currentGeneratedCode = null) => {
     if (currentGeneratedCode && typeof currentGeneratedCode === 'string') {
@@ -58,7 +57,7 @@ class DetailsPage extends Component {
         entryCodeCreateOpen: !entryCodeCreateOpen,
       }));
     }
-  }
+  };
 
   handleUpdateInstitutionOpenToggle() {
     this.setState(({ displayUpdateOpen }) => ({ displayUpdateOpen: !displayUpdateOpen }));
@@ -67,8 +66,10 @@ class DetailsPage extends Component {
   render() {
     const { classes, institution } = this.props;
     const {
-      entryCodeCreateOpen, displayCodeOpen,
-      displayUpdateOpen, currentGeneratedCode,
+      entryCodeCreateOpen,
+      displayCodeOpen,
+      displayUpdateOpen,
+      currentGeneratedCode,
     } = this.state;
     let toRender;
 
@@ -103,11 +104,7 @@ class DetailsPage extends Component {
       toRender = <p>Não há nenhuma instituição selecionada</p>;
     }
 
-    return (
-      <Fade in>
-        {toRender}
-      </Fade>
-    );
+    return <Fade in>{toRender}</Fade>;
   }
 }
 
@@ -115,21 +112,27 @@ DetailsPage.propTypes = {
   classes: PropTypes.object.isRequired,
   institution: PropTypes.shape({
     address: PropTypes.string,
-    admins: PropTypes.arrayOf(PropTypes.shape({
-      email: PropTypes.string.isRequired,
-      username: PropTypes.string.isRequired,
-    })),
+    admins: PropTypes.arrayOf(
+      PropTypes.shape({
+        email: PropTypes.string.isRequired,
+        username: PropTypes.string.isRequired,
+      }),
+    ),
     email: PropTypes.string,
     id: PropTypes.string,
     name: PropTypes.string,
-    students: PropTypes.arrayOf(PropTypes.shape({
-      email: PropTypes.string.isRequired,
-      username: PropTypes.string.isRequired,
-    })),
-    teachers: PropTypes.arrayOf(PropTypes.shape({
-      email: PropTypes.string.isRequired,
-      username: PropTypes.string.isRequired,
-    })),
+    students: PropTypes.arrayOf(
+      PropTypes.shape({
+        email: PropTypes.string.isRequired,
+        username: PropTypes.string.isRequired,
+      }),
+    ),
+    teachers: PropTypes.arrayOf(
+      PropTypes.shape({
+        email: PropTypes.string.isRequired,
+        username: PropTypes.string.isRequired,
+      }),
+    ),
   }),
 };
 
@@ -148,5 +151,4 @@ function mapStateToProps({ institution, user }) {
   return {};
 }
 
-export default connect(mapStateToProps)(
-  withStyles(styles)(DetailsPage));
+export default connect(mapStateToProps)(withStyles(styles)(DetailsPage));

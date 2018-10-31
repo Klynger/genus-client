@@ -1,10 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Button,
-  withStyles,
-  CircularProgress,
-} from '@material-ui/core';
+import { Button, withStyles, CircularProgress } from '@material-ui/core';
 
 const styles = theme => ({
   spinner: {
@@ -21,15 +17,12 @@ const styles = theme => ({
   },
 });
 
-const ProgressButton = ({
-  classes, children, showProgress, ...buttonProps
-}) => (
+const ProgressButton = ({ classes, children, showProgress, ...buttonProps }) => (
   <div className={classes.wrapper}>
     <Button {...buttonProps} disabled={showProgress}>
       {children}
     </Button>
-    {showProgress
-      && <CircularProgress size={24} className={classes.spinner} />}
+    {showProgress && <CircularProgress size={24} className={classes.spinner} />}
   </div>
 );
 

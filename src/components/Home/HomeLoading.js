@@ -5,9 +5,7 @@ import { Typography } from '@material-ui/core';
 const HomeLoading = ({ error }) => {
   if (error) {
     return (
-      <Typography>
-        HomeLoading - Something went wrong while trying to load the page
-      </Typography>
+      <Typography>HomeLoading - Something went wrong while trying to load the page</Typography>
     );
   }
   return null;

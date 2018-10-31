@@ -17,10 +17,7 @@ const ListingPage = ({ institutions }) => (
   <Fade style={{ width: '100%' }} in>
     <Container>
       <ResponsiveTitle>Instituições</ResponsiveTitle>
-      {institutions.length > 0 ?
-        <ListFormat institutions={institutions} /> :
-        <EmptyView />
-      }
+      {institutions.length > 0 ? <ListFormat institutions={institutions} /> : <EmptyView />}
     </Container>
   </Fade>
 );

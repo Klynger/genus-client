@@ -19,14 +19,14 @@ if (process.env.NODE_ENV === 'development') {
 
 middlewares.push(thunk);
 
-const store = createStore(
-  reducer,
-  composeEnhancers(applyMiddleware(...middlewares)));
+const store = createStore(reducer, composeEnhancers(applyMiddleware(...middlewares)));
 
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
       <App />
     </BrowserRouter>
-  </Provider>, document.getElementById('root'));
+  </Provider>,
+  document.getElementById('root'),
+);
 registerServiceWorker();

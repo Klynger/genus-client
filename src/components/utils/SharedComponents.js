@@ -1,15 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Button, withWidth, Typography,
-  Grow,
-} from '@material-ui/core';
+import { Button, withWidth, Typography, Grow } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
 
 export const FadeInButton = styled(Button)`
   animation: fadeIn ${({ delay }) => delay * 2}ms;
-  
+
   @keyframes fadeIn {
     0% {
       opacity: 0;
@@ -39,9 +36,7 @@ export const ActionsContainer = styled.div`
   width: 100%;
 `;
 
-export const DefaultDialogTransition = props => (
-  <Grow in {...props} />
-);
+export const DefaultDialogTransition = props => <Grow in {...props} />;
 
 export const GridContainer = styled.div`
   display: grid;
@@ -86,16 +81,14 @@ const titleVariants = {
   xl: 'h2',
 };
 
-export const Title = (variants, component) => (withWidth()(withStyles(styles)(
-  ({ children, classes, width }) => (
-  <Typography
-    className={classes.title}
-    variant={variants[width]}
-    component={component}
-  >
-    {children}
-  </Typography>
-))));
+export const Title = (variants, component) =>
+  withWidth()(
+    withStyles(styles)(({ children, classes, width }) => (
+      <Typography className={classes.title} variant={variants[width]} component={component}>
+        {children}
+      </Typography>
+    )),
+  );
 Title.propTypes = {
   children: PropTypes.string.isRequired,
   classes: PropTypes.object,

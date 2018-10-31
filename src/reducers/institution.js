@@ -19,33 +19,33 @@ const DEFAULT_STATE = {
 function institution(state = DEFAULT_STATE, action) {
   switch (action.type) {
     case SAVE_GRADE_TO_INSTITUTION:
-       return {
-         ...state,
-         byId: {
-           ...state.byId,
-           [action.payload.institutionId]: {
-             ...state.byId[action.payload.institutionId],
-             grades: concatIdIfNotContain(
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.payload.institutionId]: {
+            ...state.byId[action.payload.institutionId],
+            grades: concatIdIfNotContain(
               state.byId[action.payload.institutionId].grades,
               action.payload.gradeId,
-             ),
-           },
-         },
-         allIds: state.allIds,
-       };
+            ),
+          },
+        },
+        allIds: state.allIds,
+      };
 
     case SAVE_INSTITUTION:
-       return {
-         ...state,
-         byId: {
-           ...state.byId,
-           [action.institution.id]: {
-             ...state.byId[action.institution.id] ? state.byId[action.institution.id] : {},
-             ...action.institution,
-           },
-         },
-         allIds: concatIdIfNotContain(state.allIds, action.institution.id),
-       };
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.institution.id]: {
+            ...(state.byId[action.institution.id] ? state.byId[action.institution.id] : {}),
+            ...action.institution,
+          },
+        },
+        allIds: concatIdIfNotContain(state.allIds, action.institution.id),
+      };
 
     case SELECT_INSTITUTION:
       return {
@@ -60,10 +60,12 @@ function institution(state = DEFAULT_STATE, action) {
           ...state.byId,
           [state.selectedInstitution]: {
             ...state.byId[state.selectedInstitution],
-            admins: state.byId[state.selectedInstitution].admins
-                      .filter(id => (id !== action.toBeRemovedId)),
-            teachers: state.byId[state.selectedInstitution].teachers
-                      .filter(id => (id !== action.toBeRemovedId)),
+            admins: state.byId[state.selectedInstitution].admins.filter(
+              id => id !== action.toBeRemovedId,
+            ),
+            teachers: state.byId[state.selectedInstitution].teachers.filter(
+              id => id !== action.toBeRemovedId,
+            ),
           },
         },
         allIds: state.allIds,

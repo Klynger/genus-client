@@ -8,11 +8,11 @@ import { withStyles } from '@material-ui/core/styles';
 const CreateContainer = styled.div`
   display: flex;
   flex-direction: column;
-  
+
   @media screen and (min-width: 1200px) {
     width: 60%;
   }
-  
+
   @media screen and (min-width: 900px) and (max-width: 1199px) {
     width: 70%;
   }
@@ -21,7 +21,7 @@ const CreateContainer = styled.div`
     width: 80%;
   }
 
-  @media screen and (max-width: 699px)  {
+  @media screen and (max-width: 699px) {
     width: 95%;
   }
 `;

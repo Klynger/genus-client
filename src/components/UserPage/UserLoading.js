@@ -5,9 +5,7 @@ import { Typography } from '@material-ui/core';
 const UserLoading = ({ error }) => {
   if (error) {
     return (
-      <Typography>
-        UserLoading - Something went wrong while trying to load the page
-      </Typography>
+      <Typography>UserLoading - Something went wrong while trying to load the page</Typography>
     );
   }
   return null;

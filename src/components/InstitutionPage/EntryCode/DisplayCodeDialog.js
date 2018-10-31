@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Dialog, DialogContent, DialogTitle,
-} from '@material-ui/core';
+import { Dialog, DialogContent, DialogTitle } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { DefaultDialogTransition } from '../../utils/SharedComponents';
 

@@ -29,33 +29,26 @@ class UserMenu extends Component {
     resetStore();
     onClose();
     this.goToRoute('/landing');
-  }
+  };
 
   goToRoute = (path = '/') => {
     this.props.history.push(path);
     this.props.onClose();
-  }
+  };
 
   handleAssociateOpenToggle = () => {
-    this.setState(({ associateDialogOpen }) =>
-    ({ associateDialogOpen: !associateDialogOpen }));
+    this.setState(({ associateDialogOpen }) => ({ associateDialogOpen: !associateDialogOpen }));
     this.props.onClose();
-  }
+  };
 
   render() {
-    const {
-      anchorEl, classes, onClose,
-      menuId,
-    } = this.props;
+    const { anchorEl, classes, onClose, menuId } = this.props;
     const { associateDialogOpen } = this.state;
     const open = Boolean(anchorEl);
 
     return (
       <Fragment>
-        <AssociateDialog
-          open={associateDialogOpen}
-          onClose={this.handleAssociateOpenToggle}
-        />
+        <AssociateDialog open={associateDialogOpen} onClose={this.handleAssociateOpenToggle} />
         <Menu
           id={menuId}
           classes={{ paper: classes.userMenu }}
@@ -67,18 +60,10 @@ class UserMenu extends Component {
           open={open}
           onClose={onClose}
         >
-          <MenuItem
-            component={Link}
-            to="/profile"
-            onClick={onClose}
-          >
+          <MenuItem component={Link} to="/profile" onClick={onClose}>
             Perfil
           </MenuItem>
-          <MenuItem
-            onClick={this.handleAssociateOpenToggle}
-          >
-            Vincular a uma instituição
-          </MenuItem>
+          <MenuItem onClick={this.handleAssociateOpenToggle}>Vincular a uma instituição</MenuItem>
           <MenuItem onClick={this.handleLogout}>Sair</MenuItem>
         </Menu>
       </Fragment>
@@ -104,4 +89,8 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default withStyles(styles)(
-  connect(null, mapDispatchToProps)(withRouter(UserMenu)));
+  connect(
+    null,
+    mapDispatchToProps,
+  )(withRouter(UserMenu)),
+);

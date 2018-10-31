@@ -11,16 +11,8 @@ const AsyncProfileDetailsPage = Loadable({
 
 const UserRoutes = ({ match }) => (
   <Switch>
-    <Route
-      exact
-      path={match.path}
-      component={AsyncProfileDetailsPage}
-    />
-    <Route
-      exact
-      path={`${match.path}/:userId`}
-      component={AsyncProfileDetailsPage}
-    />
+    <Route exact path={match.path} component={AsyncProfileDetailsPage} />
+    <Route exact path={`${match.path}/:userId`} component={AsyncProfileDetailsPage} />
   </Switch>
 );
 

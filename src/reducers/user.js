@@ -17,7 +17,7 @@ function user(state = DEFAULT_STATE, action) {
         byId: {
           ...state.byId,
           [action.user.id]: {
-            ...state.byId[action.user.id] ? state.byId[action.user.id] : {},
+            ...(state.byId[action.user.id] ? state.byId[action.user.id] : {}),
             ...action.user,
           },
         },
@@ -27,10 +27,13 @@ function user(state = DEFAULT_STATE, action) {
     case REMOVE_USER:
       return {
         ...state,
-        byId: action.userList.reduce((obj, key) => ({
-          ...obj,
-          [key]: state.byId[key],
-        }), {}),
+        byId: action.userList.reduce(
+          (obj, key) => ({
+            ...obj,
+            [key]: state.byId[key],
+          }),
+          {},
+        ),
         allIds: action.userList,
       };
 

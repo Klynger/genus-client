@@ -1,10 +1,19 @@
 import {
-  Button, Dialog, DialogTitle,
-  DialogContent, DialogActions,
-  FormControl, FormHelperText,
-  Input, InputLabel,
-  withMobileDialog, Grow, CircularProgress,
-  withStyles, withWidth, Zoom,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  FormControl,
+  FormHelperText,
+  Input,
+  InputLabel,
+  withMobileDialog,
+  Grow,
+  CircularProgress,
+  withStyles,
+  withWidth,
+  Zoom,
 } from '@material-ui/core';
 import { capitalize } from '@material-ui/core/utils/helpers';
 import { Form, withFormik } from 'formik';
@@ -71,10 +80,20 @@ function getErrorMessage(errorStatus) {
   }
 }
 
-const Signin = ({ classes, errors, fullScreen,
-  handleChange, handleReset, handleSubmit,
-  isSubmitting, values, open,
-  onClose, touched, width }) => {
+const Signin = ({
+  classes,
+  errors,
+  fullScreen,
+  handleChange,
+  handleReset,
+  handleSubmit,
+  isSubmitting,
+  values,
+  open,
+  onClose,
+  touched,
+  width,
+}) => {
   return (
     <Dialog
       fullScreen={fullScreen}
@@ -86,9 +105,7 @@ const Signin = ({ classes, errors, fullScreen,
         paper: classes[`signinDialogRoot${capitalize(width)}`],
       }}
     >
-      <DialogTitle>
-        Login
-      </DialogTitle>
+      <DialogTitle>Login</DialogTitle>
       <DialogContent>
         <StyledForm>
           <FormControl
@@ -96,15 +113,13 @@ const Signin = ({ classes, errors, fullScreen,
             error={touched.email && errors.email !== undefined}
           >
             <InputLabel>Email: </InputLabel>
-            <Input
-              name="email"
-              value={values.email || ''}
-              onChange={handleChange}
-            />
-            {touched.email && errors.email &&
-              <Zoom in>
-                <FormHelperText id="signin__email-error-text">{errors.email}</FormHelperText>
-              </Zoom>}
+            <Input name="email" value={values.email || ''} onChange={handleChange} />
+            {touched.email &&
+              errors.email && (
+                <Zoom in>
+                  <FormHelperText id="signin__email-error-text">{errors.email}</FormHelperText>
+                </Zoom>
+              )}
           </FormControl>
           <FormControl
             className={classes.formControl}
@@ -118,10 +133,14 @@ const Signin = ({ classes, errors, fullScreen,
               value={values.password}
               onChange={handleChange}
             />
-            {touched.password && errors.password &&
-              <Zoom in>
-                <FormHelperText id="signin__password-error-text">{errors.password}</FormHelperText>
-              </Zoom>}
+            {touched.password &&
+              errors.password && (
+                <Zoom in>
+                  <FormHelperText id="signin__password-error-text">
+                    {errors.password}
+                  </FormHelperText>
+                </Zoom>
+              )}
           </FormControl>
           <DialogActions>
             <Button color="primary" disabled={isSubmitting} onClick={onClose}>
@@ -131,19 +150,16 @@ const Signin = ({ classes, errors, fullScreen,
               <Button color="primary" disabled={isSubmitting} onClick={handleSubmit}>
                 Login
               </Button>
-              {isSubmitting &&
-                <CircularProgress
-                  size={24}
-                  className={classes.singinButtonProgress}
-                />}
+              {isSubmitting && (
+                <CircularProgress size={24} className={classes.singinButtonProgress} />
+              )}
             </div>
           </DialogActions>
-          {errors.requestError !== undefined &&
+          {errors.requestError !== undefined && (
             <Zoom in>
-              <FormHelperText error>
-                {getErrorMessage(errors.requestError)}
-              </FormHelperText>
-            </Zoom>}
+              <FormHelperText error>{getErrorMessage(errors.requestError)}</FormHelperText>
+            </Zoom>
+          )}
         </StyledForm>
       </DialogContent>
     </Dialog>
@@ -179,40 +195,51 @@ Signin.propTypes = {
   width: PropTypes.string.isRequired,
 };
 
-export default withStyles(styles)(withWidth()(withMobileDialog({
-  breakpoint: 'xs',
-})(withRouter(withFormik({
-  mapPropsToValues({ email }) {
-    return {
-      email: email || '',
-      password: '',
-    };
-  },
-  validationSchema: Yup.object().shape({
-    email: Yup.string().email('Email inválido.').required('Email obrigatório.'),
-    password: Yup.string().min(6, 'A senha deve ter pelo menos 6 caracteres.')
-      .max(30, 'Senha não pode ter mais que 30 caracteres.')
-      .required('Senha obrigatória.'),
-  }),
-  handleSubmit(values, { setSubmitting, props, setErrors, resetForm }) {
-    requestGraphql(loginQuery(values))
-      .then(({ data }) => {
-        setSubmitting(false);
-        if (data.data) {
-          localStorage.setItem('token', data.data.login);
-          resetForm({
-            email: '',
-            password: '',
-          });
-          props.history.push('/');
-        } else if (data.errors) {
-          setErrors({ requestError: '404' });
-        }
-      })
-      .catch(({ request }) => {
-        setErrors({ requestError: request.status.toString() });
-        setSubmitting(false);
-      });
-  },
-  enableReinitialize: true,
-})(Signin)))));
+export default withStyles(styles)(
+  withWidth()(
+    withMobileDialog({
+      breakpoint: 'xs',
+    })(
+      withRouter(
+        withFormik({
+          mapPropsToValues({ email }) {
+            return {
+              email: email || '',
+              password: '',
+            };
+          },
+          validationSchema: Yup.object().shape({
+            email: Yup.string()
+              .email('Email inválido.')
+              .required('Email obrigatório.'),
+            password: Yup.string()
+              .min(6, 'A senha deve ter pelo menos 6 caracteres.')
+              .max(30, 'Senha não pode ter mais que 30 caracteres.')
+              .required('Senha obrigatória.'),
+          }),
+          handleSubmit(values, { setSubmitting, props, setErrors, resetForm }) {
+            requestGraphql(loginQuery(values))
+              .then(({ data }) => {
+                setSubmitting(false);
+                if (data.data) {
+                  localStorage.setItem('token', data.data.login);
+                  resetForm({
+                    email: '',
+                    password: '',
+                  });
+                  props.history.push('/');
+                } else if (data.errors) {
+                  setErrors({ requestError: '404' });
+                }
+              })
+              .catch(({ request }) => {
+                setErrors({ requestError: request.status.toString() });
+                setSubmitting(false);
+              });
+          },
+          enableReinitialize: true,
+        })(Signin),
+      ),
+    ),
+  ),
+);
