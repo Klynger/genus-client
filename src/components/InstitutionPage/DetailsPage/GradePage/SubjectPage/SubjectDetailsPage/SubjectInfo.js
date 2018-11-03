@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Paper, Typography, withStyles } from '@material-ui/core';
+import { withRouter, Link } from 'react-router-dom';
 import { DEFAULT_PHOTO_CLASS_SRC } from '../../../../../utils/helpers';
 import { ActionsContainer } from '../../../../../utils/SharedComponents';
+import { Button, Paper, Typography, withStyles } from '@material-ui/core';
 
 const PHOTO_DIMENSION = 200;
 
@@ -35,7 +36,7 @@ const styles = theme => ({
   },
 });
 
-const SubjectInfo = ({ classes, onAddTeacherClick, onEditSubjectClick, subject }) => (
+const SubjectInfo = ({ classes, subject, onAddTeacherClick, onEditSubjectClick, history }) => (
   <Paper className={classes.root}>
     <div className={classes.contentContainer}>
       <img
@@ -61,12 +62,20 @@ const SubjectInfo = ({ classes, onAddTeacherClick, onEditSubjectClick, subject }
       <Button color="primary" onClick={onAddTeacherClick}>
         Vincular professor
       </Button>
+      <Button color="primary" component={Link} to={`${history.location.pathname}/forum`}>
+        Forum
+      </Button>
     </ActionsContainer>
   </Paper>
 );
 
 SubjectInfo.propTypes = {
   classes: PropTypes.object.isRequired,
+  history: PropTypes.shape({
+    location: PropTypes.shape({
+      pathname: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
   onAddTeacherClick: PropTypes.func.isRequired,
   onEditSubjectClick: PropTypes.func.isRequired,
   subject: PropTypes.shape({
@@ -76,4 +85,4 @@ SubjectInfo.propTypes = {
   }),
 };
 
-export default withStyles(styles)(SubjectInfo);
+export default withRouter(withStyles(styles)(SubjectInfo));
