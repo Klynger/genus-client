@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import SubjectsGrid from './SubjectsGrid';
 import React, { Component } from 'react';
 import { Fade } from '@material-ui/core';
+import SubjectsGrid from './SubjectsGrid';
 import { withStyles } from '@material-ui/core/styles';
 import { fetchGrade } from '../../../../../actions/grade';
 import { ResponsiveTitle } from '../../../../utils/SharedComponents';
