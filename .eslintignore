@@ -4,7 +4,6 @@
 /flow
 /flow-typed
 /public/*
-
 # production
 /build
 /dist

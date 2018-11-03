@@ -92,6 +92,6 @@ module.exports = {
     'jsx-a11y/label-has-for': 'off',
     'jsx-a11y/no-autofocus': 'off', // We are a library, people do what they want.
     'prettier/prettier': 'error',
-    'react-hooks/rules-of-hooks': 'error'
+    'react-hooks/rules-of-hooks': 'error',
   },
 };
