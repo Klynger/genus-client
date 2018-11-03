@@ -14,11 +14,7 @@ const styles = () => ({
 });
 
 const GridButton = ({ classes, onClick, Icon }) => (
-  <IconButton
-    classes={{ root: classes.gridButtonRoot }}
-    color="secondary"
-    onClick={onClick}
-  >
+  <IconButton classes={{ root: classes.gridButtonRoot }} color="secondary" onClick={onClick}>
     <Icon className={classes.gridButtonIcon} />
   </IconButton>
 );

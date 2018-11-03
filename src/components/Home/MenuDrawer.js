@@ -4,11 +4,7 @@ import { SwipeableDrawer } from '@material-ui/core';
 import DrawerContent from './DrawerContent';
 
 const MenuDrawer = ({ open, onDrawerToggle }) => (
-  <SwipeableDrawer
-    open={open}
-    onClose={onDrawerToggle}
-    onOpen={onDrawerToggle}
-  >
+  <SwipeableDrawer open={open} onClose={onDrawerToggle} onOpen={onDrawerToggle}>
     <DrawerContent onDrawerToggle={onDrawerToggle} />
   </SwipeableDrawer>
 );

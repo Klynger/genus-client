@@ -8,7 +8,10 @@ export const concatIdIfNotContain = (allIds, id) => {
 };
 
 export const getFirstInitialsCapitalized = (fullName = '', amountOfInitials = 2) => {
-  const names = fullName.replace(/\s\s+/g, ' ').split(' ').slice(0, amountOfInitials);
+  const names = fullName
+    .replace(/\s\s+/g, ' ')
+    .split(' ')
+    .slice(0, amountOfInitials);
 
   let output = '';
   names.forEach(name => {

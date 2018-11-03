@@ -34,8 +34,14 @@ class EditSubjectDialog extends Component {
   handleClose = () => {
     const DELAY_AFTER_TRANSITION = 50;
     const {
-      onClose, handleReset, setSubmitting,
-      theme: { transitions: { duration: { leavingScreen } } },
+      onClose,
+      handleReset,
+      setSubmitting,
+      theme: {
+        transitions: {
+          duration: { leavingScreen },
+        },
+      },
     } = this.props;
     setSubmitting(true);
     onClose();
@@ -43,15 +49,20 @@ class EditSubjectDialog extends Component {
       handleReset();
       setSubmitting(false);
     }, leavingScreen + DELAY_AFTER_TRANSITION);
-  }
+  };
 
   render() {
     const {
-      classes, errors,
-      fullScreen, handleChange,
-      handleSubmit, isSubmitting,
-      open, touched,
-      values, width,
+      classes,
+      errors,
+      fullScreen,
+      handleChange,
+      handleSubmit,
+      isSubmitting,
+      open,
+      touched,
+      values,
+      width,
     } = this.props;
 
     return (
@@ -68,9 +79,7 @@ class EditSubjectDialog extends Component {
         <DialogTitle>Atualização de Disciplina</DialogTitle>
         <DialogContent>
           <Form className={classes.form}>
-            <FormControl
-              error={touched.name && errors.name !== undefined}
-            >
+            <FormControl error={touched.name && errors.name !== undefined}>
               <InputLabel htmlFor="update-subject__name-field">Nome</InputLabel>
               <Input
                 id="update-subject__name-field"
@@ -78,28 +87,18 @@ class EditSubjectDialog extends Component {
                 value={values.name}
                 onChange={handleChange}
               />
-              {touched.name && errors.name &&
-                <FormHelperText>{errors.name}</FormHelperText>}
+              {touched.name && errors.name && <FormHelperText>{errors.name}</FormHelperText>}
             </FormControl>
           </Form>
-          {errors.requestError &&
-            <FormHelperText error={errors.requestError}>
-              {errors.requestError}
-            </FormHelperText>}
+          {errors.requestError && (
+            <FormHelperText error={errors.requestError}>{errors.requestError}</FormHelperText>
+          )}
         </DialogContent>
         <DialogActions>
-          <Button
-            color="secondary"
-            disabled={isSubmitting}
-            onClick={this.handleClose}
-          >
+          <Button color="secondary" disabled={isSubmitting} onClick={this.handleClose}>
             Cancelar
           </Button>
-          <ProgressButton
-            color="primary"
-            onClick={handleSubmit}
-            showProgress={isSubmitting}
-          >
+          <ProgressButton color="primary" onClick={handleSubmit} showProgress={isSubmitting}>
             Atualizar
           </ProgressButton>
         </DialogActions>
@@ -153,42 +152,48 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(
   withMobileDialog({
     breakpoint: 'xs',
-  })(withFormik({
-    mapPropsToValues({ subjectName }) {
-      return {
-        name: subjectName || '',
-      };
-    },
-    validationSchema: () => (
-      Yup.object().shape({
-        name: Yup.string()
-          .min(6, 'Nome da Disciplina deve conter no mínimo 6 caracteres.')
-          .max(50, 'Nome da Disciplina deve conter no máximo 50 caracteres.')
-          .required('Nome é obrigatório'),
-      })
-    ),
-    handleSubmit(values, { handleReset, props, setSubmitting, setErrors }) {
-      const input = {
-        ...values,
-        subjectId: props.subjectId,
-      };
+  })(
+    withFormik({
+      mapPropsToValues({ subjectName }) {
+        return {
+          name: subjectName || '',
+        };
+      },
+      validationSchema: () =>
+        Yup.object().shape({
+          name: Yup.string()
+            .min(6, 'Nome da Disciplina deve conter no mínimo 6 caracteres.')
+            .max(50, 'Nome da Disciplina deve conter no máximo 50 caracteres.')
+            .required('Nome é obrigatório'),
+        }),
+      handleSubmit(values, { handleReset, props, setSubmitting, setErrors }) {
+        const input = {
+          ...values,
+          subjectId: props.subjectId,
+        };
 
-      props.submitUpdate(input)
-        .then(res => {
-          setSubmitting(false);
-          if (res.data.data.updateSubject) {
-            props.onClose();
-            handleReset();
-          } else {
-            setErrors({ requestError: 'Algo de errado aconteceu. Tente Novamente' });
-          }
-        })
-        .catch(() => {
-          setSubmitting(false);
-        });
-    },
-    enableReinitialize: true,
-  })(withStyles(styles, { withTheme: true })(EditSubjectDialog))));
+        props
+          .submitUpdate(input)
+          .then(res => {
+            setSubmitting(false);
+            if (res.data.data.updateSubject) {
+              props.onClose();
+              handleReset();
+            } else {
+              setErrors({ requestError: 'Algo de errado aconteceu. Tente Novamente' });
+            }
+          })
+          .catch(() => {
+            setSubmitting(false);
+          });
+      },
+      enableReinitialize: true,
+    })(withStyles(styles, { withTheme: true })(EditSubjectDialog)),
+  ),
+);

@@ -38,8 +38,14 @@ class EditUserDialog extends Component {
   handleClose = () => {
     const DELAY_AFTER_TRANSITION = 50;
     const {
-      onClose, handleReset, setSubmitting,
-      theme: { transitions: { duration: { leavingScreen } } },
+      onClose,
+      handleReset,
+      setSubmitting,
+      theme: {
+        transitions: {
+          duration: { leavingScreen },
+        },
+      },
     } = this.props;
     setSubmitting(true);
     onClose();
@@ -47,13 +53,20 @@ class EditUserDialog extends Component {
       handleReset();
       setSubmitting(false);
     }, leavingScreen + DELAY_AFTER_TRANSITION);
-  }
+  };
 
   render() {
     const {
-      open, width, classes,
-      values, errors, touched, handleSubmit,
-      fullScreen, handleChange, isSubmitting,
+      open,
+      width,
+      classes,
+      values,
+      errors,
+      touched,
+      handleSubmit,
+      fullScreen,
+      handleChange,
+      isSubmitting,
     } = this.props;
 
     // if more attributes get added to this dialog
@@ -75,37 +88,27 @@ class EditUserDialog extends Component {
               className={classes.formControl}
               error={errors.username !== undefined && touched.username}
             >
-              <InputLabel
-                htmlFor="edit-user-dialog__username-field"
-              >
-                Nome
-              </InputLabel>
+              <InputLabel htmlFor="edit-user-dialog__username-field">Nome</InputLabel>
               <Input
                 name="username"
                 value={values.username}
                 onChange={handleChange}
                 id="edit-user-dialog__username-field"
               />
-              {touched.username && errors.username &&
-              <Zoom in>
-                <FormHelperText>{errors.username}</FormHelperText>
-              </Zoom>}
+              {touched.username &&
+                errors.username && (
+                  <Zoom in>
+                    <FormHelperText>{errors.username}</FormHelperText>
+                  </Zoom>
+                )}
             </FormControl>
           </Form>
         </DialogContent>
         <DialogActions>
-          <Button
-            color="secondary"
-            onClick={this.handleClose}
-            disabled={isSubmitting}
-          >
+          <Button color="secondary" onClick={this.handleClose} disabled={isSubmitting}>
             Cancelar
           </Button>
-          <ProgressButton
-            color="primary"
-            onClick={handleSubmit}
-            showProgress={isSubmitting}
-          >
+          <ProgressButton color="primary" onClick={handleSubmit} showProgress={isSubmitting}>
             Salvar
           </ProgressButton>
         </DialogActions>
@@ -150,34 +153,42 @@ EditUserDialog.propTypes = {
 
 function mapDispatchToProps(dispatch) {
   return {
-    updateUser: (input) => dispatch(updateUser(input)),
+    updateUser: input => dispatch(updateUser(input)),
   };
 }
 
-export default connect(null, mapDispatchToProps)(withFormik({
-  enableReinitialize: true,
-  mapPropsToValues({ user }) {
-    return {
-      username: user.username || '',
-    };
-  },
-  validationSchema: () => (
-    Yup.object().shape({
-      username: Yup.string()
-        .min(6, 'Nome deve ter pelo menos 6 caracteres.')
-        .max(50, 'Nome não pode ter mais de 50 caracteres.')
-        .required('Nome obrigatório'),
-    })),
-  handleSubmit(values, { props, setSubmitting }) {
-    props.updateUser(values)
-      .then(() => {
-        props.onClose();
-        setSubmitting(false);
-      })
-      .catch(() => {
-        setSubmitting(false);
-      });
-  },
-})(withMobileDialog({
-    breakpoint: 'xs',
-  })(withStyles(styles, { withTheme: true })(EditUserDialog))));
+export default connect(
+  null,
+  mapDispatchToProps,
+)(
+  withFormik({
+    enableReinitialize: true,
+    mapPropsToValues({ user }) {
+      return {
+        username: user.username || '',
+      };
+    },
+    validationSchema: () =>
+      Yup.object().shape({
+        username: Yup.string()
+          .min(6, 'Nome deve ter pelo menos 6 caracteres.')
+          .max(50, 'Nome não pode ter mais de 50 caracteres.')
+          .required('Nome obrigatório'),
+      }),
+    handleSubmit(values, { props, setSubmitting }) {
+      props
+        .updateUser(values)
+        .then(() => {
+          props.onClose();
+          setSubmitting(false);
+        })
+        .catch(() => {
+          setSubmitting(false);
+        });
+    },
+  })(
+    withMobileDialog({
+      breakpoint: 'xs',
+    })(withStyles(styles, { withTheme: true })(EditUserDialog)),
+  ),
+);

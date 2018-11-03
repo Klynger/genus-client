@@ -14,7 +14,7 @@ function grade(state = DEFAULT_STATE, action) {
         byId: {
           ...state.byId,
           [action.grade.id]: {
-            ...state.byId[action.grade.id] ? state.byId[action.grade.id] : {},
+            ...(state.byId[action.grade.id] ? state.byId[action.grade.id] : {}),
             ...action.grade,
           },
         },

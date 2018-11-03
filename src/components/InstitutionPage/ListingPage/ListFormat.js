@@ -1,10 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import {
-  Table, TableBody, TableCell,
-  TableHead, TableRow, Paper,
-} from '@material-ui/core';
+import { Table, TableBody, TableCell, TableHead, TableRow, Paper } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({

@@ -5,8 +5,13 @@ import { Form, withFormik } from 'formik';
 import * as Yup from 'yup';
 import { withStyles } from '@material-ui/core/styles';
 import {
-  FormControl, InputLabel, FormHelperText,
-  Input, Paper, CircularProgress, Zoom,
+  FormControl,
+  InputLabel,
+  FormHelperText,
+  Input,
+  Paper,
+  CircularProgress,
+  Zoom,
 } from '@material-ui/core';
 import { FadeInButton } from '../utils/SharedComponents';
 import { requestGraphql } from '../utils/HTTPClient';
@@ -98,10 +103,11 @@ class Signup extends PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.errors.requestError !== prevProps.errors.requestError
-      && this.props.errors.requestError !== undefined) {
-      this.props.handleSnackbarOpen(
-        new Error(this.props.errors.requestError));
+    if (
+      this.props.errors.requestError !== prevProps.errors.requestError &&
+      this.props.errors.requestError !== undefined
+    ) {
+      this.props.handleSnackbarOpen(new Error(this.props.errors.requestError));
     }
   }
 
@@ -124,8 +130,13 @@ class Signup extends PureComponent {
 
   render() {
     const {
-      handleSignin, classes, handleChange,
-      values, errors, touched, isSubmitting,
+      handleSignin,
+      classes,
+      handleChange,
+      values,
+      errors,
+      touched,
+      isSubmitting,
       handleSubmit,
     } = this.props;
 
@@ -138,10 +149,14 @@ class Signup extends PureComponent {
           >
             <InputLabel htmlFor="username">Nome</InputLabel>
             <Input name="username" value={values.username} onChange={handleChange} />
-            {touched.username && errors.username &&
-              <Zoom in>
-                <FormHelperText id="signup__username-error-text">{errors.username}</FormHelperText>
-              </Zoom>}
+            {touched.username &&
+              errors.username && (
+                <Zoom in>
+                  <FormHelperText id="signup__username-error-text">
+                    {errors.username}
+                  </FormHelperText>
+                </Zoom>
+              )}
           </FormControl>
           <FormControl
             className={classes.formControl}
@@ -149,10 +164,12 @@ class Signup extends PureComponent {
           >
             <InputLabel htmlFor="email">Email</InputLabel>
             <Input name="email" type="email" value={values.email} onChange={handleChange} />
-            {touched.email && errors.email &&
-              <Zoom in>
-                <FormHelperText id="signup__email-error-text">{errors.email}</FormHelperText>
-              </Zoom>}
+            {touched.email &&
+              errors.email && (
+                <Zoom in>
+                  <FormHelperText id="signup__email-error-text">{errors.email}</FormHelperText>
+                </Zoom>
+              )}
           </FormControl>
           <FormControl
             className={classes.formControl}
@@ -165,10 +182,14 @@ class Signup extends PureComponent {
               value={values.password}
               onChange={handleChange}
             />
-            {touched.password && errors.password &&
-              <Zoom in>
-                <FormHelperText id="signup__password-error-text">{errors.password}</FormHelperText>
-              </Zoom>}
+            {touched.password &&
+              errors.password && (
+                <Zoom in>
+                  <FormHelperText id="signup__password-error-text">
+                    {errors.password}
+                  </FormHelperText>
+                </Zoom>
+              )}
           </FormControl>
           <div className={classes.signupButtonWrapper}>
             <FadeInButton
@@ -179,11 +200,9 @@ class Signup extends PureComponent {
             >
               Registrar
             </FadeInButton>
-            {isSubmitting
-              && <CircularProgress
-                size={24}
-                className={classes.signupButtonProgress}
-              />}
+            {isSubmitting && (
+              <CircularProgress size={24} className={classes.signupButtonProgress} />
+            )}
           </div>
           <FadeInButton
             color="secondary"
@@ -224,63 +243,69 @@ Signup.propTypes = {
   }).isRequired,
 };
 
-export default withRouter(withFormik({
-  mapPropsToValues({ username, email }) {
-    return {
-      username: username || '',
-      email: email || '',
-      password: '',
-    };
-  },
-  validationSchema: Yup.object().shape({
-    email: Yup.string().trim().email('Você deve passar um email válido.')
-      .required('Email obrigatório.'),
-    password: Yup.string().min(6, 'A senha deve ter pelo menos 6 caracteres.')
-      .max(30, 'Senha não pode ter mais que 30 caracteres.')
-      .required('Senha obrigatória.'),
-    username: Yup.string().trim()
-      .lowercase()
-      .min(6, 'Nome deve ter pelo menos 6 caracteres.')
-      .max(50, 'Nome não pode ter mais de 50 caracteres.')
-      .required('Nome obrigatório'),
-  }),
-  handleSubmit(values, { setSubmitting, props, setErrors, resetForm }) {
-    requestGraphql(mutationCreateUser(values))
-      .then(({ data }) => {
-        if (data.data.createUser) {
-          props.handleSnackbarOpen();
-          const loginUser = {
-            email: values.email,
-            password: values.password,
-          };
-          requestGraphql(loginQuery(loginUser))
-          .then(res => {
-            if (res.data.data) {
-              localStorage.setItem('token', res.data.data.login);
-              props.history.push('/');
-            } else if (data.errors) {
-              setErrors({ requestError: '400' }); // handle this error on inside form
-              setSubmitting(false);
-            }
-          })
-          .catch(({ request }) => {
-            setErrors({ requestError: request.status });
+export default withRouter(
+  withFormik({
+    mapPropsToValues({ username, email }) {
+      return {
+        username: username || '',
+        email: email || '',
+        password: '',
+      };
+    },
+    validationSchema: Yup.object().shape({
+      email: Yup.string()
+        .trim()
+        .email('Você deve passar um email válido.')
+        .required('Email obrigatório.'),
+      password: Yup.string()
+        .min(6, 'A senha deve ter pelo menos 6 caracteres.')
+        .max(30, 'Senha não pode ter mais que 30 caracteres.')
+        .required('Senha obrigatória.'),
+      username: Yup.string()
+        .trim()
+        .lowercase()
+        .min(6, 'Nome deve ter pelo menos 6 caracteres.')
+        .max(50, 'Nome não pode ter mais de 50 caracteres.')
+        .required('Nome obrigatório'),
+    }),
+    handleSubmit(values, { setSubmitting, props, setErrors, resetForm }) {
+      requestGraphql(mutationCreateUser(values))
+        .then(({ data }) => {
+          if (data.data.createUser) {
+            props.handleSnackbarOpen();
+            const loginUser = {
+              email: values.email,
+              password: values.password,
+            };
+            requestGraphql(loginQuery(loginUser))
+              .then(res => {
+                if (res.data.data) {
+                  localStorage.setItem('token', res.data.data.login);
+                  props.history.push('/');
+                } else if (data.errors) {
+                  setErrors({ requestError: '400' }); // handle this error on inside form
+                  setSubmitting(false);
+                }
+              })
+              .catch(({ request }) => {
+                setErrors({ requestError: request.status });
+                setSubmitting(false);
+              });
+            resetForm({
+              email: '',
+              username: '',
+              password: '',
+            });
+          } else if (data.errors) {
+            // TODO in this case the errors must be handle inside the form
+            setErrors({ requestError: '400' });
             setSubmitting(false);
-          });
-          resetForm({
-            email: '',
-            username: '',
-            password: '',
-          });
-        } else if (data.errors) {
-          // TODO in this case the errors must be handle inside the form
-          setErrors({ requestError: '400' });
+          }
+        })
+        .catch(({ request }) => {
+          setErrors({ requestError: request.status });
           setSubmitting(false);
-        }
-      })
-      .catch(({ request }) => {
-        setErrors({ requestError: request.status });
-        setSubmitting(false);
-      });
-  },
-})(withStyles(styles)(Signup)));
+        });
+    },
+  })(withStyles(styles)(Signup)),
+);

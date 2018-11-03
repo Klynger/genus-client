@@ -51,12 +51,8 @@ const NotFound404 = NotFoundBreakpoints.extend`
 
 const NotFoundPage = () => (
   <DivContainer>
-    <NotFound404 maxSize={12}>
-      404
-    </NotFound404>
-    <NotFoundText>
-      Page Not Found
-    </NotFoundText>
+    <NotFound404 maxSize={12}>404</NotFound404>
+    <NotFoundText>Page Not Found</NotFoundText>
   </DivContainer>
 );
 

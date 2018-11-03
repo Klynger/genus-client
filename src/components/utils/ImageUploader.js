@@ -1,14 +1,10 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import {
-  Avatar,
-} from '@material-ui/core';
+import { Avatar } from '@material-ui/core';
 
 class ImageUploader extends Component {
   get fullSrc() {
-    const {
-      path, mimeType, imgSrc,
-    } = this.props;
+    const { path, mimeType, imgSrc } = this.props;
 
     if (mimeType && imgSrc) {
       return `${mimeType}${imgSrc}`; // TODO
@@ -18,30 +14,16 @@ class ImageUploader extends Component {
   }
 
   render() {
-    const {
-      alt, className, initials,
-      style,
-    } = this.props;
+    const { alt, className, initials, style } = this.props;
 
     if (initials) {
       return (
-        <Avatar
-          style={style}
-          alt={alt}
-          className={className}
-        >
+        <Avatar style={style} alt={alt} className={className}>
           {initials}
         </Avatar>
       );
     }
-    return (
-      <Avatar
-        alt={alt}
-        style={style}
-        src={this.fullSrc}
-        className={className}
-      />
-    );
+    return <Avatar alt={alt} style={style} src={this.fullSrc} className={className} />;
   }
 }
 
@@ -58,11 +40,15 @@ ImageUploader.propTypes = {
     let result = null;
     const prop = props[propName];
 
-    if (typeof prop !== 'undefined' && (typeof prop !== 'string'
-      || prop.length === 0 || prop.length > 2)) {
-        result = new Error(`Invalid prop \`${propName}supplied to` +
-        ` \`${componentName}\`. Validation failed.` +
-        ` You must pass a string with 0 < ${propName}.length <= 2.`);
+    if (
+      typeof prop !== 'undefined' &&
+      (typeof prop !== 'string' || prop.length === 0 || prop.length > 2)
+    ) {
+      result = new Error(
+        `Invalid prop \`${propName}supplied to` +
+          ` \`${componentName}\`. Validation failed.` +
+          ` You must pass a string with 0 < ${propName}.length <= 2.`,
+      );
     }
     return result;
   },

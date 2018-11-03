@@ -1,9 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Card, CardActionArea, CardContent,
-  CardMedia, Typography, Fade,
-} from '@material-ui/core';
+import { Card, CardActionArea, CardContent, CardMedia, Typography, Fade } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
 
@@ -12,9 +9,8 @@ const StyledCard = styled(Card)``;
 const StyledCardMedia = styled(CardMedia)`
   height: 140px;
   opacity: 0.5;
-  transition: opacity ${props =>
-    props.transitionHoverDuration || 250}ms ${props =>
-      props.transitionHoverFunction || 'cubic-bezier(0.4, 0, 0.2, 1)'};
+  transition: opacity ${props => props.transitionHoverDuration || 250}ms
+    ${props => props.transitionHoverFunction || 'cubic-bezier(0.4, 0, 0.2, 1)'};
 
   ${StyledCard}:hover & {
     opacity: 1;
@@ -49,27 +45,12 @@ const styles = () => ({
   },
 });
 
-const GridCard = ({
-  classes,
-  children,
-  imgAlt,
-  imgSrc,
-  onClick,
-  title,
-}) => (
+const GridCard = ({ classes, children, imgAlt, imgSrc, onClick, title }) => (
   <div>
     <Fade in>
-      <StyledCard
-        className={classes.subjectCardRoot}
-      >
-        <CardActionArea
-          className={classes.subjectCardActionArea}
-          onClick={onClick}
-        >
-          <StyledCardMedia
-            title={imgAlt}
-            image={imgSrc}
-          />
+      <StyledCard className={classes.subjectCardRoot}>
+        <CardActionArea className={classes.subjectCardActionArea} onClick={onClick}>
+          <StyledCardMedia title={imgAlt} image={imgSrc} />
           <CardContent>
             <UnderlinedTypo variant="h5" component="h3">
               {title}

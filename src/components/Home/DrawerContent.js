@@ -27,15 +27,11 @@ class DrawerContent extends Component {
     const { classes } = this.props;
     return (
       <List>
-        <ListItem
-          className={classes.item}
-          button
-          onClick={() => this.handleGoToPath()}
-        >
-         <ListItemIcon>
-           <Home />
-         </ListItemIcon>
-         <ListItemText primary="Página Inicial" />
+        <ListItem className={classes.item} button onClick={() => this.handleGoToPath()}>
+          <ListItemIcon>
+            <Home />
+          </ListItemIcon>
+          <ListItemText primary="Página Inicial" />
         </ListItem>
         <ListItem
           className={classes.item}
@@ -57,26 +53,23 @@ class DrawerContent extends Component {
           </ListItemIcon>
           <ListItemText primary="Criar Instituição" />
         </ListItem>
-        {process.env.NODE_ENV === 'development' &&
-          <ListItem
-            className={classes.item}
-            button
-            onClick={() => this.handleGoToPath('/testing')}
-          >
+        {process.env.NODE_ENV === 'development' && (
+          <ListItem className={classes.item} button onClick={() => this.handleGoToPath('/testing')}>
             <ListItemIcon>
               <Flight />
             </ListItemIcon>
             <ListItemText primary="Test" />
-          </ListItem>}
+          </ListItem>
+        )}
       </List>
     );
   }
 }
 
 DrawerContent.propTypes = {
- classes: PropTypes.object,
- history: PropTypes.object,
- onDrawerToggle: PropTypes.func.isRequired,
+  classes: PropTypes.object,
+  history: PropTypes.object,
+  onDrawerToggle: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles, { withTheme: true })(withRouter(DrawerContent));

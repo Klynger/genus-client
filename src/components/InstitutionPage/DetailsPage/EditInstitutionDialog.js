@@ -35,8 +35,14 @@ class EditInstitutionDialog extends Component {
   handleClose = () => {
     const DELAY_AFTER_TRANSITION = 50;
     const {
-      onClose, handleReset, setSubmitting,
-      theme: { transitions: { duration: { leavingScreen } } },
+      onClose,
+      handleReset,
+      setSubmitting,
+      theme: {
+        transitions: {
+          duration: { leavingScreen },
+        },
+      },
     } = this.props;
     setSubmitting(true);
     onClose();
@@ -44,15 +50,20 @@ class EditInstitutionDialog extends Component {
       handleReset();
       setSubmitting(false);
     }, leavingScreen + DELAY_AFTER_TRANSITION);
-  }
+  };
 
   render() {
     const {
-      classes, errors,
-      fullScreen, handleChange,
-      handleSubmit, isSubmitting,
-      open, touched,
-      values, width,
+      classes,
+      errors,
+      fullScreen,
+      handleChange,
+      handleSubmit,
+      isSubmitting,
+      open,
+      touched,
+      values,
+      width,
     } = this.props;
     return (
       <Dialog
@@ -68,9 +79,7 @@ class EditInstitutionDialog extends Component {
         <DialogTitle>Atualização de Instituição</DialogTitle>
         <DialogContent>
           <Form className={classes.form}>
-            <FormControl
-              error={touched.name && errors.name !== undefined}
-            >
+            <FormControl error={touched.name && errors.name !== undefined}>
               <InputLabel htmlFor="update-institution__name-field">Nome</InputLabel>
               <Input
                 id="update-institution__name-field"
@@ -78,12 +87,9 @@ class EditInstitutionDialog extends Component {
                 value={values.name}
                 onChange={handleChange}
               />
-              {touched.name && errors.name &&
-                <FormHelperText>{errors.name}</FormHelperText>}
+              {touched.name && errors.name && <FormHelperText>{errors.name}</FormHelperText>}
             </FormControl>
-            <FormControl
-              error={touched.phone && errors.phone !== undefined}
-            >
+            <FormControl error={touched.phone && errors.phone !== undefined}>
               <InputLabel htmlFor="update-institution__phone-field">Telefone</InputLabel>
               <Input
                 id="update-institution__phone-field"
@@ -91,12 +97,9 @@ class EditInstitutionDialog extends Component {
                 value={values.phone}
                 onChange={handleChange}
               />
-              {touched.phone && errors.phone &&
-                <FormHelperText>{errors.phone}</FormHelperText>}
+              {touched.phone && errors.phone && <FormHelperText>{errors.phone}</FormHelperText>}
             </FormControl>
-            <FormControl
-              error={touched.address && errors.address !== undefined}
-            >
+            <FormControl error={touched.address && errors.address !== undefined}>
               <InputLabel htmlFor="update-institution__address-field">Endereço</InputLabel>
               <Input
                 id="update-institution__address-field"
@@ -104,28 +107,19 @@ class EditInstitutionDialog extends Component {
                 value={values.address}
                 onChange={handleChange}
               />
-              {touched.address && errors.address &&
-                <FormHelperText>{errors.address}</FormHelperText>}
+              {touched.address &&
+                errors.address && <FormHelperText>{errors.address}</FormHelperText>}
             </FormControl>
           </Form>
-          {errors.requestError &&
-            <FormHelperText error={errors.requestError}>
-              {errors.requestError}
-            </FormHelperText>}
+          {errors.requestError && (
+            <FormHelperText error={errors.requestError}>{errors.requestError}</FormHelperText>
+          )}
         </DialogContent>
         <DialogActions>
-          <Button
-            color="secondary"
-            disabled={isSubmitting}
-            onClick={this.handleClose}
-          >
+          <Button color="secondary" disabled={isSubmitting} onClick={this.handleClose}>
             Cancelar
           </Button>
-          <ProgressButton
-            color="primary"
-            onClick={handleSubmit}
-            showProgress={isSubmitting}
-          >
+          <ProgressButton color="primary" onClick={handleSubmit} showProgress={isSubmitting}>
             Atualizar
           </ProgressButton>
         </DialogActions>
@@ -197,51 +191,57 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(
   withMobileDialog({
     breakpoint: 'xs',
-  })(withFormik({
-    mapPropsToValues({ institution }) {
-      return {
-        address: institution.address || '',
-        name: institution.name || '',
-        phone: institution.phone || '',
-      };
-    },
-    validationSchema: () => (
-      Yup.object().shape({
-        address: Yup.string()
-          .min(6, 'Endereço deve conter no mínimo 6 caracteres.')
-          .max(50, 'Endereço deve conter no máximo 50 caracteres.')
-          .required('Endereço é obrigatório'),
-        name: Yup.string()
-          .min(6, 'Nome da instituição deve conter no mínimo 6 caracteres.')
-          .max(50, 'Nome da instituição deve conter no máximo 50 caracteres.')
-          .required('Nome é obrigatório'),
-        phone: Yup.string()
-          .min(6, 'Telefone deve conter no mínimo 6 digitos.')
-          .max(50, 'Telefone deve conter no máximo 50 digitos.')
-          .required('Telefone é obrigatório.'),
-      })
-    ),
-    handleSubmit(values, { handleReset, props, setSubmitting, setErrors }) {
-      const input = {
-        ...values,
-        institutionId: props.selectedInstitution,
-      };
-      props.submitUpdate(input)
-        .then(res => {
-          setSubmitting(false);
-          if (res.data.data.updateInstitution) {
-            props.onClose();
-            handleReset();
-          } else {
-            setErrors({ requestError: 'Algo de errado aconteceu. Tente Novamente' });
-          }
-        })
-        .catch(() => {
-          setSubmitting(false);
-        });
-    },
-    enableReinitialize: true,
-  })(withStyles(styles, { withTheme: true })(EditInstitutionDialog))));
+  })(
+    withFormik({
+      mapPropsToValues({ institution }) {
+        return {
+          address: institution.address || '',
+          name: institution.name || '',
+          phone: institution.phone || '',
+        };
+      },
+      validationSchema: () =>
+        Yup.object().shape({
+          address: Yup.string()
+            .min(6, 'Endereço deve conter no mínimo 6 caracteres.')
+            .max(50, 'Endereço deve conter no máximo 50 caracteres.')
+            .required('Endereço é obrigatório'),
+          name: Yup.string()
+            .min(6, 'Nome da instituição deve conter no mínimo 6 caracteres.')
+            .max(50, 'Nome da instituição deve conter no máximo 50 caracteres.')
+            .required('Nome é obrigatório'),
+          phone: Yup.string()
+            .min(6, 'Telefone deve conter no mínimo 6 digitos.')
+            .max(50, 'Telefone deve conter no máximo 50 digitos.')
+            .required('Telefone é obrigatório.'),
+        }),
+      handleSubmit(values, { handleReset, props, setSubmitting, setErrors }) {
+        const input = {
+          ...values,
+          institutionId: props.selectedInstitution,
+        };
+        props
+          .submitUpdate(input)
+          .then(res => {
+            setSubmitting(false);
+            if (res.data.data.updateInstitution) {
+              props.onClose();
+              handleReset();
+            } else {
+              setErrors({ requestError: 'Algo de errado aconteceu. Tente Novamente' });
+            }
+          })
+          .catch(() => {
+            setSubmitting(false);
+          });
+      },
+      enableReinitialize: true,
+    })(withStyles(styles, { withTheme: true })(EditInstitutionDialog)),
+  ),
+);
