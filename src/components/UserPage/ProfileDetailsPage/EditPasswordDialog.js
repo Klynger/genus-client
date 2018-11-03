@@ -7,6 +7,8 @@ import ProgressButton from '../../utils/ProgressButton';
 import { capitalize } from '@material-ui/core/utils/helpers';
 import { defaultDialogBreakpoints } from '../../utils/helpers';
 import { DefaultDialogTransition } from '../../utils/SharedComponents';
+import { mutationUpdateUserPassword } from '../../../queryGenerators/userMutations';
+import { requestGraphql } from '../../utils/HTTPClient';
 import {
   Zoom,
   Input,
@@ -53,7 +55,7 @@ const EditPasswordDialog = ({
         <Form className={classes.form}>
           <FormControl
             className={classes.formControl}
-            error={Boolean(errors.password) && touched.password}
+            error={Boolean(errors.password) && touched.password || Boolean(errors.requestError)}
           >
             <InputLabel
               htmlFor="edit-password-dialog__password-field"
@@ -70,6 +72,10 @@ const EditPasswordDialog = ({
             {touched.password && Boolean(errors.password) &&
               <Zoom in>
                 <FormHelperText>{errors.password}</FormHelperText>
+              </Zoom>}
+            {Boolean(errors.requestError) &&
+              <Zoom in>
+                <FormHelperText>{errors.requestError}</FormHelperText>
               </Zoom>}
           </FormControl>
           <FormControl
@@ -145,6 +151,7 @@ EditPasswordDialog.propTypes = {
     newPassword: PropTypes.string,
     password: PropTypes.string,
     passwordConfirm: PropTypes.string,
+    requestError: PropTypes.string,
   }).isRequired,
   fullScreen: PropTypes.bool.isRequired,
   handleChange: PropTypes.func.isRequired,
@@ -194,8 +201,23 @@ export default connect(mapToProps)(withFormik({
         .required('Confirmação de senha é obrigatória.'),
     })
   ),
-  handleSubmit() {
-    // TODO
+  handleSubmit(values, { props, resetForm, setErrors, setSubmitting }) {
+    requestGraphql(mutationUpdateUserPassword(values.password, values.newPassword),
+    localStorage.getItem('token'))
+    .then(res => {
+      setSubmitting(false);
+      if (res.data.data.updateUserPassword) {
+        resetForm({
+          passwordConfirm: '',
+          password: '',
+          newPassword: '',
+        });
+        props.onClose();
+      } else if (res.data.errors) {
+        setErrors({ requestError: 'Senha atual incorreta! Tente novamente.' });
+      }
+    })
+    .catch(() => setSubmitting(false));
   },
 })(withMobileDialog({
   breakpoint: 'xs',

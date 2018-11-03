@@ -37,3 +37,15 @@ export const mutationUpdateUser = input => ({
     input,
   },
 });
+
+export const mutationUpdateUserPassword = (password, newPassword) => ({
+  query: `
+    mutation updateUserPassword($password: String!, $newPassword: String!) {
+      updateUserPassword(password: $password, newPassword: $newPassword)
+    }
+  `,
+  variables: {
+    password,
+    newPassword,
+  },
+});
