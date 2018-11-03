@@ -36,110 +36,106 @@ const styles = theme => ({
 });
 
 const EditPasswordDialog = ({
-  open, isSubmitting,
-  onClose, classes, width,
-  fullScreen, values, errors,
-  handleChange, handleSubmit, touched,
+  open,
+  isSubmitting,
+  onClose,
+  classes,
+  width,
+  fullScreen,
+  values,
+  errors,
+  handleChange,
+  handleSubmit,
+  touched,
 }) => (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      fullScreen={fullScreen}
-      TransitionComponent={DefaultDialogTransition}
-      classes={{
-        paper: classes[`dialogRoot${capitalize(width)}`],
-      }}
-    >
-      <DialogTitle>Alterar senha</DialogTitle>
-      <DialogContent>
-        <Form className={classes.form}>
-          <FormControl
-            className={classes.formControl}
-            error={Boolean(errors.password) && touched.password || Boolean(errors.requestError)}
-          >
-            <InputLabel
-              htmlFor="edit-password-dialog__password-field"
-            >
-              Senha atual
-            </InputLabel>
-            <Input
-              name="password"
-              type="password"
-              onChange={handleChange}
-              value={values.password}
-              id="edit-password-dialog__password-field"
-            />
-            {touched.password && Boolean(errors.password) &&
+  <Dialog
+    open={open}
+    onClose={onClose}
+    fullScreen={fullScreen}
+    TransitionComponent={DefaultDialogTransition}
+    classes={{
+      paper: classes[`dialogRoot${capitalize(width)}`],
+    }}
+  >
+    <DialogTitle>Alterar senha</DialogTitle>
+    <DialogContent>
+      <Form className={classes.form}>
+        <FormControl
+          className={classes.formControl}
+          error={(Boolean(errors.password) && touched.password) || Boolean(errors.requestError)}
+        >
+          <InputLabel htmlFor="edit-password-dialog__password-field">Senha atual</InputLabel>
+          <Input
+            name="password"
+            type="password"
+            onChange={handleChange}
+            value={values.password}
+            id="edit-password-dialog__password-field"
+          />
+          {touched.password &&
+            Boolean(errors.password) && (
               <Zoom in>
                 <FormHelperText>{errors.password}</FormHelperText>
-              </Zoom>}
-            {Boolean(errors.requestError) &&
-              <Zoom in>
-                <FormHelperText>{errors.requestError}</FormHelperText>
-              </Zoom>}
-          </FormControl>
-          <FormControl
-            className={classes.formControl}
-            error={Boolean(errors.newPassword) && touched.newPassword}
-          >
-            <InputLabel
-              htmlFor="edit-password-dialog__new-password-field"
-            >
-              Nova senha
-            </InputLabel>
-            <Input
-              type="password"
-              name="newPassword"
-              onChange={handleChange}
-              value={values.newPassword}
-              id="edit-password-dialog__new-password-field"
-            />
-            {touched.newPassword && Boolean(errors.newPassword) &&
+              </Zoom>
+            )}
+          {Boolean(errors.requestError) && (
+            <Zoom in>
+              <FormHelperText>{errors.requestError}</FormHelperText>
+            </Zoom>
+          )}
+        </FormControl>
+        <FormControl
+          className={classes.formControl}
+          error={Boolean(errors.newPassword) && touched.newPassword}
+        >
+          <InputLabel htmlFor="edit-password-dialog__new-password-field">Nova senha</InputLabel>
+          <Input
+            type="password"
+            name="newPassword"
+            onChange={handleChange}
+            value={values.newPassword}
+            id="edit-password-dialog__new-password-field"
+          />
+          {touched.newPassword &&
+            Boolean(errors.newPassword) && (
               <Zoom in>
                 <FormHelperText>{errors.newPassword}</FormHelperText>
-              </Zoom>}
-          </FormControl>
-          <FormControl
-            className={classes.formControl}
-            error={Boolean(errors.passwordConfirm) && touched.passwordConfirm}
-          >
-            <InputLabel
-              htmlFor="edit-password-dialog__password-confirm-field"
-            >
-              Confirmação de senha
-            </InputLabel>
-            <Input
-              type="password"
-              name="passwordConfirm"
-              onChange={handleChange}
-              value={values.passwordConfirm}
-              id="edit-password-dialog__password-confirm-field"
-            />
-            {touched.passwordConfirm && Boolean(errors.passwordConfirm) &&
+              </Zoom>
+            )}
+        </FormControl>
+        <FormControl
+          className={classes.formControl}
+          error={Boolean(errors.passwordConfirm) && touched.passwordConfirm}
+        >
+          <InputLabel htmlFor="edit-password-dialog__password-confirm-field">
+            Confirmação de senha
+          </InputLabel>
+          <Input
+            type="password"
+            name="passwordConfirm"
+            onChange={handleChange}
+            value={values.passwordConfirm}
+            id="edit-password-dialog__password-confirm-field"
+          />
+          {touched.passwordConfirm &&
+            Boolean(errors.passwordConfirm) && (
               <Zoom in>
                 <FormHelperText>{errors.passwordConfirm}</FormHelperText>
-              </Zoom>}
-          </FormControl>
-        </Form>
-      </DialogContent>
-      <DialogActions>
-        <Button
-          color="secondary"
-          onClick={onClose}
-          disabled={isSubmitting}
-        >
-          Cancelar
-        </Button>
-        <ProgressButton
-          color="primary"
-          onClick={handleSubmit}
-          showProgress={isSubmitting}
-        >
-          Salvar
-        </ProgressButton>
-      </DialogActions>
-    </Dialog>
-  );
+              </Zoom>
+            )}
+        </FormControl>
+      </Form>
+    </DialogContent>
+    <DialogActions>
+      <Button color="secondary" onClick={onClose} disabled={isSubmitting}>
+        Cancelar
+      </Button>
+      <ProgressButton color="primary" onClick={handleSubmit} showProgress={isSubmitting}>
+        Salvar
+      </ProgressButton>
+    </DialogActions>
+  </Dialog>
+);
 
 EditPasswordDialog.defaultProps = {
   open: false,
@@ -178,47 +174,52 @@ function mapToProps({ user: { loggedUserId } }) {
   };
 }
 
-export default connect(mapToProps)(withFormik({
-  mapPropsToValues() {
-    return {
-      passwordConfirm: '',
-      password: '',
-      newPassword: '',
-    };
-  },
-  validationSchema: () => (
-    Yup.object().shape({
-      newPassword: Yup.string()
-      .min(6, 'A senha deve ter pelo menos 6 caracteres.')
-      .max(30, 'Senha não pode ter mais que 30 caracteres.')
-      .required('Senha obrigatória.'),
-      password: Yup.string()
-      .min(6, 'A senha deve ter pelo menos 6 caracteres.')
-      .max(30, 'Senha não pode ter mais que 30 caracteres.')
-      .required('Senha obrigatória.'),
-      passwordConfirm: Yup.string()
-        .oneOf([Yup.ref('newPassword')], 'Senhas não correspondem.')
-        .required('Confirmação de senha é obrigatória.'),
-    })
+export default connect(mapToProps)(
+  withFormik({
+    mapPropsToValues() {
+      return {
+        passwordConfirm: '',
+        password: '',
+        newPassword: '',
+      };
+    },
+    validationSchema: () =>
+      Yup.object().shape({
+        newPassword: Yup.string()
+          .min(6, 'A senha deve ter pelo menos 6 caracteres.')
+          .max(30, 'Senha não pode ter mais que 30 caracteres.')
+          .required('Senha obrigatória.'),
+        password: Yup.string()
+          .min(6, 'A senha deve ter pelo menos 6 caracteres.')
+          .max(30, 'Senha não pode ter mais que 30 caracteres.')
+          .required('Senha obrigatória.'),
+        passwordConfirm: Yup.string()
+          .oneOf([Yup.ref('newPassword')], 'Senhas não correspondem.')
+          .required('Confirmação de senha é obrigatória.'),
+      }),
+    handleSubmit(values, { props, resetForm, setErrors, setSubmitting }) {
+      requestGraphql(
+        mutationUpdateUserPassword(values.password, values.newPassword),
+        localStorage.getItem('token'),
+      )
+        .then(res => {
+          setSubmitting(false);
+          if (res.data.data.updateUserPassword) {
+            resetForm({
+              passwordConfirm: '',
+              password: '',
+              newPassword: '',
+            });
+            props.onClose();
+          } else if (res.data.errors) {
+            setErrors({ requestError: 'Senha atual incorreta! Tente novamente.' });
+          }
+        })
+        .catch(() => setSubmitting(false));
+    },
+  })(
+    withMobileDialog({
+      breakpoint: 'xs',
+    })(withStyles(styles)(EditPasswordDialog)),
   ),
-  handleSubmit(values, { props, resetForm, setErrors, setSubmitting }) {
-    requestGraphql(mutationUpdateUserPassword(values.password, values.newPassword),
-    localStorage.getItem('token'))
-    .then(res => {
-      setSubmitting(false);
-      if (res.data.data.updateUserPassword) {
-        resetForm({
-          passwordConfirm: '',
-          password: '',
-          newPassword: '',
-        });
-        props.onClose();
-      } else if (res.data.errors) {
-        setErrors({ requestError: 'Senha atual incorreta! Tente novamente.' });
-      }
-    })
-    .catch(() => setSubmitting(false));
-  },
-})(withMobileDialog({
-  breakpoint: 'xs',
-})(withStyles(styles)(EditPasswordDialog))));
+);

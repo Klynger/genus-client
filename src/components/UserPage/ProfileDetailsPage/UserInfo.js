@@ -6,14 +6,7 @@ import EditPasswordDialog from './EditPasswordDialog';
 import ImageUploader from '../../utils/ImageUploader';
 import deepOrange from '@material-ui/core/colors/deepOrange';
 import { getFirstInitialsCapitalized } from '../../utils/helpers';
-import {
-  Card,
-  Button,
-  withStyles,
-  Typography,
-  CardContent,
-  CardActions,
-} from '@material-ui/core';
+import { Card, Button, withStyles, Typography, CardContent, CardActions } from '@material-ui/core';
 
 const styles = theme => ({
   card: {
@@ -62,15 +55,15 @@ class UserInfo extends Component {
 
   handleEditUserClose = () => {
     this.setState({ editUserOpen: false });
-  }
+  };
 
   handleEditPasswordToggle = () => {
     this.setState(({ editPasswordOpen }) => ({ editPasswordOpen: !editPasswordOpen }));
-  }
+  };
 
   handleEditPasswordClose = () => {
     this.setState({ editPasswordOpen: false });
-  }
+  };
 
   render() {
     const { classes, loggedUserId, user } = this.props;
@@ -78,15 +71,8 @@ class UserInfo extends Component {
 
     return (
       <Fragment>
-        <EditUserDialog
-          user={user}
-          open={editUserOpen}
-          onClose={this.handleEditUserClose}
-        />
-        <EditPasswordDialog
-          open={editPasswordOpen}
-          onClose={this.handleEditPasswordClose}
-        />
+        <EditUserDialog user={user} open={editUserOpen} onClose={this.handleEditUserClose} />
+        <EditPasswordDialog open={editPasswordOpen} onClose={this.handleEditPasswordClose} />
         <Card className={classes.card}>
           <CardContent className={classes.content}>
             <div className={classes.imageContainer}>
@@ -103,21 +89,16 @@ class UserInfo extends Component {
               {user.email}
             </Typography>
           </CardContent>
-          {loggedUserId === user.id &&
-          <CardActions className={classes.actions}>
-          <Button
-            color="primary"
-            onClick={this.handleEditPasswordToggle}
-          >
-            Alterar senha
-          </Button>
-            <Button
-              color="primary"
-              onClick={this.handleEditUserToggle}
-            >
-              Editar informações
-            </Button>
-          </CardActions>}
+          {loggedUserId === user.id && (
+            <CardActions className={classes.actions}>
+              <Button color="primary" onClick={this.handleEditPasswordToggle}>
+                Alterar senha
+              </Button>
+              <Button color="primary" onClick={this.handleEditUserToggle}>
+                Editar informações
+              </Button>
+            </CardActions>
+          )}
         </Card>
       </Fragment>
     );
