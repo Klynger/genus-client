@@ -14,7 +14,7 @@ const AsyncInstitutionDetails = Loadable({
 });
 
 const AsyncGrade = Loadable({
-  loader: () => import('./InstitutionDetails/Grade'),
+  loader: () => import('../Grade'),
   loading: () => null,
 });
 

@@ -2,12 +2,12 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import React, { Component } from 'react';
+import GridCard from '../../utils/GridCard';
 import { withRouter } from 'react-router-dom';
-import GridCard from '../../../../utils/GridCard';
-import GridButton from '../../../../utils/GridButton';
+import GridButton from '../../utils/GridButton';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-import SubjectCreateDialog from '../../../SubjectCreateDialog';
-import { GridContainer, ResponsiveSubTitle } from '../../../../utils/SharedComponents';
+import SubjectCreateDialog from '../../Institution/SubjectCreateDialog';
+import { GridContainer, ResponsiveSubTitle } from '../../utils/SharedComponents';
 
 const Container = styled.div`
   display: flex;

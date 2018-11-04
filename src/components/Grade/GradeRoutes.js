@@ -9,7 +9,7 @@ const AsyncGradeDetails = Loadable({
 });
 
 const AsyncSubject = Loadable({
-  loader: () => import('../../../Subject'),
+  loader: () => import('../Subject'),
   loading: () => null,
 });
 

@@ -4,9 +4,9 @@ import styled from 'styled-components';
 import React, { Component } from 'react';
 import { Fade } from '@material-ui/core';
 import SubjectsGrid from './SubjectsGrid';
+import { fetchGrade } from '../../../actions/grade';
 import { withStyles } from '@material-ui/core/styles';
-import { fetchGrade } from '../../../../../actions/grade';
-import { ResponsiveTitle } from '../../../../utils/SharedComponents';
+import { ResponsiveTitle } from '../../utils/SharedComponents';
 
 const Container = styled.div`
   align-items: center;
