@@ -36,7 +36,14 @@ const styles = theme => ({
   },
 });
 
-const SubjectInfo = ({ classes, subject, onAddTeacherClick, onEditSubjectClick, history }) => (
+const SubjectInfo = ({
+  classes,
+  subject,
+  onAddStudentClick,
+  onAddTeacherClick,
+  onEditSubjectClick,
+  history,
+}) => (
   <Paper className={classes.root}>
     <div className={classes.contentContainer}>
       <img
@@ -62,6 +69,9 @@ const SubjectInfo = ({ classes, subject, onAddTeacherClick, onEditSubjectClick, 
       <Button color="primary" onClick={onAddTeacherClick}>
         Vincular professor
       </Button>
+      <Button color="primary" onClick={onAddStudentClick}>
+        Vincular aluno
+      </Button>
       <Button color="primary" component={Link} to={`${history.location.pathname}/forum`}>
         Forum
       </Button>
@@ -76,6 +86,7 @@ SubjectInfo.propTypes = {
       pathname: PropTypes.string.isRequired,
     }).isRequired,
   }).isRequired,
+  onAddStudentClick: PropTypes.func.isRequired,
   onAddTeacherClick: PropTypes.func.isRequired,
   onEditSubjectClick: PropTypes.func.isRequired,
   subject: PropTypes.shape({
