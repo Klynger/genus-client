@@ -2,21 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 // import { Button } from '@material-ui/core';
 // import CreateEntryCodeDialog from '../InstitutionPage/EntryCode/CreateEntryCodeDialog';
-import UserList from '../Institution/InstitutionDetails/UserList';
-import PropTypes from 'prop-types';
+// import UserList from '../InstitutionPage/DetailsPage/UserList';
+// import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { requestGraphql } from '../utils/HTTPClient';
-import { getUsersFromInstitutionByRole } from '../../queryGenerators/userQueries';
-
-// const LandingContainer = styled.div`
-//   align-items: center;
-//   display: flex;
-//   height: 100%;
-//   justify-content: center;
-//   min-height: 100vh;
-//   min-width: 100vw;
-//   width: 100%;
-// `;
+import DiscussionCard from '../Forum/ForumDiscussionsPage/DiscussionCard'; // eslint-disable-line
 
 const LandingContainer = styled.div`
   width: 70%;
@@ -32,83 +21,88 @@ const LandingContainer = styled.div`
 //   );
 // };
 
-class TestingPage extends React.Component {
-  constructor(props) {
-    super(props);
+// discussion: PropTypes.shape({
+//   creationDate: PropTypes.string.isRequired,
+//   creator: PropTypes.shape({
+//     email: PropTypes.string.isRequired,
+//     username: PropTypes.string.isRequired,
+//   }).isRequired,
+//   replies: PropTypes.arrayOf({
+//     content: PropTypes.string,
+//     date: PropTypes.string,
+//     user: PropTypes.shape({
+//       username: PropTypes.string.isRequired,
+//     }),
+//   }).isRequired,
+//   title: PropTypes.string,
+// }).isRequired,
 
-    this.state = {
-      admins: [],
-      teachers: [],
-    };
+const TEXT_MARKDOWN = `
+# Installation
 
-    this.fetchData = this.fetchData.bind(this);
-    // this.handleOpenCreateToggle = this.handleOpenCreateToggle.bind(this);
-  }
+## Download tarball
 
-  // handleOpenCreateToggle() {
-  //   this.setState(({ openCreate }) => ({ openCreate: !openCreate }));
-  // }
+You can download the latest release tarball directly from [releases][releases]
 
-  componentDidMount() {
-    if (this.props.institutionId) {
-      this.fetchData();
-    }
-  }
+## Bower
 
-  componentDidUpdate(prevProps) {
-    if (this.props.institutionId !== prevProps.institutionId) {
-      this.fetchData();
-    }
-  }
+    bower install showdown
 
-  fetchData() {
-    const teacherInput = {
-      institutionId: this.props.institutionId,
-      role: 'TEACHER',
-    };
-    requestGraphql(getUsersFromInstitutionByRole(teacherInput), localStorage.getItem('token'))
-      .then(res => {
-        if (res.data.data && res.data.data.getUsersFromInstitutionByRole) {
-          this.setState({ teachers: [...res.data.data.getUsersFromInstitutionByRole] });
-        } else {
-          // TODO error treatment
-        }
-      })
-      .catch();
-    const adminInput = {
-      institutionId: this.props.institutionId,
-      role: 'ADMIN',
-    };
-    requestGraphql(getUsersFromInstitutionByRole(adminInput), localStorage.getItem('token'))
-      .then(res => {
-        if (res.data.data && res.data.data.getUsersFromInstitutionByRole) {
-          this.setState({ admins: [...res.data.data.getUsersFromInstitutionByRole] });
-        } else {
-          // TODO error treatment
-        }
-      })
-      .catch();
-  }
+## npm (server-side)
 
-  render() {
-    const { teachers, admins } = this.state;
-    return (
-      <LandingContainer>
-        <UserList users={teachers} headTitle="Professores" />
-        <UserList users={admins} headTitle="Administradores" />
-      </LandingContainer>
-    );
-  }
-}
+    npm install showdown
 
-TestingPage.propTypes = {
-  institutionId: PropTypes.string.isRequired,
+## CDN
+
+<blockquote>
+  This blockquote will change based on the HTML settings above.
+</blockquote>
+`;
+
+const DISCUSSION = {
+  creationDate: '10 - JAN - 2018',
+  creator: {
+    email: 't@t.com',
+    username: 'Ígor Brasileiro Duarte',
+  },
+  title: 'Primeira Publicação',
+  content: TEXT_MARKDOWN,
+  replies: [
+    {
+      id: 0,
+      content: 'asdada',
+      user: {
+        username: 'User 01',
+      },
+    },
+    {
+      id: 1,
+      content: '2222222',
+      user: {
+        username: 'User 02',
+      },
+    },
+    {
+      id: 2,
+      content: 'aaaaaaaa',
+      user: {
+        username: 'User 03',
+      },
+    },
+    {
+      id: 3,
+      content: 'test',
+      user: {
+        username: 'User 04',
+      },
+    },
+  ],
 };
 
-function mapStateToProps({ institution }) {
-  return {
-    institutionId: institution.selectedInstitution,
-  };
-}
+const TestingPage = () => (
+  <LandingContainer>
+    <DiscussionCard discussion={DISCUSSION} />
+  </LandingContainer>
+);
 
-export default connect(mapStateToProps)(TestingPage);
+export default connect()(TestingPage);
