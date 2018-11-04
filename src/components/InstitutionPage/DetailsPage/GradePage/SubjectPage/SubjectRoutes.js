@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Route, Switch, Redirect } from 'react-router-dom';
 import Loadable from 'react-loadable';
 import SubjectLoading from './SubjectLoading';
+import { Route, Switch, Redirect } from 'react-router-dom';
 
 const AsyncSubjectDetails = Loadable({
   loader: () => import('./SubjectDetailsPage'),

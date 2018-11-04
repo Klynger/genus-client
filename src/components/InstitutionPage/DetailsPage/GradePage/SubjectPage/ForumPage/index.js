@@ -1,5 +1,3 @@
-import React from 'react';
+import ForumRoutes from './ForumRoutes';
 
-const Forum = () => <div>Forum works</div>;
-
-export default Forum;
+export default ForumRoutes;

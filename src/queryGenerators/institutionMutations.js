@@ -18,6 +18,22 @@ export const mutationCreateInstitution = input => ({
             teachers {
               id
             }
+            forum {
+              id
+              title
+              replyNumber
+              creationDate
+              replies(page: 0, size: 10) {
+                id
+                content
+                user {
+                  id
+                }
+              }
+              creator {
+                id
+              }
+            }
           }
         }
         admins {

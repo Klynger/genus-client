@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Route, Switch, Redirect } from 'react-router-dom';
 import Loadable from 'react-loadable';
+import { Route, Switch, Redirect } from 'react-router-dom';
 
 const AsyncGradeDetailsPage = Loadable({
   loader: () => import('./GradeDetailsPage'),

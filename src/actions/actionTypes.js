@@ -1,4 +1,4 @@
-// Institution action types
+// Institution
 export const SAVE_INSTITUTION = 'SAVE_INSTITUTION';
 export const UPDATE_INSTITUTION = 'UPDATE_INSTITUTION';
 export const SELECT_INSTITUTION = 'SELECT_INSTITUTION';
@@ -7,18 +7,23 @@ export const REMOVE_ALL_INSTITUTIONS = 'REMOVE_ALL_INSTITUTIONS';
 export const SAVE_GRADE_TO_INSTITUTION = 'ADD_GRADE_TO_INSTITUTION';
 export const SAVE_USERS_TO_INSTITUTION = 'SAVE_USERS_TO_INSTITUTION';
 export const REMOVE_USER_FROM_INSTITUION = 'REMOVE_USER_FROM_INSTITUION';
-// User action types
+// User
 export const SAVE_USER = 'SAVE_USER';
-export const REMOVE_ALL_USERS = 'REMOVE_ALL_USERS';
 export const REMOVE_USER = 'REMOVE_USER';
 export const SET_LOGGED_USER = 'SET_LOGGED_USER';
-// Grade action types
+export const REMOVE_ALL_USERS = 'REMOVE_ALL_USERS';
+// Grade
 export const SAVE_GRADE = 'SAVE_GRADE';
-export const SAVE_SUBJECT_TO_GRADE = 'SAVE_SUBJECT_TO_GRADE';
 export const SELECT_GRADE = 'SELECT_GRADE';
 export const REMOVE_ALL_GRADES = 'REMOVE_ALL_GRADES';
-// Subject action types
+export const SAVE_SUBJECT_TO_GRADE = 'SAVE_SUBJECT_TO_GRADE';
+// Subject
 export const SAVE_SUBJECT = 'SAVE_SUBJECT';
+export const UPDATE_SUBJECT = 'UPDATE_SUBJECT';
 export const REMOVE_ALL_SUBJECTS = 'REMOVE_ALL_SUBJECTS';
 export const ADD_TEACHER_TO_SUBJECT = 'ADD_TEACHER_TO_SUBJECT';
-export const UPDATE_SUBJECT = 'UPDATE_SUBJECT';
+// Discussion
+export const SAVE_DISCUSSION = 'SAVE_DISCUSSION';
+export const ADD_REPLY_TO_DISCUSSION = 'ADD_REPLY_TO_DISCUSSION';
+// Reply
+export const SAVE_REPLY = 'SAVE_REPLY';
