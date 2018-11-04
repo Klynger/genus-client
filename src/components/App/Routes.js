@@ -4,8 +4,8 @@ import LoadingPage from '../LoadingPage';
 import AuthRoute from '../utils/AuthRoute';
 import { Switch, Route } from 'react-router-dom';
 
-const AsyncLandingPage = Loadable({
-  loader: () => import('../LandingPage'),
+const AsyncLanding = Loadable({
+  loader: () => import('../Landing'),
   loading: LoadingPage,
 });
 
@@ -16,7 +16,7 @@ const AsyncHome = Loadable({
 
 export default () => (
   <Switch>
-    <Route path="/landing" exact component={AsyncLandingPage} />
+    <Route path="/landing" exact component={AsyncLanding} />
     <AuthRoute component={AsyncHome} />
   </Switch>
 );

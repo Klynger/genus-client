@@ -35,7 +35,7 @@ LandingContainer.defaultProps = {
   unit: theme.spacing.unit,
 };
 
-class LandingPage extends Component {
+class Landing extends Component {
   constructor(props) {
     super(props);
 
@@ -121,4 +121,4 @@ class LandingPage extends Component {
   }
 }
 
-export default LandingPage;
+export default Landing;

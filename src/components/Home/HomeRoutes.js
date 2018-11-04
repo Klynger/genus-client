@@ -3,8 +3,8 @@ import Loadable from 'react-loadable';
 import HomeLoading from './HomeLoading';
 import { Route, Switch, Redirect } from 'react-router-dom';
 
-const AsyncOverviewPage = Loadable({
-  loader: () => import('../OverviewPage'),
+const AsyncOverview = Loadable({
+  loader: () => import('../Overview'),
   loading: HomeLoading,
 });
 
@@ -26,7 +26,7 @@ const AsyncTestingPage = Loadable({
 const HomeRoutes = () => {
   return (
     <Switch>
-      <Route path="/" exact component={AsyncOverviewPage} />
+      <Route path="/" exact component={AsyncOverview} />
       <Route path="/institution" component={AsyncInstitution} />
       <Route path="/profile" component={AsyncUser} />
       {process.env.NODE_ENV === 'development' && (
