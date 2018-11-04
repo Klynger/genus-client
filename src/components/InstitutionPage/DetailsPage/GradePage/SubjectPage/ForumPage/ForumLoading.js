@@ -4,7 +4,6 @@ import { Typography } from '@material-ui/core';
 
 const ForumLoading = ({ error }) => {
   if (error) {
-    console.log('error', error);
     return (
       <Typography>ForumLoading - Something went wrong while trying to load the page</Typography>
     );

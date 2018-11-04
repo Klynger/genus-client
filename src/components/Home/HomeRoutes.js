@@ -1,7 +1,7 @@
 import React from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
 import Loadable from 'react-loadable';
 import HomeLoading from './HomeLoading';
+import { Route, Switch, Redirect } from 'react-router-dom';
 
 const AsyncOverviewPage = Loadable({
   loader: () => import('../OverviewPage'),
