@@ -25,9 +25,12 @@ function discussion(state = DEFAULT_STATE, action) {
         ...state,
         byId: {
           ...state.byId,
-          [action.discussionId]: {
-            ...state.byId[action.discussionId],
-            replies: concatIdIfNotContain(state.byId[action.discussionId].replies, action.replyId),
+          [action.payload.discussionId]: {
+            ...state.byId[action.payload.discussionId],
+            replies: concatIdIfNotContain(
+              state.byId[action.payload.discussionId].replies,
+              action.payload.replyId,
+            ),
           },
         },
       };

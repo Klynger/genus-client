@@ -1,12 +1,16 @@
-import { combineReducers } from 'redux';
-import grade from './grade';
-import institution from './institution';
-import subject from './subject';
 import user from './user';
+import grade from './grade';
+import reply from './reply';
+import subject from './subject';
+import discussion from './discussion';
+import { combineReducers } from 'redux';
+import institution from './institution';
 
 export default combineReducers({
-  grade,
-  institution,
-  subject,
   user,
+  grade,
+  reply,
+  subject,
+  discussion,
+  institution,
 });

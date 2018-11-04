@@ -1,9 +1,11 @@
 import {
+  SAVE_USER,
+  SAVE_GRADE,
+  SAVE_REPLY,
+  SAVE_SUBJECT,
+  SAVE_DISCUSSION,
   SAVE_INSTITUTION,
   SELECT_INSTITUTION,
-  SAVE_GRADE,
-  SAVE_SUBJECT,
-  SAVE_USER,
   UPDATE_INSTITUTION,
 } from './actionTypes';
 import { NO_INSTUTION_SELECTED } from '../reducers/institution';
@@ -29,7 +31,8 @@ export const addInstitution = institutionInput => (dispatch, getState) => {
   ).then(res => {
     let result;
     if (res.data.data && res.data.data.createInstitution) {
-      const admins = [...res.data.data.createInstitution.admins];
+      const admins = res.data.data.createInstitution.admins;
+
       const institution = {
         ...res.data.data.createInstitution,
         admins: admins.map(user => user.id),
@@ -98,6 +101,33 @@ export const joinInstitution = code => dispatch =>
           subject = {
             ...subject,
             teachers: subject.teachers.map(({ id }) => id),
+            forum: subject.forum.map(discussion => {
+              discussion = {
+                ...discussion,
+                creator: discussion.creator.id,
+                subject: discussion.subject.id,
+                replies: discussion.replies.map(reply => {
+                  reply = {
+                    ...reply,
+                    user: reply.user.id,
+                    discussion: discussion.id,
+                  };
+                  dispatch({
+                    type: SAVE_REPLY,
+                    reply,
+                  });
+
+                  return reply.id;
+                }),
+              };
+
+              dispatch({
+                type: SAVE_DISCUSSION,
+                discussion,
+              });
+
+              return discussion.id;
+            }),
           };
           dispatch({
             type: SAVE_SUBJECT,
@@ -151,6 +181,33 @@ export const fetchInstitutionsByOwner = () => (dispatch, getState) => {
               });
 
               return user.id;
+            }),
+            forum: subject.forum.map(discussion => {
+              discussion = {
+                ...discussion,
+                creator: discussion.creator.id,
+                subject: subject.id,
+                replies: discussion.replies.map(reply => {
+                  reply = {
+                    ...reply,
+                    user: reply.user.id,
+                    discussion: discussion.id,
+                  };
+                  dispatch({
+                    type: SAVE_REPLY,
+                    reply,
+                  });
+
+                  return reply.id;
+                }),
+              };
+
+              dispatch({
+                type: SAVE_DISCUSSION,
+                discussion,
+              });
+
+              return discussion.id;
             }),
           };
           dispatch({

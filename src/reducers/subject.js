@@ -1,8 +1,9 @@
 import {
   SAVE_SUBJECT,
+  UPDATE_SUBJECT,
   REMOVE_ALL_SUBJECTS,
   ADD_TEACHER_TO_SUBJECT,
-  UPDATE_SUBJECT,
+  ADD_DISCUSSION_TO_SUBJECT,
 } from '../actions/actionTypes';
 import { concatIdIfNotContain } from '../components/utils/helpers';
 
@@ -35,6 +36,21 @@ function subject(state = DEFAULT_STATE, action) {
             teachers: concatIdIfNotContain(
               state.byId[action.payload.subjectId].teachers,
               action.payload.teacherId,
+            ),
+          },
+        },
+      };
+
+    case ADD_DISCUSSION_TO_SUBJECT:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.payload.subjectId]: {
+            ...[action.payload.subjectId],
+            forum: concatIdIfNotContain(
+              state.byId[action.payload.subjectId].forum,
+              action.payload.discussionId,
             ),
           },
         },
