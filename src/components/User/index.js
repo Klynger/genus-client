@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { fetchUserById } from '../../actions/user';
 
-class UserPage extends Component {
+class User extends Component {
   componentDidUpdate(prevProps) {
     if (
       this.props.match.params.userId &&
@@ -29,7 +29,7 @@ class UserPage extends Component {
   }
 }
 
-UserPage.propTypes = {
+User.propTypes = {
   fetchUser: PropTypes.func.isRequired,
   loggedUserId: PropTypes.string.isRequired,
   match: PropTypes.shape({
@@ -56,5 +56,5 @@ export default withRouter(
   connect(
     mapToProps,
     mapDispatchToProps,
-  )(UserPage),
+  )(User),
 );

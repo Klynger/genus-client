@@ -3,9 +3,9 @@ import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Form, withFormik } from 'formik';
-import ProgressButton from '../../../../../../utils/ProgressButton';
-import { createDiscussion } from '../../../../../../../actions/discussion';
-import { ActionsContainer } from '../../../../../../utils/SharedComponents';
+import ProgressButton from '../../utils/ProgressButton';
+import { createDiscussion } from '../../../actions/discussion';
+import { ActionsContainer } from '../../utils/SharedComponents';
 import {
   Fade,
   Zoom,

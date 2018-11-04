@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { Form, withFormik } from 'formik';
 import { capitalize } from '@material-ui/core/utils/helpers';
-import ProgressButton from '../../../../../utils/ProgressButton';
-import { updateSubject } from '../../../../../../actions/subject';
-import { defaultDialogBreakpoints } from '../../../../../utils/helpers';
-import { DefaultDialogTransition } from '../../../../../utils/SharedComponents';
+import ProgressButton from '../../utils/ProgressButton';
+import { updateSubject } from '../../../actions/subject';
+import { defaultDialogBreakpoints } from '../../utils/helpers';
+import { DefaultDialogTransition } from '../../utils/SharedComponents';
 import {
   Button,
   Dialog,

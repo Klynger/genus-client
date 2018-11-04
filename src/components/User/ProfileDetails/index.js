@@ -35,7 +35,7 @@ const Container = styled.div`
   }
 `;
 
-const ProfileDetailsPage = ({ user }) => <Container>{user && <UserInfo user={user} />}</Container>;
+const ProfileDetails = ({ user }) => <Container>{user && <UserInfo user={user} />}</Container>;
 
 function mapToProps({ user }, { match }) {
   return {
@@ -44,7 +44,7 @@ function mapToProps({ user }, { match }) {
   };
 }
 
-ProfileDetailsPage.propTypes = {
+ProfileDetails.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
       userId: PropTypes.string,
@@ -53,4 +53,4 @@ ProfileDetailsPage.propTypes = {
   user: PropTypes.object.isRequired,
 };
 
-export default connect(mapToProps)(ProfileDetailsPage);
+export default connect(mapToProps)(ProfileDetails);

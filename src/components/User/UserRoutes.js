@@ -4,15 +4,15 @@ import Loadable from 'react-loadable';
 import UserLoading from './UserLoading';
 import { Route, Switch } from 'react-router-dom';
 
-const AsyncProfileDetailsPage = Loadable({
-  loader: () => import('./ProfileDetailsPage'),
+const AsyncProfileDetails = Loadable({
+  loader: () => import('./ProfileDetails'),
   loading: UserLoading,
 });
 
 const UserRoutes = ({ match }) => (
   <Switch>
-    <Route exact path={match.path} component={AsyncProfileDetailsPage} />
-    <Route exact path={`${match.path}/:userId`} component={AsyncProfileDetailsPage} />
+    <Route exact path={match.path} component={AsyncProfileDetails} />
+    <Route exact path={`${match.path}/:userId`} component={AsyncProfileDetails} />
   </Switch>
 );
 

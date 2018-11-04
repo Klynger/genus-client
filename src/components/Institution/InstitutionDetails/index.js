@@ -28,7 +28,7 @@ const styles = theme => ({
   },
 });
 
-class DetailsPage extends Component {
+class InstitutionDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -108,7 +108,7 @@ class DetailsPage extends Component {
   }
 }
 
-DetailsPage.propTypes = {
+InstitutionDetails.propTypes = {
   classes: PropTypes.object.isRequired,
   institution: PropTypes.shape({
     address: PropTypes.string,
@@ -151,4 +151,4 @@ function mapStateToProps({ institution, user }) {
   return {};
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(DetailsPage));
+export default connect(mapStateToProps)(withStyles(styles)(InstitutionDetails));

@@ -8,13 +8,13 @@ const AsyncOverviewPage = Loadable({
   loading: HomeLoading,
 });
 
-const AsyncInstitutionPage = Loadable({
-  loader: () => import('../InstitutionPage'),
+const AsyncInstitution = Loadable({
+  loader: () => import('../Institution'),
   loading: HomeLoading,
 });
 
-const AsyncUserPage = Loadable({
-  loader: () => import('../UserPage'),
+const AsyncUser = Loadable({
+  loader: () => import('../User'),
   loading: HomeLoading,
 });
 
@@ -27,8 +27,8 @@ const HomeRoutes = () => {
   return (
     <Switch>
       <Route path="/" exact component={AsyncOverviewPage} />
-      <Route path="/institution" component={AsyncInstitutionPage} />
-      <Route path="/profile" component={AsyncUserPage} />
+      <Route path="/institution" component={AsyncInstitution} />
+      <Route path="/profile" component={AsyncUser} />
       {process.env.NODE_ENV === 'development' && (
         <Route path="/testing" component={AsyncTestingPage} />
       )}

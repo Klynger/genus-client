@@ -3,20 +3,20 @@ import PropTypes from 'prop-types';
 import Loadable from 'react-loadable';
 import { Route, Switch, Redirect } from 'react-router-dom';
 
-const AsyncGradeDetailsPage = Loadable({
-  loader: () => import('./GradeDetailsPage'),
+const AsyncGradeDetails = Loadable({
+  loader: () => import('./GradeDetails'),
   loading: () => null,
 });
 
-const AsyncSubjectPage = Loadable({
-  loader: () => import('./SubjectPage'),
+const AsyncSubject = Loadable({
+  loader: () => import('../../../Subject'),
   loading: () => null,
 });
 
 const GradeRoutes = ({ match }) => (
   <Switch>
-    <Route path={match.path} exact component={AsyncGradeDetailsPage} />
-    <Route component={AsyncSubjectPage} path={`${match.path}/subject/:subjectId`} />
+    <Route path={match.path} exact component={AsyncGradeDetails} />
+    <Route component={AsyncSubject} path={`${match.path}/subject/:subjectId`} />
     <Redirect to={match.path} />
   </Switch>
 );

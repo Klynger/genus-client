@@ -5,9 +5,9 @@ import React, { Component, Fragment } from 'react';
 import { Form, withFormik } from 'formik';
 import AddTeacherEmptyView from './AddTeacherEmptyView';
 import { capitalize } from '@material-ui/core/utils/helpers';
-import { addTeacherToSubject } from '../../../../../../actions/subject';
-import { defaultDialogBreakpoints } from '../../../../../utils/helpers';
-import { DefaultDialogTransition } from '../../../../../utils/SharedComponents';
+import { addTeacherToSubject } from '../../../actions/subject';
+import { defaultDialogBreakpoints } from '../../utils/helpers';
+import { DefaultDialogTransition } from '../../utils/SharedComponents';
 import {
   Dialog,
   DialogTitle,

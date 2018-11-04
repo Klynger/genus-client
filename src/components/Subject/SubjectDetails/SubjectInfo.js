@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter, Link } from 'react-router-dom';
-import { DEFAULT_PHOTO_CLASS_SRC } from '../../../../../utils/helpers';
-import { ActionsContainer } from '../../../../../utils/SharedComponents';
+import { DEFAULT_PHOTO_CLASS_SRC } from '../../utils/helpers';
+import { ActionsContainer } from '../../utils/SharedComponents';
 import { Button, Paper, Typography, withStyles } from '@material-ui/core';
 
 const PHOTO_DIMENSION = 200;

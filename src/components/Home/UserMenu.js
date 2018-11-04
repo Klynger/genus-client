@@ -5,7 +5,7 @@ import { withRouter, Link } from 'react-router-dom';
 import React, { Component, Fragment } from 'react';
 import { Menu, MenuItem } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import AssociateDialog from '../InstitutionPage/EntryCode/AssociateDialog';
+import AssociateDialog from '../Institution/EntryCode/AssociateDialog';
 
 const styles = () => ({
   userMenu: {

@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 // import { Button } from '@material-ui/core';
 // import CreateEntryCodeDialog from '../InstitutionPage/EntryCode/CreateEntryCodeDialog';
-import UserList from '../InstitutionPage/DetailsPage/UserList';
+import UserList from '../Institution/InstitutionDetails/UserList';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { requestGraphql } from '../utils/HTTPClient';

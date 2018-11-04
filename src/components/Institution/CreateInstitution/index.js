@@ -41,7 +41,7 @@ const titleVariant = {
   xl: 'display3',
 };
 
-const CreatePage = ({ classes, width }) => {
+const CreateInstitution = ({ classes, width }) => {
   return (
     <Fade in>
       <CreateContainer>
@@ -53,9 +53,9 @@ const CreatePage = ({ classes, width }) => {
   );
 };
 
-CreatePage.propTypes = {
+CreateInstitution.propTypes = {
   classes: PropTypes.object.isRequired,
   width: PropTypes.string.isRequired,
 };
 
-export default withStyles(styles)(withWidth()(CreatePage));
+export default withStyles(styles)(withWidth()(CreateInstitution));

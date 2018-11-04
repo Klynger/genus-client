@@ -48,7 +48,7 @@ const styles = theme => ({
   },
 });
 
-class GradeDetailsPage extends Component {
+class GradeDetails extends Component {
   componentDidMount() {
     const { fetchGradeById, match } = this.props;
     fetchGradeById(match.params.gradeId)
@@ -86,7 +86,7 @@ class GradeDetailsPage extends Component {
   }
 }
 
-GradeDetailsPage.propTypes = {
+GradeDetails.propTypes = {
   classes: PropTypes.object.isRequired,
   fetchGradeById: PropTypes.func.isRequired,
   grade: PropTypes.object,
@@ -131,5 +131,5 @@ export default withStyles(styles, { withTheme: true })(
   connect(
     mapToProps,
     mapDispatchToProps,
-  )(GradeDetailsPage),
+  )(GradeDetails),
 );

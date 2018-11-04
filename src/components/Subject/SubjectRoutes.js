@@ -5,12 +5,12 @@ import SubjectLoading from './SubjectLoading';
 import { Route, Switch, Redirect } from 'react-router-dom';
 
 const AsyncSubjectDetails = Loadable({
-  loader: () => import('./SubjectDetailsPage'),
+  loader: () => import('./SubjectDetails'),
   loading: SubjectLoading,
 });
 
 const AsyncForum = Loadable({
-  loader: () => import('./ForumPage'),
+  loader: () => import('../Forum'),
   loading: SubjectLoading,
 });
 
