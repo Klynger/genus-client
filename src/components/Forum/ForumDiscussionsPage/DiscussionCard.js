@@ -1,18 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
-import { Edit, Delete, MoreVert, Reply } from '@material-ui/icons';
-import deepOrange from '@material-ui/core/colors/deepOrange';
 import ImageUploader from '../../utils/ImageUploader';
+import deepOrange from '@material-ui/core/colors/deepOrange';
 import { getFirstInitialsCapitalized } from '../../utils/helpers';
+import { Edit, Delete, MoreVert, Reply } from '@material-ui/icons';
 import {
   Card,
-  CardActions,
-  CardContent,
-  CardHeader,
   Divider,
   IconButton,
   withStyles,
+  CardHeader,
+  CardContent,
+  CardActions,
 } from '@material-ui/core';
 
 const styles = {
