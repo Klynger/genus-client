@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, CardActionArea, CardContent, CardMedia, Typography, Fade } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
+import { withStyles } from '@material-ui/core/styles';
+import { Card, CardActionArea, CardContent, CardMedia, Typography, Fade } from '@material-ui/core';
 
 const StyledCard = styled(Card)``;
 

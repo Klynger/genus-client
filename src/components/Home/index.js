@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { connect } from 'react-redux';
-import ApplicationBar from './ApplicationBar';
-import MenuDrawer from './MenuDrawer';
 import HomeRoutes from './HomeRoutes';
+import MenuDrawer from './MenuDrawer';
+import styled from 'styled-components';
+import React, { Component } from 'react';
+import ApplicationBar from './ApplicationBar';
 import { fetchLoggedUser } from '../../actions/user';
 import { fetchInstitutionsByOwner } from '../../actions/institution';
 

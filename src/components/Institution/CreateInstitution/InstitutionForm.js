@@ -1,13 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Form, withFormik } from 'formik';
 import * as Yup from 'yup';
-import { Input, InputLabel, FormControl, FormHelperText, Button, Paper } from '@material-ui/core';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { Form, withFormik } from 'formik';
 import { withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
-import { connect } from 'react-redux';
 import { addInstitution } from '../../../actions/institution';
+import { Input, InputLabel, FormControl, FormHelperText, Button, Paper } from '@material-ui/core';
 
 const StyledForm = styled(Form)`
   display: flex;

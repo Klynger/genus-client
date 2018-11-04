@@ -1,16 +1,16 @@
 import { requestGraphql } from '../components/utils/HTTPClient';
 import {
-  mutationCreateSubject,
-  mutationAddTeacherToSubject,
-  mutationUpdateSubject,
-} from '../queryGenerators/SubjectMutations';
-import {
-  SAVE_SUBJECT,
-  SAVE_SUBJECT_TO_GRADE,
   SAVE_USER,
-  ADD_TEACHER_TO_SUBJECT,
+  SAVE_SUBJECT,
   UPDATE_SUBJECT,
+  SAVE_SUBJECT_TO_GRADE,
+  ADD_TEACHER_TO_SUBJECT,
 } from './actionTypes';
+import {
+  mutationCreateSubject,
+  mutationUpdateSubject,
+  mutationAddTeacherToSubject,
+} from '../queryGenerators/SubjectMutations';
 
 export const saveSubject = subjectInput => dispatch =>
   requestGraphql(mutationCreateSubject(subjectInput), localStorage.getItem('token')).then(res => {

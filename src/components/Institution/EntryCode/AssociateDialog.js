@@ -1,27 +1,27 @@
 import React from 'react';
-import { withFormik, Form } from 'formik';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import * as Yup from 'yup';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { withFormik, Form } from 'formik';
+import { capitalize } from '@material-ui/core/utils/helpers';
+import { joinInstitution } from '../../../actions/institution';
+import { defaultDialogBreakpoints } from '../../utils/helpers';
+import { DefaultDialogTransition } from '../../utils/SharedComponents';
 import {
+  Zoom,
+  Input,
+  Button,
   Dialog,
+  withWidth,
+  InputLabel,
+  withStyles,
   DialogTitle,
   FormControl,
   DialogContent,
-  withWidth,
-  InputLabel,
-  Input,
-  FormHelperText,
-  Zoom,
   DialogActions,
-  Button,
+  FormHelperText,
   CircularProgress,
 } from '@material-ui/core';
-import { defaultDialogBreakpoints } from '../../utils/helpers';
-import { capitalize } from '@material-ui/core/utils/helpers';
-import { DefaultDialogTransition } from '../../utils/SharedComponents';
-import { withStyles } from '@material-ui/core/styles';
-import { joinInstitution } from '../../../actions/institution';
 
 const styles = theme => ({
   ...defaultDialogBreakpoints(),

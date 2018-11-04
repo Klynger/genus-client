@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { Button, Snackbar } from '@material-ui/core';
-import Signup from './Signup';
 import Signin from './Signin';
+import Signup from './Signup';
+import PropTypes from 'prop-types';
 import theme from '../utils/theme';
+import styled from 'styled-components';
+import React, { Component } from 'react';
+import { Button, Snackbar } from '@material-ui/core';
 
 const LandingContainer = styled.div`
   align-items: center;

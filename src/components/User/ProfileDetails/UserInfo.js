@@ -4,8 +4,8 @@ import EditUserDialog from './EditUserDialog';
 import React, { Component, Fragment } from 'react';
 import ImageUploader from '../../utils/ImageUploader';
 import deepOrange from '@material-ui/core/colors/deepOrange';
-import { Card, Button, withStyles, Typography, CardContent, CardActions } from '@material-ui/core';
 import { getFirstInitialsCapitalized } from '../../utils/helpers';
+import { Card, Button, withStyles, Typography, CardContent, CardActions } from '@material-ui/core';
 
 const styles = theme => ({
   card: {

@@ -1,30 +1,30 @@
 import React from 'react';
-import { withFormik, Form } from 'formik';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import {
-  Dialog,
-  DialogTitle,
-  FormControl,
-  DialogContent,
-  withMobileDialog,
-  withWidth,
-  InputLabel,
-  Select,
-  MenuItem,
-  FormHelperText,
-  Zoom,
-  DialogActions,
-  Button,
-  CircularProgress,
-} from '@material-ui/core';
-import { defaultDialogBreakpoints } from '../../utils/helpers';
-import { capitalize } from '@material-ui/core/utils/helpers';
-import { DefaultDialogTransition } from '../../utils/SharedComponents';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { withFormik, Form } from 'formik';
 import { withStyles } from '@material-ui/core/styles';
 import { requestGraphql } from '../../utils/HTTPClient';
+import { capitalize } from '@material-ui/core/utils/helpers';
+import { defaultDialogBreakpoints } from '../../utils/helpers';
+import { DefaultDialogTransition } from '../../utils/SharedComponents';
 import { mutationCreateEntryCode } from '../../../queryGenerators/entryCodeMutations';
+import {
+  Zoom,
+  Button,
+  Dialog,
+  Select,
+  MenuItem,
+  withWidth,
+  InputLabel,
+  DialogTitle,
+  FormControl,
+  DialogActions,
+  DialogContent,
+  FormHelperText,
+  CircularProgress,
+  withMobileDialog,
+} from '@material-ui/core';
 
 const styles = theme => ({
   ...defaultDialogBreakpoints(),

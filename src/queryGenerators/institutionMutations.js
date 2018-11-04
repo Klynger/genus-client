@@ -124,5 +124,3 @@ export const mutationUpdateInstitution = input => ({
     input,
   },
 });
-
-export default {};

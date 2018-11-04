@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import InstitutionForm from './InstitutionForm';
-import { Typography, Divider, Fade, withWidth } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import { Typography, Divider, Fade, withWidth } from '@material-ui/core';
 
 const CreateContainer = styled.div`
   display: flex;

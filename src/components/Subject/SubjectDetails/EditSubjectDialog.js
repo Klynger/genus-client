@@ -3,23 +3,23 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { Form, withFormik } from 'formik';
-import { capitalize } from '@material-ui/core/utils/helpers';
 import ProgressButton from '../../utils/ProgressButton';
 import { updateSubject } from '../../../actions/subject';
+import { capitalize } from '@material-ui/core/utils/helpers';
 import { defaultDialogBreakpoints } from '../../utils/helpers';
 import { DefaultDialogTransition } from '../../utils/SharedComponents';
 import {
+  Input,
   Button,
   Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  FormControl,
-  Input,
-  InputLabel,
-  withMobileDialog,
   withStyles,
+  InputLabel,
+  FormControl,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
   FormHelperText,
+  withMobileDialog,
 } from '@material-ui/core';
 
 const styles = () => ({

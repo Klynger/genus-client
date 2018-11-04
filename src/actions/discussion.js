@@ -1,6 +1,6 @@
-import { SAVE_DISCUSSION, SAVE_REPLY, ADD_DISCUSSION_TO_SUBJECT } from './actionTypes';
 import { requestGraphql } from '../components/utils/HTTPClient';
 import { mutationCreateDiscussion } from '../queryGenerators/discussionMutations';
+import { SAVE_DISCUSSION, SAVE_REPLY, ADD_DISCUSSION_TO_SUBJECT } from './actionTypes';
 
 export const createDiscussion = input => dispatch => {
   return requestGraphql(mutationCreateDiscussion(input), localStorage.getItem('token')).then(

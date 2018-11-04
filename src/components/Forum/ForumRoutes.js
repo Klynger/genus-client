@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Loadable from 'react-loadable';
-import { Route, Switch, Redirect } from 'react-router-dom';
 import ForumLoading from './ForumLoading';
+import { Route, Switch, Redirect } from 'react-router-dom';
 
 const AsyncForumDiscussions = Loadable({
   loader: () => import('./ForumDiscussionsPage'),

@@ -1,28 +1,28 @@
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import React, { Component, Fragment } from 'react';
 import { Form, withFormik } from 'formik';
+import React, { Component, Fragment } from 'react';
 import AddTeacherEmptyView from './AddTeacherEmptyView';
 import { capitalize } from '@material-ui/core/utils/helpers';
 import { addTeacherToSubject } from '../../../actions/subject';
 import { defaultDialogBreakpoints } from '../../utils/helpers';
 import { DefaultDialogTransition } from '../../utils/SharedComponents';
 import {
+  Zoom,
+  Input,
   Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Button,
-  withStyles,
-  withMobileDialog,
-  FormControl,
-  InputLabel,
   Select,
   MenuItem,
-  Input,
-  Zoom,
+  InputLabel,
+  withStyles,
+  DialogTitle,
+  FormControl,
+  DialogActions,
+  DialogContent,
   FormHelperText,
+  withMobileDialog,
 } from '@material-ui/core';
 
 const styles = () => ({

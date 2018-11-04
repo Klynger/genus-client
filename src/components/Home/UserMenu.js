@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { clearStore } from '../../actions';
-import { withRouter, Link } from 'react-router-dom';
-import React, { Component, Fragment } from 'react';
 import { Menu, MenuItem } from '@material-ui/core';
+import React, { Component, Fragment } from 'react';
+import { withRouter, Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import AssociateDialog from '../Institution/EntryCode/AssociateDialog';
 

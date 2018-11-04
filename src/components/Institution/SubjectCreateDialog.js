@@ -9,18 +9,18 @@ import { defaultDialogBreakpoints } from '../utils/helpers';
 import { capitalize } from '@material-ui/core/utils/helpers';
 import { DefaultDialogTransition } from '../utils/SharedComponents';
 import {
+  Input,
   Button,
   Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  FormControl,
-  FormHelperText,
-  Input,
+  withWidth,
   InputLabel,
   withStyles,
+  DialogTitle,
+  FormControl,
+  DialogContent,
+  DialogActions,
+  FormHelperText,
   withMobileDialog,
-  withWidth,
 } from '@material-ui/core';
 
 const styles = theme => ({

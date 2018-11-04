@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { List, ListItem, ListItemIcon, ListItemText, withStyles } from '@material-ui/core';
 import { AddBox, Flight, Home, School } from '@material-ui/icons';
+import { List, ListItem, ListItemIcon, ListItemText, withStyles } from '@material-ui/core';
 
 const itemWidth = 240;
 

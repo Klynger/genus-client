@@ -1,8 +1,8 @@
 import React from 'react';
+import UserInfo from './UserInfo';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import UserInfo from './UserInfo';
 
 const Container = styled.div`
   align-items: center;

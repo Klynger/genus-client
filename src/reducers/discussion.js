@@ -1,5 +1,5 @@
-import { SAVE_DISCUSSION, ADD_REPLY_TO_DISCUSSION } from '../actions/actionTypes';
 import { concatIdIfNotContain } from '../components/utils/helpers';
+import { SAVE_DISCUSSION, ADD_REPLY_TO_DISCUSSION } from '../actions/actionTypes';
 
 const DEFAULT_STATE = {
   byId: {},

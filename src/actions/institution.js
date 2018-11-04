@@ -1,3 +1,6 @@
+import { requestGraphql } from '../components/utils/HTTPClient';
+import { NO_INSTUTION_SELECTED } from '../reducers/institution';
+import { queryFindInstitutionsByOwner } from '../queryGenerators/institutionQueries';
 import {
   SAVE_USER,
   SAVE_GRADE,
@@ -8,14 +11,11 @@ import {
   SELECT_INSTITUTION,
   UPDATE_INSTITUTION,
 } from './actionTypes';
-import { NO_INSTUTION_SELECTED } from '../reducers/institution';
-import { requestGraphql } from '../components/utils/HTTPClient';
 import {
-  mutationCreateInstitution,
   mutationJoinInstitution,
+  mutationCreateInstitution,
   mutationUpdateInstitution,
 } from '../queryGenerators/institutionMutations';
-import { queryFindInstitutionsByOwner } from '../queryGenerators/institutionQueries';
 
 export const selectInstitution = id => dispatch => {
   dispatch({

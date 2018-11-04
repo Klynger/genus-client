@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import SubjectInfo from './SubjectInfo';
+import { Fade } from '@material-ui/core';
 import AddteacherDialog from './AddTeacherDialog';
 import React, { Component, Fragment } from 'react';
-import { Fade } from '@material-ui/core';
 import EditSubjectDialog from './EditSubjectDialog';
 
 const Container = styled.div`

@@ -1,6 +1,6 @@
-import { mutationUpdateUser, removerUserFromInstitution } from '../queryGenerators/userMutations';
-import { SAVE_USER, SET_LOGGED_USER, REMOVE_USER_FROM_INSTITUION } from './actionTypes';
 import { requestGraphql } from '../components/utils/HTTPClient';
+import { SAVE_USER, SET_LOGGED_USER, REMOVE_USER_FROM_INSTITUION } from './actionTypes';
+import { mutationUpdateUser, removerUserFromInstitution } from '../queryGenerators/userMutations';
 import {
   findUserById,
   findLoggedUserQuery,

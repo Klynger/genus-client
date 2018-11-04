@@ -1,29 +1,29 @@
+import React from 'react';
+import * as Yup from 'yup';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import { Form, withFormik } from 'formik';
+import { withRouter } from 'react-router-dom';
+import { requestGraphql } from '../utils/HTTPClient';
+import { capitalize } from '@material-ui/core/utils/helpers';
+import { loginQuery } from '../../queryGenerators/userQueries';
 import {
+  Grow,
+  Zoom,
+  Input,
   Button,
   Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  FormControl,
-  FormHelperText,
-  Input,
-  InputLabel,
-  withMobileDialog,
-  Grow,
-  CircularProgress,
-  withStyles,
   withWidth,
-  Zoom,
+  InputLabel,
+  withStyles,
+  DialogTitle,
+  FormControl,
+  DialogActions,
+  DialogContent,
+  FormHelperText,
+  CircularProgress,
+  withMobileDialog,
 } from '@material-ui/core';
-import { capitalize } from '@material-ui/core/utils/helpers';
-import { Form, withFormik } from 'formik';
-import { requestGraphql } from '../utils/HTTPClient';
-import { loginQuery } from '../../queryGenerators/userQueries';
-import PropTypes from 'prop-types';
-import React from 'react';
-import { withRouter } from 'react-router-dom';
-import styled from 'styled-components';
-import * as Yup from 'yup';
 
 const StyledForm = styled(Form)`
   display: flex;

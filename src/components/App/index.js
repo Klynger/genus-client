@@ -1,8 +1,8 @@
 import React from 'react';
-import { MuiThemeProvider } from '@material-ui/core/styles';
-import { createGlobalStyle } from 'styled-components';
 import Routes from './Routes';
 import theme from '../utils/theme';
+import { createGlobalStyle } from 'styled-components';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 
 const GlobalStyles = createGlobalStyle`
   html, body {

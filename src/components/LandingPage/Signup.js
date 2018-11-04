@@ -1,23 +1,23 @@
-import React, { PureComponent } from 'react';
+import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Form, withFormik } from 'formik';
-import * as Yup from 'yup';
+import React, { PureComponent } from 'react';
+import { withRouter } from 'react-router-dom';
+import { requestGraphql } from '../utils/HTTPClient';
 import { withStyles } from '@material-ui/core/styles';
+import { FadeInButton } from '../utils/SharedComponents';
+import { loginQuery } from '../../queryGenerators/userQueries';
+import { mutationCreateUser } from '../../queryGenerators/userMutations';
 import {
-  FormControl,
-  InputLabel,
-  FormHelperText,
+  Zoom,
   Input,
   Paper,
+  InputLabel,
+  FormControl,
+  FormHelperText,
   CircularProgress,
-  Zoom,
 } from '@material-ui/core';
-import { FadeInButton } from '../utils/SharedComponents';
-import { requestGraphql } from '../utils/HTTPClient';
-import { mutationCreateUser } from '../../queryGenerators/userMutations';
-import { loginQuery } from '../../queryGenerators/userQueries';
-import { withRouter } from 'react-router-dom';
 
 const DEFAULT_ANIMATION_TIMING = 700;
 

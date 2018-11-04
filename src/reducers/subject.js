@@ -1,3 +1,4 @@
+import { concatIdIfNotContain } from '../components/utils/helpers';
 import {
   SAVE_SUBJECT,
   UPDATE_SUBJECT,
@@ -5,7 +6,6 @@ import {
   ADD_TEACHER_TO_SUBJECT,
   ADD_DISCUSSION_TO_SUBJECT,
 } from '../actions/actionTypes';
-import { concatIdIfNotContain } from '../components/utils/helpers';
 
 const DEFAULT_STATE = {
   byId: {},
