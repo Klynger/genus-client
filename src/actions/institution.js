@@ -101,6 +101,7 @@ export const joinInstitution = code => dispatch =>
           subject = {
             ...subject,
             teachers: subject.teachers.map(({ id }) => id),
+            students: subject.students.map(({ id }) => id),
             forum: subject.forum.map(discussion => {
               discussion = {
                 ...discussion,
@@ -175,6 +176,14 @@ export const fetchInstitutionsByOwner = () => (dispatch, getState) => {
           subject = {
             ...subject,
             teachers: subject.teachers.map(user => {
+              dispatch({
+                type: SAVE_USER,
+                user,
+              });
+
+              return user.id;
+            }),
+            students: subject.students.map(user => {
               dispatch({
                 type: SAVE_USER,
                 user,

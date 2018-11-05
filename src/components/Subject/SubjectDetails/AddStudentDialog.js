@@ -7,6 +7,7 @@ import AddTeacherEmptyView from './AddTeacherEmptyView';
 import ProgressButton from '../../utils/ProgressButton';
 import { capitalize } from '@material-ui/core/utils/helpers';
 import { defaultDialogBreakpoints } from '../../utils/helpers';
+import { addStudentToSubject } from '../../../actions/subject';
 import { DefaultDialogTransition } from '../../utils/SharedComponents';
 import {
   Zoom,
@@ -144,7 +145,9 @@ function mapStateToProps({ institution, user }) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return {};
+  return {
+    addStudent: input => dispatch(addStudentToSubject(input)),
+  };
 }
 
 export default connect(
@@ -166,9 +169,25 @@ export default connect(
         ),
       });
     },
-    handleSubmit(values, { props, setSubmitting }) {
-      setSubmitting(false);
-      props.onClose();
+    handleSubmit(values, { props, resetForm, setErrors, setSubmitting }) {
+      props
+        .addStudent(values)
+        .then(res => {
+          setSubmitting(false);
+
+          if (res.data.data && res.data.data.addStudentToSubject) {
+            props.onClose();
+            resetForm({
+              studentId: NO_STUDENT_SELECTED,
+              subjectId: props.subject.id,
+            });
+          } else {
+            setErrors({ requestError: 'Algo de errado aconteceu. Tente Novamente' });
+          }
+        })
+        .catch(() => {
+          setSubmitting(false);
+        });
     },
   })(
     withMobileDialog({
