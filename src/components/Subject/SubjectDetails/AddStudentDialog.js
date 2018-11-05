@@ -93,6 +93,11 @@ const AddStudentDialog = ({
                 )}
             </FormControl>
           </Form>
+          {errors.requestError && (
+            <FormHelperText error={Boolean(errors.requestError)}>
+              {errors.requestError}
+            </FormHelperText>
+          )}
         </DialogContent>
         <DialogActions>
           <Button color="primary" onClick={onClose}>
@@ -110,6 +115,7 @@ const AddStudentDialog = ({
 AddStudentDialog.propTypes = {
   classes: PropTypes.object.isRequired,
   errors: PropTypes.shape({
+    requestError: PropTypes.string,
     studentId: PropTypes.string,
   }).isRequired,
   fullScreen: PropTypes.bool.isRequired,
