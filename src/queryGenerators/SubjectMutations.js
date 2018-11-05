@@ -9,6 +9,9 @@ export const mutationCreateSubject = input => ({
           username
           email
         }
+        students {
+          id
+        }
       }
     }
   `,
@@ -46,5 +49,22 @@ export const mutationUpdateSubject = input => ({
   `,
   variables: {
     input,
+  },
+});
+
+export const mutationAddStudentToSubject = ({ subjectId, studentId }) => ({
+  query: `
+    mutation addStudentToSubject($subjectId: ID!, $studentId: ID!) {
+      addStudentToSubject(subjectId: $subjectId, studentId: $studentId) {
+        id
+        students {
+          id
+        }
+      }
+    }
+  `,
+  variables: {
+    subjectId,
+    studentId,
   },
 });

@@ -24,6 +24,9 @@ export const queryFindInstitutionsByOwner = () => ({
             teachers {
               id
             }
+            students {
+              id
+            }
             forum {
               id
               title

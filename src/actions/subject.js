@@ -5,11 +5,13 @@ import {
   UPDATE_SUBJECT,
   SAVE_SUBJECT_TO_GRADE,
   ADD_TEACHER_TO_SUBJECT,
+  ADD_STUDENT_TO_SUBJECT,
 } from './actionTypes';
 import {
   mutationCreateSubject,
   mutationUpdateSubject,
   mutationAddTeacherToSubject,
+  mutationAddStudentToSubject,
 } from '../queryGenerators/SubjectMutations';
 
 export const saveSubject = subjectInput => dispatch =>
@@ -68,5 +70,23 @@ export const updateSubject = payload => dispatch =>
         payload,
       });
     }
+    return res;
+  });
+
+export const addStudentToSubject = payload => dispatch =>
+  requestGraphql(mutationAddStudentToSubject(payload), localStorage.getItem('token')).then(res => {
+    if (res.data.data && res.data.data.addStudentToSubject) {
+      const students = res.data.data.addStudentToSubject.students;
+
+      students.forEach(user => {
+        if (user.id === payload.studentId) {
+          dispatch({
+            type: ADD_STUDENT_TO_SUBJECT,
+            payload,
+          });
+        }
+      });
+    }
+
     return res;
   });
