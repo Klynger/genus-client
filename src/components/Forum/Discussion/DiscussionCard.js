@@ -24,6 +24,7 @@ const styles = {
   },
   discussionCard: {
     borderRadius: 0,
+    width: '100%',
   },
   reply: {
     display: 'flex',
@@ -37,7 +38,7 @@ const styles = {
 };
 
 const DiscussionActionButtons = ({ classes }) => (
-  <CardActions disableActionSpacing className={classes}>
+  <CardActions disableActionSpacing className={classes.actions}>
     <IconButton aria-label="delete">
       <Delete />
     </IconButton>
@@ -76,7 +77,7 @@ const DiscussionCard = ({ classes, discussion }) => (
     <CardContent>
       <ReactMarkdown escapeHtml source={discussion.content} />
     </CardContent>
-    <DiscussionActionButtons classes={classes.actions} />
+    <DiscussionActionButtons classes={classes} />
     {/* TODO LIST OF REPLIES */}
   </Card>
 );
