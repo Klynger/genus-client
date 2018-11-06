@@ -62,10 +62,7 @@ const AddStudentDialog = ({
     }}
   >
     <DialogTitle>{subject.name}</DialogTitle>
-    {students.length === 0 ? (
-      // refactor add teacher empty view
-      <AddTeacherEmptyView onDialogCloseClick={onClose} />
-    ) : (
+    {students && students.length > 0 ? (
       <Fragment>
         <DialogContent>
           <Form className={classes.form}>
@@ -108,6 +105,8 @@ const AddStudentDialog = ({
           </ProgressButton>
         </DialogActions>
       </Fragment>
+    ) : (
+      <AddTeacherEmptyView onDialogCloseClick={onClose} />
     )}
   </Dialog>
 );
