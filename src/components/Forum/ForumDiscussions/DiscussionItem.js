@@ -29,24 +29,35 @@ const styles = () => ({
 });
 
 // TODO render this component inside a li element
-const Discussionitem = ({ classes, discussion, className: classNameProp }) => (
-  <Card className={classNames(classes.card, classNameProp)} to="/" component={Link}>
-    <CardHeader
-      avatar={
-        <Avatar className={classes.avatar}>
-          {getFirstInitialsCapitalized(discussion.creator.username)}
-        </Avatar>
-      }
-      title={discussion.title}
-      subheader={discussion.creator.username}
-    />
-  </Card>
-);
+const Discussionitem = ({ classes, discussion, className: classNameProp, history }) => {
+  return (
+    <Card
+      className={classNames(classes.card, classNameProp)}
+      to={`${history.location.pathname}/discussion/${discussion.id}`}
+      component={Link}
+    >
+      <CardHeader
+        avatar={
+          <Avatar className={classes.avatar}>
+            {getFirstInitialsCapitalized(discussion.creator.username)}
+          </Avatar>
+        }
+        title={discussion.title}
+        subheader={discussion.creator.username}
+      />
+    </Card>
+  );
+};
 
 Discussionitem.propTypes = {
   classes: PropTypes.object.isRequired,
   className: PropTypes.string,
   discussion: PropTypes.object.isRequired,
+  history: PropTypes.shape({
+    location: PropTypes.shape({
+      pathname: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
 };
 
 export default withStyles(styles)(withRouter(Discussionitem));

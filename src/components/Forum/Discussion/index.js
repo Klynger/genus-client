@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import React, { Fragment } from 'react';
 import DiscussionCard from './DiscussionCard';
+import { Fade } from '@material-ui/core';
 
 const Container = styled.div`
   align-items: center;
@@ -46,7 +47,11 @@ const DiscussionPage = ({ discussion }) => {
     );
   }
 
-  return <Container>{toRender}</Container>;
+  return (
+    <Fade in>
+      <Container>{toRender}</Container>
+    </Fade>
+  );
 };
 
 DiscussionPage.propTypes = {
