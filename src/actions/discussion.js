@@ -9,21 +9,21 @@ export const createDiscussion = input => dispatch => {
       if (res.data.data && res.data.data.createDiscussion) {
         const discussion = {
           ...res.data.data.createDiscussion,
-          replies: res.data.data.createDiscussion.replies.map(reply => ({
-            ...reply,
-            user: reply.user.id,
-            discussion: res.data.data.createDiscussion.id,
-          })),
+          replies: res.data.data.createDiscussion.replies.map(reply => {
+            reply = {
+              ...reply,
+              user: reply.user.id,
+              discussion: res.data.data.createDiscussion.id,
+            };
+            dispatch({
+              type: SAVE_REPLY,
+              reply,
+            });
+            return reply.id;
+          }),
           creator: res.data.data.createDiscussion.creator.id,
           subject: res.data.data.createDiscussion.subject.id,
         };
-
-        discussion.replies.forEach(reply => {
-          dispatch({
-            type: SAVE_REPLY,
-            reply,
-          });
-        });
 
         dispatch({
           type: SAVE_DISCUSSION,
