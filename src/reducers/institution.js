@@ -1,12 +1,12 @@
+import { concatIdIfNotContain } from '../components/utils/helpers';
 import {
-  SAVE_GRADE_TO_INSTITUTION,
   SAVE_INSTITUTION,
   SELECT_INSTITUTION,
-  REMOVE_ALL_INSTITUTIONS,
-  REMOVE_USER_FROM_INSTITUION,
   UPDATE_INSTITUTION,
+  REMOVE_ALL_INSTITUTIONS,
+  SAVE_GRADE_TO_INSTITUTION,
+  REMOVE_USER_FROM_INSTITUION,
 } from '../actions/actionTypes';
-import { concatIdIfNotContain } from '../components/utils/helpers';
 
 export const NO_INSTUTION_SELECTED = '-1';
 

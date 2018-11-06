@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, withWidth, Typography, Grow } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
+import { withStyles } from '@material-ui/core/styles';
+import { Button, withWidth, Typography, Grow } from '@material-ui/core';
 
 export const FadeInButton = styled(Button)`
   animation: fadeIn ${({ delay }) => delay * 2}ms;
@@ -81,7 +81,7 @@ const titleVariants = {
   xl: 'h2',
 };
 
-export const Title = (variants, component) =>
+const Title = (variants, component) =>
   withWidth()(
     withStyles(styles)(({ children, classes, width }) => (
       <Typography className={classes.title} variant={variants[width]} component={component}>

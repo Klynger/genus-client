@@ -1,14 +1,14 @@
+import { requestGraphql } from '../components/utils/HTTPClient';
+import { queryFindGrade } from '../queryGenerators/GradeQueries';
+import { mutationCreateGrade } from '../queryGenerators/GradeMutations';
+import { mutationCreateSubject } from '../queryGenerators/SubjectMutations';
 import {
+  SAVE_USER,
   SAVE_GRADE,
   SAVE_SUBJECT,
   SAVE_SUBJECT_TO_GRADE,
   SAVE_GRADE_TO_INSTITUTION,
-  SAVE_USER,
 } from './actionTypes';
-import { requestGraphql } from '../components/utils/HTTPClient';
-import { mutationCreateGrade } from '../queryGenerators/GradeMutations';
-import { mutationCreateSubject } from '../queryGenerators/SubjectMutations';
-import { queryFindGrade } from '../queryGenerators/GradeQueries';
 
 export const addGrade = gradeInput => dispatch => {
   return requestGraphql(mutationCreateGrade(gradeInput), localStorage.getItem('token')).then(

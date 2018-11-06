@@ -1,19 +1,21 @@
+import { requestGraphql } from '../components/utils/HTTPClient';
+import { NO_INSTUTION_SELECTED } from '../reducers/institution';
+import { queryFindInstitutionsByOwner } from '../queryGenerators/institutionQueries';
 import {
+  SAVE_USER,
+  SAVE_GRADE,
+  SAVE_REPLY,
+  SAVE_SUBJECT,
+  SAVE_DISCUSSION,
   SAVE_INSTITUTION,
   SELECT_INSTITUTION,
-  SAVE_GRADE,
-  SAVE_SUBJECT,
-  SAVE_USER,
   UPDATE_INSTITUTION,
 } from './actionTypes';
-import { NO_INSTUTION_SELECTED } from '../reducers/institution';
-import { requestGraphql } from '../components/utils/HTTPClient';
 import {
-  mutationCreateInstitution,
   mutationJoinInstitution,
+  mutationCreateInstitution,
   mutationUpdateInstitution,
 } from '../queryGenerators/institutionMutations';
-import { queryFindInstitutionsByOwner } from '../queryGenerators/institutionQueries';
 
 export const selectInstitution = id => dispatch => {
   dispatch({
@@ -29,7 +31,8 @@ export const addInstitution = institutionInput => (dispatch, getState) => {
   ).then(res => {
     let result;
     if (res.data.data && res.data.data.createInstitution) {
-      const admins = [...res.data.data.createInstitution.admins];
+      const admins = res.data.data.createInstitution.admins;
+
       const institution = {
         ...res.data.data.createInstitution,
         admins: admins.map(user => user.id),
@@ -98,6 +101,34 @@ export const joinInstitution = code => dispatch =>
           subject = {
             ...subject,
             teachers: subject.teachers.map(({ id }) => id),
+            students: subject.students.map(({ id }) => id),
+            forum: subject.forum.map(discussion => {
+              discussion = {
+                ...discussion,
+                creator: discussion.creator.id,
+                subject: discussion.subject.id,
+                replies: discussion.replies.map(reply => {
+                  reply = {
+                    ...reply,
+                    user: reply.user.id,
+                    discussion: discussion.id,
+                  };
+                  dispatch({
+                    type: SAVE_REPLY,
+                    reply,
+                  });
+
+                  return reply.id;
+                }),
+              };
+
+              dispatch({
+                type: SAVE_DISCUSSION,
+                discussion,
+              });
+
+              return discussion.id;
+            }),
           };
           dispatch({
             type: SAVE_SUBJECT,
@@ -151,6 +182,41 @@ export const fetchInstitutionsByOwner = () => (dispatch, getState) => {
               });
 
               return user.id;
+            }),
+            students: subject.students.map(user => {
+              dispatch({
+                type: SAVE_USER,
+                user,
+              });
+
+              return user.id;
+            }),
+            forum: subject.forum.map(discussion => {
+              discussion = {
+                ...discussion,
+                creator: discussion.creator.id,
+                subject: subject.id,
+                replies: discussion.replies.map(reply => {
+                  reply = {
+                    ...reply,
+                    user: reply.user.id,
+                    discussion: discussion.id,
+                  };
+                  dispatch({
+                    type: SAVE_REPLY,
+                    reply,
+                  });
+
+                  return reply.id;
+                }),
+              };
+
+              dispatch({
+                type: SAVE_DISCUSSION,
+                discussion,
+              });
+
+              return discussion.id;
             }),
           };
           dispatch({
