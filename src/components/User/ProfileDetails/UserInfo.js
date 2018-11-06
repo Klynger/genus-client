@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import EditUserDialog from './EditUserDialog';
 import React, { Component, Fragment } from 'react';
+import EditPasswordDialog from './EditPasswordDialog';
 import ImageUploader from '../../utils/ImageUploader';
 import EditPasswordDialog from './EditPasswordDialog';
 import deepOrange from '@material-ui/core/colors/deepOrange';

@@ -50,7 +50,7 @@ ProfileDetails.propTypes = {
       userId: PropTypes.string,
     }).isRequired,
   }).isRequired,
-  user: PropTypes.object.isRequired,
+  user: PropTypes.object,
 };
 
 export default connect(mapToProps)(ProfileDetails);
