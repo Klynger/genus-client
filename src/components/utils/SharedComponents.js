@@ -81,7 +81,7 @@ const titleVariants = {
   xl: 'h2',
 };
 
-export const Title = (variants, component) =>
+const Title = (variants, component) =>
   withWidth()(
     withStyles(styles)(({ children, classes, width }) => (
       <Typography className={classes.title} variant={variants[width]} component={component}>

@@ -1,7 +1,8 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import DiscussionItem from './DiscussionItem';
+import classNames from 'classnames';
+import { withStyles } from '@material-ui/core';
 
 const styles = theme => ({
   discussionItem: {
@@ -18,8 +19,8 @@ const styles = theme => ({
   },
 });
 
-const DiscussionsList = ({ classes, discussions }) => (
-  <ul className={classes.root}>
+const DiscussionsList = ({ classes, className: classNameProp, discussions }) => (
+  <ul className={classNames(classes.root, classNameProp)}>
     {discussions.map(discussion => (
       <DiscussionItem
         key={discussion.id}
@@ -36,6 +37,7 @@ DiscussionsList.defaultProps = {
 
 DiscussionsList.propTypes = {
   classes: PropTypes.object.isRequired,
+  className: PropTypes.string,
   discussions: PropTypes.arrayOf(PropTypes.object),
 };
 

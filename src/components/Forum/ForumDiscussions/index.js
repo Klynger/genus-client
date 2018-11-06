@@ -2,7 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import DiscussionsList from './DiscussionsList';
+import { Button, Fade, withStyles } from '@material-ui/core';
+import { ResponsiveTitle, ActionsContainer } from '../../utils/SharedComponents';
 
 const Container = styled.div`
   align-items: center;
@@ -35,12 +38,32 @@ const Container = styled.div`
   }
 `;
 
+const styles = theme => ({
+  actionsContainer: {
+    marginTop: theme.spacing.unit * 4,
+  },
+});
+
 const ForumDiscussions = props => {
-  const { discussions } = props;
+  const {
+    classes,
+    discussions,
+    match: { url },
+    subject,
+  } = props;
+
   return (
-    <Container>
-      <DiscussionsList discussions={discussions} />
-    </Container>
+    <Fade in>
+      <Container>
+        <ResponsiveTitle>Forúm {subject && `- ${subject.name}`}</ResponsiveTitle>
+        <ActionsContainer className={classes.actionsContainer}>
+          <Button component={Link} to={`${url}/new-discussion`} color="primary">
+            Criar uma discussão
+          </Button>
+        </ActionsContainer>
+        <DiscussionsList discussions={discussions} />
+      </Container>
+    </Fade>
   );
 };
 
@@ -49,12 +72,16 @@ ForumDiscussions.defaultProps = {
 };
 
 ForumDiscussions.propTypes = {
+  classes: PropTypes.object.isRequired,
   discussions: PropTypes.arrayOf(PropTypes.object),
+  history: PropTypes.shape({}).isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
       subjectId: PropTypes.string.isRequired,
     }).isRequired,
+    url: PropTypes.string.isRequired,
   }).isRequired,
+  subject: PropTypes.object,
 };
 
 function mapToProps(
@@ -76,10 +103,11 @@ function mapToProps(
           },
         };
       }),
+      subject: subject.byId[subjectId],
     };
   }
 
   return {};
 }
 
-export default connect(mapToProps)(ForumDiscussions);
+export default connect(mapToProps)(withStyles(styles)(ForumDiscussions));

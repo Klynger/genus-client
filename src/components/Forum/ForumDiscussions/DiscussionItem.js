@@ -1,17 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, Card, CardHeader, Avatar } from '@material-ui/core';
 import classNames from 'classnames';
-import { getFirstInitialsCapitalized } from '../../utils/helpers';
-import deepOrange from '@material-ui/core/colors/deepOrange';
 import { Link, withRouter } from 'react-router-dom';
+import deepOrange from '@material-ui/core/colors/deepOrange';
+import { getFirstInitialsCapitalized } from '../../utils/helpers';
+import { withStyles, Card, CardHeader, Avatar } from '@material-ui/core';
 
-const styles = theme => ({
+const styles = () => ({
   root: {
+    width: '100%',
+  },
+  card: {
     borderRadius: 0,
     cursor: 'pointer',
     textDecoration: 'none',
-    width: `calc(100% - ${theme.spacing.unit * 2}px)`,
+    width: '100%',
     transition: 'background-color 150ms ease',
     '&:hover': {
       backgroundColor: '#ddd',
@@ -25,8 +28,9 @@ const styles = theme => ({
   },
 });
 
+// TODO render this component inside a li element
 const Discussionitem = ({ classes, discussion, className: classNameProp }) => (
-  <Card className={classNames(classes.root, classNameProp)} to="/" component={Link}>
+  <Card className={classNames(classes.card, classNameProp)} to="/" component={Link}>
     <CardHeader
       avatar={
         <Avatar className={classes.avatar}>
