@@ -64,7 +64,7 @@ function subject(state = DEFAULT_STATE, action) {
         byId: {
           ...state.byId,
           [action.payload.subjectId]: {
-            ...[action.payload.subjectId],
+            ...state.byId[action.payload.subjectId],
             forum: concatIdIfNotContain(
               state.byId[action.payload.subjectId].forum,
               action.payload.discussionId,

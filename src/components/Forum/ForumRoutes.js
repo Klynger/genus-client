@@ -5,12 +5,12 @@ import ForumLoading from './ForumLoading';
 import { Route, Switch, Redirect } from 'react-router-dom';
 
 const AsyncForumDiscussions = Loadable({
-  loader: () => import('./ForumDiscussionsPage'),
+  loader: () => import('./ForumDiscussions'),
   loading: ForumLoading,
 });
 
 const AsyncNewDiscussion = Loadable({
-  loader: () => import('./NewDiscussionPage'),
+  loader: () => import('./NewDiscussion'),
   loading: ForumLoading,
 });
 

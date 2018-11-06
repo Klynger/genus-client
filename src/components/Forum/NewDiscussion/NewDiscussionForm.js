@@ -143,9 +143,11 @@ export default connect(
           ...values,
           subjectId: props.match.params.subjectId,
         })
-        .then(() => {
-          const path = props.match.url.replace(/\/new-discussion/g, '');
-          props.history.push(path);
+        .then(res => {
+          if (res.data.data) {
+            const path = props.match.url.replace(/\/new-discussion/g, '');
+            props.history.push(path);
+          }
           setSubmitting(false);
         })
         .catch(() => {
