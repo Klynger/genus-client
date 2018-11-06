@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, withStyles, CircularProgress } from '@material-ui/core';
 
-const styles = theme => ({
+const styles = () => ({
   spinner: {
     left: '50%',
     marginLeft: -12,
@@ -12,7 +12,6 @@ const styles = theme => ({
     zIndex: 1,
   },
   wrapper: {
-    margin: theme.spacing.unit,
     position: 'relative',
   },
 });

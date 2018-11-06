@@ -1,5 +1,5 @@
-import { SAVE_USER, SET_LOGGED_USER, REMOVE_USER, REMOVE_ALL_USERS } from '../actions/actionTypes';
 import { concatIdIfNotContain } from '../components/utils/helpers';
+import { SAVE_USER, SET_LOGGED_USER, REMOVE_USER, REMOVE_ALL_USERS } from '../actions/actionTypes';
 
 export const NO_USER_LOGGED = '-333';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { SwipeableDrawer } from '@material-ui/core';
 import DrawerContent from './DrawerContent';
+import { SwipeableDrawer } from '@material-ui/core';
 
 const MenuDrawer = ({ open, onDrawerToggle }) => (
   <SwipeableDrawer open={open} onClose={onDrawerToggle} onOpen={onDrawerToggle}>

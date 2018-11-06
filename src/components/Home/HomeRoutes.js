@@ -1,20 +1,20 @@
 import React from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
 import Loadable from 'react-loadable';
 import HomeLoading from './HomeLoading';
+import { Route, Switch, Redirect } from 'react-router-dom';
 
-const AsyncOverviewPage = Loadable({
-  loader: () => import('../OverviewPage'),
+const AsyncOverview = Loadable({
+  loader: () => import('../Overview'),
   loading: HomeLoading,
 });
 
-const AsyncInstitutionPage = Loadable({
-  loader: () => import('../InstitutionPage'),
+const AsyncInstitution = Loadable({
+  loader: () => import('../Institution'),
   loading: HomeLoading,
 });
 
-const AsyncUserPage = Loadable({
-  loader: () => import('../UserPage'),
+const AsyncUser = Loadable({
+  loader: () => import('../User'),
   loading: HomeLoading,
 });
 
@@ -26,9 +26,9 @@ const AsyncTestingPage = Loadable({
 const HomeRoutes = () => {
   return (
     <Switch>
-      <Route path="/" exact component={AsyncOverviewPage} />
-      <Route path="/institution" component={AsyncInstitutionPage} />
-      <Route path="/profile" component={AsyncUserPage} />
+      <Route path="/" exact component={AsyncOverview} />
+      <Route path="/institution" component={AsyncInstitution} />
+      <Route path="/profile" component={AsyncUser} />
       {process.env.NODE_ENV === 'development' && (
         <Route path="/testing" component={AsyncTestingPage} />
       )}

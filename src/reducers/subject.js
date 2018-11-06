@@ -1,10 +1,12 @@
+import { concatIdIfNotContain } from '../components/utils/helpers';
 import {
   SAVE_SUBJECT,
+  UPDATE_SUBJECT,
   REMOVE_ALL_SUBJECTS,
   ADD_TEACHER_TO_SUBJECT,
-  UPDATE_SUBJECT,
+  ADD_DISCUSSION_TO_SUBJECT,
+  ADD_STUDENT_TO_SUBJECT,
 } from '../actions/actionTypes';
-import { concatIdIfNotContain } from '../components/utils/helpers';
 
 const DEFAULT_STATE = {
   byId: {},
@@ -25,6 +27,7 @@ function subject(state = DEFAULT_STATE, action) {
         },
         allIds: concatIdIfNotContain(state.allIds, action.subject.id),
       };
+
     case ADD_TEACHER_TO_SUBJECT:
       return {
         ...state,
@@ -35,6 +38,36 @@ function subject(state = DEFAULT_STATE, action) {
             teachers: concatIdIfNotContain(
               state.byId[action.payload.subjectId].teachers,
               action.payload.teacherId,
+            ),
+          },
+        },
+      };
+
+    case ADD_STUDENT_TO_SUBJECT:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.payload.subjectId]: {
+            ...state.byId[action.payload.subjectId],
+            students: concatIdIfNotContain(
+              state.byId[action.payload.subjectId].students,
+              action.payload.studentId,
+            ),
+          },
+        },
+      };
+
+    case ADD_DISCUSSION_TO_SUBJECT:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.payload.subjectId]: {
+            ...state.byId[action.payload.subjectId],
+            forum: concatIdIfNotContain(
+              state.byId[action.payload.subjectId].forum,
+              action.payload.discussionId,
             ),
           },
         },

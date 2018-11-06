@@ -24,6 +24,25 @@ export const queryFindInstitutionsByOwner = () => ({
             teachers {
               id
             }
+            students {
+              id
+            }
+            forum {
+              id
+              title
+              replyNumber
+              creationDate
+              replies(page: 0, size: 10) {
+                id
+                content
+                user {
+                  id
+                }
+              }
+              creator {
+                id
+              }
+            }
           }
         }
         admins {
@@ -41,5 +60,3 @@ export const queryFindInstitutionsByOwner = () => ({
     ${userFragment}
   `,
 });
-
-export default {};

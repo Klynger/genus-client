@@ -1,8 +1,8 @@
 import {
-  REMOVE_ALL_INSTITUTIONS,
   REMOVE_ALL_USERS,
   REMOVE_ALL_GRADES,
   REMOVE_ALL_SUBJECTS,
+  REMOVE_ALL_INSTITUTIONS,
 } from './actionTypes';
 
 export const clearStore = dispatch => {
