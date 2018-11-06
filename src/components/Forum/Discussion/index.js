@@ -61,13 +61,16 @@ function mapStateToProps(
     },
   },
 ) {
-  if (discussion.byId[discussionId]) {
-    const singleDiscussion = discussion.byId[discussionId];
+  const singleDiscussion = discussion.byId[discussionId];
+  if (singleDiscussion && user.byId[singleDiscussion.creator].username) {
     return {
       discussion: {
         ...singleDiscussion,
         creator: user.byId[singleDiscussion.creator],
-        replies: singleDiscussion.replies.map(id => reply.byId[id]),
+        replies: singleDiscussion.replies.map(id => ({
+          ...reply.byId[id],
+          user: user.byId[reply.byId[id].user],
+        })),
       },
     };
   }
