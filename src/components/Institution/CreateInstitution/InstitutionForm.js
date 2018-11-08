@@ -51,10 +51,9 @@ const InstitutionForm = ({
           value={values.name}
           onChange={handleChange}
         />
-        {touched.name &&
-          errors.name && (
-            <FormHelperText id="create-institution__name-error-text">{errors.name}</FormHelperText>
-          )}
+        {touched.name && errors.name && (
+          <FormHelperText id="create-institution__name-error-text">{errors.name}</FormHelperText>
+        )}
       </FormControl>
       <FormControl
         className={classes.formControl}
@@ -69,12 +68,9 @@ const InstitutionForm = ({
           value={values.email}
           onChange={handleChange}
         />
-        {touched.email &&
-          errors.email && (
-            <FormHelperText id="create-institution__email-error-text">
-              {errors.email}
-            </FormHelperText>
-          )}
+        {touched.email && errors.email && (
+          <FormHelperText id="create-institution__email-error-text">{errors.email}</FormHelperText>
+        )}
       </FormControl>
       <FormControl
         className={classes.formControl}
@@ -88,12 +84,9 @@ const InstitutionForm = ({
           value={values.phone}
           onChange={handleChange}
         />
-        {touched.phone &&
-          errors.phone && (
-            <FormHelperText id="create-institution__phone-error-text">
-              {errors.phone}
-            </FormHelperText>
-          )}
+        {touched.phone && errors.phone && (
+          <FormHelperText id="create-institution__phone-error-text">{errors.phone}</FormHelperText>
+        )}
       </FormControl>
       <FormControl
         className={classes.formControl}
@@ -107,12 +100,11 @@ const InstitutionForm = ({
           value={values.address}
           onChange={handleChange}
         />
-        {touched.address &&
-          errors.address && (
-            <FormHelperText id="create-institution__address-error-text">
-              {errors.address}
-            </FormHelperText>
-          )}
+        {touched.address && errors.address && (
+          <FormHelperText id="create-institution__address-error-text">
+            {errors.address}
+          </FormHelperText>
+        )}
       </FormControl>
       <ActionsContainer>
         <Button variant="raised" disabled={isSubmitting} style={{ marginRight: 10 }}>

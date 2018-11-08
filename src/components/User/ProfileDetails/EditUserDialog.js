@@ -95,12 +95,11 @@ class EditUserDialog extends Component {
                 onChange={handleChange}
                 id="edit-user-dialog__username-field"
               />
-              {touched.username &&
-                errors.username && (
-                  <Zoom in>
-                    <FormHelperText>{errors.username}</FormHelperText>
-                  </Zoom>
-                )}
+              {touched.username && errors.username && (
+                <Zoom in>
+                  <FormHelperText>{errors.username}</FormHelperText>
+                </Zoom>
+              )}
             </FormControl>
           </Form>
         </DialogContent>

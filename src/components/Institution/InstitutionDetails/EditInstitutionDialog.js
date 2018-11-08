@@ -107,8 +107,9 @@ class EditInstitutionDialog extends Component {
                 value={values.address}
                 onChange={handleChange}
               />
-              {touched.address &&
-                errors.address && <FormHelperText>{errors.address}</FormHelperText>}
+              {touched.address && errors.address && (
+                <FormHelperText>{errors.address}</FormHelperText>
+              )}
             </FormControl>
           </Form>
           {errors.requestError && (

@@ -54,12 +54,11 @@ const NewDiscussionForm = ({
             onChange={handleChange}
             id="new-discussion__title-field"
           />
-          {touched.title &&
-            Boolean(errors.title) && (
-              <Zoom in>
-                <FormHelperText>{errors.title}</FormHelperText>
-              </Zoom>
-            )}
+          {touched.title && Boolean(errors.title) && (
+            <Zoom in>
+              <FormHelperText>{errors.title}</FormHelperText>
+            </Zoom>
+          )}
         </FormControl>
         <TextField
           rows={10}

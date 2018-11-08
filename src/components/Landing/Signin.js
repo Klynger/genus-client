@@ -114,12 +114,11 @@ const Signin = ({
           >
             <InputLabel>Email: </InputLabel>
             <Input name="email" value={values.email || ''} onChange={handleChange} />
-            {touched.email &&
-              errors.email && (
-                <Zoom in>
-                  <FormHelperText id="signin__email-error-text">{errors.email}</FormHelperText>
-                </Zoom>
-              )}
+            {touched.email && errors.email && (
+              <Zoom in>
+                <FormHelperText id="signin__email-error-text">{errors.email}</FormHelperText>
+              </Zoom>
+            )}
           </FormControl>
           <FormControl
             className={classes.formControl}
@@ -133,14 +132,11 @@ const Signin = ({
               value={values.password}
               onChange={handleChange}
             />
-            {touched.password &&
-              errors.password && (
-                <Zoom in>
-                  <FormHelperText id="signin__password-error-text">
-                    {errors.password}
-                  </FormHelperText>
-                </Zoom>
-              )}
+            {touched.password && errors.password && (
+              <Zoom in>
+                <FormHelperText id="signin__password-error-text">{errors.password}</FormHelperText>
+              </Zoom>
+            )}
           </FormControl>
           <DialogActions>
             <Button color="primary" disabled={isSubmitting} onClick={onClose}>

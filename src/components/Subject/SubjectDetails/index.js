@@ -40,11 +40,11 @@ const Container = styled.div`
 `;
 
 /*
-* This component needs data that is fetched by other
-* component, it needs to change.
-* TODO add apollo-graphql and me this component get its
-* own data.
-*/
+ * This component needs data that is fetched by other
+ * component, it needs to change.
+ * TODO add apollo-graphql and me this component get its
+ * own data.
+ */
 class SubjectDetailsPage extends Component {
   constructor(props) {
     super(props);

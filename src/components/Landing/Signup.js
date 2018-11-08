@@ -149,14 +149,11 @@ class Signup extends PureComponent {
           >
             <InputLabel htmlFor="username">Nome</InputLabel>
             <Input name="username" value={values.username} onChange={handleChange} />
-            {touched.username &&
-              errors.username && (
-                <Zoom in>
-                  <FormHelperText id="signup__username-error-text">
-                    {errors.username}
-                  </FormHelperText>
-                </Zoom>
-              )}
+            {touched.username && errors.username && (
+              <Zoom in>
+                <FormHelperText id="signup__username-error-text">{errors.username}</FormHelperText>
+              </Zoom>
+            )}
           </FormControl>
           <FormControl
             className={classes.formControl}
@@ -164,12 +161,11 @@ class Signup extends PureComponent {
           >
             <InputLabel htmlFor="email">Email</InputLabel>
             <Input name="email" type="email" value={values.email} onChange={handleChange} />
-            {touched.email &&
-              errors.email && (
-                <Zoom in>
-                  <FormHelperText id="signup__email-error-text">{errors.email}</FormHelperText>
-                </Zoom>
-              )}
+            {touched.email && errors.email && (
+              <Zoom in>
+                <FormHelperText id="signup__email-error-text">{errors.email}</FormHelperText>
+              </Zoom>
+            )}
           </FormControl>
           <FormControl
             className={classes.formControl}
@@ -182,14 +178,11 @@ class Signup extends PureComponent {
               value={values.password}
               onChange={handleChange}
             />
-            {touched.password &&
-              errors.password && (
-                <Zoom in>
-                  <FormHelperText id="signup__password-error-text">
-                    {errors.password}
-                  </FormHelperText>
-                </Zoom>
-              )}
+            {touched.password && errors.password && (
+              <Zoom in>
+                <FormHelperText id="signup__password-error-text">{errors.password}</FormHelperText>
+              </Zoom>
+            )}
           </FormControl>
           <div className={classes.signupButtonWrapper}>
             <FadeInButton

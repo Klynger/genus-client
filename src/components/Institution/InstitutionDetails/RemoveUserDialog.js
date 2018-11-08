@@ -80,24 +80,22 @@ const RemoveUserDialog = ({
         <FormControl error={touched.institutionName && errors.institutionName !== undefined}>
           <InputLabel htmlFor="institutionName">Nome da Instituição:</InputLabel>
           <Input name="institutionName" value={values.institutionName} onChange={handleChange} />
-          {touched.institutionName &&
-            errors.institutionName && (
-              <Zoom in>
-                <FormHelperText id="institution-name-error-text">
-                  {errors.institutionName}
-                </FormHelperText>
-              </Zoom>
-            )}
+          {touched.institutionName && errors.institutionName && (
+            <Zoom in>
+              <FormHelperText id="institution-name-error-text">
+                {errors.institutionName}
+              </FormHelperText>
+            </Zoom>
+          )}
         </FormControl>
         <FormControl error={touched.password && errors.password !== undefined}>
           <InputLabel htmlFor="password">Senha:</InputLabel>
           <Input name="password" type="password" value={values.password} onChange={handleChange} />
-          {touched.password &&
-            errors.password && (
-              <Zoom in>
-                <FormHelperText id="password-error-text">{errors.password}</FormHelperText>
-              </Zoom>
-            )}
+          {touched.password && errors.password && (
+            <Zoom in>
+              <FormHelperText id="password-error-text">{errors.password}</FormHelperText>
+            </Zoom>
+          )}
         </FormControl>
         {errors.requestError && (
           <FormHelperText error={errors.requestError}>{errors.requestError}</FormHelperText>

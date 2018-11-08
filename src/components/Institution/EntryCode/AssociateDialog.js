@@ -82,12 +82,11 @@ const AssociateDialog = ({
             value={values.code}
             onChange={handleChange}
           />
-          {touched.code &&
-            errors.code && (
-              <Zoom in>
-                <FormHelperText>{errors.code}</FormHelperText>
-              </Zoom>
-            )}
+          {touched.code && errors.code && (
+            <Zoom in>
+              <FormHelperText>{errors.code}</FormHelperText>
+            </Zoom>
+          )}
         </FormControl>
       </Form>
     </DialogContent>

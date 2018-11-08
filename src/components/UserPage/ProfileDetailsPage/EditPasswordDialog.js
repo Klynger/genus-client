@@ -72,12 +72,11 @@ const EditPasswordDialog = ({
             value={values.password}
             id="edit-password-dialog__password-field"
           />
-          {touched.password &&
-            Boolean(errors.password) && (
-              <Zoom in>
-                <FormHelperText>{errors.password}</FormHelperText>
-              </Zoom>
-            )}
+          {touched.password && Boolean(errors.password) && (
+            <Zoom in>
+              <FormHelperText>{errors.password}</FormHelperText>
+            </Zoom>
+          )}
           {Boolean(errors.requestError) && (
             <Zoom in>
               <FormHelperText>{errors.requestError}</FormHelperText>
@@ -96,12 +95,11 @@ const EditPasswordDialog = ({
             value={values.newPassword}
             id="edit-password-dialog__new-password-field"
           />
-          {touched.newPassword &&
-            Boolean(errors.newPassword) && (
-              <Zoom in>
-                <FormHelperText>{errors.newPassword}</FormHelperText>
-              </Zoom>
-            )}
+          {touched.newPassword && Boolean(errors.newPassword) && (
+            <Zoom in>
+              <FormHelperText>{errors.newPassword}</FormHelperText>
+            </Zoom>
+          )}
         </FormControl>
         <FormControl
           className={classes.formControl}
@@ -117,12 +115,11 @@ const EditPasswordDialog = ({
             value={values.passwordConfirm}
             id="edit-password-dialog__password-confirm-field"
           />
-          {touched.passwordConfirm &&
-            Boolean(errors.passwordConfirm) && (
-              <Zoom in>
-                <FormHelperText>{errors.passwordConfirm}</FormHelperText>
-              </Zoom>
-            )}
+          {touched.passwordConfirm && Boolean(errors.passwordConfirm) && (
+            <Zoom in>
+              <FormHelperText>{errors.passwordConfirm}</FormHelperText>
+            </Zoom>
+          )}
         </FormControl>
       </Form>
     </DialogContent>
