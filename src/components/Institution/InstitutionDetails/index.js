@@ -1,32 +1,14 @@
-import React, { Component } from 'react';
+import UserList from './UserList';
 import PropTypes from 'prop-types';
-import { Fade, withStyles } from '@material-ui/core';
 import { connect } from 'react-redux';
 import GradesGrid from './GradesGrid';
-import CreateEntryCodeDialog from '../EntryCode/CreateEntryCodeDialog';
-import DisplayCodeDialog from '../EntryCode/DisplayCodeDialog';
-import UserList from './UserList';
+import { Fade } from '@material-ui/core';
+import React, { Component } from 'react';
 import InstitutionInfos from './InstitutionInfo';
 import EditInstitutionDialog from './EditInstitutionDialog';
-
-const styles = theme => ({
-  detailsPageRoot: {
-    display: 'flex',
-    flexDirection: 'column',
-    [theme.breakpoints.down('xs')]: {
-      width: '95%',
-    },
-    [theme.breakpoints.up('sm')]: {
-      width: '85%',
-    },
-    [theme.breakpoints.up('lg')]: {
-      width: '70%',
-    },
-    [theme.breakpoints.up('xl')]: {
-      width: '60%',
-    },
-  },
-});
+import DisplayCodeDialog from '../EntryCode/DisplayCodeDialog';
+import DefaultContainerRoute from '../../utils/DefaultContainerRoute';
+import CreateEntryCodeDialog from '../EntryCode/CreateEntryCodeDialog';
 
 class InstitutionDetails extends Component {
   constructor(props) {
@@ -64,7 +46,7 @@ class InstitutionDetails extends Component {
   }
 
   render() {
-    const { classes, institution } = this.props;
+    const { institution } = this.props;
     const {
       entryCodeCreateOpen,
       displayCodeOpen,
@@ -75,7 +57,7 @@ class InstitutionDetails extends Component {
 
     if (institution) {
       toRender = (
-        <div className={classes.detailsPageRoot}>
+        <DefaultContainerRoute>
           <DisplayCodeDialog
             open={displayCodeOpen}
             code={currentGeneratedCode}
@@ -98,7 +80,7 @@ class InstitutionDetails extends Component {
           <UserList users={institution.teachers} headTitle="Professores" />
           <UserList users={institution.admins} headTitle="Administradores" />
           <UserList users={institution.students} headTitle="Alunos" />
-        </div>
+        </DefaultContainerRoute>
       );
     } else {
       toRender = <p>Não há nenhuma instituição selecionada</p>;
@@ -109,7 +91,6 @@ class InstitutionDetails extends Component {
 }
 
 InstitutionDetails.propTypes = {
-  classes: PropTypes.object.isRequired,
   institution: PropTypes.shape({
     address: PropTypes.string,
     admins: PropTypes.arrayOf(
@@ -151,4 +132,4 @@ function mapStateToProps({ institution, user }) {
   return {};
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(InstitutionDetails));
+export default connect(mapStateToProps)(InstitutionDetails);

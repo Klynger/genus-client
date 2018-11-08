@@ -1,30 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import InstitutionForm from './InstitutionForm';
 import { withStyles } from '@material-ui/core/styles';
+import DefaultContainerRoute from '../../utils/DefaultContainerRoute';
 import { Typography, Divider, Fade, withWidth } from '@material-ui/core';
-
-const CreateContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  @media screen and (min-width: 1200px) {
-    width: 60%;
-  }
-
-  @media screen and (min-width: 900px) and (max-width: 1199px) {
-    width: 70%;
-  }
-
-  @media screen and (min-width 700px) and (max-width: 899px) {
-    width: 80%;
-  }
-
-  @media screen and (max-width: 699px) {
-    width: 95%;
-  }
-`;
 
 const styles = theme => ({
   divider: {
@@ -44,11 +23,11 @@ const titleVariant = {
 const CreateInstitution = ({ classes, width }) => {
   return (
     <Fade in>
-      <CreateContainer>
+      <DefaultContainerRoute>
         <Typography variant={titleVariant[width]}>CRIAR NOVA INSTITUIÇÃO</Typography>
         <Divider className={classes.divider} />
         <InstitutionForm />
-      </CreateContainer>
+      </DefaultContainerRoute>
     </Fade>
   );
 };

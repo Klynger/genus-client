@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
-import { Button, withWidth, Typography, Grow } from '@material-ui/core';
+import { Button, withWidth, Typography, Grow, withStyles } from '@material-ui/core';
 
 export const FadeInButton = styled(Button)`
   animation: fadeIn ${({ delay }) => delay * 2}ms;
