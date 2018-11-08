@@ -19,8 +19,6 @@ class InstitutionDetails extends Component {
       displayCodeOpen: false,
       displayUpdateOpen: false,
     };
-
-    this.handleUpdateInstitutionOpenToggle = this.handleUpdateInstitutionOpenToggle.bind(this);
   }
 
   handleDisplayCodeOpenToggle = () => {
@@ -41,9 +39,9 @@ class InstitutionDetails extends Component {
     }
   };
 
-  handleUpdateInstitutionOpenToggle() {
+  handleUpdateInstitutionOpenToggle = () => {
     this.setState(({ displayUpdateOpen }) => ({ displayUpdateOpen: !displayUpdateOpen }));
-  }
+  };
 
   render() {
     const { institution } = this.props;
