@@ -1,43 +1,43 @@
 import { schema } from 'normalizr';
 
-const userSchema = new schema.Entity('user');
-const subjectSchema = new schema.Entity('subject');
-const gradeSchema = new schema.Entity('grade');
-const institutionSchema = new schema.Entity('institution');
-const discussionSchema = new schema.Entity('discussion');
-const replySchema = new schema.Entity('reply');
+const user = new schema.Entity('user');
+const subject = new schema.Entity('subject');
+const grade = new schema.Entity('grade');
+const institution = new schema.Entity('institution');
+const discussion = new schema.Entity('discussion');
+const reply = new schema.Entity('reply');
 
-subjectSchema.define({
-  teachers: [userSchema],
-  students: [userSchema],
-  forum: [discussionSchema],
-  grade: gradeSchema,
+subject.define({
+  teachers: [user],
+  students: [user],
+  forum: [discussion],
+  grade,
 });
 
-gradeSchema.define({
-  subjects: [subjectSchema],
-  institution: institutionSchema,
+grade.define({
+  subjects: [subject],
+  institution,
 });
 
-institutionSchema.define({
-  grades: [gradeSchema],
-  admins: [userSchema],
-  teachers: [userSchema],
-  students: [userSchema],
+institution.define({
+  grades: [grade],
+  admins: [user],
+  teachers: [user],
+  students: [user],
 });
 
-discussionSchema.define({
-  replies: [replySchema],
+discussion.define({
+  replies: [reply],
 });
 
-replySchema.define({
-  discussion: discussionSchema,
-  user: userSchema,
+reply.define({
+  discussion,
+  user,
 });
 
-export const user = userSchema;
-export const subject = subjectSchema;
-export const grade = gradeSchema;
-export const institution = institutionSchema;
-export const discussion = discussionSchema;
-export const reply = replySchema;
+export const userSchema = user;
+export const subjectSchema = subject;
+export const gradeSchema = grade;
+export const institutionSchema = institution;
+export const discussionSchema = discussion;
+export const replySchema = reply;
