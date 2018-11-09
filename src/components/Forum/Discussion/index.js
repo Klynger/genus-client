@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import DiscussionCard from './DiscussionCard';
 import { Fade } from '@material-ui/core';
+import DiscussionCard from './DiscussionCard';
 import DefaultContainerRoute from '../../utils/DefaultContainerRoute';
 
 const DiscussionPage = ({ discussion }) => {

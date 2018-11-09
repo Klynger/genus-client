@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
 import { Fade } from '@material-ui/core';
+import { withRouter } from 'react-router-dom';
 import NewDiscussionForm from './NewDiscussionForm';
 import DefaultContainerRoute from '../../utils/DefaultContainerRoute';
 
