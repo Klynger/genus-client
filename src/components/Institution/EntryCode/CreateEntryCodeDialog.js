@@ -95,12 +95,11 @@ const CreateEntryCodeDialog = ({
               </MenuItem>
             ))}
           </Select>
-          {touched.institutionId &&
-            errors.institutionId && (
-              <Zoom in>
-                <FormHelperText>{errors.institutionId}</FormHelperText>
-              </Zoom>
-            )}
+          {touched.institutionId && errors.institutionId && (
+            <Zoom in>
+              <FormHelperText>{errors.institutionId}</FormHelperText>
+            </Zoom>
+          )}
         </FormControl>
         <FormControl
           className={classes.createEntryCodeFormControl}
@@ -122,12 +121,11 @@ const CreateEntryCodeDialog = ({
               </MenuItem>
             ))}
           </Select>
-          {touched.role &&
-            errors.role && (
-              <Zoom in>
-                <FormHelperText>{errors.role}</FormHelperText>
-              </Zoom>
-            )}
+          {touched.role && errors.role && (
+            <Zoom in>
+              <FormHelperText>{errors.role}</FormHelperText>
+            </Zoom>
+          )}
         </FormControl>
         <DialogActions>
           <Button color="primary" disabled={isSubmitting} onClick={onClose}>

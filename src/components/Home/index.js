@@ -38,9 +38,6 @@ class Home extends Component {
     super(props);
 
     this.state = { openDrawer: false };
-
-    this.handleDrawerToggle = this.handleDrawerToggle.bind(this);
-    this.handleActiveDrawerToggle = this.handleActiveDrawerToggle.bind(this);
   }
 
   componentDidMount() {
@@ -51,13 +48,13 @@ class Home extends Component {
     });
   }
 
-  handleDrawerToggle() {
+  handleDrawerToggle = () => {
     this.setState(({ openDrawer }) => ({ openDrawer: !openDrawer }));
-  }
+  };
 
-  handleActiveDrawerToggle() {
+  handleActiveDrawerToggle = () => {
     this.handleDrawerToggle();
-  }
+  };
 
   render() {
     const { openDrawer } = this.state;

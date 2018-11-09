@@ -88,12 +88,11 @@ class AddTeacherDialog extends Component {
                       </MenuItem>
                     ))}
                   </Select>
-                  {touched.teacherId &&
-                    errors.teacherId && (
-                      <Zoom in>
-                        <FormHelperText>{errors.teacherId}</FormHelperText>
-                      </Zoom>
-                    )}
+                  {touched.teacherId && errors.teacherId && (
+                    <Zoom in>
+                      <FormHelperText>{errors.teacherId}</FormHelperText>
+                    </Zoom>
+                  )}
                 </FormControl>
               </Form>
             </DialogContent>

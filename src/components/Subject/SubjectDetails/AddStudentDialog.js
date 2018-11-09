@@ -82,12 +82,11 @@ const AddStudentDialog = ({
                   </MenuItem>
                 ))}
               </Select>
-              {touched.studentId &&
-                Boolean(errors.studentId) && (
-                  <Zoom in>
-                    <FormHelperText>{errors.studentId}</FormHelperText>
-                  </Zoom>
-                )}
+              {touched.studentId && Boolean(errors.studentId) && (
+                <Zoom in>
+                  <FormHelperText>{errors.studentId}</FormHelperText>
+                </Zoom>
+              )}
             </FormControl>
           </Form>
           {errors.requestError && (

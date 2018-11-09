@@ -67,10 +67,9 @@ const GradeCreateDialog = ({
         >
           <InputLabel htmlFor="name">Nome </InputLabel>
           <Input name="name" value={values.name} onChange={handleChange} />
-          {touched.name &&
-            errors.name && (
-              <FormHelperText id="grade__name-error-text">{errors.name}</FormHelperText>
-            )}
+          {touched.name && errors.name && (
+            <FormHelperText id="grade__name-error-text">{errors.name}</FormHelperText>
+          )}
         </FormControl>
       </Form>
       <DialogActions>
