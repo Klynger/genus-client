@@ -1,18 +1,8 @@
+import { dispatchInstitutionEntities } from './utils';
 import { requestGraphql } from '../components/utils/HTTPClient';
 import { NO_INSTUTION_SELECTED } from '../reducers/institution';
+import { SELECT_INSTITUTION, UPDATE_INSTITUTION } from './actionTypes';
 import { queryFindInstitutionsByOwner } from '../queryGenerators/institutionQueries';
-import { institutionSchema } from '../models/schema';
-import { normalize } from 'normalizr';
-import {
-  SAVE_USER,
-  SAVE_GRADE,
-  SAVE_REPLY,
-  SAVE_SUBJECT,
-  SAVE_DISCUSSION,
-  SAVE_INSTITUTION,
-  SELECT_INSTITUTION,
-  UPDATE_INSTITUTION,
-} from './actionTypes';
 import {
   mutationJoinInstitution,
   mutationCreateInstitution,
@@ -33,22 +23,11 @@ export const addInstitution = institutionInput => (dispatch, getState) => {
   ).then(res => {
     let result;
     if (res.data.data && res.data.data.createInstitution) {
-      const admins = res.data.data.createInstitution.admins;
-
-      const institution1 = {
-        ...res.data.data.createInstitution,
-        admins: admins.map(user => user.id),
-      };
+      dispatchInstitutionEntities([res.data.data.createInstitution], dispatch);
       dispatch({
-        type: SAVE_INSTITUTION,
-        institution: institution1,
+        type: SELECT_INSTITUTION,
+        id: getState().institution.allIds[getState().institution.allIds.length - 1],
       });
-      if (getState().institution1.selectedInstitution === NO_INSTUTION_SELECTED) {
-        dispatch({
-          type: SELECT_INSTITUTION,
-          id: res.data.data.createInstitution.id,
-        });
-      }
       result = res;
     } else {
       result = Promise.reject(new Error('400'));
@@ -60,93 +39,7 @@ export const addInstitution = institutionInput => (dispatch, getState) => {
 export const joinInstitution = code => dispatch =>
   requestGraphql(mutationJoinInstitution(code), localStorage.getItem('token')).then(res => {
     if (res.data.data && res.data.data.joinInstitution) {
-      const grades = res.data.data.joinInstitution.grades;
-      const admins = res.data.data.joinInstitution.admins;
-      const students = res.data.data.joinInstitution.students;
-      const teachers = res.data.data.joinInstitution.teachers;
-
-      const institution1 = {
-        ...res.data.data.joinInstitution,
-        grades: res.data.data.joinInstitution.grades.map(grade => grade.id),
-        admins: admins.map(admin => admin.id),
-        students: students.map(student => student.id),
-        teachers: teachers.map(teacher => teacher.id),
-      };
-
-      admins.forEach(user => {
-        dispatch({
-          type: SAVE_USER,
-          user,
-        });
-      });
-
-      students.forEach(user => {
-        dispatch({
-          type: SAVE_USER,
-          user,
-        });
-      });
-
-      teachers.forEach(user => {
-        dispatch({
-          type: SAVE_USER,
-          user,
-        });
-      });
-
-      dispatch({
-        type: SAVE_INSTITUTION,
-        institution: institution1,
-      });
-      grades.forEach(grade => {
-        grade.subjects.forEach(subject => {
-          subject = {
-            ...subject,
-            teachers: subject.teachers.map(({ id }) => id),
-            students: subject.students.map(({ id }) => id),
-            forum: subject.forum.map(discussion => {
-              discussion = {
-                ...discussion,
-                creator: discussion.creator.id,
-                subject: discussion.subject.id,
-                replies: discussion.replies.map(reply => {
-                  reply = {
-                    ...reply,
-                    user: reply.user.id,
-                    discussion: discussion.id,
-                  };
-                  dispatch({
-                    type: SAVE_REPLY,
-                    reply,
-                  });
-
-                  return reply.id;
-                }),
-              };
-
-              dispatch({
-                type: SAVE_DISCUSSION,
-                discussion,
-              });
-
-              return discussion.id;
-            }),
-          };
-          dispatch({
-            type: SAVE_SUBJECT,
-            subject,
-          });
-        });
-        grade.subjects = grade.subjects.map(sub => sub.id);
-        dispatch({
-          type: SAVE_GRADE,
-          grade,
-        });
-      });
-      dispatch({
-        type: SELECT_INSTITUTION,
-        id: institution1.id,
-      });
+      dispatchInstitutionEntities([res.data.data.joinInstitution], dispatch);
     }
     return res;
   });
@@ -155,61 +48,7 @@ export const fetchInstitutionsByOwner = () => (dispatch, getState) => {
   return requestGraphql(queryFindInstitutionsByOwner(), localStorage.getItem('token')).then(res => {
     let requestResult;
     if (res.data.data && res.data.data.getInstitutionsFromLoggedUser) {
-      const {
-        entities: {
-          user: usersById,
-          grade: gradesById,
-          reply: repliesById,
-          subject: subjectsById,
-          discussion: discussionsById,
-          institution: institutionsById,
-        },
-        result: institutionIds,
-      } = normalize(res.data.data.getInstitutionsFromLoggedUser, [institutionSchema]);
-
-      Object.keys(usersById).forEach(id => {
-        dispatch({
-          type: SAVE_USER,
-          user: usersById[id],
-        });
-      });
-
-      Object.keys(gradesById).forEach(id => {
-        dispatch({
-          type: SAVE_GRADE,
-          grade: gradesById[id],
-        });
-      });
-
-      Object.keys(subjectsById).forEach(id => {
-        dispatch({
-          type: SAVE_SUBJECT,
-          subject: subjectsById[id],
-        });
-      });
-
-      Object.keys(repliesById).forEach(id => {
-        dispatch({
-          type: SAVE_REPLY,
-          reply: repliesById[id],
-        });
-      });
-
-      Object.keys(discussionsById).forEach(id => {
-        dispatch({
-          type: SAVE_DISCUSSION,
-          discussion: discussionsById[id],
-        });
-      });
-
-      institutionIds.forEach(id => {
-        const institution = institutionsById[id];
-
-        dispatch({
-          type: SAVE_INSTITUTION,
-          institution,
-        });
-      });
+      dispatchInstitutionEntities(res.data.data.getInstitutionsFromLoggedUser, dispatch);
 
       const state = getState();
       if (

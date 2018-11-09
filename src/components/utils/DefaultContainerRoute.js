@@ -39,7 +39,7 @@ const DefaultContainerRoute = ({
 );
 
 DefaultContainerRoute.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   classes: PropTypes.object.isRequired,
   className: PropTypes.string,
   component: PropTypes.oneOfType([PropTypes.string, PropTypes.func, PropTypes.object]),

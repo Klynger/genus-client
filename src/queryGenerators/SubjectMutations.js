@@ -15,6 +15,7 @@ export const mutationCreateSubject = input => ({
         forum {
           id
           title
+          content
           replyNumber
           creationDate
           replies(page: 0, size: 10) {

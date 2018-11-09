@@ -4,6 +4,7 @@ export const mutationCreateDiscussion = input => ({
       createDiscussion(input: $input) {
         id
         title
+        content
         replyNumber
         creationDate
         replies(page: 0, size: 10) {
