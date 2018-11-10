@@ -1,0 +1,7 @@
+#import "./institutionFragment.graphql"
+
+mutation updateInstitution($input: UpdateInstitutionInput!) {
+  updateInstitution(input: $input) {
+    ...institutionFields
+  }
+}

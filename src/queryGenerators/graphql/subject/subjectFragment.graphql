@@ -1,0 +1,4 @@
+fragment subjectFields on Subject {
+  id
+  name
+}

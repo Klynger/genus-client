@@ -1,0 +1,7 @@
+fragment discussionFields on Discussion {
+  id
+  title
+  content
+  replyNumber
+  creationDate
+}

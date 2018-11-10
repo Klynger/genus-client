@@ -1,51 +1,18 @@
+import { loader } from 'graphql.macro';
+
 export const loginQuery = authenticationBean => ({
-  query: `
-  query getToken($authenticationBean: AuthenticationInput!) {
-    login(input: $authenticationBean)
-  }
-  `,
+  query: loader('./graphql/user/login.graphql').loc.source.body,
   variables: {
     authenticationBean,
   },
 });
 
 export const findLoggedUserQuery = () => ({
-  query: `
-    query {
-      findLoggedUser {
-        id
-        username
-        email
-      }
-    }
-  `,
-});
-
-export const getUsersFromInstitutionByRole = input => ({
-  query: `
-      query getUsersFromInstitutionByRole($input: GetUsersFromInstitutionByRoleInput!){
-        getUsersFromInstitutionByRole(input: $input) {
-          id
-          email
-          username
-        }
-      }
-  `,
-  variables: {
-    input,
-  },
+  query: loader('./graphql/user/findLoggedUser.graphql').loc.source.body,
 });
 
 export const findUserById = id => ({
-  query: `
-    query findUserById($id: ID!) {
-      findUser(id: $id) {
-        id
-        email
-        username
-      }
-    }
-  `,
+  query: loader('./graphql/user/findUser.graphql').loc.source.body,
   variables: {
     id,
   },

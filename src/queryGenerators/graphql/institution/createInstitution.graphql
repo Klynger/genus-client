@@ -1,0 +1,19 @@
+#import "./institutionFragment.graphql"
+
+mutation createNewInstitution($input: CreateInstitutionInput!) {
+      createInstitution(input: $input) {
+        ...institutionFields
+        grades {
+          id
+        }
+        admins {
+          id
+        }
+        teachers {
+          id
+        }
+        students {
+          id
+        }
+      }
+    }

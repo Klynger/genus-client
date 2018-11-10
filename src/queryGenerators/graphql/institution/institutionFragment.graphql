@@ -1,0 +1,7 @@
+fragment institutionFields on Institution {
+  id
+  name
+  email
+  phone
+  address
+}

@@ -1,18 +1,7 @@
+import { loader } from 'graphql.macro';
+
 export const mutationCreateGrade = input => ({
-  query: `
-    mutation createNewGrade($input: GradeCreationInput!) {
-      createGrade(input: $input) {
-        id
-        name
-        institution {
-          id
-        }
-        subjects {
-          id
-        }
-      }
-    }
-  `,
+  query: loader('./graphql/grade/createGrade.graphql').loc.source.body,
   variables: {
     input,
   },
