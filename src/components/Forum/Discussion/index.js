@@ -32,7 +32,7 @@ function mapStateToProps(
   },
 ) {
   const singleDiscussion = discussion.byId[discussionId];
-  if (singleDiscussion && user.byId[singleDiscussion.creator].username) {
+  if (singleDiscussion && user.byId[singleDiscussion.creator]) {
     return {
       discussion: {
         ...singleDiscussion,

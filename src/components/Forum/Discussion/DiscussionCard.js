@@ -75,7 +75,7 @@ const DiscussionCard = ({ classes, discussion }) => (
     />
     <Divider light />
     <CardContent>
-      <ReactMarkdown escapeHtml source={discussion.replies[0].content} />
+      <ReactMarkdown escapeHtml source={discussion.content} />
     </CardContent>
     <DiscussionActionButtons classes={classes} />
     {/* TODO LIST OF REPLIES */}
@@ -85,6 +85,7 @@ const DiscussionCard = ({ classes, discussion }) => (
 DiscussionCard.propTypes = {
   classes: PropTypes.object.isRequired,
   discussion: PropTypes.shape({
+    content: PropTypes.string.isRequired,
     creationDate: PropTypes.string.isRequired,
     creator: PropTypes.shape({
       email: PropTypes.string.isRequired,

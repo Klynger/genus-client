@@ -1,116 +1,20 @@
+import { gradeSchema } from '../models/schema';
+import { SAVE_GRADE_TO_INSTITUTION } from './actionTypes';
+import { dispatchEntities } from '../components/utils/helpers';
 import { requestGraphql } from '../components/utils/HTTPClient';
 import { queryFindGrade } from '../queryGenerators/GradeQueries';
 import { mutationCreateGrade } from '../queryGenerators/GradeMutations';
-import { mutationCreateSubject } from '../queryGenerators/SubjectMutations';
-import {
-  SAVE_USER,
-  SAVE_GRADE,
-  SAVE_SUBJECT,
-  SAVE_SUBJECT_TO_GRADE,
-  SAVE_GRADE_TO_INSTITUTION,
-} from './actionTypes';
-
-export const addGrade = gradeInput => dispatch => {
-  return requestGraphql(mutationCreateGrade(gradeInput), localStorage.getItem('token')).then(
-    res => {
-      const result = res;
-      if (res.data.data && res.data.data.createGrade) {
-        const subjects = res.data.data.createGrade.subjects.map(subject => {
-          subject = subject.teachers.map(user => {
-            dispatch({
-              type: SAVE_USER,
-              user,
-            });
-            return user.id;
-          });
-          dispatch({
-            type: SAVE_SUBJECT,
-            subject,
-          });
-
-          return subject.id;
-        });
-
-        const grade = {
-          ...res.data.data.createGrade.subjects,
-          subjects: subjects.map(({ id }) => id),
-        };
-        dispatch({
-          type: SAVE_GRADE,
-          grade,
-        });
-      } else {
-        // TODO
-        // result = Promise.reject(new Error('404'));
-      }
-      return result;
-    },
-  );
-};
-
-export const addSubjectToGrade = subjectInput => dispatch =>
-  requestGraphql(mutationCreateSubject(subjectInput), localStorage.getItem('token')).then(res => {
-    if (res.data.data && res.data.data.createSubject) {
-      const subject = {
-        ...res.data.data.createSubject,
-        teachers: res.data.data.createSubject.teachers.map(user => {
-          dispatch({
-            type: SAVE_USER,
-            user,
-          });
-          return user.id;
-        }),
-      };
-
-      dispatch({
-        type: SAVE_SUBJECT,
-        subject,
-      });
-
-      const payload = {
-        gradeId: subjectInput.gradeId,
-        subjectId: subject.id,
-      };
-      dispatch({
-        type: SAVE_SUBJECT_TO_GRADE,
-        payload,
-      });
-    }
-  });
 
 export const createGrade = newGrade => dispatch => {
   return requestGraphql(mutationCreateGrade(newGrade), localStorage.getItem('token')).then(res => {
     const result = res;
     if (res.data.data && res.data.data.createGrade) {
-      const grade = {
-        ...res.data.data.createGrade,
-        subjects: res.data.data.createGrade.subjects.map(subject => {
-          subject = {
-            ...subject,
-            teachers: subject.teachers.map(user => {
-              dispatch({
-                type: SAVE_USER,
-                user,
-              });
-              return user.id;
-            }),
-          };
-          dispatch({
-            type: SAVE_SUBJECT,
-            subject,
-          });
-          return subject.id;
-        }),
-      };
-      dispatch({
-        type: SAVE_GRADE,
-        grade,
-      });
+      dispatchEntities(res.data.data.createGrade, dispatch, gradeSchema);
       dispatch({
         type: SAVE_GRADE_TO_INSTITUTION,
         payload: {
           gradeId: res.data.data.createGrade.id,
-          institutionId: newGrade.institutionId,
+          institutionId: res.data.data.createGrade.institution.id,
         },
       });
     } else {
@@ -125,27 +29,7 @@ export const fetchGrade = id => dispatch => {
   return requestGraphql(queryFindGrade(id), localStorage.getItem('token')).then(res => {
     let result;
     if (res.data.data && res.data.data.findGrade) {
-      const grade = {
-        ...res.data.data.createGrade,
-        subjects: res.data.data.createGrade.subjects.map(subject => {
-          subject = {
-            ...subject,
-            teachers: subject.teachers.map(user => {
-              dispatch({
-                type: SAVE_USER,
-                user,
-              });
-              return user.id;
-            }),
-          };
-          return subject.id;
-        }),
-      };
-      dispatch({
-        type: SAVE_GRADE,
-        grade,
-      });
-
+      dispatchEntities(res.data.data.findGrade, dispatch, gradeSchema);
       result = res;
     } else {
       // TODO
@@ -155,5 +39,3 @@ export const fetchGrade = id => dispatch => {
     return result;
   });
 };
-
-export default {};

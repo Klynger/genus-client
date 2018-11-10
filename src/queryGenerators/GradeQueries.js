@@ -4,9 +4,15 @@ export const queryFindGrade = id => ({
       findGrade(input: $id) {
         id
         name
+        institution {
+          id
+        }
         subjects {
           id
           name
+          grade {
+            id
+          }
           teachers {
             id
             username
@@ -15,6 +21,7 @@ export const queryFindGrade = id => ({
           forum {
             id
             title
+            content
             replyNumber
             creationDate
             replies(page: 0, size: 10) {
