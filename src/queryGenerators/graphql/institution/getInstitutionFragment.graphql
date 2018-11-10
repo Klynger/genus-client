@@ -1,0 +1,39 @@
+fragment getInstitutionFields on Institution {
+  ...institutionFields
+  grades {
+    ...gradeFields
+    subjects {
+      ...subjectFields
+      grade {
+        id
+      }
+      teachers {
+        id
+      }
+      students {
+        id
+      }
+      forum {
+        ...discussionFields
+        replies(page: 0, size: 10) {
+          ...replyFields
+          user {
+            id
+          }
+        }
+        creator {
+          id
+        }
+      }
+    }
+  }
+  admins {
+    ...userFields
+  }
+  teachers {
+    ...userFields
+  }
+  students {
+    ...userFields
+  }
+}

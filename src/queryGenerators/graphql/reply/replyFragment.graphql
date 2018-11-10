@@ -1,0 +1,6 @@
+#import "../user/userFragment.graphql"
+
+fragment replyFields on Reply {
+  id
+  content
+}

@@ -1,0 +1,13 @@
+#import "../user/userFragment.graphql"
+#import "./institutionFragment.graphql"
+#import "../grade/gradeFragment.graphql"
+#import "../reply/replyFragment.graphql"
+#import ./getInstitutionFragment.graphql"
+#import "../subject/subjectFragment.graphql"
+#import "../discussion/discussionFragment.graphql"
+
+query {
+  getInstitutionsFromLoggedUser {
+    ...getInstitutionFields
+  }
+}

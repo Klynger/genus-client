@@ -8,7 +8,7 @@ import { requestGraphql } from '../../utils/HTTPClient';
 import { capitalize } from '@material-ui/core/utils/helpers';
 import { defaultDialogBreakpoints } from '../../utils/helpers';
 import { DefaultDialogTransition } from '../../utils/SharedComponents';
-import { mutationCreateEntryCode } from '../../../queryGenerators/entryCodeMutations';
+import { mutationCreateEntryCode } from '../../../queryGenerators/institutionMutations';
 import {
   Zoom,
   Button,
