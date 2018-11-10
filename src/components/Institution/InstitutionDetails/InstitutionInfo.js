@@ -1,7 +1,7 @@
 import React from 'react';
-import { Button, Paper, Typography, withStyles } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { ActionsContainer } from '../../shared/SharedComponents';
+import { Button, Paper, Typography, withStyles } from '@material-ui/core';
 
 const photoDimension = '140px';
 

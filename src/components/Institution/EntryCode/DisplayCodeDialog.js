@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { DefaultDialogTransition } from '../../shared/SharedComponents';
 import { Dialog, DialogContent, DialogTitle } from '@material-ui/core';
+import { DefaultDialogTransition } from '../../shared/SharedComponents';
 
 const styles = () => ({
   displayCodeDialogRoot: {

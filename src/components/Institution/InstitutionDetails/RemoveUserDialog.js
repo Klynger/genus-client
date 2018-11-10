@@ -1,6 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import * as Yup from 'yup';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Form, withFormik } from 'formik';
