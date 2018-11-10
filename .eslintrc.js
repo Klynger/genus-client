@@ -18,7 +18,16 @@ module.exports = {
     ecmaVersion: 7,
     sourceType: 'module',
   },
-  plugins: ['babel', 'import', 'jsx-a11y', 'mocha', 'prettier', 'material-ui', 'react-hooks'],
+  plugins: [
+    'babel',
+    'import',
+    'jsx-a11y',
+    'mocha',
+    'prettier',
+    'material-ui',
+    'react-hooks',
+    'eslint-plugin-genus',
+  ],
   rules: {
     'linebreak-style': 'off', // Don't play nicely with Windows
     'arrow-body-style': 'off', // Incompatible with prettier
@@ -93,5 +102,6 @@ module.exports = {
     'jsx-a11y/no-autofocus': 'off', // We are a library, people do what they want.
     'prettier/prettier': 'error',
     'react-hooks/rules-of-hooks': 'error',
+    'genus/import-sort': 'error',
   },
 };
