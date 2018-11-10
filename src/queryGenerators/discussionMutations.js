@@ -7,6 +7,9 @@ export const mutationCreateDiscussion = input => ({
         content
         replyNumber
         creationDate
+        subject {
+          id
+        }
         replies(page: 0, size: 10) {
           id
           content

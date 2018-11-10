@@ -28,6 +28,8 @@ institution.define({
 
 discussion.define({
   replies: [reply],
+  creator: user,
+  subject,
 });
 
 reply.define({
@@ -36,8 +38,8 @@ reply.define({
 });
 
 export const userSchema = user;
-export const subjectSchema = subject;
 export const gradeSchema = grade;
-export const institutionSchema = institution;
-export const discussionSchema = discussion;
 export const replySchema = reply;
+export const subjectSchema = subject;
+export const discussionSchema = discussion;
+export const institutionSchema = institution;
