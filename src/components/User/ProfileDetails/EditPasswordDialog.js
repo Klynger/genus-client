@@ -3,12 +3,12 @@ import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Form, withFormik } from 'formik';
-import ProgressButton from '../../utils/ProgressButton';
+import ProgressButton from '../../shared/ProgressButton';
+import { requestGraphql } from '../../../utils/HTTPClient';
 import { capitalize } from '@material-ui/core/utils/helpers';
-import { defaultDialogBreakpoints } from '../../utils/helpers';
-import { DefaultDialogTransition } from '../../utils/SharedComponents';
+import { defaultDialogBreakpoints } from '../../../utils/helpers';
+import { DefaultDialogTransition } from '../../shared/SharedComponents';
 import { mutationUpdateUserPassword } from '../../../queryGenerators/userMutations';
-import { requestGraphql } from '../../utils/HTTPClient';
 import {
   Zoom,
   Input,

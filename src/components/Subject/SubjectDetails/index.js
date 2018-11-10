@@ -6,7 +6,7 @@ import AddStudentDialog from './AddStudentDialog';
 import AddteacherDialog from './AddTeacherDialog';
 import React, { Component, Fragment } from 'react';
 import EditSubjectDialog from './EditSubjectDialog';
-import DefaultContainerRoute from '../../utils/DefaultContainerRoute';
+import DefaultContainerRoute from '../../shared/DefaultContainerRoute';
 
 /*
  * This component needs data that is fetched by other

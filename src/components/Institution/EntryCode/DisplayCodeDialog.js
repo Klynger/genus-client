@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { DefaultDialogTransition } from '../../utils/SharedComponents';
+import { DefaultDialogTransition } from '../../shared/SharedComponents';
 import { Dialog, DialogContent, DialogTitle } from '@material-ui/core';
 
 const styles = () => ({

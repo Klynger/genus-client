@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Link, withRouter } from 'react-router-dom';
 import deepOrange from '@material-ui/core/colors/deepOrange';
-import { getFirstInitialsCapitalized } from '../../utils/helpers';
+import { getFirstInitialsCapitalized } from '../../../utils/helpers';
 import { withStyles, Card, CardHeader, Avatar } from '@material-ui/core';
 
 const styles = () => ({

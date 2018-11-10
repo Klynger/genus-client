@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withFormik, Form } from 'formik';
 import { withStyles } from '@material-ui/core/styles';
-import { requestGraphql } from '../../utils/HTTPClient';
+import { requestGraphql } from '../../../utils/HTTPClient';
 import { capitalize } from '@material-ui/core/utils/helpers';
-import { defaultDialogBreakpoints } from '../../utils/helpers';
-import { DefaultDialogTransition } from '../../utils/SharedComponents';
+import { defaultDialogBreakpoints } from '../../../utils/helpers';
+import { DefaultDialogTransition } from '../../shared/SharedComponents';
 import { mutationCreateEntryCode } from '../../../queryGenerators/institutionMutations';
 import {
   Zoom,

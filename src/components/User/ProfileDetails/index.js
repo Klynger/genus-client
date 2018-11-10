@@ -2,7 +2,7 @@ import React from 'react';
 import UserInfo from './UserInfo';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import DefaultContainerRoute from '../../utils/DefaultContainerRoute';
+import DefaultContainerRoute from '../../shared/DefaultContainerRoute';
 
 const ProfileDetails = ({ user }) => (
   <DefaultContainerRoute>{user && <UserInfo user={user} />}</DefaultContainerRoute>

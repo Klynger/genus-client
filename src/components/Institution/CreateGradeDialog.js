@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 import { Form, withFormik } from 'formik';
 import { withRouter } from 'react-router-dom';
 import { createGrade } from '../../actions/grade';
-import { defaultDialogBreakpoints } from '../utils/helpers';
 import { capitalize } from '@material-ui/core/utils/helpers';
-import { DefaultDialogTransition } from '../utils/SharedComponents';
+import { defaultDialogBreakpoints } from '../../utils/helpers';
+import { DefaultDialogTransition } from '../shared/SharedComponents';
 import {
   Input,
   Button,
@@ -34,7 +34,7 @@ const styles = theme => ({
   },
 });
 
-const GradeCreateDialog = ({
+const CreateGradeDialog = ({
   classes,
   errors,
   fullScreen,
@@ -91,11 +91,11 @@ const GradeCreateDialog = ({
   </Dialog>
 );
 
-GradeCreateDialog.defaultProps = {
+CreateGradeDialog.defaultProps = {
   open: false,
 };
 
-GradeCreateDialog.propTypes = {
+CreateGradeDialog.propTypes = {
   classes: PropTypes.object,
   errors: PropTypes.shape({
     name: PropTypes.string,
@@ -167,7 +167,7 @@ export default connect(
                 });
             },
             enableReinitialize: true,
-          })(GradeCreateDialog),
+          })(CreateGradeDialog),
         ),
       ),
     ),

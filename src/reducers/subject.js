@@ -1,4 +1,4 @@
-import { concatIdIfNotContain } from '../components/utils/helpers';
+import { concatIdIfNotContain } from '../utils/helpers';
 import {
   SAVE_SUBJECT,
   UPDATE_SUBJECT,

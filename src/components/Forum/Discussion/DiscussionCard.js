@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
-import ImageUploader from '../../utils/ImageUploader';
+import ImageUploader from '../../shared/ImageUploader';
 import deepOrange from '@material-ui/core/colors/deepOrange';
-import { getFirstInitialsCapitalized } from '../../utils/helpers';
 import { Edit, Delete, MoreVert, Reply } from '@material-ui/icons';
+import { getFirstInitialsCapitalized } from '../../../utils/helpers';
 import {
   Card,
   Divider,

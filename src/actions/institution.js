@@ -1,6 +1,6 @@
+import { dispatchEntities } from '../utils/helpers';
+import { requestGraphql } from '../utils/HTTPClient';
 import { institutionSchema } from '../models/schema';
-import { dispatchEntities } from '../components/utils/helpers';
-import { requestGraphql } from '../components/utils/HTTPClient';
 import { NO_INSTUTION_SELECTED } from '../reducers/institution';
 import { SELECT_INSTITUTION, UPDATE_INSTITUTION } from './actionTypes';
 import { queryFindInstitutionsByOwner } from '../queryGenerators/institutionQueries';

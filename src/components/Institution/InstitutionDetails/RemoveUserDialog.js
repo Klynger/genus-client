@@ -1,5 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import * as Yup from 'yup';
+import { connect } from 'react-redux';
+import styled from 'styled-components';
+import { Form, withFormik } from 'formik';
+import { capitalize } from '@material-ui/core/utils/helpers';
+import { defaultDialogBreakpoints } from '../../../utils/helpers';
+import { removeUserOfInstitutionId } from '../../../actions/user';
+import { DefaultDialogTransition } from '../../shared/SharedComponents';
 import {
   Button,
   Dialog,
@@ -17,19 +25,6 @@ import {
   withWidth,
   Zoom,
 } from '@material-ui/core';
-import * as Yup from 'yup';
-import { connect } from 'react-redux';
-import styled from 'styled-components';
-import { Form, withFormik } from 'formik';
-import { capitalize } from '@material-ui/core/utils/helpers';
-import { DefaultDialogTransition } from '../../utils/SharedComponents';
-import { defaultDialogBreakpoints } from '../../utils/helpers';
-import { removeUserOfInstitutionId } from '../../../actions/user';
-
-const StyledForm = styled(Form)`
-  display: flex;
-  flex-direction: column;
-`;
 
 const DangerText = styled.span`
   color: red;
@@ -40,22 +35,26 @@ const styles = () => ({
   warningText: {
     color: 'red',
   },
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
 });
 
 const RemoveUserDialog = ({
-  classes,
+  open,
+  width,
   errors,
+  values,
+  classes,
+  onClose,
+  touched,
+  userName,
   fullScreen,
-  handleSubmit,
   handleChange,
+  handleSubmit,
   isSubmitting,
   selectedInstitutionName,
-  open,
-  onClose,
-  values,
-  userName,
-  touched,
-  width,
 }) => (
   <Dialog
     fullScreen={fullScreen}
@@ -76,7 +75,7 @@ const RemoveUserDialog = ({
         da instituição (<DangerText>{selectedInstitutionName}</DangerText>) e senha para que a
         operação possa ser realizada!
       </DialogContentText>
-      <StyledForm>
+      <Form className={classes.form}>
         <FormControl error={touched.institutionName && errors.institutionName !== undefined}>
           <InputLabel htmlFor="institutionName">Nome da Instituição:</InputLabel>
           <Input name="institutionName" value={values.institutionName} onChange={handleChange} />
@@ -108,7 +107,7 @@ const RemoveUserDialog = ({
             Remover
           </Button>
         </DialogActions>
-      </StyledForm>
+      </Form>
     </DialogContent>
   </Dialog>
 );

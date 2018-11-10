@@ -1,5 +1,5 @@
 import { SAVE_REPLY } from '../actions/actionTypes';
-import { concatIdIfNotContain } from '../components/utils/helpers';
+import { concatIdIfNotContain } from '../utils/helpers';
 
 const DEFAULT_STATE = {
   byId: {},

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Form, withFormik } from 'formik';
 import { withRouter } from 'react-router-dom';
-import { requestGraphql } from '../utils/HTTPClient';
+import { requestGraphql } from '../../utils/HTTPClient';
 import { capitalize } from '@material-ui/core/utils/helpers';
 import { loginQuery } from '../../queryGenerators/userQueries';
 import {

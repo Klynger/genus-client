@@ -2,10 +2,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import EditUserDialog from './EditUserDialog';
 import React, { Component, Fragment } from 'react';
-import ImageUploader from '../../utils/ImageUploader';
+import ImageUploader from '../../shared/ImageUploader';
 import EditPasswordDialog from './EditPasswordDialog';
 import deepOrange from '@material-ui/core/colors/deepOrange';
-import { getFirstInitialsCapitalized } from '../../utils/helpers';
+import { getFirstInitialsCapitalized } from '../../../utils/helpers';
 import { Card, Button, withStyles, Typography, CardContent, CardActions } from '@material-ui/core';
 
 const styles = theme => ({

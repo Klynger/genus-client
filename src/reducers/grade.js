@@ -1,4 +1,4 @@
-import { concatIdIfNotContain } from '../components/utils/helpers';
+import { concatIdIfNotContain } from '../utils/helpers';
 import { SAVE_GRADE, REMOVE_ALL_GRADES, SAVE_SUBJECT_TO_GRADE } from '../actions/actionTypes';
 
 const DEFAULT_STATE = {

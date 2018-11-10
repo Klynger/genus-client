@@ -1,7 +1,7 @@
 import { gradeSchema } from '../models/schema';
+import { dispatchEntities } from '../utils/helpers';
+import { requestGraphql } from '../utils/HTTPClient';
 import { SAVE_GRADE_TO_INSTITUTION } from './actionTypes';
-import { dispatchEntities } from '../components/utils/helpers';
-import { requestGraphql } from '../components/utils/HTTPClient';
 import { queryFindGrade } from '../queryGenerators/GradeQueries';
 import { mutationCreateGrade } from '../queryGenerators/GradeMutations';
 

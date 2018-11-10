@@ -5,8 +5,8 @@ import { Fade } from '@material-ui/core';
 import SubjectsGrid from './SubjectsGrid';
 import { fetchGrade } from '../../../actions/grade';
 import { withStyles } from '@material-ui/core/styles';
-import { ResponsiveTitle } from '../../utils/SharedComponents';
-import DefaultContainerRoute from '../../utils/DefaultContainerRoute';
+import { ResponsiveTitle } from '../../shared/SharedComponents';
+import DefaultContainerRoute from '../../shared/DefaultContainerRoute';
 
 const styles = theme => ({
   emptyGradeDetails: {
