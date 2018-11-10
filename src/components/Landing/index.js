@@ -1,7 +1,7 @@
 import Signin from './Signin';
 import Signup from './Signup';
 import PropTypes from 'prop-types';
-import theme from '../utils/theme';
+import theme from '../../utils/theme';
 import styled from 'styled-components';
 import React, { Component } from 'react';
 import { Button, Snackbar } from '@material-ui/core';

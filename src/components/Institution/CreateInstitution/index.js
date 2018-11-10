@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import InstitutionForm from './InstitutionForm';
 import { withStyles } from '@material-ui/core/styles';
-import DefaultContainerRoute from '../../utils/DefaultContainerRoute';
+import DefaultContainerRoute from '../../shared/DefaultContainerRoute';
 import { Typography, Divider, Fade, withWidth } from '@material-ui/core';
 
 const styles = theme => ({

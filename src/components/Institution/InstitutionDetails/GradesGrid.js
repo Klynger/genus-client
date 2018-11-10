@@ -3,12 +3,12 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import GridButton from '../../utils/GridButton';
-import GradeCreateDialog from '../GradeCreateDialog';
+import GridButton from '../../shared/GridButton';
+import CreateGradeDialog from '../CreateGradeDialog';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-import GridCard, { CardLine } from '../../utils/GridCard';
+import GridCard, { CardLine } from '../../shared/GridCard';
 import { NO_INSTUTION_SELECTED } from '../../../reducers/institution';
-import { GridContainer, ResponsiveSubTitle } from '../../utils/SharedComponents';
+import { GridContainer, ResponsiveSubTitle } from '../../shared/SharedComponents';
 
 const Container = styled.div`
   display: flex;
@@ -44,7 +44,7 @@ class GradesGrid extends Component {
       <Container>
         <ResponsiveSubTitle>Séries</ResponsiveSubTitle>
         <GridContainer>
-          <GradeCreateDialog open={createGradeOpen} onClose={this.handleCreateGradeClose} />
+          <CreateGradeDialog open={createGradeOpen} onClose={this.handleCreateGradeClose} />
           {grades.map(({ id, name, subjects }) => (
             <GridCard key={id} title={name} onClick={() => this.goToGrade(id)}>
               <CardLine>Disciplinas cadastradas: {subjects.length}</CardLine>

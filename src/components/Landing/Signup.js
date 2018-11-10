@@ -4,9 +4,9 @@ import styled from 'styled-components';
 import { Form, withFormik } from 'formik';
 import React, { PureComponent } from 'react';
 import { withRouter } from 'react-router-dom';
-import { requestGraphql } from '../utils/HTTPClient';
 import { withStyles } from '@material-ui/core/styles';
-import { FadeInButton } from '../utils/SharedComponents';
+import { requestGraphql } from '../../utils/HTTPClient';
+import { FadeInButton } from '../shared/SharedComponents';
 import { loginQuery } from '../../queryGenerators/userQueries';
 import { mutationCreateUser } from '../../queryGenerators/userMutations';
 import {

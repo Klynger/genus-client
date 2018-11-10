@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 import InstitutionInfos from './InstitutionInfo';
 import EditInstitutionDialog from './EditInstitutionDialog';
 import DisplayCodeDialog from '../EntryCode/DisplayCodeDialog';
-import DefaultContainerRoute from '../../utils/DefaultContainerRoute';
+import DefaultContainerRoute from '../../shared/DefaultContainerRoute';
 import CreateEntryCodeDialog from '../EntryCode/CreateEntryCodeDialog';
 
 class InstitutionDetails extends Component {

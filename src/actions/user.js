@@ -1,4 +1,4 @@
-import { requestGraphql } from '../components/utils/HTTPClient';
+import { requestGraphql } from '../utils/HTTPClient';
 import { findUserById, findLoggedUserQuery } from '../queryGenerators/userQueries';
 import { SAVE_USER, SET_LOGGED_USER, REMOVE_USER_FROM_INSTITUION } from './actionTypes';
 import { mutationUpdateUser, removerUserFromInstitution } from '../queryGenerators/userMutations';

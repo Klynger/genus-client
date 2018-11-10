@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import DiscussionsList from './DiscussionsList';
 import { Button, Fade, withStyles } from '@material-ui/core';
-import DefaultContainerRoute from '../../utils/DefaultContainerRoute';
-import { ResponsiveTitle, ActionsContainer } from '../../utils/SharedComponents';
+import DefaultContainerRoute from '../../shared/DefaultContainerRoute';
+import { ResponsiveTitle, ActionsContainer } from '../../shared/SharedComponents';
 
 const styles = theme => ({
   actionsContainer: {

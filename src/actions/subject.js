@@ -1,6 +1,6 @@
 import { subjectSchema } from '../models/schema';
-import { dispatchEntities } from '../components/utils/helpers';
-import { requestGraphql } from '../components/utils/HTTPClient';
+import { dispatchEntities } from '../utils/helpers';
+import { requestGraphql } from '../utils/HTTPClient';
 import {
   UPDATE_SUBJECT,
   SAVE_SUBJECT_TO_GRADE,

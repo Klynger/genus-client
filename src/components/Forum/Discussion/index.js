@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Fade } from '@material-ui/core';
 import DiscussionCard from './DiscussionCard';
-import DefaultContainerRoute from '../../utils/DefaultContainerRoute';
+import DefaultContainerRoute from '../../shared/DefaultContainerRoute';
 
 const DiscussionPage = ({ discussion }) => {
   let toRender = null;

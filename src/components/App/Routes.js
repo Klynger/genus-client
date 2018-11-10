@@ -1,7 +1,7 @@
 import React from 'react';
 import Loadable from 'react-loadable';
 import LoadingPage from '../LoadingPage';
-import AuthRoute from '../utils/AuthRoute';
+import AuthRoute from '../shared/AuthRoute';
 import { Switch, Route } from 'react-router-dom';
 
 const AsyncLanding = Loadable({

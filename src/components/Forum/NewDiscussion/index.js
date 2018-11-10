@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Fade } from '@material-ui/core';
 import { withRouter } from 'react-router-dom';
 import NewDiscussionForm from './NewDiscussionForm';
-import DefaultContainerRoute from '../../utils/DefaultContainerRoute';
+import DefaultContainerRoute from '../../shared/DefaultContainerRoute';
 
 const NewDiscussionPage = ({ match, history }) => {
   return (
