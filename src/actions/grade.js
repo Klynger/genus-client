@@ -1,25 +1,9 @@
 import { gradeSchema } from '../models/schema';
+import { SAVE_GRADE_TO_INSTITUTION } from './actionTypes';
 import { dispatchEntities } from '../components/utils/helpers';
 import { requestGraphql } from '../components/utils/HTTPClient';
 import { queryFindGrade } from '../queryGenerators/GradeQueries';
 import { mutationCreateGrade } from '../queryGenerators/GradeMutations';
-import { mutationCreateSubject } from '../queryGenerators/SubjectMutations';
-import { SAVE_SUBJECT_TO_GRADE, SAVE_GRADE_TO_INSTITUTION } from './actionTypes';
-
-export const addSubjectToGrade = subjectInput => dispatch =>
-  requestGraphql(mutationCreateSubject(subjectInput), localStorage.getItem('token')).then(res => {
-    if (res.data.data && res.data.data.createSubject) {
-      dispatchEntities(res.data.data.createSubject, dispatch, gradeSchema);
-
-      dispatch({
-        type: SAVE_SUBJECT_TO_GRADE,
-        payload: {
-          gradeId: subjectInput.gradeId,
-          subjectId: res.data.data.createSubject.id,
-        },
-      });
-    }
-  });
 
 export const createGrade = newGrade => dispatch => {
   return requestGraphql(mutationCreateGrade(newGrade), localStorage.getItem('token')).then(res => {

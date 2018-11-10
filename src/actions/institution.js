@@ -17,7 +17,7 @@ export const selectInstitution = id => dispatch => {
   });
 };
 
-export const addInstitution = institutionInput => (dispatch, getState) => {
+export const addInstitution = institutionInput => dispatch => {
   return requestGraphql(
     mutationCreateInstitution(institutionInput),
     localStorage.getItem('token'),
@@ -27,7 +27,7 @@ export const addInstitution = institutionInput => (dispatch, getState) => {
       dispatchEntities(res.data.data.createInstitution, dispatch, institutionSchema);
       dispatch({
         type: SELECT_INSTITUTION,
-        id: getState().institution.allIds[getState().institution.allIds.length - 1],
+        id: res.data.data.createInstitution.id,
       });
       result = res;
     } else {
@@ -41,6 +41,10 @@ export const joinInstitution = code => dispatch =>
   requestGraphql(mutationJoinInstitution(code), localStorage.getItem('token')).then(res => {
     if (res.data.data && res.data.data.joinInstitution) {
       dispatchEntities(res.data.data.joinInstitution, dispatch, institutionSchema);
+      dispatch({
+        type: SELECT_INSTITUTION,
+        id: res.data.data.joinInstitution.id,
+      });
     }
     return res;
   });
