@@ -1,4 +1,5 @@
-import { dispatchInstitutionEntities } from './utils';
+import { institutionSchema } from '../models/schema';
+import { dispatchEntities } from '../components/utils/helpers';
 import { requestGraphql } from '../components/utils/HTTPClient';
 import { NO_INSTUTION_SELECTED } from '../reducers/institution';
 import { SELECT_INSTITUTION, UPDATE_INSTITUTION } from './actionTypes';
@@ -23,7 +24,7 @@ export const addInstitution = institutionInput => (dispatch, getState) => {
   ).then(res => {
     let result;
     if (res.data.data && res.data.data.createInstitution) {
-      dispatchInstitutionEntities([res.data.data.createInstitution], dispatch);
+      dispatchEntities(res.data.data.createInstitution, dispatch, institutionSchema);
       dispatch({
         type: SELECT_INSTITUTION,
         id: getState().institution.allIds[getState().institution.allIds.length - 1],
@@ -39,7 +40,7 @@ export const addInstitution = institutionInput => (dispatch, getState) => {
 export const joinInstitution = code => dispatch =>
   requestGraphql(mutationJoinInstitution(code), localStorage.getItem('token')).then(res => {
     if (res.data.data && res.data.data.joinInstitution) {
-      dispatchInstitutionEntities([res.data.data.joinInstitution], dispatch);
+      dispatchEntities(res.data.data.joinInstitution, dispatch, institutionSchema);
     }
     return res;
   });
@@ -48,7 +49,7 @@ export const fetchInstitutionsByOwner = () => (dispatch, getState) => {
   return requestGraphql(queryFindInstitutionsByOwner(), localStorage.getItem('token')).then(res => {
     let requestResult;
     if (res.data.data && res.data.data.getInstitutionsFromLoggedUser) {
-      dispatchInstitutionEntities(res.data.data.getInstitutionsFromLoggedUser, dispatch);
+      dispatchEntities(res.data.data.getInstitutionsFromLoggedUser, dispatch, [institutionSchema]);
 
       const state = getState();
       if (

@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import styled from 'styled-components';
 import React, { Component } from 'react';
 import GridCard from '../../utils/GridCard';
@@ -77,14 +76,4 @@ SubjectsGrid.subjects = {
   subjects: [],
 };
 
-function mapToProps({ grade, subject }, { gradeId }) {
-  if (grade.byId[gradeId] && grade.byId[gradeId].subjects) {
-    return {
-      subjects: grade.byId[gradeId].subjects.map(id => subject.byId[id]),
-    };
-  }
-
-  return {};
-}
-
-export default connect(mapToProps)(withRouter(SubjectsGrid));
+export default withRouter(SubjectsGrid);

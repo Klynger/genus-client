@@ -4,9 +4,15 @@ export const queryFindGrade = id => ({
       findGrade(input: $id) {
         id
         name
+        institution {
+          id
+        }
         subjects {
           id
           name
+          grade {
+            id
+          }
           teachers {
             id
             username

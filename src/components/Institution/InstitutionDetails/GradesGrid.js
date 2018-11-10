@@ -21,12 +21,16 @@ class GradesGrid extends Component {
     super(props);
 
     this.state = {
-      gradeOpen: false,
+      createGradeOpen: false,
     };
   }
 
-  handleGradeOpen = () => {
-    this.setState(prevState => ({ gradeOpen: !prevState.gradeOpen }));
+  handleCreateGradeOpen = () => {
+    this.setState({ createGradeOpen: true });
+  };
+
+  handleCreateGradeClose = () => {
+    this.setState({ createGradeOpen: false });
   };
 
   goToGrade = gradeId => {
@@ -35,19 +39,19 @@ class GradesGrid extends Component {
 
   render() {
     const { grades } = this.props;
-    const { gradeOpen } = this.state;
+    const { createGradeOpen } = this.state;
     return (
       <Container>
         <ResponsiveSubTitle>Séries</ResponsiveSubTitle>
         <GridContainer>
-          <GradeCreateDialog open={gradeOpen} onClose={this.handleGradeOpen} />
+          <GradeCreateDialog open={createGradeOpen} onClose={this.handleCreateGradeClose} />
           {grades.map(({ id, name, subjects }) => (
             <GridCard key={id} title={name} onClick={() => this.goToGrade(id)}>
               <CardLine>Disciplinas cadastradas: {subjects.length}</CardLine>
               <CardLine>Quantidade de alunos: 35</CardLine>
             </GridCard>
           ))}
-          <GridButton key="-1" Icon={AddCircleIcon} onClick={this.handleGradeOpen} />
+          <GridButton key="-1" Icon={AddCircleIcon} onClick={this.handleCreateGradeOpen} />
         </GridContainer>
       </Container>
     );

@@ -1,3 +1,5 @@
+import { normalize } from 'normalizr';
+
 export const DEFAULT_PHOTO_CLASS_SRC = '/static/images/grade-default-img.jpg';
 
 export const concatIdIfNotContain = (allIds, id) => {
@@ -43,3 +45,26 @@ export const defaultDialogBreakpoints = () => ({
     width: '30%',
   },
 });
+
+// ----------------------------------------------------------------------
+
+function getSaveAction(entityName) {
+  return `SAVE_${entityName.toUpperCase()}`;
+}
+
+function dispatchById(objects, dispatch, entityName) {
+  const actionType = getSaveAction(entityName);
+  Object.keys(objects).forEach(id => {
+    dispatch({
+      type: actionType,
+      [entityName]: objects[id],
+    });
+  });
+}
+
+export function dispatchEntities(denormalizedData, dispatch, schema) {
+  const { entities } = normalize(denormalizedData, schema);
+  Object.keys(entities).forEach(entityName => {
+    dispatchById(entities[entityName], dispatch, entityName);
+  });
+}

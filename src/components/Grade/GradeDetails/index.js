@@ -45,7 +45,7 @@ class GradeDetails extends Component {
       toRender = (
         <DefaultContainerRoute unit={unit}>
           <ResponsiveTitle>{grade.name}</ResponsiveTitle>
-          <SubjectsGrid gradeId={gradeId} />
+          <SubjectsGrid gradeId={gradeId} subjects={grade.subjects} />
         </DefaultContainerRoute>
       );
     } else {
@@ -78,12 +78,14 @@ function mapToProps({ grade, subject }, ownProps) {
     },
   } = ownProps;
 
-  if (grade.byId[gradeId]) {
-    const propGrade = grade.byId[gradeId];
+  const propGrade = grade.byId[gradeId];
+  if (propGrade) {
     return {
       grade: {
         ...propGrade,
-        subjects: propGrade.subjects.map(subId => subject.byId[subId]),
+        subjects: propGrade.subjects
+          .filter(subId => subject.byId[subId])
+          .map(subId => subject.byId[subId]),
       },
     };
   }
