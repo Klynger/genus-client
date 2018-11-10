@@ -1,8 +1,8 @@
 import { discussionSchema } from '../models/schema';
+import { ADD_DISCUSSION_TO_SUBJECT } from './actionTypes';
 import { dispatchEntities } from '../components/utils/helpers';
 import { requestGraphql } from '../components/utils/HTTPClient';
 import { mutationCreateDiscussion } from '../queryGenerators/discussionMutations';
-import { ADD_DISCUSSION_TO_SUBJECT } from './actionTypes';
 
 export const createDiscussion = input => dispatch => {
   return requestGraphql(mutationCreateDiscussion(input), localStorage.getItem('token')).then(
