@@ -1,4 +1,4 @@
-# eslint-plugin-sort-import-length
+# eslint-plugin-genus
 
 This plugin sort detect import length to be sorted
 
@@ -10,22 +10,24 @@ You'll first need to install [ESLint](http://eslint.org):
 $ npm i eslint --save-dev
 ```
 
-Next, install `eslint-plugin-sort-import-length`:
+Next, install `eslint-plugin-genus`:
+
+**OBS**: this plugin isn't yet at npm
 
 ```
-$ npm install eslint-plugin-sort-import-length --save-dev
+$ npm install eslint-plugin-genus --save-dev
 ```
 
-**Note:** If you installed ESLint globally (using the `-g` flag) then you must also install `eslint-plugin-sort-import-length` globally.
+**Note:** If you installed ESLint globally (using the `-g` flag) then you must also install `eslint-plugin-genus` globally.
 
 ## Usage
 
-Add `sort-import-length` to the plugins section of your `.eslintrc` configuration file. You can omit the `eslint-plugin-` prefix:
+Add `eslint-plugin-genus` to the plugins section of your `.eslintrc` configuration file. You can omit the `eslint-plugin-` prefix:
 
 ```json
 {
     "plugins": [
-        "sort-import-length"
+        "eslint-plugin-genus"
     ]
 }
 ```
@@ -36,16 +38,42 @@ Then configure the rules you want to use under the rules section.
 ```json
 {
     "rules": {
-        "sort-import-length/rule-name": 2
+        "genus/import-sort": "error"
     }
 }
 ```
 
-## Supported Rules
+## Rule Example
+* Import Sort: this rule requires that import declarations be ordered by the size of the import declaration
 
-* Fill in provided rules here
+Example 1:
+```
+// Bad
+import foo from 'xbto'; // length 23
+import bar from 'bar'; // length 22
 
+// Good
+import bar from 'bar'; // length 22
+import foo from 'xbto'; // length 23
 
+```  
 
+Example 2:
+```
+// Bad
+import Xbto, {
+    foo,
+    bar,
+    foobar
+} from 'xbto'; // length 58
+import bar from 'bar'; // length 22
 
+// Good
+import bar from 'bar'; // length 22
+import Xbto, {
+    foo,
+    bar,
+    foobar
+} from 'xbto'; // length 58
 
+```
