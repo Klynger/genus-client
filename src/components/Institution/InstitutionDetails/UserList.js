@@ -1,4 +1,9 @@
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import React, { Component } from 'react';
+import RemoveUserDialog from './RemoveUserDialog';
+import { DeleteForever } from '@material-ui/icons';
+import { NO_INSTUTION_SELECTED } from '../../../reducers/institution';
 import {
   Paper,
   withStyles,
@@ -11,11 +16,6 @@ import {
   TablePagination,
   IconButton,
 } from '@material-ui/core';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { DeleteForever } from '@material-ui/icons';
-import RemoveUserDialog from './RemoveUserDialog';
-import { NO_INSTUTION_SELECTED } from '../../../reducers/institution';
 
 const styles = theme => ({
   root: {
