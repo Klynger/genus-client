@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import InstitutionForm from './InstitutionForm';
+import { Divider, Fade } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import { ResponsiveTitle } from '../../shared/SharedComponents';
 import DefaultContainerRoute from '../../shared/DefaultContainerRoute';
-import { Typography, Divider, Fade, withWidth } from '@material-ui/core';
 
 const styles = theme => ({
   divider: {
@@ -12,19 +13,11 @@ const styles = theme => ({
   },
 });
 
-const titleVariant = {
-  xs: 'display1',
-  sm: 'display2',
-  md: 'display2',
-  lg: 'display3',
-  xl: 'display3',
-};
-
-const CreateInstitution = ({ classes, width }) => {
+const CreateInstitution = ({ classes }) => {
   return (
     <Fade in>
       <DefaultContainerRoute>
-        <Typography variant={titleVariant[width]}>CRIAR NOVA INSTITUIÇÃO</Typography>
+        <ResponsiveTitle>CRIAR NOVA INSTITUIÇÃO</ResponsiveTitle>
         <Divider className={classes.divider} />
         <InstitutionForm />
       </DefaultContainerRoute>
@@ -34,7 +27,6 @@ const CreateInstitution = ({ classes, width }) => {
 
 CreateInstitution.propTypes = {
   classes: PropTypes.object.isRequired,
-  width: PropTypes.string.isRequired,
 };
 
-export default withStyles(styles)(withWidth()(CreateInstitution));
+export default withStyles(styles)(CreateInstitution);
