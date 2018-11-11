@@ -33,8 +33,10 @@ discussion.define({
 });
 
 reply.define({
-  discussion,
   user,
+  discussion,
+  replies: [reply],
+  parent: reply,
 });
 
 export const userSchema = user;

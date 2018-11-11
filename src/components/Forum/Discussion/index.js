@@ -1,25 +1,69 @@
-import React from 'react';
+import AddReply from './AddReply';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Fade } from '@material-ui/core';
+import RepliesList from './RepliesList';
 import DiscussionCard from './DiscussionCard';
+import React, { Component, Fragment } from 'react';
+import { Fade, withStyles } from '@material-ui/core';
 import DefaultContainerRoute from '../../shared/DefaultContainerRoute';
 
-const DiscussionPage = ({ discussion }) => {
-  let toRender = null;
+const styles = theme => ({
+  addReply: {
+    marginBottom: theme.spacing.unit,
+    marginTop: theme.spacing.unit,
+  },
+  repliesList: {
+    marginTop: theme.spacing.unit * 2,
+  },
+});
 
-  if (discussion) {
-    toRender = <DiscussionCard discussion={discussion} />;
+class DiscussionPage extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      openAddReply: false,
+    };
   }
 
-  return (
-    <Fade in>
-      <DefaultContainerRoute>{toRender}</DefaultContainerRoute>
-    </Fade>
-  );
-};
+  handleToggleShowAddReply = () => {
+    this.setState(({ openAddReply }) => ({ openAddReply: !openAddReply }));
+  };
+
+  handleCloseAddReply = () => {
+    this.setState({ openAddReply: false });
+  };
+
+  render() {
+    let toRender = null;
+    const { classes, discussion } = this.props;
+    const { openAddReply } = this.state;
+
+    if (discussion) {
+      toRender = (
+        <Fragment>
+          <DiscussionCard onReply={this.handleToggleShowAddReply} discussion={discussion} />
+          {openAddReply && (
+            <AddReply
+              className={classes.addReply}
+              discussionId={discussion.id}
+              onClose={this.handleCloseAddReply}
+              onSubmit={this.handleCloseAddReply}
+            />
+          )}
+          <RepliesList replies={discussion.replies} className={classes.repliesList} />
+        </Fragment>
+      );
+    }
+    return (
+      <Fade in>
+        <DefaultContainerRoute>{toRender}</DefaultContainerRoute>
+      </Fade>
+    );
+  }
+}
 
 DiscussionPage.propTypes = {
+  classes: PropTypes.object.isRequired,
   discussion: PropTypes.object,
 };
 
@@ -37,10 +81,18 @@ function mapStateToProps(
       discussion: {
         ...singleDiscussion,
         creator: user.byId[singleDiscussion.creator],
-        replies: singleDiscussion.replies.map(id => ({
-          ...reply.byId[id],
-          user: user.byId[reply.byId[id].user],
-        })),
+        replies: singleDiscussion.replies
+          .filter(id => reply.byId[id])
+          .map(id => {
+            const aux = reply.byId[id];
+
+            return {
+              ...aux,
+              user: user.byId[aux.user],
+              parent: aux.parent && reply.byId[aux.parent],
+              discussion: singleDiscussion,
+            };
+          }),
       },
     };
   }
@@ -48,4 +100,4 @@ function mapStateToProps(
   return {};
 }
 
-export default connect(mapStateToProps)(DiscussionPage);
+export default connect(mapStateToProps)(withStyles(styles)(DiscussionPage));

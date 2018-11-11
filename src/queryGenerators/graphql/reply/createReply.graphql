@@ -1,0 +1,8 @@
+#import "./replyFragment.graphql"
+#import "./getReplyFragment.graphql"
+
+mutation createReply($input: ReplyCreationInput!) {
+  createReply(input: $input) {
+    ...getReplyFields
+  }
+}

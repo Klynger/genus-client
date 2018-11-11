@@ -16,10 +16,7 @@ fragment getInstitutionFields on Institution {
       forum {
         ...discussionFields
         replies(page: 0, size: 10) {
-          ...replyFields
-          user {
-            id
-          }
+          ...getReplyFields
         }
         creator {
           id

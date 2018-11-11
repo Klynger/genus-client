@@ -1,0 +1,15 @@
+fragment getReplyFields on Reply {
+  ...replyFields
+    discussion {
+      id
+    }
+    user {
+      id
+    }
+    parent {
+      id
+    }
+    replies {
+      id
+    }
+}
