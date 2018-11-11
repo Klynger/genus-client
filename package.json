@@ -70,7 +70,7 @@
     "eslint-config-airbnb": "^17.1.0",
     "eslint-import-resolver-webpack": "^0.10.1",
     "eslint-plugin-babel": "^5.2.1",
-    "eslint-plugin-genus": "file:plugin",
+    "eslint-plugin-genus": "^0.0.1",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.1",
     "eslint-plugin-material-ui": "^1.0.1",
