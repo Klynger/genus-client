@@ -3,6 +3,7 @@
 #import "../grade/gradeFragment.graphql"
 #import "../reply/replyFragment.graphql"
 #import ./getInstitutionFragment.graphql"
+#import "../reply/getReplyFragment.graphql"
 #import "../subject/subjectFragment.graphql"
 #import "../discussion/discussionFragment.graphql"
 

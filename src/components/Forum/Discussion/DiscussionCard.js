@@ -23,7 +23,6 @@ const styles = {
     minWidth: 40,
   },
   discussionCard: {
-    borderRadius: 0,
     width: '100%',
   },
   reply: {
@@ -37,7 +36,7 @@ const styles = {
   },
 };
 
-const DiscussionActionButtons = ({ classes }) => (
+const DiscussionActionButtons = ({ classes, onReply }) => (
   <CardActions disableActionSpacing className={classes.actions}>
     <IconButton aria-label="delete">
       <Delete />
@@ -45,7 +44,7 @@ const DiscussionActionButtons = ({ classes }) => (
     <IconButton aria-label="edit">
       <Edit />
     </IconButton>
-    <IconButton aria-label="reply">
+    <IconButton aria-label="reply" onClick={onReply}>
       <Reply />
     </IconButton>
   </CardActions>
@@ -53,9 +52,10 @@ const DiscussionActionButtons = ({ classes }) => (
 
 DiscussionActionButtons.propTypes = {
   classes: PropTypes.object.isRequired,
+  onReply: PropTypes.func.isRequired,
 };
 
-const DiscussionCard = ({ classes, discussion }) => (
+const DiscussionCard = ({ classes, discussion, onReply }) => (
   <Card className={classes.discussionCard}>
     <CardHeader
       avatar={
@@ -77,8 +77,7 @@ const DiscussionCard = ({ classes, discussion }) => (
     <CardContent>
       <ReactMarkdown escapeHtml source={discussion.content} />
     </CardContent>
-    <DiscussionActionButtons classes={classes} />
-    {/* TODO LIST OF REPLIES */}
+    <DiscussionActionButtons classes={classes} onReply={onReply} />
   </Card>
 );
 
@@ -102,6 +101,7 @@ DiscussionCard.propTypes = {
     ).isRequired,
     title: PropTypes.string,
   }).isRequired,
+  onReply: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(DiscussionCard);

@@ -1,5 +1,6 @@
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import {
   Input,
   Select,
@@ -20,6 +21,13 @@ class CustomTextField extends Component {
   constructor(props) {
     super(props);
     this.labelRef = React.createRef();
+  }
+
+  componentDidMount() {
+    if (this.props.variant === 'outlined') {
+      this.labelNode = ReactDOM.findDOMNode(this.labelRef.current);
+      this.forceUpdate();
+    }
   }
 
   render() {
@@ -116,13 +124,19 @@ class CustomTextField extends Component {
         ) : (
           InputElement
         )}
-        {showHelperText && helperText && (
-          <OnEnterHelperTextTransition in>
+        {showHelperText &&
+          helperText &&
+          (OnEnterHelperTextTransition ? (
+            <OnEnterHelperTextTransition in>
+              <FormHelperText id={helperTextId} {...FormHelperTextProps}>
+                {helperText}
+              </FormHelperText>
+            </OnEnterHelperTextTransition>
+          ) : (
             <FormHelperText id={helperTextId} {...FormHelperTextProps}>
               {helperText}
             </FormHelperText>
-          </OnEnterHelperTextTransition>
-        )}
+          ))}
       </FormControl>
     );
   }
@@ -133,7 +147,6 @@ CustomTextField.defaultProps = {
   required: false,
   variant: 'standard',
   showHelperText: false,
-  OnEnterHelperTextTransition: Fragment,
 };
 
 CustomTextField.propTypes = {

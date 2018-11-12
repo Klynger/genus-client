@@ -1,5 +1,4 @@
 #import "./discussionFragment.graphql"
-#import "../reply/replyFragment.graphql"
 
 mutation createDiscussion($input: DiscussionCreationInput!) {
   createDiscussion(input: $input) {
@@ -8,10 +7,7 @@ mutation createDiscussion($input: DiscussionCreationInput!) {
       id
     }
     replies(page: 0, size: 10) {
-      ...replyFields
-      user {
-        id
-      }
+      id
     }
     creator {
       id
