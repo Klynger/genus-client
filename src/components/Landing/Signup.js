@@ -1,23 +1,16 @@
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Form, withFormik } from 'formik';
 import React, { PureComponent } from 'react';
 import { withRouter } from 'react-router-dom';
+import { Zoom, Paper } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { requestGraphql } from '../../utils/HTTPClient';
+import ProgressButton from '../shared/ProgressButton';
+import CustomTextField from '../shared/CustomTextField';
 import { FadeInButton } from '../shared/SharedComponents';
-import { loginQuery } from '../../queryGenerators/userQueries';
-import { mutationCreateUser } from '../../queryGenerators/userMutations';
-import {
-  Zoom,
-  Input,
-  Paper,
-  InputLabel,
-  FormControl,
-  FormHelperText,
-  CircularProgress,
-} from '@material-ui/core';
+import { createUser, loginUser } from '../../actions/user';
 
 const DEFAULT_ANIMATION_TIMING = 700;
 
@@ -76,25 +69,45 @@ const StyledForm = styled(Form)`
 `;
 
 const styles = theme => ({
-  signupButtonProgress: {
-    left: '50%',
-    marginLeft: -12,
-    marginTop: -12,
-    position: 'absolute',
-    top: '50%',
-    zIndex: 1,
-  },
   formControl: {
     marginBottom: theme.spacing.unit,
   },
   signupButtonWrapper: {
     margin: theme.spacing.unit,
-    position: 'relative',
   },
   signupSubmitButton: {
     width: '100%',
   },
+  progressButton: {
+    width: '100%',
+    animation: `fadeIn ${FadeInButton.defaultProps.delay * 1.3 * 2}ms`,
+    keyframes: {
+      '0%': {
+        opacity: 0,
+      },
+      '50%': {
+        opacity: 0,
+      },
+      '100%': {
+        opacity: 1,
+      },
+    },
+  },
 });
+
+const valuesKeys = ['username', 'email', 'password'];
+function labelText(valueText) {
+  switch (valueText) {
+    case 'username':
+      return 'Nome';
+    case 'email':
+      return 'Email';
+    case 'password':
+      return 'Senha';
+    default:
+      return '';
+  }
+}
 
 class Signup extends PureComponent {
   constructor(props) {
@@ -143,59 +156,31 @@ class Signup extends PureComponent {
     return (
       <SignupContainer>
         <StyledForm>
-          <FormControl
-            className={classes.formControl}
-            error={touched.username && errors.username !== undefined}
-          >
-            <InputLabel htmlFor="username">Nome</InputLabel>
-            <Input name="username" value={values.username} onChange={handleChange} />
-            {touched.username && errors.username && (
-              <Zoom in>
-                <FormHelperText id="signup__username-error-text">{errors.username}</FormHelperText>
-              </Zoom>
-            )}
-          </FormControl>
-          <FormControl
-            className={classes.formControl}
-            error={touched.email && errors.email !== undefined}
-          >
-            <InputLabel htmlFor="email">Email</InputLabel>
-            <Input name="email" type="email" value={values.email} onChange={handleChange} />
-            {touched.email && errors.email && (
-              <Zoom in>
-                <FormHelperText id="signup__email-error-text">{errors.email}</FormHelperText>
-              </Zoom>
-            )}
-          </FormControl>
-          <FormControl
-            className={classes.formControl}
-            error={touched.password && errors.password !== undefined}
-          >
-            <InputLabel htmlFor="password">Senha</InputLabel>
-            <Input
-              name="password"
-              type="password"
-              value={values.password}
+          {valuesKeys.map(value => (
+            <CustomTextField
+              key={value}
+              name={value}
+              value={values[value]}
               onChange={handleChange}
+              label={labelText(value)}
+              helperText={errors[value]}
+              className={classes.formControl}
+              OnEnterHelperTextTransition={Zoom}
+              id={`signup__${value}-field`}
+              type={value === 'password' ? 'password' : 'text'}
+              error={Boolean(touched[value] && errors[value])}
+              showHelperText={Boolean(touched[value] && errors[value])}
             />
-            {touched.password && errors.password && (
-              <Zoom in>
-                <FormHelperText id="signup__password-error-text">{errors.password}</FormHelperText>
-              </Zoom>
-            )}
-          </FormControl>
+          ))}
           <div className={classes.signupButtonWrapper}>
-            <FadeInButton
-              className={classes.signupSubmitButton}
+            <ProgressButton
+              className={classes.progressButton}
+              showProgress={isSubmitting}
               color="primary"
-              disabled={isSubmitting}
               onClick={handleSubmit}
             >
               Registrar
-            </FadeInButton>
-            {isSubmitting && (
-              <CircularProgress size={24} className={classes.signupButtonProgress} />
-            )}
+            </ProgressButton>
           </div>
           <FadeInButton
             color="secondary"
@@ -236,69 +221,82 @@ Signup.propTypes = {
   }).isRequired,
 };
 
-export default withRouter(
-  withFormik({
-    mapPropsToValues({ username, email }) {
-      return {
-        username: username || '',
-        email: email || '',
-        password: '',
-      };
-    },
-    validationSchema: Yup.object().shape({
-      email: Yup.string()
-        .trim()
-        .email('Você deve passar um email válido.')
-        .required('Email obrigatório.'),
-      password: Yup.string()
-        .min(6, 'A senha deve ter pelo menos 6 caracteres.')
-        .max(30, 'Senha não pode ter mais que 30 caracteres.')
-        .required('Senha obrigatória.'),
-      username: Yup.string()
-        .trim()
-        .lowercase()
-        .min(6, 'Nome deve ter pelo menos 6 caracteres.')
-        .max(50, 'Nome não pode ter mais de 50 caracteres.')
-        .required('Nome obrigatório'),
-    }),
-    handleSubmit(values, { setSubmitting, props, setErrors, resetForm }) {
-      requestGraphql(mutationCreateUser(values))
-        .then(({ data }) => {
-          if (data.data.createUser) {
-            props.handleSnackbarOpen();
-            const loginUser = {
-              email: values.email,
-              password: values.password,
-            };
-            requestGraphql(loginQuery(loginUser))
-              .then(res => {
-                if (res.data.data) {
-                  localStorage.setItem('token', res.data.data.login);
-                  props.history.push('/');
-                } else if (data.errors) {
-                  setErrors({ requestError: '400' }); // handle this error on inside form
+function mapActionsToProps() {
+  return {
+    createNewUser: input => createUser(input),
+    loginNewUser: input => loginUser(input),
+  };
+}
+
+export default connect(
+  null,
+  mapActionsToProps,
+)(
+  withRouter(
+    withFormik({
+      mapPropsToValues() {
+        return {
+          email: '',
+          password: '',
+          username: '',
+        };
+      },
+      validationSchema: Yup.object().shape({
+        email: Yup.string()
+          .trim()
+          .email('Você deve passar um email válido.')
+          .required('Email obrigatório.'),
+        password: Yup.string()
+          .min(6, 'A senha deve ter pelo menos 6 caracteres.')
+          .max(30, 'Senha não pode ter mais que 30 caracteres.')
+          .required('Senha obrigatória.'),
+        username: Yup.string()
+          .trim()
+          .lowercase()
+          .min(6, 'Nome deve ter pelo menos 6 caracteres.')
+          .max(50, 'Nome não pode ter mais de 50 caracteres.')
+          .required('Nome obrigatório'),
+      }),
+      handleSubmit(values, { setSubmitting, props, setErrors, resetForm }) {
+        props
+          .createNewUser(values)
+          .then(({ data }) => {
+            if (data.data.createUser) {
+              props.handleSnackbarOpen();
+              const { username, ...login } = values;
+              props
+                .loginNewUser(login)
+                .then(res => {
+                  if (res.data && res.data.data) {
+                    props.history.push('/');
+                  } else if (data.errors) {
+                    setErrors({ requestError: '400' });
+                    setSubmitting(false);
+                  }
+                })
+                .catch(({ request }) => {
+                  if (request && request.status) {
+                    setErrors({ requestError: request.status });
+                  }
                   setSubmitting(false);
-                }
-              })
-              .catch(({ request }) => {
-                setErrors({ requestError: request.status });
-                setSubmitting(false);
+                });
+              resetForm({
+                email: '',
+                username: '',
+                password: '',
               });
-            resetForm({
-              email: '',
-              username: '',
-              password: '',
-            });
-          } else if (data.errors) {
-            // TODO in this case the errors must be handle inside the form
-            setErrors({ requestError: '400' });
+            } else if (data.errors) {
+              setErrors({ requestError: '400' });
+              setSubmitting(false);
+            }
+          })
+          .catch(({ request }) => {
+            if (request && request.status) {
+              setErrors({ requestError: request.status });
+            }
             setSubmitting(false);
-          }
-        })
-        .catch(({ request }) => {
-          setErrors({ requestError: request.status });
-          setSubmitting(false);
-        });
-    },
-  })(withStyles(styles)(Signup)),
+          });
+      },
+    })(withStyles(styles)(Signup)),
+  ),
 );
