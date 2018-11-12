@@ -1,6 +1,5 @@
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Form, withFormik } from 'formik';
 import React, { PureComponent } from 'react';
@@ -62,23 +61,17 @@ const SignupContainer = styled(Paper)`
   }
 `;
 
-const StyledForm = styled(Form)`
-  display: flex;
-  flex-direction: column;
-  margin-top: 20px;
-`;
-
 const styles = theme => ({
-  formControl: {
-    marginBottom: theme.spacing.unit,
-  },
-  signupButtonWrapper: {
-    margin: theme.spacing.unit,
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    marginTop: '20px',
   },
   signupSubmitButton: {
     width: '100%',
   },
   progressButton: {
+    margin: `${theme.spacing.unit}px 0 0 0`,
     width: '100%',
     animation: `fadeIn ${FadeInButton.defaultProps.delay * 1.3 * 2}ms`,
     keyframes: {
@@ -110,11 +103,6 @@ function labelText(valueText) {
 }
 
 class Signup extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.handleDropImage = this.handleDropImage.bind(this);
-  }
-
   componentDidUpdate(prevProps) {
     if (
       this.props.errors.requestError !== prevProps.errors.requestError &&
@@ -122,23 +110,6 @@ class Signup extends PureComponent {
     ) {
       this.props.handleSnackbarOpen(new Error(this.props.errors.requestError));
     }
-  }
-
-  handleDropImage(files) {
-    const { setFieldValue } = this.props;
-
-    files.forEach(file => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const fileAsDataURLString = reader.result;
-        const mimeType = fileAsDataURLString.substring(0, 22);
-        const photoBase64 = fileAsDataURLString.substring(22 + 1);
-
-        setFieldValue('mimeType', mimeType);
-        setFieldValue('photo', photoBase64);
-      };
-      reader.readAsDataURL(file);
-    });
   }
 
   render() {
@@ -155,7 +126,7 @@ class Signup extends PureComponent {
 
     return (
       <SignupContainer>
-        <StyledForm>
+        <Form className={classes.form}>
           {valuesKeys.map(value => (
             <CustomTextField
               key={value}
@@ -172,24 +143,23 @@ class Signup extends PureComponent {
               showHelperText={Boolean(touched[value] && errors[value])}
             />
           ))}
-          <div className={classes.signupButtonWrapper}>
-            <ProgressButton
-              className={classes.progressButton}
-              showProgress={isSubmitting}
-              color="primary"
-              onClick={handleSubmit}
-            >
-              Registrar
-            </ProgressButton>
-          </div>
+          <ProgressButton
+            className={classes.progressButton}
+            showProgress={isSubmitting}
+            color="primary"
+            onClick={handleSubmit}
+          >
+            Registrar
+          </ProgressButton>
           <FadeInButton
             color="secondary"
+            disabled={isSubmitting}
             delay={FadeInButton.defaultProps.delay * 1.3}
             onClick={handleSignin}
           >
             Login
           </FadeInButton>
-        </StyledForm>
+        </Form>
       </SignupContainer>
     );
   }
@@ -208,7 +178,6 @@ Signup.propTypes = {
   handleSnackbarOpen: PropTypes.func.isRequired, // eslint-disable-line
   handleSubmit: PropTypes.func.isRequired,
   isSubmitting: PropTypes.bool.isRequired,
-  setFieldValue: PropTypes.func,
   touched: PropTypes.shape({
     email: PropTypes.bool,
     password: PropTypes.bool,
@@ -221,27 +190,17 @@ Signup.propTypes = {
   }).isRequired,
 };
 
-function mapActionsToProps() {
-  return {
-    createNewUser: input => createUser(input),
-    loginNewUser: input => loginUser(input),
-  };
-}
-
-export default connect(
-  null,
-  mapActionsToProps,
-)(
-  withRouter(
-    withFormik({
-      mapPropsToValues() {
-        return {
-          email: '',
-          password: '',
-          username: '',
-        };
-      },
-      validationSchema: Yup.object().shape({
+export default withRouter(
+  withFormik({
+    mapPropsToValues() {
+      return {
+        email: '',
+        password: '',
+        username: '',
+      };
+    },
+    validationSchema: () =>
+      Yup.object().shape({
         email: Yup.string()
           .trim()
           .email('Você deve passar um email válido.')
@@ -257,46 +216,43 @@ export default connect(
           .max(50, 'Nome não pode ter mais de 50 caracteres.')
           .required('Nome obrigatório'),
       }),
-      handleSubmit(values, { setSubmitting, props, setErrors, resetForm }) {
-        props
-          .createNewUser(values)
-          .then(({ data }) => {
-            if (data.data.createUser) {
-              props.handleSnackbarOpen();
-              const { username, ...login } = values;
-              props
-                .loginNewUser(login)
-                .then(res => {
-                  if (res.data && res.data.data) {
-                    props.history.push('/');
-                  } else if (data.errors) {
-                    setErrors({ requestError: '400' });
-                    setSubmitting(false);
-                  }
-                })
-                .catch(({ request }) => {
-                  if (request && request.status) {
-                    setErrors({ requestError: request.status });
-                  }
+    handleSubmit(values, { setSubmitting, props, setErrors, resetForm }) {
+      createUser(values)
+        .then(({ data }) => {
+          if (data.data.createUser) {
+            props.handleSnackbarOpen();
+            const { username, ...login } = values;
+            loginUser(login)
+              .then(res => {
+                if (res.data && res.data.data) {
+                  props.history.push('/');
+                } else if (data.errors) {
+                  setErrors({ requestError: '400' });
                   setSubmitting(false);
-                });
-              resetForm({
-                email: '',
-                username: '',
-                password: '',
+                }
+              })
+              .catch(({ request }) => {
+                if (request && request.status) {
+                  setErrors({ requestError: request.status });
+                }
+                setSubmitting(false);
               });
-            } else if (data.errors) {
-              setErrors({ requestError: '400' });
-              setSubmitting(false);
-            }
-          })
-          .catch(({ request }) => {
-            if (request && request.status) {
-              setErrors({ requestError: request.status });
-            }
+            resetForm({
+              email: '',
+              username: '',
+              password: '',
+            });
+          } else if (data.errors) {
+            setErrors({ requestError: '400' });
             setSubmitting(false);
-          });
-      },
-    })(withStyles(styles)(Signup)),
-  ),
+          }
+        })
+        .catch(({ request }) => {
+          if (request && request.status) {
+            setErrors({ requestError: request.status });
+          }
+          setSubmitting(false);
+        });
+    },
+  })(withStyles(styles)(Signup)),
 );
