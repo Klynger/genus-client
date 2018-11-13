@@ -1,13 +1,12 @@
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import styled from 'styled-components';
 import React, { Component } from 'react';
-import GridCard from '../../utils/GridCard';
+import GridCard from '../../shared/GridCard';
 import { withRouter } from 'react-router-dom';
-import GridButton from '../../utils/GridButton';
+import GridButton from '../../shared/GridButton';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-import SubjectCreateDialog from '../../Institution/SubjectCreateDialog';
-import { GridContainer, ResponsiveSubTitle } from '../../utils/SharedComponents';
+import CreateSubjectDialog from '../../Institution/CreateSubjectDialog';
+import { GridContainer, ResponsiveSubTitle } from '../../shared/SharedComponents';
 
 const Container = styled.div`
   display: flex;
@@ -46,7 +45,7 @@ class SubjectsGrid extends Component {
     return (
       <Container>
         <ResponsiveSubTitle>Disciplinas</ResponsiveSubTitle>
-        <SubjectCreateDialog
+        <CreateSubjectDialog
           gradeId={gradeId}
           open={subjectDialogOpen}
           onClose={this.handleSubjectDialogToggle}
@@ -77,14 +76,4 @@ SubjectsGrid.subjects = {
   subjects: [],
 };
 
-function mapToProps({ grade, subject }, { gradeId }) {
-  if (grade.byId[gradeId] && grade.byId[gradeId].subjects) {
-    return {
-      subjects: grade.byId[gradeId].subjects.map(id => subject.byId[id]),
-    };
-  }
-
-  return {};
-}
-
-export default connect(mapToProps)(withRouter(SubjectsGrid));
+export default withRouter(SubjectsGrid);

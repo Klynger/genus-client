@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DiscussionItem from './DiscussionItem';
 import classNames from 'classnames';
+import DiscussionItem from './DiscussionItem';
 import { withStyles } from '@material-ui/core';
 
 const styles = theme => ({

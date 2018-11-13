@@ -6,8 +6,8 @@ import React, { Component, Fragment } from 'react';
 import AddTeacherEmptyView from './AddTeacherEmptyView';
 import { capitalize } from '@material-ui/core/utils/helpers';
 import { addTeacherToSubject } from '../../../actions/subject';
-import { defaultDialogBreakpoints } from '../../utils/helpers';
-import { DefaultDialogTransition } from '../../utils/SharedComponents';
+import { defaultDialogBreakpoints } from '../../../utils/helpers';
+import { DefaultDialogTransition } from '../../shared/SharedComponents';
 import {
   Zoom,
   Input,
@@ -40,15 +40,15 @@ class AddTeacherDialog extends Component {
   render() {
     const {
       open,
-      subject,
-      teachers,
-      onClose,
-      classes,
       width,
-      fullScreen,
-      values,
       errors,
+      values,
+      classes,
+      onClose,
+      subject,
       touched,
+      teachers,
+      fullScreen,
       handleChange,
       handleSubmit,
     } = this.props;
@@ -88,12 +88,11 @@ class AddTeacherDialog extends Component {
                       </MenuItem>
                     ))}
                   </Select>
-                  {touched.teacherId &&
-                    errors.teacherId && (
-                      <Zoom in>
-                        <FormHelperText>{errors.teacherId}</FormHelperText>
-                      </Zoom>
-                    )}
+                  {touched.teacherId && errors.teacherId && (
+                    <Zoom in>
+                      <FormHelperText>{errors.teacherId}</FormHelperText>
+                    </Zoom>
+                  )}
                 </FormControl>
               </Form>
             </DialogContent>

@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 import React, { Fragment } from 'react';
 import { Form, withFormik } from 'formik';
 import AddTeacherEmptyView from './AddTeacherEmptyView';
-import ProgressButton from '../../utils/ProgressButton';
+import ProgressButton from '../../shared/ProgressButton';
 import { capitalize } from '@material-ui/core/utils/helpers';
-import { defaultDialogBreakpoints } from '../../utils/helpers';
 import { addStudentToSubject } from '../../../actions/subject';
-import { DefaultDialogTransition } from '../../utils/SharedComponents';
+import { defaultDialogBreakpoints } from '../../../utils/helpers';
+import { DefaultDialogTransition } from '../../shared/SharedComponents';
 import {
   Zoom,
   Input,
@@ -82,12 +82,11 @@ const AddStudentDialog = ({
                   </MenuItem>
                 ))}
               </Select>
-              {touched.studentId &&
-                Boolean(errors.studentId) && (
-                  <Zoom in>
-                    <FormHelperText>{errors.studentId}</FormHelperText>
-                  </Zoom>
-                )}
+              {touched.studentId && Boolean(errors.studentId) && (
+                <Zoom in>
+                  <FormHelperText>{errors.studentId}</FormHelperText>
+                </Zoom>
+              )}
             </FormControl>
           </Form>
           {errors.requestError && (

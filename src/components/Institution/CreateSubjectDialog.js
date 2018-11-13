@@ -5,9 +5,9 @@ import React, { Component } from 'react';
 import { Form, withFormik } from 'formik';
 import { withRouter } from 'react-router-dom';
 import { saveSubject } from '../../actions/subject';
-import { defaultDialogBreakpoints } from '../utils/helpers';
 import { capitalize } from '@material-ui/core/utils/helpers';
-import { DefaultDialogTransition } from '../utils/SharedComponents';
+import { defaultDialogBreakpoints } from '../../utils/helpers';
+import { DefaultDialogTransition } from '../shared/SharedComponents';
 import {
   Input,
   Button,
@@ -34,7 +34,7 @@ const styles = theme => ({
   },
 });
 
-class SubjectCreateDialog extends Component {
+class CreateSubjectDialog extends Component {
   constructor(props) {
     super(props);
 
@@ -83,10 +83,9 @@ class SubjectCreateDialog extends Component {
             >
               <InputLabel htmlFor="name">Nome</InputLabel>
               <Input name="name" value={values.name} onChange={handleChange} />
-              {touched.name &&
-                errors.name && (
-                  <FormHelperText id="subject__name-error-text">{errors.name}</FormHelperText>
-                )}
+              {touched.name && errors.name && (
+                <FormHelperText id="subject__name-error-text">{errors.name}</FormHelperText>
+              )}
             </FormControl>
           </Form>
           <DialogActions>
@@ -110,11 +109,11 @@ class SubjectCreateDialog extends Component {
   }
 }
 
-SubjectCreateDialog.defaultProps = {
+CreateSubjectDialog.defaultProps = {
   open: false,
 };
 
-SubjectCreateDialog.propTypes = {
+CreateSubjectDialog.propTypes = {
   classes: PropTypes.object,
   errors: PropTypes.shape({
     name: PropTypes.string,
@@ -192,7 +191,7 @@ export default connect(
                 .catch(setSubmitting(false));
             },
             enableReinitialize: true,
-          })(SubjectCreateDialog),
+          })(CreateSubjectDialog),
         ),
       ),
     ),

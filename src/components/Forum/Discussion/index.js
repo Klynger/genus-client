@@ -1,60 +1,69 @@
+import AddReply from './AddReply';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
-import React, { Fragment } from 'react';
+import RepliesList from './RepliesList';
 import DiscussionCard from './DiscussionCard';
-import { Fade } from '@material-ui/core';
+import React, { Component, Fragment } from 'react';
+import { Fade, withStyles } from '@material-ui/core';
+import DefaultContainerRoute from '../../shared/DefaultContainerRoute';
 
-const Container = styled.div`
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  padding: ${({ unit }) => unit || 8}px;
+const styles = theme => ({
+  addReply: {
+    marginBottom: theme.spacing.unit,
+    marginTop: theme.spacing.unit,
+  },
+  repliesList: {
+    marginTop: theme.spacing.unit * 2,
+  },
+});
 
-  @media screen and (min-width: 1920px) {
-    width: calc(50% - ${({ unit }) => (unit || 8) * 2}px);
+class DiscussionPage extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      openAddReply: false,
+    };
   }
 
-  @media screen and (min-width: 1280px) and (max-width: 1919px) {
-    width: calc(60% - ${({ unit }) => (unit || 8) * 2}px);
-  }
+  handleToggleShowAddReply = () => {
+    this.setState(({ openAddReply }) => ({ openAddReply: !openAddReply }));
+  };
 
-  @media screen and (min-width: 960px) and (max-width: 1279px) {
-    width: calc(70% - ${({ unit }) => (unit || 8) * 2}px);
-  }
+  handleCloseAddReply = () => {
+    this.setState({ openAddReply: false });
+  };
 
-  @media screen and (min-width: 700px) and (max-width: 959px) {
-    width: calc(80% - ${({ unit }) => (unit || 8) * 2}px);
-  }
+  render() {
+    let toRender = null;
+    const { classes, discussion } = this.props;
+    const { openAddReply } = this.state;
 
-  @media screen and (min-width: 600px) and (max-width: 699px) {
-    width: calc(85% - ${({ unit }) => (unit || 8) * 2}px);
-  }
-
-  @media screen and (max-width: 599px) {
-    width: calc(95% - ${({ unit }) => (unit || 8) * 2}px);
-  }
-`;
-
-const DiscussionPage = ({ discussion }) => {
-  let toRender = null;
-
-  if (discussion) {
-    toRender = (
-      <Fragment>
-        <DiscussionCard discussion={discussion} />
-      </Fragment>
+    if (discussion) {
+      toRender = (
+        <Fragment>
+          <DiscussionCard onReply={this.handleToggleShowAddReply} discussion={discussion} />
+          {openAddReply && (
+            <AddReply
+              className={classes.addReply}
+              discussionId={discussion.id}
+              onClose={this.handleCloseAddReply}
+              onSubmit={this.handleCloseAddReply}
+            />
+          )}
+          <RepliesList replies={discussion.replies} className={classes.repliesList} />
+        </Fragment>
+      );
+    }
+    return (
+      <Fade in>
+        <DefaultContainerRoute>{toRender}</DefaultContainerRoute>
+      </Fade>
     );
   }
-
-  return (
-    <Fade in>
-      <Container>{toRender}</Container>
-    </Fade>
-  );
-};
+}
 
 DiscussionPage.propTypes = {
+  classes: PropTypes.object.isRequired,
   discussion: PropTypes.object,
 };
 
@@ -67,15 +76,23 @@ function mapStateToProps(
   },
 ) {
   const singleDiscussion = discussion.byId[discussionId];
-  if (singleDiscussion && user.byId[singleDiscussion.creator].username) {
+  if (singleDiscussion && user.byId[singleDiscussion.creator]) {
     return {
       discussion: {
         ...singleDiscussion,
         creator: user.byId[singleDiscussion.creator],
-        replies: singleDiscussion.replies.map(id => ({
-          ...reply.byId[id],
-          user: user.byId[reply.byId[id].user],
-        })),
+        replies: singleDiscussion.replies
+          .filter(id => reply.byId[id])
+          .map(id => {
+            const aux = reply.byId[id];
+
+            return {
+              ...aux,
+              user: user.byId[aux.user],
+              parent: aux.parent && reply.byId[aux.parent],
+              discussion: singleDiscussion,
+            };
+          }),
       },
     };
   }
@@ -83,4 +100,4 @@ function mapStateToProps(
   return {};
 }
 
-export default connect(mapStateToProps)(DiscussionPage);
+export default connect(mapStateToProps)(withStyles(styles)(DiscussionPage));

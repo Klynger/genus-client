@@ -1,0 +1,3 @@
+mutation removeUserFromInstitution($input: RemoveUserFromInstitutionInput!) {
+  removeUserFromInstitution(input: $input)
+}

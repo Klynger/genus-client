@@ -1,40 +1,20 @@
-import { requestGraphql } from '../components/utils/HTTPClient';
+import { dispatchEntities } from '../utils/helpers';
+import { discussionSchema } from '../models/schema';
+import { requestGraphql } from '../utils/HTTPClient';
+import { ADD_DISCUSSION_TO_SUBJECT } from './actionTypes';
 import { mutationCreateDiscussion } from '../queryGenerators/discussionMutations';
-import { SAVE_DISCUSSION, SAVE_REPLY, ADD_DISCUSSION_TO_SUBJECT } from './actionTypes';
 
 export const createDiscussion = input => dispatch => {
   return requestGraphql(mutationCreateDiscussion(input), localStorage.getItem('token')).then(
     res => {
       const result = res;
       if (res.data.data && res.data.data.createDiscussion) {
-        const discussion = {
-          ...res.data.data.createDiscussion,
-          replies: res.data.data.createDiscussion.replies.map(reply => {
-            reply = {
-              ...reply,
-              user: reply.user.id,
-              discussion: res.data.data.createDiscussion.id,
-            };
-            dispatch({
-              type: SAVE_REPLY,
-              reply,
-            });
-            return reply.id;
-          }),
-          creator: res.data.data.createDiscussion.creator.id,
-          subject: res.data.data.createDiscussion.subject.id,
-        };
-
-        dispatch({
-          type: SAVE_DISCUSSION,
-          discussion,
-        });
-
+        dispatchEntities(res.data.data.createDiscussion, dispatch, discussionSchema);
         dispatch({
           type: ADD_DISCUSSION_TO_SUBJECT,
           payload: {
-            subjectId: discussion.subject,
-            discussionId: discussion.id,
+            subjectId: res.data.data.createDiscussion.subject.id,
+            discussionId: res.data.data.createDiscussion.id,
           },
         });
       }

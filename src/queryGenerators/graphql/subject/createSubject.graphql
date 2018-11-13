@@ -1,0 +1,16 @@
+#import "./subjectFragment.graphql"
+
+mutation createSubject($input: SubjectCreationInput!) {
+  createSubject(input: $input) {
+    ...subjectFields
+    teachers {
+      id
+    }
+    students {
+      id
+    }
+    forum {
+      id
+    }
+  }
+}

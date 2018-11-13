@@ -1,0 +1,19 @@
+#import "./discussionFragment.graphql"
+
+mutation createDiscussion($input: DiscussionCreationInput!) {
+  createDiscussion(input: $input) {
+    ...discussionFields
+    subject {
+      id
+    }
+    replies(page: 0, size: 10) {
+      id
+    }
+    creator {
+      id
+    }
+    subject {
+      id
+    }
+  }
+}

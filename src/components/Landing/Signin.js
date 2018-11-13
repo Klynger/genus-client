@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Form, withFormik } from 'formik';
 import { withRouter } from 'react-router-dom';
-import { requestGraphql } from '../utils/HTTPClient';
+import { requestGraphql } from '../../utils/HTTPClient';
 import { capitalize } from '@material-ui/core/utils/helpers';
 import { loginQuery } from '../../queryGenerators/userQueries';
 import {
@@ -114,12 +114,11 @@ const Signin = ({
           >
             <InputLabel>Email: </InputLabel>
             <Input name="email" value={values.email || ''} onChange={handleChange} />
-            {touched.email &&
-              errors.email && (
-                <Zoom in>
-                  <FormHelperText id="signin__email-error-text">{errors.email}</FormHelperText>
-                </Zoom>
-              )}
+            {touched.email && errors.email && (
+              <Zoom in>
+                <FormHelperText id="signin__email-error-text">{errors.email}</FormHelperText>
+              </Zoom>
+            )}
           </FormControl>
           <FormControl
             className={classes.formControl}
@@ -133,14 +132,11 @@ const Signin = ({
               value={values.password}
               onChange={handleChange}
             />
-            {touched.password &&
-              errors.password && (
-                <Zoom in>
-                  <FormHelperText id="signin__password-error-text">
-                    {errors.password}
-                  </FormHelperText>
-                </Zoom>
-              )}
+            {touched.password && errors.password && (
+              <Zoom in>
+                <FormHelperText id="signin__password-error-text">{errors.password}</FormHelperText>
+              </Zoom>
+            )}
           </FormControl>
           <DialogActions>
             <Button color="primary" disabled={isSubmitting} onClick={onClose}>

@@ -1,0 +1,35 @@
+#import "./gradeFragment.graphql"
+#import "../user/userFragment.graphql"
+#import "../reply/replyFragment.graphql"
+#import "../subject/subjectFragment.graphql"
+#import "../discussion/discussionFragment.graphql"
+
+query findGrade($id: ID!) {
+  findGrade(input: $id) {
+    ...gradeFields
+    institution {
+      id
+    }
+    subjects {
+      ...subjectFields
+      grade {
+        id
+      }
+      teachers {
+        ...userFields
+      }
+      forum {
+        ...discussionFields
+        replies(page: 0, size: 10) {
+          ...repliesFields
+          user {
+            ...userFields
+          }
+        }
+        creator {
+          ...userFields
+        }
+      }
+    }
+  }
+}

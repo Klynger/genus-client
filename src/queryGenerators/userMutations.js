@@ -1,49 +1,28 @@
+import { loader } from 'graphql.macro';
+
 export const mutationCreateUser = userInput => ({
-  query: `
-    mutation createNewUser($userInput: CreateUserInput!) {
-      createUser(input: $userInput) {
-        id
-        username
-        email
-      }
-    }
-  `,
+  query: loader('./graphql/user/createUser.graphql').loc.source.body,
   variables: {
     userInput,
   },
 });
 
 export const removerUserFromInstitution = input => ({
-  query: `
-    mutation removeUserFromInstitution($input: RemoveUserFromInstitutionInput!) {
-      removeUserFromInstitution(input: $input)
-    }
-  `,
+  query: loader('./graphql/user/removeUserFromInstitution.graphql').loc.source.body,
   variables: {
     input,
   },
 });
 
 export const mutationUpdateUser = input => ({
-  query: `
-    mutation updateUser($input: UpdateUserInput!) {
-      updateUser(input: $input) {
-        id
-        username
-      }
-    }
-  `,
+  query: loader('./graphql/user/updateUser.graphql').loc.source.body,
   variables: {
     input,
   },
 });
 
 export const mutationUpdateUserPassword = (password, newPassword) => ({
-  query: `
-    mutation updateUserPassword($password: String!, $newPassword: String!) {
-      updateUserPassword(password: $password, newPassword: $newPassword)
-    }
-  `,
+  query: loader('./graphql/user/updateUserPassword.graphql').loc.source.body,
   variables: {
     password,
     newPassword,

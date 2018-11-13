@@ -1,0 +1,13 @@
+#import "./gradeFragment.graphql"
+
+mutation createGrade($input: GradeCreationInput!) {
+  createGrade(input: $input) {
+    ...gradeFields
+    institution {
+      id
+    }
+    subjects {
+      id
+    }
+  }
+}

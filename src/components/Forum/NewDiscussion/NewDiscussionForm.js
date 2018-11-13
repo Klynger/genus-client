@@ -3,9 +3,9 @@ import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Form, withFormik } from 'formik';
-import ProgressButton from '../../utils/ProgressButton';
+import ProgressButton from '../../shared/ProgressButton';
 import { createDiscussion } from '../../../actions/discussion';
-import { ActionsContainer } from '../../utils/SharedComponents';
+import { ActionsContainer } from '../../shared/SharedComponents';
 import {
   Fade,
   Zoom,
@@ -54,12 +54,11 @@ const NewDiscussionForm = ({
             onChange={handleChange}
             id="new-discussion__title-field"
           />
-          {touched.title &&
-            Boolean(errors.title) && (
-              <Zoom in>
-                <FormHelperText>{errors.title}</FormHelperText>
-              </Zoom>
-            )}
+          {touched.title && Boolean(errors.title) && (
+            <Zoom in>
+              <FormHelperText>{errors.title}</FormHelperText>
+            </Zoom>
+          )}
         </FormControl>
         <TextField
           rows={10}

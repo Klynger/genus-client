@@ -1,7 +1,7 @@
-import { requestGraphql } from '../components/utils/HTTPClient';
+import { subjectSchema } from '../models/schema';
+import { dispatchEntities } from '../utils/helpers';
+import { requestGraphql } from '../utils/HTTPClient';
 import {
-  SAVE_USER,
-  SAVE_SUBJECT,
   UPDATE_SUBJECT,
   SAVE_SUBJECT_TO_GRADE,
   ADD_TEACHER_TO_SUBJECT,
@@ -17,28 +17,14 @@ import {
 export const saveSubject = subjectInput => dispatch =>
   requestGraphql(mutationCreateSubject(subjectInput), localStorage.getItem('token')).then(res => {
     if (res.data.data && res.data.data.createSubject) {
-      const subject = {
-        ...res.data.data.createSubject,
-        teachers: res.data.data.createSubject.teachers.map(user => {
-          dispatch({
-            type: SAVE_USER,
-            user,
-          });
-          return user.id;
-        }),
-      };
-      dispatch({
-        type: SAVE_SUBJECT,
-        subject,
-      });
+      dispatchEntities(res.data.data.createSubject, dispatch, subjectSchema);
 
-      const payload = {
-        gradeId: subjectInput.gradeId,
-        subjectId: subject.id,
-      };
       dispatch({
         type: SAVE_SUBJECT_TO_GRADE,
-        payload,
+        payload: {
+          gradeId: subjectInput.gradeId,
+          subjectId: res.data.data.createSubject.id,
+        },
       });
     }
   });
@@ -46,15 +32,9 @@ export const saveSubject = subjectInput => dispatch =>
 export const addTeacherToSubject = payload => dispatch =>
   requestGraphql(mutationAddTeacherToSubject(payload), localStorage.getItem('token')).then(res => {
     if (res.data.data && res.data.data.addTeacherToSubject) {
-      const teachers = res.data.data.addTeacherToSubject.teachers;
-
-      teachers.forEach(user => {
-        if (user.id === payload.teacherId) {
-          dispatch({
-            type: ADD_TEACHER_TO_SUBJECT,
-            payload,
-          });
-        }
+      dispatch({
+        type: ADD_TEACHER_TO_SUBJECT,
+        payload,
       });
       return res;
     }
@@ -76,17 +56,10 @@ export const updateSubject = payload => dispatch =>
 export const addStudentToSubject = payload => dispatch =>
   requestGraphql(mutationAddStudentToSubject(payload), localStorage.getItem('token')).then(res => {
     if (res.data.data && res.data.data.addStudentToSubject) {
-      const students = res.data.data.addStudentToSubject.students;
-
-      students.forEach(user => {
-        if (user.id === payload.studentId) {
-          dispatch({
-            type: ADD_STUDENT_TO_SUBJECT,
-            payload,
-          });
-        }
+      dispatch({
+        type: ADD_STUDENT_TO_SUBJECT,
+        payload,
       });
     }
-
     return res;
   });

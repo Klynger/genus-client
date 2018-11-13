@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withFormik, Form } from 'formik';
 import { withStyles } from '@material-ui/core/styles';
-import { requestGraphql } from '../../utils/HTTPClient';
+import { requestGraphql } from '../../../utils/HTTPClient';
 import { capitalize } from '@material-ui/core/utils/helpers';
-import { defaultDialogBreakpoints } from '../../utils/helpers';
-import { DefaultDialogTransition } from '../../utils/SharedComponents';
-import { mutationCreateEntryCode } from '../../../queryGenerators/entryCodeMutations';
+import { defaultDialogBreakpoints } from '../../../utils/helpers';
+import { DefaultDialogTransition } from '../../shared/SharedComponents';
+import { mutationCreateEntryCode } from '../../../queryGenerators/institutionMutations';
 import {
   Zoom,
   Button,
@@ -95,12 +95,11 @@ const CreateEntryCodeDialog = ({
               </MenuItem>
             ))}
           </Select>
-          {touched.institutionId &&
-            errors.institutionId && (
-              <Zoom in>
-                <FormHelperText>{errors.institutionId}</FormHelperText>
-              </Zoom>
-            )}
+          {touched.institutionId && errors.institutionId && (
+            <Zoom in>
+              <FormHelperText>{errors.institutionId}</FormHelperText>
+            </Zoom>
+          )}
         </FormControl>
         <FormControl
           className={classes.createEntryCodeFormControl}
@@ -122,12 +121,11 @@ const CreateEntryCodeDialog = ({
               </MenuItem>
             ))}
           </Select>
-          {touched.role &&
-            errors.role && (
-              <Zoom in>
-                <FormHelperText>{errors.role}</FormHelperText>
-              </Zoom>
-            )}
+          {touched.role && errors.role && (
+            <Zoom in>
+              <FormHelperText>{errors.role}</FormHelperText>
+            </Zoom>
+          )}
         </FormControl>
         <DialogActions>
           <Button color="primary" disabled={isSubmitting} onClick={onClose}>

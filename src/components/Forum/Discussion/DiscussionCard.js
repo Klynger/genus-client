@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
-import ImageUploader from '../../utils/ImageUploader';
+import ImageUploader from '../../shared/ImageUploader';
 import deepOrange from '@material-ui/core/colors/deepOrange';
-import { getFirstInitialsCapitalized } from '../../utils/helpers';
 import { Edit, Delete, MoreVert, Reply } from '@material-ui/icons';
+import { getFirstInitialsCapitalized } from '../../../utils/helpers';
 import {
   Card,
   Divider,
@@ -23,7 +23,6 @@ const styles = {
     minWidth: 40,
   },
   discussionCard: {
-    borderRadius: 0,
     width: '100%',
   },
   reply: {
@@ -37,7 +36,7 @@ const styles = {
   },
 };
 
-const DiscussionActionButtons = ({ classes }) => (
+const DiscussionActionButtons = ({ classes, onReply }) => (
   <CardActions disableActionSpacing className={classes.actions}>
     <IconButton aria-label="delete">
       <Delete />
@@ -45,7 +44,7 @@ const DiscussionActionButtons = ({ classes }) => (
     <IconButton aria-label="edit">
       <Edit />
     </IconButton>
-    <IconButton aria-label="reply">
+    <IconButton aria-label="reply" onClick={onReply}>
       <Reply />
     </IconButton>
   </CardActions>
@@ -53,9 +52,10 @@ const DiscussionActionButtons = ({ classes }) => (
 
 DiscussionActionButtons.propTypes = {
   classes: PropTypes.object.isRequired,
+  onReply: PropTypes.func.isRequired,
 };
 
-const DiscussionCard = ({ classes, discussion }) => (
+const DiscussionCard = ({ classes, discussion, onReply }) => (
   <Card className={classes.discussionCard}>
     <CardHeader
       avatar={
@@ -75,16 +75,16 @@ const DiscussionCard = ({ classes, discussion }) => (
     />
     <Divider light />
     <CardContent>
-      <ReactMarkdown escapeHtml source={discussion.replies[0].content} />
+      <ReactMarkdown escapeHtml source={discussion.content} />
     </CardContent>
-    <DiscussionActionButtons classes={classes} />
-    {/* TODO LIST OF REPLIES */}
+    <DiscussionActionButtons classes={classes} onReply={onReply} />
   </Card>
 );
 
 DiscussionCard.propTypes = {
   classes: PropTypes.object.isRequired,
   discussion: PropTypes.shape({
+    content: PropTypes.string.isRequired,
     creationDate: PropTypes.string.isRequired,
     creator: PropTypes.shape({
       email: PropTypes.string.isRequired,
@@ -101,6 +101,7 @@ DiscussionCard.propTypes = {
     ).isRequired,
     title: PropTypes.string,
   }).isRequired,
+  onReply: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(DiscussionCard);
