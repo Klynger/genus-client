@@ -62,6 +62,7 @@ class CustomTextField extends Component {
       showHelperText,
       InputLabelProps,
       FormHelperTextProps,
+      HelperTextTransitionProps,
       OnEnterHelperTextTransition,
       ...other
     } = this.props;
@@ -118,7 +119,7 @@ class CustomTextField extends Component {
           </InputLabel>
         )}
         {select ? (
-          <Select value={value} {...SelectProps}>
+          <Select value={value} input={InputElement} {...SelectProps}>
             {children}
           </Select>
         ) : (
@@ -127,7 +128,7 @@ class CustomTextField extends Component {
         {showHelperText &&
           helperText &&
           (OnEnterHelperTextTransition ? (
-            <OnEnterHelperTextTransition in>
+            <OnEnterHelperTextTransition {...HelperTextTransitionProps} in>
               <FormHelperText id={helperTextId} {...FormHelperTextProps}>
                 {helperText}
               </FormHelperText>
@@ -152,7 +153,7 @@ CustomTextField.defaultProps = {
 CustomTextField.propTypes = {
   autoComplete: PropTypes.string,
   autoFocus: PropTypes.bool,
-  children: PropTypes.string,
+  children: PropTypes.node,
   className: PropTypes.string,
   defaultValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   disabled: PropTypes.bool,
@@ -160,6 +161,7 @@ CustomTextField.propTypes = {
   FormHelperTextProps: PropTypes.object,
   fullWidth: PropTypes.bool,
   helperText: PropTypes.node,
+  HelperTextTransitionProps: PropTypes.object,
   id: PropTypes.string,
   InputLabelProps: PropTypes.object,
   InputProps: PropTypes.object,
