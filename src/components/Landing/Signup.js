@@ -127,20 +127,20 @@ class Signup extends PureComponent {
     return (
       <SignupContainer>
         <Form className={classes.form}>
-          {valuesKeys.map(value => (
+          {valuesKeys.map(key => (
             <CustomTextField
-              key={value}
-              name={value}
-              value={values[value]}
+              key={key}
+              name={key}
+              value={values[key]}
               onChange={handleChange}
-              label={labelText(value)}
-              helperText={errors[value]}
+              label={labelText(key)}
+              helperText={errors[key]}
               className={classes.formControl}
               OnEnterHelperTextTransition={Zoom}
-              id={`signup__${value}-field`}
-              type={value === 'password' ? 'password' : 'text'}
-              error={Boolean(touched[value] && errors[value])}
-              showHelperText={Boolean(touched[value] && errors[value])}
+              id={`signup__${key}-field`}
+              type={key === 'password' ? 'password' : 'text'}
+              error={Boolean(touched[key] && errors[key])}
+              showHelperText={Boolean(touched[key] && errors[key])}
             />
           ))}
           <ProgressButton
@@ -220,16 +220,15 @@ export default withRouter(
     handleSubmit(values, { setSubmitting, props, setErrors, resetForm }) {
       createUserAndLogin(values)
         .then(({ data }) => {
-          const HAS_DATA = data && data.data;
           setSubmitting(false);
-          if (HAS_DATA && data.data.createUser) {
+          if (data.data && data.data.createUser) {
             props.handleSnackbarOpen();
             resetForm({
               email: '',
               username: '',
               password: '',
             });
-          } else if (HAS_DATA && data.data.login) {
+          } else if (data.data && data.data.login) {
             props.history.push('/');
           } else if (data.errors) {
             setErrors({ requestError: '400' });
