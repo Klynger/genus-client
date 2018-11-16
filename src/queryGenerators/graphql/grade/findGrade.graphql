@@ -21,8 +21,8 @@ query findGrade($id: ID!) {
       forum {
         ...discussionFields
         replies(page: 0, size: 10) {
-          ...repliesFields
-          user {
+          ...replyFields
+          creator {
             ...userFields
           }
         }
