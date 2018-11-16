@@ -65,4 +65,11 @@ export const loginUser = login =>
     return res;
   });
 
-export const createUser = input => requestGraphql(mutationCreateUser(input)).then(res => res);
+export const createUserAndLogin = input =>
+  requestGraphql(mutationCreateUser(input)).then(res => {
+    if (res.data && res.data.data && res.data.data.createUser) {
+      const { username, ...login } = input;
+      return loginUser(login);
+    }
+    return res;
+  });

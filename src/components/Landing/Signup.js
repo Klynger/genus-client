@@ -8,8 +8,8 @@ import { Zoom, Paper } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import ProgressButton from '../shared/ProgressButton';
 import CustomTextField from '../shared/CustomTextField';
+import { createUserAndLogin } from '../../actions/user';
 import { FadeInButton } from '../shared/SharedComponents';
-import { createUser, loginUser } from '../../actions/user';
 
 const DEFAULT_ANIMATION_TIMING = 700;
 
@@ -144,6 +144,7 @@ class Signup extends PureComponent {
             />
           ))}
           <ProgressButton
+            type="submit"
             className={classes.progressButton}
             showProgress={isSubmitting}
             color="primary"
@@ -217,34 +218,21 @@ export default withRouter(
           .required('Nome obrigatório'),
       }),
     handleSubmit(values, { setSubmitting, props, setErrors, resetForm }) {
-      createUser(values)
+      createUserAndLogin(values)
         .then(({ data }) => {
-          if (data.data.createUser) {
+          const HAS_DATA = data && data.data;
+          setSubmitting(false);
+          if (HAS_DATA && data.data.createUser) {
             props.handleSnackbarOpen();
-            const { username, ...login } = values;
-            loginUser(login)
-              .then(res => {
-                if (res.data && res.data.data) {
-                  props.history.push('/');
-                } else if (data.errors) {
-                  setErrors({ requestError: '400' });
-                  setSubmitting(false);
-                }
-              })
-              .catch(({ request }) => {
-                if (request && request.status) {
-                  setErrors({ requestError: request.status });
-                }
-                setSubmitting(false);
-              });
             resetForm({
               email: '',
               username: '',
               password: '',
             });
+          } else if (HAS_DATA && data.data.login) {
+            props.history.push('/');
           } else if (data.errors) {
             setErrors({ requestError: '400' });
-            setSubmitting(false);
           }
         })
         .catch(({ request }) => {
