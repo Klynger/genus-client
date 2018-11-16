@@ -47,7 +47,7 @@ class Landing extends Component {
 
     this.onSnackbarOpen = this.onSnackbarOpen.bind(this);
     this.handleSnackbarClose = this.handleSnackbarClose.bind(this);
-    this.toggleSignin = this.toggleSignin.bind(this);
+    this.handleOpenSignin = this.handleOpenSignin.bind(this);
     this.handleCloseSignin = this.handleCloseSignin.bind(this);
   }
 
@@ -82,8 +82,8 @@ class Landing extends Component {
     this.setState({ openSnackbar: false });
   }
 
-  toggleSignin() {
-    this.setState(prevState => ({ signinOpen: !prevState.signinOpen }));
+  handleOpenSignin() {
+    this.setState({ signinOpen: true });
   }
 
   handleCloseSignin() {
@@ -96,7 +96,7 @@ class Landing extends Component {
     return (
       <LandingContainer>
         <BackgroundImg src="/static/images/landing-background.jpg" />
-        <Signup handleSignin={this.toggleSignin} handleSnackbarOpen={this.onSnackbarOpen} />
+        <Signup onHandleSignin={this.handleOpenSignin} handleSnackbarOpen={this.onSnackbarOpen} />
         <Signin open={signinOpen} onClose={this.handleCloseSignin} />
         <Snackbar
           anchorOrigin={{
