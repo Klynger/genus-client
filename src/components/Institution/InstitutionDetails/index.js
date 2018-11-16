@@ -4,75 +4,90 @@ import { connect } from 'react-redux';
 import GradesGrid from './GradesGrid';
 import { Fade } from '@material-ui/core';
 import React, { Component } from 'react';
-import InstitutionInfos from './InstitutionInfo';
+import InstitutionInfo from './InstitutionInfo';
 import EditInstitutionDialog from './EditInstitutionDialog';
 import DisplayCodeDialog from '../EntryCode/DisplayCodeDialog';
+import GenerateCodeDialog from '../EntryCode/GenerateCodeDialog';
 import DefaultContainerRoute from '../../shared/DefaultContainerRoute';
-import CreateEntryCodeDialog from '../EntryCode/CreateEntryCodeDialog';
 
 class InstitutionDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      entryCodeCreateOpen: false,
+      generateCodeOpen: false,
       currentGeneratedCode: null,
       displayCodeOpen: false,
       displayUpdateOpen: false,
     };
   }
 
-  handleDisplayCodeOpenToggle = () => {
-    this.setState(({ displayCodeOpen }) => ({ displayCodeOpen: !displayCodeOpen }));
+  handleDisplayCodeClose = () => {
+    this.setState({ displayCodeOpen: false });
   };
 
-  handleCreateEntryOpenToggle = (currentGeneratedCode = null) => {
+  handleGenerateCodeClose = (currentGeneratedCode = null) => {
     if (currentGeneratedCode && typeof currentGeneratedCode === 'string') {
       this.setState({
-        entryCodeCreateOpen: false,
+        generateCodeOpen: false,
         displayCodeOpen: true,
         currentGeneratedCode,
       });
     } else {
-      this.setState(({ entryCodeCreateOpen }) => ({
-        entryCodeCreateOpen: !entryCodeCreateOpen,
-      }));
+      this.setState({ generateCodeOpen: false });
     }
   };
 
-  handleUpdateInstitutionOpenToggle = () => {
-    this.setState(({ displayUpdateOpen }) => ({ displayUpdateOpen: !displayUpdateOpen }));
+  handleGenerateCodeOpen = () => {
+    this.setState({ generateCodeOpen: true });
+  };
+
+  handleUpdateInstitutionOpen = () => {
+    this.setState({ displayUpdateOpen: true });
+  };
+
+  handleUpdateInstitutionClose = () => {
+    this.setState({ displayUpdateOpen: false });
   };
 
   render() {
-    const { institution } = this.props;
+    const { institution, loggedUserId } = this.props;
     const {
-      entryCodeCreateOpen,
       displayCodeOpen,
       displayUpdateOpen,
+      generateCodeOpen,
       currentGeneratedCode,
     } = this.state;
     let toRender;
 
     if (institution) {
+      const loggedUserIsAdmin = institution.admins.some(({ id }) => id === loggedUserId);
+
       toRender = (
         <DefaultContainerRoute>
           <DisplayCodeDialog
             open={displayCodeOpen}
             code={currentGeneratedCode}
-            onClose={this.handleDisplayCodeOpenToggle}
+            onClose={this.handleDisplayCodeClose}
           />
-          <CreateEntryCodeDialog
-            open={entryCodeCreateOpen}
-            onClose={this.handleCreateEntryOpenToggle}
-          />
-          <EditInstitutionDialog
-            open={displayUpdateOpen}
-            onClose={this.handleUpdateInstitutionOpenToggle}
-          />
-          <InstitutionInfos
+          {loggedUserIsAdmin && (
+            <GenerateCodeDialog
+              open={generateCodeOpen}
+              institutionId={institution.id}
+              onClose={this.handleGenerateCodeClose}
+            />
+          )}
+          {loggedUserIsAdmin && (
+            <EditInstitutionDialog
+              open={displayUpdateOpen}
+              onClose={this.handleUpdateInstitutionClose}
+            />
+          )}
+          <InstitutionInfo
             institution={institution}
-            onHandleCreateEntryOpenToggle={this.handleCreateEntryOpenToggle}
-            onHandleUpdateInstitutionOpenToggle={this.handleUpdateInstitutionOpenToggle}
+            canUpdateInfo={loggedUserIsAdmin}
+            canGenerateCode={loggedUserIsAdmin}
+            onGenerateCodeOpen={this.handleGenerateCodeOpen}
+            onUpdateInstitutionOpen={this.handleUpdateInstitutionOpen}
           />
           <GradesGrid />
           <UserList users={institution.teachers} headTitle="Professores" />
@@ -94,6 +109,7 @@ InstitutionDetails.propTypes = {
     admins: PropTypes.arrayOf(
       PropTypes.shape({
         email: PropTypes.string.isRequired,
+        id: PropTypes.string.isRequired,
         username: PropTypes.string.isRequired,
       }),
     ),
@@ -103,16 +119,19 @@ InstitutionDetails.propTypes = {
     students: PropTypes.arrayOf(
       PropTypes.shape({
         email: PropTypes.string.isRequired,
+        id: PropTypes.string.isRequired,
         username: PropTypes.string.isRequired,
       }),
     ),
     teachers: PropTypes.arrayOf(
       PropTypes.shape({
         email: PropTypes.string.isRequired,
+        id: PropTypes.string.isRequired,
         username: PropTypes.string.isRequired,
       }),
     ),
   }),
+  loggedUserId: PropTypes.string.isRequired,
 };
 
 function mapStateToProps({ institution, user }) {
@@ -121,13 +140,22 @@ function mapStateToProps({ institution, user }) {
     return {
       institution: {
         ...institution.byId[selectedInstitution],
-        admins: institution.byId[selectedInstitution].admins.map(id => user.byId[id]),
-        students: institution.byId[selectedInstitution].students.map(id => user.byId[id]),
-        teachers: institution.byId[selectedInstitution].teachers.map(id => user.byId[id]),
+        admins: institution.byId[selectedInstitution].admins
+          .filter(id => user.byId[id])
+          .map(id => user.byId[id]),
+        students: institution.byId[selectedInstitution].students
+          .filter(id => user.byId[id])
+          .map(id => user.byId[id]),
+        teachers: institution.byId[selectedInstitution].teachers
+          .filter(id => user.byId[id])
+          .map(id => user.byId[id]),
       },
+      loggedUserId: user.loggedUserId,
     };
   }
-  return {};
+  return {
+    loggedUserId: user.loggedUserId,
+  };
 }
 
 export default connect(mapStateToProps)(InstitutionDetails);
