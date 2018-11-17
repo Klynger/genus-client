@@ -3,5 +3,5 @@ fragment discussionFields on Discussion {
   title
   content
   replyNumber
-  creationDate
+  createdAt
 }
