@@ -9,7 +9,7 @@ import {
 
 export const fetchLoggedUser = () => dispatch =>
   requestGraphql(findLoggedUserQuery(), localStorage.getItem('token')).then(res => {
-    if (res.data.data.findLoggedUser) {
+    if (res.data.data && res.data.data.findLoggedUser) {
       dispatch({
         type: SAVE_USER,
         user: res.data.data.findLoggedUser,
@@ -22,7 +22,7 @@ export const fetchLoggedUser = () => dispatch =>
 
       return res;
     }
-    return Promise.reject(new Error('400'));
+    return res; // TODO return error
   });
 
 export const fetchUserById = id => dispatch =>

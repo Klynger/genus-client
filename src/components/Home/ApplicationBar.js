@@ -196,7 +196,7 @@ ApplicationBar.defaultProps = {
 
 function mapStateToProps({ institution, user }) {
   const { allIds, byId, selectedInstitution } = institution;
-  if (selectedInstitution !== NO_INSTUTION_SELECTED) {
+  if (selectedInstitution !== NO_INSTUTION_SELECTED && user.byId[user.loggedUserId]) {
     return {
       institutions: allIds.map(id => byId[id]),
       selectedInstitution: byId[selectedInstitution],
