@@ -4,4 +4,7 @@ fragment notificationFields on Notification {
   notificationType
   read
   createdAt
+  gradeId
+  subjectId
+  discussionId
 }
