@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import { NO_USER_LOGGED } from '../../reducers/user';
 import React, { PureComponent, Fragment } from 'react';
+import { readNotification } from '../../actions/discussion';
 import { Menu, MenuItem, withStyles } from '@material-ui/core';
 
 const styles = {
@@ -13,7 +14,7 @@ const styles = {
 
 class NotificationList extends PureComponent {
   render() {
-    const { anchorEl, classes, menuId, notifications, onClose } = this.props;
+    const { anchorEl, classes, menuId, notifications, onClose, readNotificationById } = this.props;
     const open = Boolean(anchorEl);
 
     return (
@@ -25,15 +26,20 @@ class NotificationList extends PureComponent {
           onClose={onClose}
           open={open}
         >
-          {/* /institution/grade/8/subject/9/forum/discussion/10 */}
           {notifications &&
             notifications.map(notification => (
               <MenuItem
                 key={notification.id}
                 component={Link}
-                to={`/institution/grade/${notification.gradeId}
-                      /subject/${notification.subjectId}
-                      /forum/discussion/${notification.discussionId}`}
+                to={`/institution/grade/${notification.gradeId}/subject/${
+                  notification.subjectId
+                }/forum/discussion/${notification.discussionId}`}
+                onClick={() => {
+                  onClose();
+                  if (!notification.read) {
+                    readNotificationById(notification.id);
+                  }
+                }}
               >
                 {notification.message.length >= 20
                   ? notification.message.slice(0, 16).concat('...')
@@ -53,6 +59,7 @@ NotificationList.propTypes = {
   menuId: PropTypes.string.isRequired,
   notifications: PropTypes.array,
   onClose: PropTypes.func.isRequired,
+  readNotificationById: PropTypes.func.isRequired,
 };
 
 NotificationList.defaultProps = {
@@ -67,4 +74,13 @@ function mapStateToProps({ user }) {
   return { notifications };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(withRouter(NotificationList)));
+function mapDispatchToProps(dispatch) {
+  return {
+    readNotificationById: input => dispatch(readNotification(input)),
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withStyles(styles)(withRouter(NotificationList)));
