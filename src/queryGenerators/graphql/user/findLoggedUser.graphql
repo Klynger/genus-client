@@ -1,7 +1,10 @@
+#import "../notification/notificationFragment.graphql"
 #import "./userFragment.graphql"
-
 query {
   findLoggedUser {
     ...userFields
+    notifications {
+      ...notificationFields
+    }
   }
 }

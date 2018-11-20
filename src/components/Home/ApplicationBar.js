@@ -2,14 +2,17 @@ import UserMenu from './UserMenu';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
+import Notification from '../Notification';
 import { withRouter } from 'react-router-dom';
 import MenuIcon from '@material-ui/icons/Menu';
 import { withStyles } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import Notifications from '@material-ui/icons/Notifications';
 import { selectInstitution } from '../../actions/institution';
 import { NO_INSTUTION_SELECTED } from '../../reducers/institution';
 import {
   AppBar,
+  Badge,
   Toolbar,
   IconButton,
   Typography,
@@ -19,6 +22,7 @@ import {
 } from '@material-ui/core';
 
 const USER_MENU_ID = 'appbar__user-menu';
+const NOTIFICATION_MENU_ID = 'appbar_notification-menu';
 
 const styles = theme => ({
   appTitle: {
@@ -30,6 +34,9 @@ const styles = theme => ({
     marginRight: theme.spacing.unit,
   },
   userIcon: {
+    color: theme.palette.common.white,
+  },
+  notificationIcon: {
     color: theme.palette.common.white,
   },
   selectRoot: {
@@ -54,6 +61,7 @@ class ApplicationBar extends Component {
     super(props);
     this.state = {
       anchorEl: null,
+      anchorNotificationEl: null,
       institutionSelectOpen: false,
     };
   }
@@ -64,6 +72,14 @@ class ApplicationBar extends Component {
 
   handleCloseUserMenu = () => {
     this.setState({ anchorEl: null });
+  };
+
+  handleOpenNotificationMenu = event => {
+    this.setState({ anchorNotificationEl: event.currentTarget });
+  };
+
+  handleCloseNotificationMenu = () => {
+    this.setState({ anchorNotificationEl: null });
   };
 
   goToRoute = (path = '/') => {
@@ -113,9 +129,10 @@ class ApplicationBar extends Component {
   }
 
   render() {
-    const { classes, onDrawerToggle } = this.props;
-    const { anchorEl } = this.state;
+    const { classes, onDrawerToggle, notificationQuantity } = this.props;
+    const { anchorEl, anchorNotificationEl } = this.state;
     const open = Boolean(anchorEl);
+    const openNotificationMenu = Boolean(anchorNotificationEl);
 
     return (
       <AppBar position="fixed">
@@ -132,6 +149,21 @@ class ApplicationBar extends Component {
             Genus
           </Typography>
           {this.renderInstitutionMenu()}
+          <IconButton
+            aria-owns={openNotificationMenu ? NOTIFICATION_MENU_ID : null}
+            aria-haspopup="true"
+            onClick={this.handleOpenNotificationMenu}
+            color="inherit"
+          >
+            <Badge badgeContent={notificationQuantity} color="secondary">
+              <Notifications className={classes.notificationIcon} />
+            </Badge>
+          </IconButton>
+          <Notification
+            anchorEl={anchorNotificationEl}
+            menuId={NOTIFICATION_MENU_ID}
+            onClose={this.handleCloseNotificationMenu}
+          />
           <IconButton
             aria-owns={open ? USER_MENU_ID : null}
             aria-haspopup="true"
@@ -151,6 +183,7 @@ ApplicationBar.propTypes = {
   classes: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   institutions: PropTypes.array,
+  notificationQuantity: PropTypes.number,
   onDrawerToggle: PropTypes.func.isRequired,
   selectedInstitution: PropTypes.object,
   selectInstitution: PropTypes.func.isRequired,
@@ -158,14 +191,18 @@ ApplicationBar.propTypes = {
 
 ApplicationBar.defaultProps = {
   institutions: [],
+  notificationQuantity: 0,
 };
 
-function mapStateToProps({ institution }) {
+function mapStateToProps({ institution, user }) {
   const { allIds, byId, selectedInstitution } = institution;
   if (selectedInstitution !== NO_INSTUTION_SELECTED) {
     return {
       institutions: allIds.map(id => byId[id]),
       selectedInstitution: byId[selectedInstitution],
+      notificationQuantity: user.byId[user.loggedUserId].notifications.filter(
+        notification => !notification.read,
+      ).length,
     };
   }
 
