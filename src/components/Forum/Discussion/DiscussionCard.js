@@ -71,7 +71,7 @@ const DiscussionCard = ({ classes, discussion, onReply }) => (
         </IconButton>
       }
       title={discussion.creator.username}
-      subheader={discussion.creationDate}
+      subheader={discussion.createdAt}
     />
     <Divider light />
     <CardContent>
@@ -85,7 +85,7 @@ DiscussionCard.propTypes = {
   classes: PropTypes.object.isRequired,
   discussion: PropTypes.shape({
     content: PropTypes.string.isRequired,
-    creationDate: PropTypes.string.isRequired,
+    createdAt: PropTypes.string.isRequired,
     creator: PropTypes.shape({
       email: PropTypes.string.isRequired,
       username: PropTypes.string.isRequired,

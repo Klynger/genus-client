@@ -1,5 +1,11 @@
 import { concatIdIfNotContain } from '../utils/helpers';
-import { SAVE_USER, SET_LOGGED_USER, REMOVE_USER, REMOVE_ALL_USERS } from '../actions/actionTypes';
+import {
+  SAVE_USER,
+  SET_LOGGED_USER,
+  REMOVE_USER,
+  REMOVE_ALL_USERS,
+  READ_NOTIFICATION,
+} from '../actions/actionTypes';
 
 export const NO_USER_LOGGED = '-333';
 
@@ -41,6 +47,24 @@ function user(state = DEFAULT_STATE, action) {
       return {
         ...state,
         loggedUserId: action.id,
+      };
+
+    case READ_NOTIFICATION:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [state.loggedUserId]: {
+            ...state.byId[state.loggedUserId],
+            notifications: state.byId[state.loggedUserId].notifications.map(notification => {
+              if (notification.id === action.id) {
+                notification.read = true;
+              }
+
+              return notification;
+            }),
+          },
+        },
       };
 
     case REMOVE_ALL_USERS:

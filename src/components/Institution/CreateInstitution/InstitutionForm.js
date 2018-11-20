@@ -52,19 +52,19 @@ const InstitutionForm = ({
 }) => (
   <Paper className={classes.root}>
     <Form className={classes.form}>
-      {valuesKeys.map(value => (
+      {valuesKeys.map(key => (
         <CustomTextField
-          key={value}
-          name={value}
-          value={values[value]}
+          key={key}
+          name={key}
+          value={values[key]}
           onChange={handleChange}
-          label={labelText(value)}
-          helperText={errors[value]}
+          label={labelText(key)}
+          helperText={errors[key]}
           className={classes.formControl}
           OnEnterHelperTextTransition={Zoom}
-          id={`create-institution__${value}-field`}
-          error={Boolean(touched[value] && errors[value])}
-          showHelperText={Boolean(touched[value] && errors[value])}
+          id={`create-institution__${key}-field`}
+          error={Boolean(touched[key] && errors[key])}
+          showHelperText={Boolean(touched[key] && errors[key])}
         />
       ))}
       <ActionsContainer>

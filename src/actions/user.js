@@ -1,11 +1,15 @@
 import { requestGraphql } from '../utils/HTTPClient';
-import { findUserById, findLoggedUserQuery } from '../queryGenerators/userQueries';
 import { SAVE_USER, SET_LOGGED_USER, REMOVE_USER_FROM_INSTITUION } from './actionTypes';
-import { mutationUpdateUser, removerUserFromInstitution } from '../queryGenerators/userMutations';
+import { findUserById, findLoggedUserQuery, loginQuery } from '../queryGenerators/userQueries';
+import {
+  mutationUpdateUser,
+  removerUserFromInstitution,
+  mutationCreateUser,
+} from '../queryGenerators/userMutations';
 
 export const fetchLoggedUser = () => dispatch =>
   requestGraphql(findLoggedUserQuery(), localStorage.getItem('token')).then(res => {
-    if (res.data.data.findLoggedUser) {
+    if (res.data.data && res.data.data.findLoggedUser) {
       dispatch({
         type: SAVE_USER,
         user: res.data.data.findLoggedUser,
@@ -18,7 +22,7 @@ export const fetchLoggedUser = () => dispatch =>
 
       return res;
     }
-    return Promise.reject(new Error('400'));
+    return res; // TODO return error
   });
 
 export const fetchUserById = id => dispatch =>
@@ -49,6 +53,23 @@ export const removeUserOfInstitutionId = input => dispatch =>
         type: REMOVE_USER_FROM_INSTITUION,
         toBeRemovedId: input.toBeRemovedId,
       });
+    }
+    return res;
+  });
+
+export const loginUser = login =>
+  requestGraphql(loginQuery(login)).then(res => {
+    if (res.data && res.data.data && res.data.data.login) {
+      localStorage.setItem('token', res.data.data.login);
+    }
+    return res;
+  });
+
+export const createUserAndLogin = input =>
+  requestGraphql(mutationCreateUser(input)).then(res => {
+    if (res.data && res.data.data && res.data.data.createUser) {
+      const { username, ...login } = input;
+      return loginUser(login);
     }
     return res;
   });

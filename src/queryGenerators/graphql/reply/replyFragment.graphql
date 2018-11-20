@@ -2,6 +2,6 @@
 
 fragment replyFields on Reply {
   id
-  date
   content
+  updatedAt
 }
