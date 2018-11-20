@@ -1,8 +1,9 @@
 import { dispatchEntities } from '../utils/helpers';
 import { discussionSchema } from '../models/schema';
 import { requestGraphql } from '../utils/HTTPClient';
-import { ADD_DISCUSSION_TO_SUBJECT } from './actionTypes';
+import { ADD_DISCUSSION_TO_SUBJECT, READ_NOTIFICATION } from './actionTypes';
 import { mutationCreateDiscussion } from '../queryGenerators/discussionMutations';
+import { readNotificationMutation } from '../queryGenerators/NotificationMutations';
 
 export const createDiscussion = input => dispatch => {
   return requestGraphql(mutationCreateDiscussion(input), localStorage.getItem('token')).then(
@@ -22,5 +23,15 @@ export const createDiscussion = input => dispatch => {
     },
   );
 };
+
+export const readNotification = input => dispatch =>
+  requestGraphql(readNotificationMutation(input), localStorage.getItem('token')).then(res => {
+    if (res.data && res.data.data && res.data.data.readNotification) {
+      dispatch({
+        type: READ_NOTIFICATION,
+        id: input,
+      });
+    }
+  });
 
 export default {};

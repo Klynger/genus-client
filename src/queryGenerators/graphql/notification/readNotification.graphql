@@ -1,0 +1,7 @@
+#import "./notificationFragment.graphql"
+
+mutation readNotification($input: ID!) {
+  readNotification(input: $input) {
+    ...notificationFields
+  }
+}

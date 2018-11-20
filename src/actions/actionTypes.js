@@ -12,6 +12,7 @@ export const SAVE_USER = 'SAVE_USER';
 export const REMOVE_USER = 'REMOVE_USER';
 export const SET_LOGGED_USER = 'SET_LOGGED_USER';
 export const REMOVE_ALL_USERS = 'REMOVE_ALL_USERS';
+export const READ_NOTIFICATION = 'READ_NOTIFICATION';
 // Grade
 export const SAVE_GRADE = 'SAVE_GRADE';
 export const SELECT_GRADE = 'SELECT_GRADE';

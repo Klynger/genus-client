@@ -1,0 +1,10 @@
+fragment notificationFields on Notification {
+  id
+  message
+  notificationType
+  read
+  createdAt
+  gradeId
+  subjectId
+  discussionId
+}
