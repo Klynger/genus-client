@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
 import { Form, withFormik } from 'formik';
+import { createReply } from '../../../actions/reply';
 import ProgressButton from '../../shared/ProgressButton';
 import CustomTextField from '../../shared/CustomTextField';
 import { ActionsContainer } from '../../shared/SharedComponents';
 import { Button, Paper, withStyles, Zoom } from '@material-ui/core';
-import { replyToDiscussion, replyToReply } from '../../../actions/reply';
 
 const styles = theme => ({
   form: {
@@ -73,11 +73,10 @@ AddReply.defaultProps = {
 };
 
 AddReply.propTypes = {
-  addReplyToDiscussion: PropTypes.func.isRequired, // eslint-disable-line
-  addReplyToReply: PropTypes.func.isRequired, // eslint-disable-line
   classes: PropTypes.object.isRequired,
   className: PropTypes.string,
   componentRoot: PropTypes.oneOfType([PropTypes.string, PropTypes.func, PropTypes.object]),
+  createNewReply: PropTypes.func.isRequired, // eslint-disable-line
   discussionId: PropTypes.string, // eslint-disable-line
   errors: PropTypes.shape({
     content: PropTypes.string,
@@ -99,8 +98,7 @@ AddReply.propTypes = {
 
 function mapDispatchToProps(dispatch) {
   return {
-    addReplyToDiscussion: input => dispatch(replyToDiscussion(input)),
-    addReplyToReply: input => dispatch(replyToReply(input)),
+    createNewReply: input => dispatch(createReply(input)),
   };
 }
 
@@ -126,21 +124,17 @@ export default connect(
     handleSubmit(values, formikBag) {
       const {
         setSubmitting,
-        props: {
-          onSubmit,
-          parentId,
-          discussionId,
-          isReplyToReply,
-          addReplyToReply,
-          addReplyToDiscussion,
-        },
+        props: { onSubmit, parentId, discussionId, isReplyToReply, createNewReply },
       } = formikBag;
 
       if (!isReplyToReply) {
-        addReplyToDiscussion({
-          ...values,
-          forumPostId: discussionId,
-        })
+        createNewReply(
+          {
+            ...values,
+            discussionId,
+          },
+          isReplyToReply,
+        )
           .then(res => {
             if (res.data.data) {
               onSubmit();
@@ -152,10 +146,13 @@ export default connect(
             setSubmitting(false);
           });
       } else {
-        addReplyToReply({
-          ...values,
-          parentId,
-        })
+        createNewReply(
+          {
+            ...values,
+            parentId,
+          },
+          isReplyToReply,
+        )
           .then(res => {
             if (res.data.data) {
               // TODO

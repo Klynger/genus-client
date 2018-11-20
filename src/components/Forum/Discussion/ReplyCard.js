@@ -85,8 +85,8 @@ class ReplyCard extends Component {
             avatar={
               <ImageUploader
                 className={classes.avatar}
-                alt={getFirstInitialsCapitalized(reply.user.username)}
-                initials={getFirstInitialsCapitalized(reply.user.username)}
+                alt={getFirstInitialsCapitalized(reply.creator.username)}
+                initials={getFirstInitialsCapitalized(reply.creator.username)}
               />
             }
             actions={
@@ -94,7 +94,7 @@ class ReplyCard extends Component {
                 <MoreVert />
               </IconButton>
             }
-            title={reply.user.username}
+            title={reply.creator.username}
             subheader={reply.date}
           />
           <Divider light />
@@ -128,10 +128,10 @@ ReplyCard.propTypes = {
   className: PropTypes.string,
   reply: PropTypes.shape({
     content: PropTypes.string,
-    date: PropTypes.string,
-    user: PropTypes.shape({
+    creator: PropTypes.shape({
       username: PropTypes.string,
     }).isRequired,
+    date: PropTypes.string,
   }).isRequired,
 };
 

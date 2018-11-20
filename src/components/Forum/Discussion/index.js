@@ -85,10 +85,9 @@ function mapStateToProps(
           .filter(id => reply.byId[id])
           .map(id => {
             const aux = reply.byId[id];
-
             return {
               ...aux,
-              user: user.byId[aux.user],
+              creator: user.byId[aux.creator],
               parent: aux.parent && reply.byId[aux.parent],
               discussion: singleDiscussion,
             };

@@ -33,8 +33,8 @@ discussion.define({
 });
 
 reply.define({
-  user,
   discussion,
+  creator: user,
   replies: [reply],
   parent: reply,
 });
