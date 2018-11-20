@@ -45,13 +45,10 @@ class Landing extends Component {
       snackBarMsg: 'Usuário criado',
     };
 
-    this.onSnackbarOpen = this.onSnackbarOpen.bind(this);
-    this.handleSnackbarClose = this.handleSnackbarClose.bind(this);
-    this.handleOpenSignin = this.handleOpenSignin.bind(this);
     this.handleCloseSignin = this.handleCloseSignin.bind(this);
   }
 
-  onSnackbarOpen(error) {
+  onSnackbarOpen = error => {
     const snackBarOptions = {
       snackBarMsg: '',
       openSnackbar: true,
@@ -68,26 +65,26 @@ class Landing extends Component {
       }
     }
     this.setState(snackBarOptions);
-  }
+  };
 
-  componentDidCatch(error) {
-    this.onSnackbarOpen(error);
-  }
-
-  handleSnackbarClose(event, reason) {
+  handleSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
 
     this.setState({ openSnackbar: false });
-  }
+  };
 
-  handleOpenSignin() {
+  handleOpenSignin = () => {
     this.setState({ signinOpen: true });
-  }
+  };
 
-  handleCloseSignin() {
+  handleCloseSignin = () => {
     this.setState({ signinOpen: false });
+  };
+
+  componentDidCatch(error) {
+    this.onSnackbarOpen(error);
   }
 
   render() {
@@ -96,7 +93,7 @@ class Landing extends Component {
     return (
       <LandingContainer>
         <BackgroundImg src="/static/images/landing-background.jpg" />
-        <Signup onHandleSignin={this.handleOpenSignin} handleSnackbarOpen={this.onSnackbarOpen} />
+        <Signup onSigninClick={this.handleOpenSignin} handleSnackbarOpen={this.onSnackbarOpen} />
         <Signin open={signinOpen} onClose={this.handleCloseSignin} />
         <Snackbar
           anchorOrigin={{
