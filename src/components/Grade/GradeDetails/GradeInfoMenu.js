@@ -16,7 +16,7 @@ const styles = () => ({
   },
 });
 
-const GradeInfoMenu = ({ id, open, classes, onClose, anchorEl, onAddStudends, canAddStudents }) => {
+const GradeInfoMenu = ({ id, open, classes, onClose, anchorEl, onAddStudents, canAddStudents }) => {
   return (
     <Popper anchorEl={anchorEl} className={classes.popper} open={open} transition disablePortal>
       {({ TransitionProps, placement }) => (
@@ -31,8 +31,8 @@ const GradeInfoMenu = ({ id, open, classes, onClose, anchorEl, onAddStudends, ca
                 {canAddStudents && (
                   <MenuItem
                     onClick={e => {
-                      if (onAddStudends) {
-                        onAddStudends();
+                      if (onAddStudents) {
+                        onAddStudents();
                       }
                       onClose(e);
                     }}
@@ -57,7 +57,7 @@ GradeInfoMenu.propTypes = {
   anchorEl: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
   canAddStudents: PropTypes.bool,
   classes: PropTypes.object.isRequired,
-  onAddStudends: PropTypes.func,
+  onAddStudents: PropTypes.func,
   open: PropTypes.bool,
 };
 

@@ -1,0 +1,5 @@
+mutation addStudentToSubjectsInGrade($gradeId: ID!, $studentId: ID!) {
+  addStudentToSubjectsInGrade(gradeId: $gradeId, studentId: $studentId) {
+    id
+  }
+}

@@ -6,6 +6,7 @@ import { Fade } from '@material-ui/core';
 import SubjectsGrid from './SubjectsGrid';
 import { fetchGrade } from '../../../actions/grade';
 import { withStyles } from '@material-ui/core/styles';
+import AddStudentToGradeDialog from './AddStudentToGradeDialog';
 import DefaultContainerRoute from '../../shared/DefaultContainerRoute';
 
 const styles = theme => ({
@@ -18,6 +19,14 @@ const styles = theme => ({
 });
 
 class GradeDetails extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      addStudentsOpen: false,
+    };
+  }
+
   componentDidMount() {
     const { fetchGradeById, match } = this.props;
     fetchGradeById(match.params.gradeId)
@@ -29,22 +38,35 @@ class GradeDetails extends Component {
       });
   }
 
+  handleAddStudentsOpen = () => {
+    this.setState({ addStudentsOpen: true });
+  };
+
+  handleAddStudentsClose = () => {
+    this.setState({ addStudentsOpen: false });
+  };
+
   render() {
-    const {
-      grade,
-      classes,
-      match: {
-        params: { gradeId },
-      },
-      theme: {
-        spacing: { unit },
-      },
-    } = this.props;
+    const { classes, grade } = this.props;
     let toRender;
     if (grade) {
+      const {
+        students,
+        match: {
+          params: { gradeId },
+        },
+      } = this.props;
+      const { addStudentsOpen } = this.state;
+
       toRender = (
-        <DefaultContainerRoute unit={unit}>
-          <GradeInfo grade={grade} />
+        <DefaultContainerRoute>
+          <AddStudentToGradeDialog
+            grade={grade}
+            students={students}
+            open={addStudentsOpen}
+            onClose={this.handleAddStudentsClose}
+          />
+          <GradeInfo grade={grade} onAddStudents={this.handleAddStudentsOpen} />
           <SubjectsGrid gradeId={gradeId} subjects={grade.subjects} />
         </DefaultContainerRoute>
       );
@@ -55,6 +77,10 @@ class GradeDetails extends Component {
   }
 }
 
+GradeDetails.defalutProps = {
+  students: [],
+};
+
 GradeDetails.propTypes = {
   classes: PropTypes.object.isRequired,
   fetchGradeById: PropTypes.func.isRequired,
@@ -64,22 +90,25 @@ GradeDetails.propTypes = {
       gradeId: PropTypes.string.isRequired,
     }).isRequired,
   }).isRequired,
-  theme: PropTypes.shape({
-    spacing: PropTypes.shape({
-      unit: PropTypes.number.isRequired,
-    }).isRequired,
-  }).isRequired,
+  students: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string,
+      username: PropTypes.string,
+    }),
+  ),
 };
 
-function mapToProps({ grade, subject }, ownProps) {
+function mapToProps({ institution, grade, subject, user }, ownProps) {
   const {
     match: {
       params: { gradeId },
     },
   } = ownProps;
 
+  const selectedInstitution = institution.byId[institution.selectedInstitution];
   const propGrade = grade.byId[gradeId];
-  if (propGrade) {
+  if (propGrade && selectedInstitution) {
     return {
       grade: {
         ...propGrade,
@@ -87,6 +116,7 @@ function mapToProps({ grade, subject }, ownProps) {
           .filter(subId => subject.byId[subId])
           .map(subId => subject.byId[subId]),
       },
+      students: selectedInstitution.students.filter(id => user.byId[id]).map(id => user.byId[id]),
     };
   }
   return {};
@@ -98,7 +128,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default withStyles(styles, { withTheme: true })(
+export default withStyles(styles)(
   connect(
     mapToProps,
     mapDispatchToProps,

@@ -29,3 +29,11 @@ export const mutationAddStudentToSubject = ({ subjectId, studentId }) => ({
     studentId,
   },
 });
+
+export const mutationAddStudentToSubjectsInGrade = ({ gradeId, studentId }) => ({
+  query: loader('./graphql/subject/addStudentToSubjectsInGrade.graphql').loc.source.body,
+  variables: {
+    gradeId,
+    studentId,
+  },
+});

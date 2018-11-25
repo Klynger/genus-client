@@ -73,7 +73,7 @@ class GradeInfo extends Component {
     const { grade } = this.props;
 
     if (grade) {
-      const { classes, canAddStudents } = this.props;
+      const { classes, canAddStudents, onAddStudents } = this.props;
       const { openMenu } = this.state;
 
       const showMenuButton = canAddStudents;
@@ -86,6 +86,7 @@ class GradeInfo extends Component {
             anchorEl={this.menuAnchorEl}
             onClose={this.handleMenuClose}
             canAddStudents={canAddStudents}
+            onAddStudents={onAddStudents}
           />
           <Paper className={classes.root}>
             {showMenuButton && (
@@ -137,6 +138,7 @@ GradeInfo.propTypes = {
   grade: PropTypes.shape({
     name: PropTypes.string,
   }),
+  onAddStudents: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(GradeInfo);
