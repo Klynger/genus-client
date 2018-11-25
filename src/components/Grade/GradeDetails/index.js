@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
+import GradeInfo from './GradeInfo';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { Fade } from '@material-ui/core';
 import SubjectsGrid from './SubjectsGrid';
 import { fetchGrade } from '../../../actions/grade';
 import { withStyles } from '@material-ui/core/styles';
-import { ResponsiveTitle } from '../../shared/SharedComponents';
 import DefaultContainerRoute from '../../shared/DefaultContainerRoute';
 
 const styles = theme => ({
@@ -44,7 +44,7 @@ class GradeDetails extends Component {
     if (grade) {
       toRender = (
         <DefaultContainerRoute unit={unit}>
-          <ResponsiveTitle>{grade.name}</ResponsiveTitle>
+          <GradeInfo grade={grade} />
           <SubjectsGrid gradeId={gradeId} subjects={grade.subjects} />
         </DefaultContainerRoute>
       );
