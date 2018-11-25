@@ -114,7 +114,7 @@ class Signup extends PureComponent {
 
   render() {
     const {
-      onHandleSignin,
+      onSigninClick,
       classes,
       handleChange,
       values,
@@ -156,7 +156,7 @@ class Signup extends PureComponent {
             color="secondary"
             disabled={isSubmitting}
             delay={FadeInButton.defaultProps.delay * 1.3}
-            onClick={onHandleSignin}
+            onClick={onSigninClick}
           >
             Login
           </FadeInButton>
@@ -178,7 +178,7 @@ Signup.propTypes = {
   handleSnackbarOpen: PropTypes.func.isRequired, // eslint-disable-line
   handleSubmit: PropTypes.func.isRequired,
   isSubmitting: PropTypes.bool.isRequired,
-  onHandleSignin: PropTypes.func.isRequired,
+  onSigninClick: PropTypes.func.isRequired,
   touched: PropTypes.shape({
     email: PropTypes.bool,
     password: PropTypes.bool,
