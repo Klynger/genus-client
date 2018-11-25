@@ -52,6 +52,7 @@ class GradeDetails extends Component {
     if (grade) {
       const {
         students,
+        canAddStudents,
         match: {
           params: { gradeId },
         },
@@ -66,7 +67,11 @@ class GradeDetails extends Component {
             open={addStudentsOpen}
             onClose={this.handleAddStudentsClose}
           />
-          <GradeInfo grade={grade} onAddStudents={this.handleAddStudentsOpen} />
+          <GradeInfo
+            grade={grade}
+            canAddStudents={canAddStudents}
+            onAddStudents={this.handleAddStudentsOpen}
+          />
           <SubjectsGrid gradeId={gradeId} subjects={grade.subjects} />
         </DefaultContainerRoute>
       );
@@ -78,10 +83,12 @@ class GradeDetails extends Component {
 }
 
 GradeDetails.defalutProps = {
+  canAddStudents: false,
   students: [],
 };
 
 GradeDetails.propTypes = {
+  canAddStudents: PropTypes.bool,
   classes: PropTypes.object.isRequired,
   fetchGradeById: PropTypes.func.isRequired,
   grade: PropTypes.object,
@@ -117,6 +124,7 @@ function mapToProps({ institution, grade, subject, user }, ownProps) {
           .map(subId => subject.byId[subId]),
       },
       students: selectedInstitution.students.filter(id => user.byId[id]).map(id => user.byId[id]),
+      canAddStudents: selectedInstitution.admins.some(id => id === user.loggedUserId),
     };
   }
   return {};

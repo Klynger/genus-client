@@ -129,7 +129,7 @@ class GradeInfo extends Component {
 }
 
 GradeInfo.defaultProps = {
-  canAddStudents: true,
+  canAddStudents: false,
 };
 
 GradeInfo.propTypes = {

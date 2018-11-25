@@ -18,12 +18,19 @@ const styles = () => ({
 
 const GradeInfoMenu = ({ id, open, classes, onClose, anchorEl, onAddStudents, canAddStudents }) => {
   return (
-    <Popper anchorEl={anchorEl} className={classes.popper} open={open} transition disablePortal>
+    <Popper
+      anchorEl={anchorEl}
+      className={classes.popper}
+      placement="bottom-end"
+      open={open}
+      transition
+      disablePortal
+    >
       {({ TransitionProps, placement }) => (
         <Grow
           id={id}
           {...TransitionProps}
-          style={{ transformOrigin: placement === 'bottom' ? 'left top' : 'left bottom' }}
+          style={{ transformOrigin: placement === 'bottom' ? 'right bottom' : 'right top' }}
         >
           <Paper>
             <ClickAwayListener onClickAway={onClose}>
