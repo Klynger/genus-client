@@ -112,7 +112,10 @@ AddStudentToGradeDialog.defaultProps = {
 
 AddStudentToGradeDialog.propTypes = {
   classes: PropTypes.object.isRequired,
-  errors: PropTypes.shape({}).isRequired,
+  errors: PropTypes.shape({
+    gradeId: PropTypes.string,
+    studentId: PropTypes.string,
+  }).isRequired,
   fullScreen: PropTypes.bool.isRequired,
   grade: PropTypes.shape({
     id: PropTypes.string.isRequired,
@@ -131,6 +134,7 @@ AddStudentToGradeDialog.propTypes = {
     }),
   ),
   touched: PropTypes.shape({
+    gradeId: PropTypes.bool,
     studentId: PropTypes.bool,
   }).isRequired,
   values: PropTypes.shape({
