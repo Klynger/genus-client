@@ -197,12 +197,13 @@ ApplicationBar.defaultProps = {
 function mapStateToProps({ institution, user }) {
   const { allIds, byId, selectedInstitution } = institution;
   if (selectedInstitution !== NO_INSTUTION_SELECTED && user.byId[user.loggedUserId]) {
+    const notificationQuantity = user.byId[user.loggedUserId].notifications
+      ? user.byId[user.loggedUserId].notifications.filter(notification => !notification.read).length
+      : 0;
     return {
       institutions: allIds.map(id => byId[id]),
       selectedInstitution: byId[selectedInstitution],
-      notificationQuantity: user.byId[user.loggedUserId].notifications.filter(
-        notification => !notification.read,
-      ).length,
+      notificationQuantity,
     };
   }
 
