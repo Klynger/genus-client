@@ -25,8 +25,8 @@ const styles = theme => ({
   },
 });
 
-function labelText(valueName) {
-  switch (valueName) {
+function fieldToLabel(fieldName) {
+  switch (fieldName) {
     case 'address':
       return 'Endereço';
     case 'email':
@@ -40,7 +40,7 @@ function labelText(valueName) {
   }
 }
 
-const valuesKeys = ['name', 'email', 'phone', 'address'];
+const formFields = ['name', 'email', 'phone', 'address'];
 const InstitutionForm = ({
   errors,
   values,
@@ -52,19 +52,19 @@ const InstitutionForm = ({
 }) => (
   <Paper className={classes.root}>
     <Form className={classes.form}>
-      {valuesKeys.map(key => (
+      {formFields.map(field => (
         <CustomTextField
-          key={key}
-          name={key}
-          value={values[key]}
+          key={field}
+          name={field}
+          value={values[field]}
           onChange={handleChange}
-          label={labelText(key)}
-          helperText={errors[key]}
+          label={fieldToLabel(field)}
+          helperText={errors[field]}
           className={classes.formControl}
           OnEnterHelperTextTransition={Zoom}
-          id={`create-institution__${key}-field`}
-          error={Boolean(touched[key] && errors[key])}
-          showHelperText={Boolean(touched[key] && errors[key])}
+          id={`create-institution__${field}-field`}
+          error={Boolean(touched[field] && errors[field])}
+          showHelperText={Boolean(touched[field] && errors[field])}
         />
       ))}
       <ActionsContainer>

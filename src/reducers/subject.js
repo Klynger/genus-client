@@ -4,8 +4,9 @@ import {
   UPDATE_SUBJECT,
   REMOVE_ALL_SUBJECTS,
   ADD_TEACHER_TO_SUBJECT,
-  ADD_DISCUSSION_TO_SUBJECT,
   ADD_STUDENT_TO_SUBJECT,
+  ADD_STUDENT_TO_SUBJECTS,
+  ADD_DISCUSSION_TO_SUBJECT,
 } from '../actions/actionTypes';
 
 const DEFAULT_STATE = {
@@ -55,6 +56,27 @@ function subject(state = DEFAULT_STATE, action) {
               action.payload.studentId,
             ),
           },
+        },
+      };
+
+    case ADD_STUDENT_TO_SUBJECTS:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          ...action.payload.subjects.reduce(
+            (result, curId) => ({
+              ...result,
+              [curId]: {
+                ...state.byId[curId],
+                students: concatIdIfNotContain(
+                  state.byId[curId].students,
+                  action.payload.studentId,
+                ),
+              },
+            }),
+            {},
+          ),
         },
       };
 

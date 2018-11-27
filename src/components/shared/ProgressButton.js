@@ -26,12 +26,14 @@ const ProgressButton = ({ classes, children, showProgress, ...buttonProps }) => 
 );
 
 ProgressButton.defaultProps = {
+  color: 'primary',
   showProgress: false,
 };
 
 ProgressButton.propTypes = {
   children: PropTypes.node.isRequired,
   classes: PropTypes.object.isRequired,
+  color: PropTypes.oneOf(['default', 'inherit', 'primary', 'secondary']),
   showProgress: PropTypes.bool,
 };
 

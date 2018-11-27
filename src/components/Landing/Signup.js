@@ -88,9 +88,9 @@ const styles = theme => ({
   },
 });
 
-const valuesKeys = ['username', 'email', 'password'];
-function labelText(valueText) {
-  switch (valueText) {
+const formFields = ['username', 'email', 'password'];
+function fieldToLabel(fieldName) {
+  switch (fieldName) {
     case 'username':
       return 'Nome';
     case 'email':
@@ -114,7 +114,7 @@ class Signup extends PureComponent {
 
   render() {
     const {
-      handleSignin,
+      onSigninClick,
       classes,
       handleChange,
       values,
@@ -127,20 +127,20 @@ class Signup extends PureComponent {
     return (
       <SignupContainer>
         <Form className={classes.form}>
-          {valuesKeys.map(key => (
+          {formFields.map(field => (
             <CustomTextField
-              key={key}
-              name={key}
-              value={values[key]}
+              key={field}
+              name={field}
+              value={values[field]}
               onChange={handleChange}
-              label={labelText(key)}
-              helperText={errors[key]}
+              label={fieldToLabel(field)}
+              helperText={errors[field]}
               className={classes.formControl}
               OnEnterHelperTextTransition={Zoom}
-              id={`signup__${key}-field`}
-              type={key === 'password' ? 'password' : 'text'}
-              error={Boolean(touched[key] && errors[key])}
-              showHelperText={Boolean(touched[key] && errors[key])}
+              id={`signup__${field}-field`}
+              type={field === 'password' ? 'password' : 'text'}
+              error={Boolean(touched[field] && errors[field])}
+              showHelperText={Boolean(touched[field] && errors[field])}
             />
           ))}
           <ProgressButton
@@ -156,7 +156,7 @@ class Signup extends PureComponent {
             color="secondary"
             disabled={isSubmitting}
             delay={FadeInButton.defaultProps.delay * 1.3}
-            onClick={handleSignin}
+            onClick={onSigninClick}
           >
             Login
           </FadeInButton>
@@ -175,10 +175,10 @@ Signup.propTypes = {
     username: PropTypes.string,
   }).isRequired,
   handleChange: PropTypes.func.isRequired,
-  handleSignin: PropTypes.func.isRequired,
   handleSnackbarOpen: PropTypes.func.isRequired, // eslint-disable-line
   handleSubmit: PropTypes.func.isRequired,
   isSubmitting: PropTypes.bool.isRequired,
+  onSigninClick: PropTypes.func.isRequired,
   touched: PropTypes.shape({
     email: PropTypes.bool,
     password: PropTypes.bool,

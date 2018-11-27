@@ -6,6 +6,7 @@ import AddStudentDialog from './AddStudentDialog';
 import AddteacherDialog from './AddTeacherDialog';
 import React, { Component, Fragment } from 'react';
 import EditSubjectDialog from './EditSubjectDialog';
+import UserList from '../../Institution/InstitutionDetails/UserList';
 import DefaultContainerRoute from '../../shared/DefaultContainerRoute';
 
 /*
@@ -75,6 +76,7 @@ class SubjectDetailsPage extends Component {
             onAddStudentClick={this.handleOpenAddStudent}
             onEditSubjectClick={this.handleEditSubjectClick}
           />
+          <UserList users={subject.students} headTitle="Alunos" />
         </Fragment>
       );
     } else {
@@ -90,7 +92,25 @@ class SubjectDetailsPage extends Component {
 }
 
 SubjectDetailsPage.propTypes = {
-  subject: PropTypes.object,
+  subject: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    students: PropTypes.arrayOf(
+      PropTypes.shape({
+        email: PropTypes.string,
+        id: PropTypes.string.isRequired,
+        name: PropTypes.string,
+        username: PropTypes.string,
+      }),
+    ).isRequired,
+    teachers: PropTypes.arrayOf(
+      PropTypes.shape({
+        email: PropTypes.string,
+        id: PropTypes.string.isRequired,
+        name: PropTypes.string,
+        username: PropTypes.string,
+      }),
+    ).isRequired,
+  }),
 };
 
 function mapToProps(
@@ -106,7 +126,8 @@ function mapToProps(
     return {
       subject: {
         ...sub,
-        teachers: sub.teachers.map(id => user.byId[id]),
+        teachers: sub.teachers.filter(id => user.byId[id]).map(id => user.byId[id]),
+        students: sub.students.filter(id => user.byId[id]).map(id => user.byId[id]),
       },
     };
   }
