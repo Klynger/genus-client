@@ -24,6 +24,17 @@ NotificationActions.propTypes = {
   readed: PropTypes.bool.isRequired,
 };
 
+const defaultMarkButton = {
+  backgroundColor: 'rgba(0, 0, 0, 0.30)',
+  borderRadius: '50%',
+  height: '8px',
+  width: '8px',
+  position: 'relative',
+  '&:hover': {
+    backgroundColor: 'rgba(0, 0, 0, 0.54)',
+  },
+};
+
 const styles = theme => ({
   menu: {
     maxHeight: '400px',
@@ -63,24 +74,10 @@ const styles = theme => ({
     flexDirection: 'column',
   },
   markAsReadBtn: {
-    backgroundColor: 'rgba(0, 0, 0, 0.30)',
-    borderRadius: '50%',
-    height: '8px',
-    width: '8px',
-    position: 'relative',
-    '&:hover': {
-      backgroundColor: 'rgba(0, 0, 0, 0.54)',
-    },
+    ...defaultMarkButton,
   },
   markAsunreadBtn: {
-    backgroundColor: 'rgba(0, 0, 0, 0.30)',
-    borderRadius: '50%',
-    height: '8px',
-    width: '8px',
-    position: 'relative',
-    '&:hover': {
-      backgroundColor: 'rgba(0, 0, 0, 0.54)',
-    },
+    ...defaultMarkButton,
     '&:before': {
       content: '""',
       backgroundColor: 'white',
