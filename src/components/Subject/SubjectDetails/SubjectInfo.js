@@ -45,6 +45,7 @@ const SubjectInfo = ({
   onEditSubjectClick,
   history,
   isAdmin,
+  canSeeForum,
 }) => (
   <Paper className={classes.root}>
     <div className={classes.contentContainer}>
@@ -78,14 +79,17 @@ const SubjectInfo = ({
           </Button>
         </span>
       )}
-      <Button color="primary" component={Link} to={`${history.location.pathname}/forum`}>
-        Forum
-      </Button>
+      {canSeeForum && (
+        <Button color="primary" component={Link} to={`${history.location.pathname}/forum`}>
+          Forum
+        </Button>
+      )}
     </ActionsContainer>
   </Paper>
 );
 
 SubjectInfo.propTypes = {
+  canSeeForum: PropTypes.bool.isRequired,
   classes: PropTypes.object.isRequired,
   history: PropTypes.shape({
     location: PropTypes.shape({
@@ -103,14 +107,25 @@ SubjectInfo.propTypes = {
   }),
 };
 
-function mapStateToProps({ user: { loggedUserId }, institution: { byId, selectedInstitution } }) {
+function mapStateToProps(
+  { user: { loggedUserId }, institution: { byId, selectedInstitution } },
+  { subject },
+) {
   const isAdmin =
     selectedInstitution && byId[selectedInstitution]
       ? byId[selectedInstitution].admins.includes(loggedUserId)
       : false;
+  let canSeeForum = isAdmin;
+  if (subject) {
+    canSeeForum =
+      canSeeForum ||
+      subject.teachers.some(user => user.id === loggedUserId) ||
+      subject.students.some(user => user.id === loggedUserId);
+  }
 
   return {
     isAdmin,
+    canSeeForum,
   };
 }
 
