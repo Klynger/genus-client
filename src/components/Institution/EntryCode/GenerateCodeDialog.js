@@ -31,7 +31,7 @@ import {
 const styles = theme => ({
   ...defaultDialogBreakpoints(),
   formControl: {
-    margin: theme.spacing.unit,
+    margin: `${theme.spacing.unit}px 0`,
     minWidth: 120,
     width: '100%',
   },
