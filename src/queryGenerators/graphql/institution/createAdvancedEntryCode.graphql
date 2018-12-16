@@ -1,0 +1,3 @@
+mutation createAdvancedEntryCode($input: CreateAdvancedEntryCodeInput!) {
+  createAdvancedEntryCode(input: $input)
+}
