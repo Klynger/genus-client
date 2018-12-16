@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import { ActionsContainer } from '../../shared/SharedComponents';
 import { DEFAULT_PHOTO_CLASS_SRC } from '../../../utils/helpers';
@@ -43,6 +44,7 @@ const SubjectInfo = ({
   onAddTeacherClick,
   onEditSubjectClick,
   history,
+  isAdmin,
 }) => (
   <Paper className={classes.root}>
     <div className={classes.contentContainer}>
@@ -63,15 +65,19 @@ const SubjectInfo = ({
       </div>
     </div>
     <ActionsContainer>
-      <Button color="primary" onClick={onEditSubjectClick}>
-        Atualizar Informações
-      </Button>
-      <Button color="primary" onClick={onAddTeacherClick}>
-        Vincular professor
-      </Button>
-      <Button color="primary" onClick={onAddStudentClick}>
-        Vincular aluno
-      </Button>
+      {isAdmin && (
+        <span>
+          <Button color="primary" onClick={onEditSubjectClick}>
+            Atualizar Informações
+          </Button>
+          <Button color="primary" onClick={onAddTeacherClick}>
+            Vincular professor
+          </Button>
+          <Button color="primary" onClick={onAddStudentClick}>
+            Vincular aluno
+          </Button>
+        </span>
+      )}
       <Button color="primary" component={Link} to={`${history.location.pathname}/forum`}>
         Forum
       </Button>
@@ -86,6 +92,7 @@ SubjectInfo.propTypes = {
       pathname: PropTypes.string.isRequired,
     }).isRequired,
   }).isRequired,
+  isAdmin: PropTypes.bool.isRequired,
   onAddStudentClick: PropTypes.func.isRequired,
   onAddTeacherClick: PropTypes.func.isRequired,
   onEditSubjectClick: PropTypes.func.isRequired,
@@ -96,4 +103,15 @@ SubjectInfo.propTypes = {
   }),
 };
 
-export default withRouter(withStyles(styles)(SubjectInfo));
+function mapStateToProps({ user: { loggedUserId }, institution: { byId, selectedInstitution } }) {
+  const isAdmin =
+    selectedInstitution && byId[selectedInstitution]
+      ? byId[selectedInstitution].admins.includes(loggedUserId)
+      : false;
+
+  return {
+    isAdmin,
+  };
+}
+
+export default connect(mapStateToProps)(withRouter(withStyles(styles)(SubjectInfo)));
