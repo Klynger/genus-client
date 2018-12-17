@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import { ActionsContainer } from '../../shared/SharedComponents';
 import { DEFAULT_PHOTO_CLASS_SRC } from '../../../utils/helpers';
@@ -43,6 +44,8 @@ const SubjectInfo = ({
   onAddTeacherClick,
   onEditSubjectClick,
   history,
+  isAdmin,
+  canSeeForum,
 }) => (
   <Paper className={classes.root}>
     <div className={classes.contentContainer}>
@@ -63,29 +66,37 @@ const SubjectInfo = ({
       </div>
     </div>
     <ActionsContainer>
-      <Button color="primary" onClick={onEditSubjectClick}>
-        Atualizar Informações
-      </Button>
-      <Button color="primary" onClick={onAddTeacherClick}>
-        Vincular professor
-      </Button>
-      <Button color="primary" onClick={onAddStudentClick}>
-        Vincular aluno
-      </Button>
-      <Button color="primary" component={Link} to={`${history.location.pathname}/forum`}>
-        Forum
-      </Button>
+      {isAdmin && (
+        <span>
+          <Button color="primary" onClick={onEditSubjectClick}>
+            Atualizar Informações
+          </Button>
+          <Button color="primary" onClick={onAddTeacherClick}>
+            Vincular professor
+          </Button>
+          <Button color="primary" onClick={onAddStudentClick}>
+            Vincular aluno
+          </Button>
+        </span>
+      )}
+      {canSeeForum && (
+        <Button color="primary" component={Link} to={`${history.location.pathname}/forum`}>
+          Forum
+        </Button>
+      )}
     </ActionsContainer>
   </Paper>
 );
 
 SubjectInfo.propTypes = {
+  canSeeForum: PropTypes.bool.isRequired,
   classes: PropTypes.object.isRequired,
   history: PropTypes.shape({
     location: PropTypes.shape({
       pathname: PropTypes.string.isRequired,
     }).isRequired,
   }).isRequired,
+  isAdmin: PropTypes.bool.isRequired,
   onAddStudentClick: PropTypes.func.isRequired,
   onAddTeacherClick: PropTypes.func.isRequired,
   onEditSubjectClick: PropTypes.func.isRequired,
@@ -96,4 +107,26 @@ SubjectInfo.propTypes = {
   }),
 };
 
-export default withRouter(withStyles(styles)(SubjectInfo));
+function mapStateToProps(
+  { user: { loggedUserId }, institution: { byId, selectedInstitution } },
+  { subject },
+) {
+  const isAdmin =
+    selectedInstitution && byId[selectedInstitution]
+      ? byId[selectedInstitution].admins.includes(loggedUserId)
+      : false;
+  let canSeeForum = isAdmin;
+  if (subject) {
+    canSeeForum =
+      canSeeForum ||
+      subject.teachers.some(user => user.id === loggedUserId) ||
+      subject.students.some(user => user.id === loggedUserId);
+  }
+
+  return {
+    isAdmin,
+    canSeeForum,
+  };
+}
+
+export default connect(mapStateToProps)(withRouter(withStyles(styles)(SubjectInfo)));
