@@ -5,6 +5,7 @@ import RepliesList from './RepliesList';
 import DiscussionCard from './DiscussionCard';
 import React, { Component, Fragment } from 'react';
 import { Fade, withStyles } from '@material-ui/core';
+import { ResponsiveTitle } from '../../shared/SharedComponents';
 import DefaultContainerRoute from '../../shared/DefaultContainerRoute';
 
 const styles = theme => ({
@@ -41,6 +42,7 @@ class DiscussionPage extends Component {
     if (discussion) {
       toRender = (
         <Fragment>
+          <ResponsiveTitle>{discussion.title}</ResponsiveTitle>
           <DiscussionCard onReply={this.handleToggleShowAddReply} discussion={discussion} />
           {openAddReply && (
             <AddReply
