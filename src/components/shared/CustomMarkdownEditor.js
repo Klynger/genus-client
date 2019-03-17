@@ -43,6 +43,7 @@ const CustomMarkdownEditor = ({ name, onChange, content }) => {
       minPreviewHeight={200}
       generateMarkdownPreview={markdown => Promise.resolve(converter.makeHtml(markdown))}
       commands={listCommands}
+      readOnly={tab === 'preview'}
     />
   );
 };
