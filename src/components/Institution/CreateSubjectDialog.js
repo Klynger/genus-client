@@ -126,6 +126,13 @@ CreateSubjectDialog.propTypes = {
   isSubmitting: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool,
+  theme: PropTypes.shape({
+    transitions: PropTypes.shape({
+      duration: PropTypes.shape({
+        leavingScreen: PropTypes.number.isRequired,
+      }).isRequired,
+    }).isRequired,
+  }).isRequired,
   touched: PropTypes.shape({
     name: PropTypes.bool,
   }).isRequired,
@@ -156,12 +163,12 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps,
 )(
-  withStyles(styles)(
-    withWidth()(
-      withMobileDialog({
-        breakpoint: 'xs',
-      })(
-        withRouter(
+  withWidth()(
+    withMobileDialog({
+      breakpoint: 'xs',
+    })(
+      withRouter(
+        withStyles(styles, { withTheme: true })(
           withFormik({
             mapPropsToValues({ name }) {
               return {
@@ -175,20 +182,26 @@ export default connect(
               values,
               {
                 setSubmitting,
-                props: { gradeId, onClose, saveNewSubject },
+                props: { gradeId, onClose, saveNewSubject, theme },
               },
             ) {
+              setSubmitting(true);
               values = {
                 ...values,
                 gradeId,
               };
-              setSubmitting(true);
               saveNewSubject(values)
                 .then(() => {
                   onClose();
-                  setSubmitting(false);
+                  setTimeout(() => {
+                    setSubmitting(false);
+                  }, theme.transitions.duration.leavingScreen);
                 })
-                .catch(setSubmitting(false));
+                .catch(() => {
+                  setTimeout(() => {
+                    setSubmitting(false);
+                  }, theme.transitions.duration.leavingScreen);
+                });
             },
             enableReinitialize: true,
           })(CreateSubjectDialog),
