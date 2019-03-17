@@ -13,7 +13,6 @@ import {
   Button,
   Dialog,
   withWidth,
-  withTheme,
   InputLabel,
   withStyles,
   DialogTitle,
@@ -110,6 +109,13 @@ CreateGradeDialog.propTypes = {
   isSubmitting: PropTypes.bool,
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool,
+  theme: PropTypes.shape({
+    transitions: PropTypes.shape({
+      duration: PropTypes.shape({
+        leavingScreen: PropTypes.number.isRequired,
+      }).isRequired,
+    }).isRequired,
+  }).isRequired,
   touched: PropTypes.shape({
     name: PropTypes.bool,
   }),
@@ -136,47 +142,45 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps,
 )(
-  withStyles(styles)(
-    withWidth()(
-      withMobileDialog({
-        breakpoint: 'xs',
-      })(
-        withTheme()(
-          withRouter(
-            withFormik({
-              mapPropsToValues({ name }) {
-                return {
-                  name: name || '',
-                };
-              },
-              validationSchema: Yup.object().shape({
-                name: Yup.string().required('Nome da disciplina é obrigatorio'),
-              }),
-              handleSubmit(values, { setSubmitting, props }) {
-                // TODO
-                const input = {
-                  institutionId: props.institution.id,
-                  name: values.name,
-                };
+  withWidth()(
+    withMobileDialog({
+      breakpoint: 'xs',
+    })(
+      withStyles(styles, { withTheme: true })(
+        withRouter(
+          withFormik({
+            mapPropsToValues({ name }) {
+              return {
+                name: name || '',
+              };
+            },
+            validationSchema: Yup.object().shape({
+              name: Yup.string().required('Nome da disciplina é obrigatorio'),
+            }),
+            handleSubmit(values, { setSubmitting, props }) {
+              // TODO
+              const input = {
+                institutionId: props.institution.id,
+                name: values.name,
+              };
 
-                props
-                  .saveGrade(input)
-                  .then(() => {
-                    props.onClose();
-                    setTimeout(() => {
-                      setSubmitting(false);
-                    }, props.theme.transitions.duration.standard);
-                  })
-                  .catch(() => {
-                    // TODO
-                    setTimeout(() => {
-                      setSubmitting(false);
-                    }, props.theme.transitions.duration.standard);
-                  });
-              },
-              enableReinitialize: true,
-            })(CreateGradeDialog),
-          ),
+              props
+                .saveGrade(input)
+                .then(() => {
+                  props.onClose();
+                  setTimeout(() => {
+                    setSubmitting(false);
+                  }, props.theme.transitions.duration.leavingScreen);
+                })
+                .catch(() => {
+                  // TODO
+                  setTimeout(() => {
+                    setSubmitting(false);
+                  }, props.theme.transitions.duration.leavingScreen);
+                });
+            },
+            enableReinitialize: true,
+          })(CreateGradeDialog),
         ),
       ),
     ),
