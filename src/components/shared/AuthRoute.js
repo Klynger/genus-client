@@ -22,7 +22,7 @@ const AuthRoute = ({ component: Component, ...rest }) => (
 
 AuthRoute.propTypes = {
   component: Route.propTypes.component,
-  location: PropTypes.string,
+  location: PropTypes.object,
 };
 
 export default AuthRoute;
