@@ -6,12 +6,12 @@ import { Form, withFormik } from 'formik';
 import ProgressButton from '../../shared/ProgressButton';
 import { createDiscussion } from '../../../actions/discussion';
 import { ActionsContainer } from '../../shared/SharedComponents';
+import CustomMarkdownEditor from '../../shared/CustomMarkdownEditor';
 import {
   Fade,
   Zoom,
   Input,
   Paper,
-  TextField,
   withStyles,
   InputLabel,
   FormControl,
@@ -42,6 +42,7 @@ const NewDiscussionForm = ({
   isSubmitting,
   handleChange,
   handleSubmit,
+  setFieldValue,
 }) => (
   <Fade in>
     <Paper className={classes.root}>
@@ -60,17 +61,21 @@ const NewDiscussionForm = ({
             </Zoom>
           )}
         </FormControl>
-        <TextField
-          rows={10}
-          multiline
-          rowsMax={15}
-          name="content"
-          variant="outlined"
-          onChange={handleChange}
+        <FormControl
           className={classes.formControl}
-          helperText={touched.content && errors.content}
           error={touched.content && Boolean(errors.content)}
-        />
+        >
+          <CustomMarkdownEditor
+            name="content"
+            onChange={content => setFieldValue('content', content, true)}
+            content={values.content}
+          />
+          {touched.content && Boolean(errors.content) && (
+            <Zoom in>
+              <FormHelperText>{errors.content}</FormHelperText>
+            </Zoom>
+          )}
+        </FormControl>
         <ActionsContainer>
           <ProgressButton showProgress={isSubmitting} color="primary" onClick={handleSubmit}>
             Criar discussão
@@ -100,6 +105,7 @@ NewDiscussionForm.propTypes = {
     }).isRequired,
     url: PropTypes.string.isRequired,
   }).isRequired,
+  setFieldValue: PropTypes.func.isRequired,
   touched: PropTypes.shape({
     content: PropTypes.bool,
     title: PropTypes.bool,
