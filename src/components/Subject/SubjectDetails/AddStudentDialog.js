@@ -190,18 +190,21 @@ export default connect(
           props
             .addStudent(values)
             .then(res => {
-              setTimeout(() => {
-                setSubmitting(false);
-              }, props.theme.transitions.duration.leavingScreen);
+              let callResetForm = false;
               if (res.data.data && res.data.data.addStudentToSubject) {
                 props.onClose();
-                resetForm({
-                  studentId: NO_STUDENT_SELECTED,
-                  subjectId: props.subject.id,
-                });
+                callResetForm = true;
               } else {
                 setErrors({ requestError: 'Algo de errado aconteceu. Tente Novamente' });
               }
+              setTimeout(() => {
+                if (callResetForm) {
+                  resetForm({
+                    studentId: NO_STUDENT_SELECTED,
+                    subjectId: props.subject.id,
+                  });
+                }
+              }, props.theme.transitions.duration.leavingScreen);
             })
             .catch(() => {
               setTimeout(() => {
