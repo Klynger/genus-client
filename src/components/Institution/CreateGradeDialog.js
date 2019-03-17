@@ -13,6 +13,7 @@ import {
   Button,
   Dialog,
   withWidth,
+  withTheme,
   InputLabel,
   withStyles,
   DialogTitle,
@@ -47,49 +48,51 @@ const CreateGradeDialog = ({
   onClose,
   touched,
   width,
-}) => (
-  <Dialog
-    fullScreen={fullScreen}
-    open={open}
-    onClose={onClose}
-    TransitionComponent={DefaultDialogTransition}
-    onBackdropClick={handleReset}
-    classes={{
-      paper: classes[`dialogRoot${capitalize(width)}`],
-    }}
-  >
-    <DialogTitle>Série</DialogTitle>
-    <DialogContent>
-      <Form className={classes.gradeForm}>
-        <FormControl
-          className={classes.formControl}
-          error={touched.name && errors.name !== undefined}
-        >
-          <InputLabel htmlFor="name">Nome </InputLabel>
-          <Input name="name" value={values.name} onChange={handleChange} />
-          {touched.name && errors.name && (
-            <FormHelperText id="grade__name-error-text">{errors.name}</FormHelperText>
-          )}
-        </FormControl>
-      </Form>
-      <DialogActions>
-        <Button
-          color="primary"
-          disabled={isSubmitting}
-          onClick={() => {
-            onClose();
-            handleReset();
-          }}
-        >
-          Cancelar
-        </Button>
-        <Button color="primary" disabled={isSubmitting} onClick={handleSubmit}>
-          Criar
-        </Button>
-      </DialogActions>
-    </DialogContent>
-  </Dialog>
-);
+}) => {
+  return (
+    <Dialog
+      fullScreen={fullScreen}
+      open={open}
+      onClose={onClose}
+      TransitionComponent={DefaultDialogTransition}
+      onBackdropClick={handleReset}
+      classes={{
+        paper: classes[`dialogRoot${capitalize(width)}`],
+      }}
+    >
+      <DialogTitle>Série</DialogTitle>
+      <DialogContent>
+        <Form className={classes.gradeForm}>
+          <FormControl
+            className={classes.formControl}
+            error={touched.name && errors.name !== undefined}
+          >
+            <InputLabel htmlFor="name">Nome </InputLabel>
+            <Input name="name" value={values.name} onChange={handleChange} />
+            {touched.name && errors.name && (
+              <FormHelperText id="grade__name-error-text">{errors.name}</FormHelperText>
+            )}
+          </FormControl>
+        </Form>
+        <DialogActions>
+          <Button
+            color="primary"
+            disabled={isSubmitting}
+            onClick={() => {
+              onClose();
+              handleReset();
+            }}
+          >
+            Cancelar
+          </Button>
+          <Button color="primary" disabled={isSubmitting} onClick={handleSubmit}>
+            Criar
+          </Button>
+        </DialogActions>
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 CreateGradeDialog.defaultProps = {
   open: false,
@@ -138,36 +141,42 @@ export default connect(
       withMobileDialog({
         breakpoint: 'xs',
       })(
-        withRouter(
-          withFormik({
-            mapPropsToValues({ name }) {
-              return {
-                name: name || '',
-              };
-            },
-            validationSchema: Yup.object().shape({
-              name: Yup.string().required('Nome da disciplina é obrigatorio'),
-            }),
-            handleSubmit(values, { setSubmitting, props }) {
-              // TODO
-              const input = {
-                institutionId: props.institution.id,
-                name: values.name,
-              };
+        withTheme()(
+          withRouter(
+            withFormik({
+              mapPropsToValues({ name }) {
+                return {
+                  name: name || '',
+                };
+              },
+              validationSchema: Yup.object().shape({
+                name: Yup.string().required('Nome da disciplina é obrigatorio'),
+              }),
+              handleSubmit(values, { setSubmitting, props }) {
+                // TODO
+                const input = {
+                  institutionId: props.institution.id,
+                  name: values.name,
+                };
 
-              props
-                .saveGrade(input)
-                .then(() => {
-                  props.onClose();
-                  setSubmitting(false);
-                })
-                .catch(() => {
-                  // TODO
-                  setSubmitting(false);
-                });
-            },
-            enableReinitialize: true,
-          })(CreateGradeDialog),
+                props
+                  .saveGrade(input)
+                  .then(() => {
+                    props.onClose();
+                    setTimeout(() => {
+                      setSubmitting(false);
+                    }, props.theme.transitions.duration.standard);
+                  })
+                  .catch(() => {
+                    // TODO
+                    setTimeout(() => {
+                      setSubmitting(false);
+                    }, props.theme.transitions.duration.standard);
+                  });
+              },
+              enableReinitialize: true,
+            })(CreateGradeDialog),
+          ),
         ),
       ),
     ),
