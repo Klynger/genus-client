@@ -129,6 +129,13 @@ GenerateCodeDialog.propTypes = {
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool,
   roles: PropTypes.array,
+  theme: PropTypes.shape({
+    transitions: PropTypes.shape({
+      duration: PropTypes.shape({
+        leavingScreen: PropTypes.number.isRequired,
+      }).isRequired,
+    }).isRequired,
+  }).isRequired,
   touched: PropTypes.shape({
     institutionId: PropTypes.bool,
     role: PropTypes.bool,
@@ -140,10 +147,10 @@ GenerateCodeDialog.propTypes = {
   width: PropTypes.string.isRequired,
 };
 
-export default withStyles(styles)(
-  withMobileDialog({
-    breakpoint: 'xs',
-  })(
+export default withMobileDialog({
+  breakpoint: 'xs',
+})(
+  withStyles(styles, { withTheme: true })(
     withFormik({
       mapPropsToValues({ institutionId }) {
         return {
@@ -164,7 +171,9 @@ export default withStyles(styles)(
           } else {
             setErrors({ requestError: res.status.toString() });
           }
-          setSubmitting(false);
+          setTimeout(() => {
+            setSubmitting(false);
+          }, props.theme.transitions.duration.leavingScreen);
         });
       },
     })(GenerateCodeDialog),
