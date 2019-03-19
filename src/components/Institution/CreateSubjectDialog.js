@@ -170,9 +170,9 @@ export default connect(
       withRouter(
         withStyles(styles, { withTheme: true })(
           withFormik({
-            mapPropsToValues({ name }) {
+            mapPropsToValues() {
               return {
-                name: name || '',
+                name: '',
               };
             },
             validationSchema: Yup.object().shape({
@@ -181,6 +181,7 @@ export default connect(
             handleSubmit(
               values,
               {
+                resetForm,
                 setSubmitting,
                 props: { gradeId, onClose, saveNewSubject, theme },
               },
@@ -194,6 +195,7 @@ export default connect(
                 .then(() => {
                   onClose();
                   setTimeout(() => {
+                    resetForm({ name: '' });
                     setSubmitting(false);
                   }, theme.transitions.duration.leavingScreen);
                 })
