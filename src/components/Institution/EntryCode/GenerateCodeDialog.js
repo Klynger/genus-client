@@ -26,6 +26,7 @@ import {
   DialogActions,
   DialogContent,
   withMobileDialog,
+  FormHelperText,
 } from '@material-ui/core';
 
 const styles = theme => ({
@@ -201,6 +202,13 @@ class GenerateCodeDialog extends PureComponent {
                 Gerar Código
               </ProgressButton>
             </DialogActions>
+            {errors.requestError && (
+              <Zoom in>
+                <FormHelperText error={errors.requestError !== ''}>
+                  {errors.requestError}
+                </FormHelperText>
+              </Zoom>
+            )}
           </Form>
         </DialogContent>
       </Dialog>
@@ -241,6 +249,13 @@ GenerateCodeDialog.propTypes = {
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool,
   roles: PropTypes.array,
+  theme: PropTypes.shape({
+    transitions: PropTypes.shape({
+      duration: PropTypes.shape({
+        leavingScreen: PropTypes.number.isRequired,
+      }).isRequired,
+    }).isRequired,
+  }).isRequired,
   touched: PropTypes.shape({
     days: PropTypes.bool,
     institutionId: PropTypes.bool,
@@ -259,14 +274,13 @@ GenerateCodeDialog.propTypes = {
 function validateAdvancedOptions() {
   return Yup.string().matches(/\d+/, {
     message: 'Campo Obrigatório! Digite somente números.',
-    excludeEmptyString: true,
   });
 }
 
-export default withStyles(styles)(
-  withMobileDialog({
-    breakpoint: 'xs',
-  })(
+export default withMobileDialog({
+  breakpoint: 'xs',
+})(
+  withStyles(styles, { withTheme: true })(
     withFormik({
       mapPropsToValues({ institutionId }) {
         return {
@@ -284,7 +298,7 @@ export default withStyles(styles)(
           .required('Selecione uma opção.'),
         uses: validateAdvancedOptions(),
       }),
-      handleSubmit(values, { setSubmitting, setErrors, props }) {
+      handleSubmit(values, { resetForm, setSubmitting, setErrors, props }) {
         if (values.days === '' && values.uses === '') {
           const input = {
             institutionId: values.institutionId,
@@ -294,25 +308,44 @@ export default withStyles(styles)(
             res => {
               if (res.data.data && res.data.data.createEntryCode) {
                 props.onClose(res.data.data.createEntryCode);
+                resetForm({
+                  institutionId: '',
+                  role: '',
+                  days: '',
+                  uses: '',
+                });
               } else {
                 setErrors({ requestError: res.status.toString() });
               }
+              setTimeout(() => {
+                setSubmitting(false);
+              }, props.theme.transitions.duration.leavingScreen);
             },
           );
-        } else {
+        } else if (values.days !== '' && values.uses !== '') {
           requestGraphql(
             mutationCreateAdvancedEntryCode(values),
             localStorage.getItem('token'),
           ).then(res => {
             if (res.data.data && res.data.data.createAdvancedEntryCode) {
               props.onClose(res.data.data.createAdvancedEntryCode);
+              resetForm({
+                institutionId: '',
+                role: '',
+                days: '',
+                uses: '',
+              });
             } else {
               setErrors({ requestError: res.status.toString() });
             }
+            setTimeout(() => {
+              setSubmitting(false);
+            }, props.theme.transitions.duration.leavingScreen);
           });
+        } else {
+          setErrors({ requestError: 'Campo de dias e usos são ambos obrigatórios!' });
+          setSubmitting(false);
         }
-
-        setSubmitting(false);
       },
     })(GenerateCodeDialog),
   ),

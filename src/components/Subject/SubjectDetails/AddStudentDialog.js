@@ -51,64 +51,66 @@ const AddStudentDialog = ({
   touched,
   values,
   width,
-}) => (
-  <Dialog
-    open={open}
-    fullScreen={fullScreen}
-    onClose={onClose}
-    TransitionComponent={DefaultDialogTransition}
-    classes={{
-      paper: classes[`dialogRoot${capitalize(width)}`],
-    }}
-  >
-    <DialogTitle>{subject.name}</DialogTitle>
-    {students && students.length > 0 ? (
-      <Fragment>
-        <DialogContent>
-          <Form className={classes.form}>
-            <FormControl error={touched.studentId && Boolean(errors.studentId)}>
-              <InputLabel htmlFor="add-student-dialog__student-id-field">Aluno</InputLabel>
-              <Select
-                value={values.studentId}
-                onChange={handleChange}
-                input={<Input name="studentId" id="add-student-dialog__student-id-field" />}
-              >
-                <MenuItem value={NO_STUDENT_SELECTED} disabled>
-                  Selecione um Aluno
-                </MenuItem>
-                {students.map(({ id, name, username }) => (
-                  <MenuItem key={id} value={id}>
-                    {name || username}
+}) => {
+  return (
+    <Dialog
+      open={open}
+      fullScreen={fullScreen}
+      onClose={onClose}
+      TransitionComponent={DefaultDialogTransition}
+      classes={{
+        paper: classes[`dialogRoot${capitalize(width)}`],
+      }}
+    >
+      <DialogTitle>{subject.name}</DialogTitle>
+      {students && students.length > 0 ? (
+        <Fragment>
+          <DialogContent>
+            <Form className={classes.form}>
+              <FormControl error={touched.studentId && Boolean(errors.studentId)}>
+                <InputLabel htmlFor="add-student-dialog__student-id-field">Aluno</InputLabel>
+                <Select
+                  value={values.studentId}
+                  onChange={handleChange}
+                  input={<Input name="studentId" id="add-student-dialog__student-id-field" />}
+                >
+                  <MenuItem value={NO_STUDENT_SELECTED} disabled>
+                    Selecione um Aluno
                   </MenuItem>
-                ))}
-              </Select>
-              {touched.studentId && Boolean(errors.studentId) && (
-                <Zoom in>
-                  <FormHelperText>{errors.studentId}</FormHelperText>
-                </Zoom>
-              )}
-            </FormControl>
-          </Form>
-          {errors.requestError && (
-            <FormHelperText error={Boolean(errors.requestError)}>
-              {errors.requestError}
-            </FormHelperText>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button color="primary" onClick={onClose}>
-            Cancelar
-          </Button>
-          <ProgressButton color="primary" onClick={handleSubmit} showProgress={isSubmitting}>
-            Adicionar
-          </ProgressButton>
-        </DialogActions>
-      </Fragment>
-    ) : (
-      <AddTeacherEmptyView onDialogCloseClick={onClose} />
-    )}
-  </Dialog>
-);
+                  {students.map(({ id, name, username }) => (
+                    <MenuItem key={id} value={id}>
+                      {name || username}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {touched.studentId && Boolean(errors.studentId) && (
+                  <Zoom in>
+                    <FormHelperText>{errors.studentId}</FormHelperText>
+                  </Zoom>
+                )}
+              </FormControl>
+            </Form>
+            {errors.requestError && (
+              <FormHelperText error={Boolean(errors.requestError)}>
+                {errors.requestError}
+              </FormHelperText>
+            )}
+          </DialogContent>
+          <DialogActions>
+            <Button color="primary" onClick={onClose} disabled={isSubmitting}>
+              Cancelar
+            </Button>
+            <ProgressButton color="primary" onClick={handleSubmit} showProgress={isSubmitting}>
+              Adicionar
+            </ProgressButton>
+          </DialogActions>
+        </Fragment>
+      ) : (
+        <AddTeacherEmptyView onDialogCloseClick={onClose} />
+      )}
+    </Dialog>
+  );
+};
 
 AddStudentDialog.propTypes = {
   classes: PropTypes.object.isRequired,
@@ -124,6 +126,13 @@ AddStudentDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   students: PropTypes.array,
   subject: PropTypes.object.isRequired,
+  theme: PropTypes.shape({
+    transitions: PropTypes.shape({
+      duration: PropTypes.shape({
+        leavingScreen: PropTypes.number.isRequired,
+      }).isRequired,
+    }).isRequired,
+  }).isRequired,
   touched: PropTypes.shape({
     studentId: PropTypes.bool,
   }).isRequired,
@@ -158,44 +167,52 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps,
 )(
-  withFormik({
-    mapPropsToValues({ subject: { id } }) {
-      return {
-        studentId: NO_STUDENT_SELECTED,
-        subjectId: id,
-      };
-    },
-    validationSchema: () => {
-      return Yup.object().shape({
-        studentId: Yup.string().matches(
-          new RegExp(`[^${NO_STUDENT_SELECTED}]`),
-          'Selecione um aluno.',
-        ),
-      });
-    },
-    handleSubmit(values, { props, resetForm, setErrors, setSubmitting }) {
-      props
-        .addStudent(values)
-        .then(res => {
-          setSubmitting(false);
-
-          if (res.data.data && res.data.data.addStudentToSubject) {
-            props.onClose();
-            resetForm({
-              studentId: NO_STUDENT_SELECTED,
-              subjectId: props.subject.id,
-            });
-          } else {
-            setErrors({ requestError: 'Algo de errado aconteceu. Tente Novamente' });
-          }
-        })
-        .catch(() => {
-          setSubmitting(false);
-        });
-    },
+  withMobileDialog({
+    breakpoint: 'xs',
   })(
-    withMobileDialog({
-      breakpoint: 'xs',
-    })(withStyles(styles)(AddStudentDialog)),
+    withStyles(styles, { withTheme: true })(
+      withFormik({
+        mapPropsToValues({ subject: { id } }) {
+          return {
+            studentId: NO_STUDENT_SELECTED,
+            subjectId: id,
+          };
+        },
+        validationSchema: () => {
+          return Yup.object().shape({
+            studentId: Yup.string().matches(
+              new RegExp(`[^${NO_STUDENT_SELECTED}]`),
+              'Selecione um aluno.',
+            ),
+          });
+        },
+        handleSubmit(values, { props, resetForm, setErrors, setSubmitting }) {
+          props
+            .addStudent(values)
+            .then(res => {
+              let callResetForm = false;
+              if (res.data.data && res.data.data.addStudentToSubject) {
+                props.onClose();
+                callResetForm = true;
+              } else {
+                setErrors({ requestError: 'Algo de errado aconteceu. Tente Novamente' });
+              }
+              setTimeout(() => {
+                if (callResetForm) {
+                  resetForm({
+                    studentId: NO_STUDENT_SELECTED,
+                    subjectId: props.subject.id,
+                  });
+                }
+              }, props.theme.transitions.duration.leavingScreen);
+            })
+            .catch(() => {
+              setTimeout(() => {
+                setSubmitting(false);
+              }, props.theme.transitions.duration.leavingScreen);
+            });
+        },
+      })(AddStudentDialog),
+    ),
   ),
 );

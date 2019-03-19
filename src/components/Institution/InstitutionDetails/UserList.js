@@ -59,11 +59,16 @@ class UserList extends Component {
       rowsPerPage: 5,
       openDialog: false,
       userId: '',
+      rowsPerPageOptions: [5, 10, 15, 30, 60],
     };
   }
 
-  handleChangePage = (event, page) => {
+  handleChangePage = (_, page) => {
     this.setState({ page });
+  };
+
+  handleChangeRowsPerPage = e => {
+    this.setState({ rowsPerPage: e.target.value });
   };
 
   handleRemoveUserDialogToggle = () => {
@@ -78,7 +83,7 @@ class UserList extends Component {
 
   render() {
     const { ableToRemove, classes, headTitle, loggedUser, selectedInstitution, users } = this.props;
-    const { page, openDialog, rowsPerPage, userId } = this.state;
+    const { page, openDialog, rowsPerPage, userId, rowsPerPageOptions } = this.state;
 
     return (
       <Paper className={classes.root}>
@@ -91,7 +96,7 @@ class UserList extends Component {
               <TableRow>
                 <TableCell variant="head">Nome</TableCell>
                 <TableCell variant="head" className={classes.middleColumns}>
-                  email
+                  Email
                 </TableCell>
                 <TableCell variant="head" className={classes.deleteIcon}>
                   Remover
@@ -124,6 +129,10 @@ class UserList extends Component {
             count={users.length}
             page={page}
             rowsPerPage={rowsPerPage}
+            labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
+            labelRowsPerPage="Linhas por página:"
+            rowsPerPageOptions={rowsPerPageOptions}
+            onChangeRowsPerPage={this.handleChangeRowsPerPage}
             backIconButtonProps={{
               'aria-label': 'Previous Page',
             }}
