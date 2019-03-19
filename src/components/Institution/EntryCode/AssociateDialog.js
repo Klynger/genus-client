@@ -148,15 +148,15 @@ export default connect(
   withWidth()(
     withStyles(styles, { withTheme: true })(
       withFormik({
-        mapPropsToValues({ code }) {
+        mapPropsToValues() {
           return {
-            code: code || '',
+            code: '',
           };
         },
         validationSchema: Yup.object().shape({
           code: Yup.string().required('É necessário passar um código.'),
         }),
-        handleSubmit(values, { setSubmitting, props, setErrors }) {
+        handleSubmit(values, { resetForm, setSubmitting, props, setErrors }) {
           props
             .joinNewInstitution(values.code)
             .then(res => {
@@ -167,6 +167,7 @@ export default connect(
                 setErrors({ requestError: '400' });
               }
               setTimeout(() => {
+                resetForm({ code: '' });
                 setSubmitting(false);
               }, props.theme.transitions.duration.leavingScreen);
             })

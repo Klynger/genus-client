@@ -74,14 +74,7 @@ const CreateGradeDialog = ({
           </FormControl>
         </Form>
         <DialogActions>
-          <Button
-            color="primary"
-            disabled={isSubmitting}
-            onClick={() => {
-              onClose();
-              handleReset();
-            }}
-          >
+          <Button color="primary" disabled={isSubmitting} onClick={handleReset}>
             Cancelar
           </Button>
           <Button color="primary" disabled={isSubmitting} onClick={handleSubmit}>
@@ -149,15 +142,15 @@ export default connect(
       withStyles(styles, { withTheme: true })(
         withRouter(
           withFormik({
-            mapPropsToValues({ name }) {
+            mapPropsToValues() {
               return {
-                name: name || '',
+                name: '',
               };
             },
             validationSchema: Yup.object().shape({
               name: Yup.string().required('Nome da disciplina é obrigatorio'),
             }),
-            handleSubmit(values, { setSubmitting, props }) {
+            handleSubmit(values, { resetForm, setSubmitting, props }) {
               // TODO
               const input = {
                 institutionId: props.institution.id,
@@ -169,6 +162,7 @@ export default connect(
                 .then(() => {
                   props.onClose();
                   setTimeout(() => {
+                    resetForm({ name: '' });
                     setSubmitting(false);
                   }, props.theme.transitions.duration.leavingScreen);
                 })
