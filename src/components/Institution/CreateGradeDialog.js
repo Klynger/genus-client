@@ -47,49 +47,44 @@ const CreateGradeDialog = ({
   onClose,
   touched,
   width,
-}) => (
-  <Dialog
-    fullScreen={fullScreen}
-    open={open}
-    onClose={onClose}
-    TransitionComponent={DefaultDialogTransition}
-    onBackdropClick={handleReset}
-    classes={{
-      paper: classes[`dialogRoot${capitalize(width)}`],
-    }}
-  >
-    <DialogTitle>Série</DialogTitle>
-    <DialogContent>
-      <Form className={classes.gradeForm}>
-        <FormControl
-          className={classes.formControl}
-          error={touched.name && errors.name !== undefined}
-        >
-          <InputLabel htmlFor="name">Nome </InputLabel>
-          <Input name="name" value={values.name} onChange={handleChange} />
-          {touched.name && errors.name && (
-            <FormHelperText id="grade__name-error-text">{errors.name}</FormHelperText>
-          )}
-        </FormControl>
-      </Form>
-      <DialogActions>
-        <Button
-          color="primary"
-          disabled={isSubmitting}
-          onClick={() => {
-            onClose();
-            handleReset();
-          }}
-        >
-          Cancelar
-        </Button>
-        <Button color="primary" disabled={isSubmitting} onClick={handleSubmit}>
-          Criar
-        </Button>
-      </DialogActions>
-    </DialogContent>
-  </Dialog>
-);
+}) => {
+  return (
+    <Dialog
+      fullScreen={fullScreen}
+      open={open}
+      onClose={onClose}
+      TransitionComponent={DefaultDialogTransition}
+      onBackdropClick={handleReset}
+      classes={{
+        paper: classes[`dialogRoot${capitalize(width)}`],
+      }}
+    >
+      <DialogTitle>Série</DialogTitle>
+      <DialogContent>
+        <Form className={classes.gradeForm}>
+          <FormControl
+            className={classes.formControl}
+            error={touched.name && errors.name !== undefined}
+          >
+            <InputLabel htmlFor="name">Nome </InputLabel>
+            <Input name="name" value={values.name} onChange={handleChange} />
+            {touched.name && errors.name && (
+              <FormHelperText id="grade__name-error-text">{errors.name}</FormHelperText>
+            )}
+          </FormControl>
+        </Form>
+        <DialogActions>
+          <Button color="primary" disabled={isSubmitting} onClick={handleReset}>
+            Cancelar
+          </Button>
+          <Button color="primary" disabled={isSubmitting} onClick={handleSubmit}>
+            Criar
+          </Button>
+        </DialogActions>
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 CreateGradeDialog.defaultProps = {
   open: false,
@@ -107,6 +102,13 @@ CreateGradeDialog.propTypes = {
   isSubmitting: PropTypes.bool,
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool,
+  theme: PropTypes.shape({
+    transitions: PropTypes.shape({
+      duration: PropTypes.shape({
+        leavingScreen: PropTypes.number.isRequired,
+      }).isRequired,
+    }).isRequired,
+  }).isRequired,
   touched: PropTypes.shape({
     name: PropTypes.bool,
   }),
@@ -133,22 +135,22 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps,
 )(
-  withStyles(styles)(
-    withWidth()(
-      withMobileDialog({
-        breakpoint: 'xs',
-      })(
+  withWidth()(
+    withMobileDialog({
+      breakpoint: 'xs',
+    })(
+      withStyles(styles, { withTheme: true })(
         withRouter(
           withFormik({
-            mapPropsToValues({ name }) {
+            mapPropsToValues() {
               return {
-                name: name || '',
+                name: '',
               };
             },
             validationSchema: Yup.object().shape({
               name: Yup.string().required('Nome da disciplina é obrigatorio'),
             }),
-            handleSubmit(values, { setSubmitting, props }) {
+            handleSubmit(values, { resetForm, setSubmitting, props }) {
               // TODO
               const input = {
                 institutionId: props.institution.id,
@@ -159,11 +161,16 @@ export default connect(
                 .saveGrade(input)
                 .then(() => {
                   props.onClose();
-                  setSubmitting(false);
+                  setTimeout(() => {
+                    resetForm({ name: '' });
+                    setSubmitting(false);
+                  }, props.theme.transitions.duration.leavingScreen);
                 })
                 .catch(() => {
                   // TODO
-                  setSubmitting(false);
+                  setTimeout(() => {
+                    setSubmitting(false);
+                  }, props.theme.transitions.duration.leavingScreen);
                 });
             },
             enableReinitialize: true,

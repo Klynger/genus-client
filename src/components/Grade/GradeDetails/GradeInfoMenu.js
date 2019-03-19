@@ -64,7 +64,9 @@ GradeInfoMenu.propTypes = {
   anchorEl: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
   canAddStudents: PropTypes.bool,
   classes: PropTypes.object.isRequired,
+  id: PropTypes.string.isRequired,
   onAddStudents: PropTypes.func,
+  onClose: PropTypes.func.isRequired,
   open: PropTypes.bool,
 };
 

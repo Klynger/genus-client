@@ -119,6 +119,13 @@ AssociateDialog.propTypes = {
   joinNewInstitution: PropTypes.func.isRequired, // eslint-disable-line
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool,
+  theme: PropTypes.shape({
+    transitions: PropTypes.shape({
+      duration: PropTypes.shape({
+        leavingScreen: PropTypes.number.isRequired,
+      }).isRequired,
+    }).isRequired,
+  }).isRequired,
   touched: PropTypes.shape({
     code: PropTypes.bool,
   }).isRequired,
@@ -138,18 +145,18 @@ export default connect(
   null,
   mapDispatchToProps,
 )(
-  withStyles(styles)(
-    withWidth()(
+  withWidth()(
+    withStyles(styles, { withTheme: true })(
       withFormik({
-        mapPropsToValues({ code }) {
+        mapPropsToValues() {
           return {
-            code: code || '',
+            code: '',
           };
         },
         validationSchema: Yup.object().shape({
           code: Yup.string().required('É necessário passar um código.'),
         }),
-        handleSubmit(values, { setSubmitting, props, setErrors }) {
+        handleSubmit(values, { resetForm, setSubmitting, props, setErrors }) {
           props
             .joinNewInstitution(values.code)
             .then(res => {
@@ -159,11 +166,16 @@ export default connect(
               } else {
                 setErrors({ requestError: '400' });
               }
-              setSubmitting(false);
+              setTimeout(() => {
+                resetForm({ code: '' });
+                setSubmitting(false);
+              }, props.theme.transitions.duration.leavingScreen);
             })
             .catch(() => {
               // setErrors({ requestError: request.status.toString() });
-              setSubmitting(false);
+              setTimeout(() => {
+                setSubmitting(false);
+              }, props.theme.transitions.duration.leavingScreen);
             });
         },
       })(AssociateDialog),
