@@ -2,36 +2,37 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import HomeRoutes from './HomeRoutes';
 import MenuDrawer from './MenuDrawer';
-import styled from 'styled-components';
 import React, { Component } from 'react';
 import ApplicationBar from './ApplicationBar';
+import { withStyles } from '@material-ui/core';
 import { fetchLoggedUser } from '../../actions/user';
+import { getRoleFromInstitution } from '../../utils/helpers';
 import { fetchInstitutionsByOwner } from '../../actions/institution';
 
-const Wrapper = styled.div`
-  align-items: center;
-  background-color: inherit;
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  width: 100%;
-`;
-
-const ContentContainer = styled.div`
-  bakcground-color: inherit;
-  display: flex;
-  margin: 7px;
-  width: 100%;
-`;
-
-const MainContainer = styled.main`
-  align-items: center;
-  background-color: inherit;
-  display: flex;
-  flex-direction: column;
-  margin-top: 70px;
-  width: 100%;
-`;
+const styles = theme => ({
+  wrapper: {
+    alignItems: 'center',
+    backgroundColor: 'inherit',
+    display: 'flex',
+    flex: '1 1 auto',
+    flexDirection: 'column',
+    width: '100%',
+  },
+  contentContainer: {
+    backgroundColor: 'inherit',
+    display: 'flex',
+    margin: theme.spacing.unit,
+    width: '100%',
+  },
+  mainContainer: {
+    alignItems: 'center',
+    backgroundColor: 'inherit',
+    display: 'flex',
+    flexDirection: 'column',
+    marginTop: 70,
+    width: '100%',
+  },
+});
 
 class Home extends Component {
   constructor(props) {
@@ -58,29 +59,45 @@ class Home extends Component {
 
   render() {
     const { openDrawer } = this.state;
+    const { selectedInstitution, userId, classes } = this.props;
+
+    let userRole = null;
+    if (selectedInstitution && userId) {
+      userRole = getRoleFromInstitution(userId, selectedInstitution);
+    }
+
     return (
-      <Wrapper>
+      <div className={classes.wrapper}>
         <ApplicationBar onDrawerToggle={this.handleActiveDrawerToggle} />
-        <ContentContainer>
+        <div className={classes.contentContainer}>
           <MenuDrawer onDrawerToggle={this.handleActiveDrawerToggle} open={openDrawer} />
-          <MainContainer>
-            <HomeRoutes />
-          </MainContainer>
-        </ContentContainer>
-      </Wrapper>
+          <main className={classes.mainContainer}>
+            <HomeRoutes userRole={userRole} />
+          </main>
+        </div>
+      </div>
     );
   }
 }
 
 Home.propTypes = {
+  classes: PropTypes.object.isRequired,
   getInstitutions: PropTypes.func.isRequired,
   getLoggedUser: PropTypes.func.isRequired,
+  selectedInstitution: PropTypes.object,
+  userId: PropTypes.string,
 };
 
-function mapStateToProps({ user }) {
-  return {
+function mapStateToProps({ user, institution }) {
+  const result = {
     userId: user.loggedUserId,
   };
+
+  if (institution.byId[institution.selectedInstitution]) {
+    result.selectedInstitution = institution.byId[institution.selectedInstitution];
+  }
+
+  return result;
 }
 
 function mapDispatchToProps(dispatch) {
@@ -90,7 +107,9 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Home);
+export default withStyles(styles)(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  )(Home),
+);

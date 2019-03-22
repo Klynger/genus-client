@@ -1,4 +1,5 @@
 import { normalize } from 'normalizr';
+import { userRoles } from './constants';
 
 export const DEFAULT_PHOTO_CLASS_SRC = '/static/images/grade-default-img.jpg';
 
@@ -10,6 +11,18 @@ export const concatIdIfNotContain = (allIds, id) => {
 };
 
 export const phoneRegExp = /^(?:(?:\+|00)?(55)\s?)?(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})\-?(\d{4}))$/; // eslint-disable-line
+
+export function getRoleFromInstitution(id, institution) {
+  let role = null;
+  if (institution.students.includes(id)) {
+    role = userRoles.STUDENT;
+  } else if (institution.admins.includes(id)) {
+    role = userRoles.ADMIN;
+  } else if (institution.teachers.includes(id)) {
+    role = userRoles.TEACHER;
+  }
+  return role;
+}
 
 export const getFirstInitialsCapitalized = (fullName = '', amountOfInitials = 2) => {
   const names = fullName
