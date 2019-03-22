@@ -169,7 +169,7 @@ export default connect(
               };
             },
             validationSchema: Yup.object().shape({
-              name: Yup.string().required('Nome da disciplina é obrigatorio'),
+              name: Yup.string().required('Nome da disciplina é obrigatorio.'),
             }),
             handleSubmit(
               values,
