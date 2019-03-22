@@ -31,6 +31,11 @@ const styles = () => ({
   },
 });
 
+const phoneRegExp = new RegExp([
+  '^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})',
+  '[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$',
+]);
+
 class EditInstitutionDialog extends Component {
   handleClose = () => {
     const DELAY_AFTER_TRANSITION = 50;
@@ -218,9 +223,10 @@ export default connect(
             .max(50, 'Nome da instituição deve conter no máximo 50 caracteres.')
             .required('Nome é obrigatório'),
           phone: Yup.string()
-            .min(6, 'Telefone deve conter no mínimo 6 digitos.')
-            .max(50, 'Telefone deve conter no máximo 50 digitos.')
-            .required('Telefone é obrigatório.'),
+            .min(6, 'Telefone deve ter pelo menos 6 caracteres.')
+            .max(50, 'Telefone deve ter no máximo 50 caracteres.')
+            .matches(phoneRegExp, 'Telefone inválido.')
+            .required('Número de telefone é obrigatório.'),
         }),
       handleSubmit(values, { handleReset, props, setSubmitting, setErrors }) {
         const input = {
