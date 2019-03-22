@@ -204,51 +204,57 @@ export default connect(
   withMobileDialog({
     breakpoint: 'xs',
   })(
-    withFormik({
-      mapPropsToValues({ institution }) {
-        return {
-          address: institution.address || '',
-          name: institution.name || '',
-          phone: institution.phone || '',
-        };
-      },
-      validationSchema: () =>
-        Yup.object().shape({
-          address: Yup.string()
-            .min(6, 'Endereço deve conter no mínimo 6 caracteres.')
-            .max(50, 'Endereço deve conter no máximo 50 caracteres.')
-            .required('Endereço é obrigatório'),
-          name: Yup.string()
-            .min(6, 'Nome da instituição deve conter no mínimo 6 caracteres.')
-            .max(50, 'Nome da instituição deve conter no máximo 50 caracteres.')
-            .required('Nome é obrigatório'),
-          phone: Yup.string()
-            .min(6, 'Telefone deve ter pelo menos 6 caracteres.')
-            .max(50, 'Telefone deve ter no máximo 50 caracteres.')
-            .matches(phoneRegExp, 'Telefone inválido.')
-            .required('Número de telefone é obrigatório.'),
-        }),
-      handleSubmit(values, { handleReset, props, setSubmitting, setErrors }) {
-        const input = {
-          ...values,
-          institutionId: props.selectedInstitution,
-        };
-        props
-          .submitUpdate(input)
-          .then(res => {
-            setSubmitting(false);
-            if (res.data.data.updateInstitution) {
-              props.onClose();
-              handleReset();
-            } else {
-              setErrors({ requestError: 'Algo de errado aconteceu. Tente Novamente' });
-            }
-          })
-          .catch(() => {
-            setSubmitting(false);
-          });
-      },
-      enableReinitialize: true,
-    })(withStyles(styles, { withTheme: true })(EditInstitutionDialog)),
+    withStyles(styles, { withTheme: true })(
+      withFormik({
+        mapPropsToValues({ institution }) {
+          return {
+            address: institution.address || '',
+            name: institution.name || '',
+            phone: institution.phone || '',
+          };
+        },
+        validationSchema: () =>
+          Yup.object().shape({
+            address: Yup.string()
+              .min(6, 'Endereço deve conter no mínimo 6 caracteres.')
+              .max(50, 'Endereço deve conter no máximo 50 caracteres.')
+              .required('Endereço é obrigatório'),
+            name: Yup.string()
+              .min(6, 'Nome da instituição deve conter no mínimo 6 caracteres.')
+              .max(50, 'Nome da instituição deve conter no máximo 50 caracteres.')
+              .required('Nome é obrigatório'),
+            phone: Yup.string()
+              .min(6, 'Telefone deve conter no mínimo 6 digitos.')
+              .matches(phoneRegExp, 'Telefone inválido.')
+              .max(50, 'Telefone deve conter no máximo 50 digitos.')
+              .required('Telefone é obrigatório.'),
+          }),
+        handleSubmit(values, { handleReset, props, setSubmitting, setErrors }) {
+          const input = {
+            ...values,
+            institutionId: props.selectedInstitution,
+          };
+          props
+            .submitUpdate(input)
+            .then(res => {
+              setTimeout(() => {
+                setSubmitting(false);
+              }, props.theme.transitions.duration.leavingScreen);
+              if (res.data.data.updateInstitution) {
+                props.onClose();
+                handleReset();
+              } else {
+                setErrors({ requestError: 'Algo de errado aconteceu. Tente Novamente' });
+              }
+            })
+            .catch(() => {
+              setTimeout(() => {
+                setSubmitting(false);
+              }, props.theme.transitions.duration.leavingScreen);
+            });
+        },
+        enableReinitialize: true,
+      })(EditInstitutionDialog),
+    ),
   ),
 );

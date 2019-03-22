@@ -27,3 +27,10 @@ export const mutationCreateEntryCode = input => ({
     input,
   },
 });
+
+export const mutationCreateAdvancedEntryCode = input => ({
+  query: loader('./graphql/institution/createAdvancedEntryCode.graphql').loc.source.body,
+  variables: {
+    input,
+  },
+});
