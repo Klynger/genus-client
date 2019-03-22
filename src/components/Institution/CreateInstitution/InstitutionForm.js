@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { Form, withFormik } from 'formik';
 import { withRouter } from 'react-router-dom';
 import { Paper, Zoom } from '@material-ui/core';
+import { phoneRegExp } from '../../../utils/helpers';
 import { withStyles } from '@material-ui/core/styles';
 import ProgressButton from '../../shared/ProgressButton';
 import CustomTextField from '../../shared/CustomTextField';
@@ -24,11 +25,6 @@ const styles = theme => ({
     padding: theme.spacing.unit * 2,
   },
 });
-
-const phoneRegExp = new RegExp([
-  '^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})',
-  '[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$',
-]);
 
 function fieldToLabel(fieldName) {
   switch (fieldName) {
@@ -150,7 +146,7 @@ export default withStyles(styles)(
               .max(50, 'Endereço deve ter no máximo 50 caracteres.')
               .required('Endereço é obrigatório.'),
             email: Yup.string()
-              .email('Você deve apresentar um email válido.')
+              .email('Email inválido.')
               .required('Email é obrigatório.'),
             name: Yup.string()
               .min(6, 'Nome da instituição deve ter pelo menos 6 caracteres.')

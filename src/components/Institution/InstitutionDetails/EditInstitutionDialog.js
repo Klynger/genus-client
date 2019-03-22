@@ -6,9 +6,9 @@ import { Form, withFormik } from 'formik';
 import ProgressButton from '../../shared/ProgressButton';
 import { capitalize } from '@material-ui/core/utils/helpers';
 import { updateInstitution } from '../../../actions/institution';
-import { defaultDialogBreakpoints } from '../../../utils/helpers';
 import { NO_INSTUTION_SELECTED } from '../../../reducers/institution';
 import { DefaultDialogTransition } from '../../shared/SharedComponents';
+import { defaultDialogBreakpoints, phoneRegExp } from '../../../utils/helpers';
 import {
   Button,
   Dialog,
@@ -30,11 +30,6 @@ const styles = () => ({
     flexDirection: 'column',
   },
 });
-
-const phoneRegExp = new RegExp([
-  '^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})',
-  '[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$',
-]);
 
 class EditInstitutionDialog extends Component {
   handleClose = () => {
