@@ -175,7 +175,7 @@ export default connect(
             };
           },
           validationSchema: Yup.object().shape({
-            institutionName: Yup.string().required('Nome da instituição é obrigatório'),
+            institutionName: Yup.string().required('Nome da instituição é obrigatório.'),
             password: Yup.string()
               .min(6, 'A senha deve ter pelo menos 6 caracteres.')
               .max(30, 'Senha não pode ter mais que 30 caracteres.')
