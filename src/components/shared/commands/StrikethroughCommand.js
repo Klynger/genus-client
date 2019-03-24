@@ -1,7 +1,7 @@
 import { MarkdownUtil, commands } from 'react-mde';
 
 const StrikethroughCommand = {
-  ...commands,
+  ...commands.strikeThroughCommand,
   execute: (state0, api) => {
     const newSelectionRange = MarkdownUtil.selectWord({
       text: state0.text,
