@@ -33,6 +33,7 @@ const CustomMarkdownEditor = ({ classes, name, onChange, content }) => {
       readOnly={tab === 'preview'}
       className={classes.editor}
       getIcon={Commands.getIcon}
+      l18n={{ write: 'Editar', preview: 'Visualizar' }}
     />
   );
 };
