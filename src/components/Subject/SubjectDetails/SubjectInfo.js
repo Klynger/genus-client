@@ -46,6 +46,7 @@ const SubjectInfo = ({
   history,
   isAdmin,
   canSeeForum,
+  canSeeGrades,
 }) => (
   <Paper className={classes.root}>
     <div className={classes.contentContainer}>
@@ -84,12 +85,23 @@ const SubjectInfo = ({
           Forum
         </Button>
       )}
+      {canSeeGrades && (
+        <Button color="primary" component={Link} to={`${history.location.pathname}/forum`}>
+          Adicionar nova nota
+        </Button>
+      )}
+      {canSeeGrades && (
+        <Button color="primary" component={Link} to={`${history.location.pathname}/forum`}>
+          Mandar email para turma
+        </Button>
+      )}
     </ActionsContainer>
   </Paper>
 );
 
 SubjectInfo.propTypes = {
   canSeeForum: PropTypes.bool.isRequired,
+  canSeeGrades: PropTypes.bool.isRequired,
   classes: PropTypes.object.isRequired,
   history: PropTypes.shape({
     location: PropTypes.shape({
@@ -123,9 +135,12 @@ function mapStateToProps(
       subject.students.some(user => user.id === loggedUserId);
   }
 
+  const canSeeGrades = isAdmin || subject.teachers.some(user => user.id === loggedUserId);
+
   return {
     isAdmin,
     canSeeForum,
+    canSeeGrades,
   };
 }
 

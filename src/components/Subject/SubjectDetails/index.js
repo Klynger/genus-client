@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import GradesList from './GradesList';
 import SubjectInfo from './SubjectInfo';
 import { Fade } from '@material-ui/core';
 import AddStudentDialog from './AddStudentDialog';
 import AddteacherDialog from './AddTeacherDialog';
 import React, { Component, Fragment } from 'react';
 import EditSubjectDialog from './EditSubjectDialog';
-import UserList from '../../Institution/InstitutionDetails/UserList';
 import DefaultContainerRoute from '../../shared/DefaultContainerRoute';
 
 /*
@@ -50,6 +50,49 @@ class SubjectDetailsPage extends Component {
     const { subject } = this.props;
     const { openAddStudent, openAddTeacher, openEditSubject } = this.state;
 
+    // TODO: remove this when grades is integrated with
+    // backend.
+    const studentSubjects = [
+      {
+        user: {
+          name: 'aluno 1',
+          id: 1,
+          email: 'alu1@gmail.com',
+        },
+        evaluations: [
+          {
+            name: 'Prova 1',
+            result: 10,
+            weight: 0.4,
+          },
+          {
+            name: 'Prova 2',
+            result: 8,
+            weight: 0.6,
+          },
+        ],
+      },
+      {
+        user: {
+          id: 2,
+          name: 'aluno 2',
+          email: 'alu2@gmail.com',
+        },
+        evaluations: [
+          {
+            name: 'Prova 1',
+            result: 4,
+            weight: 0.4,
+          },
+          {
+            name: 'Prova 2',
+            result: 8,
+            weight: 0.6,
+          },
+        ],
+      },
+    ];
+
     let toRender;
 
     if (subject) {
@@ -76,7 +119,11 @@ class SubjectDetailsPage extends Component {
             onAddStudentClick={this.handleOpenAddStudent}
             onEditSubjectClick={this.handleEditSubjectClick}
           />
-          <UserList users={subject.students} headTitle="Alunos" />
+          <GradesList
+            users={subject.students}
+            studentSubjects={studentSubjects}
+            headTitle="Alunos"
+          />
         </Fragment>
       );
     } else {
