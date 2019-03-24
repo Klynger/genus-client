@@ -1,6 +1,8 @@
 import React from 'react';
 import { commands } from 'react-mde';
+import { Button } from '@material-ui/core';
 import breaklineCommand from './BreaklineCommand';
+import strikethroughCommand from './StrikethroughCommand';
 import {
   WrapText,
   FormatBold,
@@ -14,13 +16,18 @@ import {
   Title,
 } from '@material-ui/icons';
 
+const setCommandButtonClass = command => ({
+  ...command,
+  buttonComponentClass: Button,
+});
+
 const listCommands = [
   {
     commands: [
-      commands.headerCommand,
+      setCommandButtonClass(commands.headerCommand),
       commands.boldCommand,
       commands.italicCommand,
-      commands.strikeThroughCommand,
+      strikethroughCommand,
     ],
   },
   {
