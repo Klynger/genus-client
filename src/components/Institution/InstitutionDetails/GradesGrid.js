@@ -45,10 +45,11 @@ class GradesGrid extends Component {
         <ResponsiveSubTitle>Séries</ResponsiveSubTitle>
         <GridContainer>
           <CreateGradeDialog open={createGradeOpen} onClose={this.handleCreateGradeClose} />
-          {grades.map(({ id, name, subjects }) => (
+          {grades.map(({ id, name, subjects, qntStudents, qntTeachers }) => (
             <GridCard key={id} title={name} onClick={() => this.goToGrade(id)}>
               <CardLine>Disciplinas cadastradas: {subjects.length}</CardLine>
-              <CardLine>Quantidade de alunos: 35</CardLine>
+              <CardLine>Quantidade de professores: {qntTeachers}</CardLine>
+              <CardLine>Quantidade de alunos: {qntStudents}</CardLine>
             </GridCard>
           ))}
           <GridButton key="-1" Icon={AddCircleIcon} onClick={this.handleCreateGradeOpen} />
