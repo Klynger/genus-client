@@ -126,7 +126,7 @@ class GradeInfo extends Component {
                 variant="subtitle1"
                 gutterBottom
               >
-                Quantidade de alunos: {grade.qntTeachers}
+                Quantidade de alunos: {grade.qntStudents}
               </Typography>
             </div>
           </Paper>
@@ -146,6 +146,8 @@ GradeInfo.propTypes = {
   classes: PropTypes.object.isRequired,
   grade: PropTypes.shape({
     name: PropTypes.string,
+    qntStudents: PropTypes.number,
+    qntTeachers: PropTypes.number,
   }),
   onAddStudents: PropTypes.func.isRequired,
 };
