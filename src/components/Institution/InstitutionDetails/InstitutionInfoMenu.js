@@ -24,7 +24,9 @@ const InstitutionInfoMenu = ({
   anchorEl,
   canUpdateInfo,
   canGenerateCode,
+  canSendEmail,
   onGenerateCodeOpen,
+  onSendEmailOpen,
   onUpdateInstitutionOpen,
 }) => {
   return (
@@ -58,6 +60,16 @@ const InstitutionInfoMenu = ({
                     Gerar código de vínculo
                   </MenuItem>
                 )}
+                {canSendEmail && (
+                  <MenuItem
+                    onClick={e => {
+                      onSendEmailOpen();
+                      onClose(e);
+                    }}
+                  >
+                    Enviar email
+                  </MenuItem>
+                )}
               </MenuList>
             </ClickAwayListener>
           </Paper>
@@ -74,11 +86,13 @@ InstitutionInfoMenu.defaultProps = {
 InstitutionInfoMenu.propTypes = {
   anchorEl: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
   canGenerateCode: PropTypes.bool,
+  canSendEmail: PropTypes.bool,
   canUpdateInfo: PropTypes.bool,
   classes: PropTypes.object.isRequired,
   id: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired,
   onGenerateCodeOpen: PropTypes.func.isRequired,
+  onSendEmailOpen: PropTypes.func.isRequired,
   onUpdateInstitutionOpen: PropTypes.func.isRequired,
   open: PropTypes.bool,
 };

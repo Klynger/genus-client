@@ -1,5 +1,5 @@
 const domain = {
-  development: 'http://localhost:8080/graphql',
+  development: 'https://genuss.herokuapp.com/graphql',
   production: 'https://genuss.herokuapp.com/graphql',
 };
 

@@ -5,6 +5,7 @@ import GradesGrid from './GradesGrid';
 import { Fade } from '@material-ui/core';
 import React, { Component } from 'react';
 import InstitutionInfo from './InstitutionInfo';
+import SendEmailDialog from './SendEmailDialog';
 import EditInstitutionDialog from './EditInstitutionDialog';
 import DisplayCodeDialog from '../EntryCode/DisplayCodeDialog';
 import GenerateCodeDialog from '../EntryCode/GenerateCodeDialog';
@@ -15,6 +16,7 @@ class InstitutionDetails extends Component {
     super(props);
     this.state = {
       generateCodeOpen: false,
+      sendEmailOpen: false,
       currentGeneratedCode: null,
       displayCodeOpen: false,
       displayUpdateOpen: false,
@@ -41,6 +43,14 @@ class InstitutionDetails extends Component {
     this.setState({ generateCodeOpen: true });
   };
 
+  handleSendEmailOpen = () => {
+    this.setState({ sendEmailOpen: true });
+  };
+
+  handleSendEmailClose = () => {
+    this.setState({ sendEmailOpen: false });
+  };
+
   handleUpdateInstitutionOpen = () => {
     this.setState({ displayUpdateOpen: true });
   };
@@ -55,6 +65,7 @@ class InstitutionDetails extends Component {
       displayCodeOpen,
       displayUpdateOpen,
       generateCodeOpen,
+      sendEmailOpen,
       currentGeneratedCode,
     } = this.state;
     let toRender;
@@ -82,11 +93,20 @@ class InstitutionDetails extends Component {
               onClose={this.handleUpdateInstitutionClose}
             />
           )}
+          {loggedUserIsAdmin && (
+            <SendEmailDialog
+              open={sendEmailOpen}
+              institutionId={institution.id}
+              onClose={this.handleSendEmailClose}
+            />
+          )}
           <InstitutionInfo
             institution={institution}
             canUpdateInfo={loggedUserIsAdmin}
             canGenerateCode={loggedUserIsAdmin}
+            canSendEmail={loggedUserIsAdmin}
             onGenerateCodeOpen={this.handleGenerateCodeOpen}
+            onSendEmailOpen={this.handleSendEmailOpen}
             onUpdateInstitutionOpen={this.handleUpdateInstitutionOpen}
           />
           <GradesGrid />
