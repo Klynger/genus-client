@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import GradesList from './GradesList';
 import SubjectInfo from './SubjectInfo';
 import { Fade } from '@material-ui/core';
+import AddGradeDialog from './AddGradeDialog';
 import AddStudentDialog from './AddStudentDialog';
 import AddteacherDialog from './AddTeacherDialog';
 import React, { Component, Fragment } from 'react';
@@ -22,6 +23,7 @@ class SubjectDetailsPage extends Component {
     this.state = {
       openAddStudent: false,
       openAddTeacher: false,
+      openAddGrade: false,
       openEditSubject: false,
     };
   }
@@ -38,6 +40,14 @@ class SubjectDetailsPage extends Component {
     }));
   };
 
+  handleOpenAddGrade = () => {
+    this.setState({ openAddGrade: true });
+  };
+
+  handleCloseAddGrade = () => {
+    this.setState({ openAddGrade: false });
+  };
+
   handleOpenAddStudent = () => {
     this.setState({ openAddStudent: true });
   };
@@ -48,7 +58,7 @@ class SubjectDetailsPage extends Component {
 
   render() {
     const { subject } = this.props;
-    const { openAddStudent, openAddTeacher, openEditSubject } = this.state;
+    const { openAddStudent, openAddTeacher, openEditSubject, openAddGrade } = this.state;
 
     // TODO: remove this when grades is integrated with
     // backend.
@@ -108,6 +118,12 @@ class SubjectDetailsPage extends Component {
             open={openAddStudent}
             onClose={this.handleCloseAddStudent}
           />
+          <AddGradeDialog
+            subject={subject}
+            open={openAddGrade}
+            openAddTeacheropenAddTeacher
+            onClose={this.handleCloseAddGrade}
+          />
           <EditSubjectDialog
             subjectId={subject.id}
             open={openEditSubject}
@@ -118,6 +134,7 @@ class SubjectDetailsPage extends Component {
             onAddTeacherClick={this.handleAddTeacherClick}
             onAddStudentClick={this.handleOpenAddStudent}
             onEditSubjectClick={this.handleEditSubjectClick}
+            onAddGradeClick={this.handleOpenAddGrade}
           />
           <GradesList
             users={subject.students}

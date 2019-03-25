@@ -14,6 +14,7 @@ import {
   TableCell,
   TableBody,
   TablePagination,
+  TextField,
   IconButton,
 } from '@material-ui/core';
 
@@ -25,6 +26,7 @@ const styles = theme => ({
   },
   table: {
     width: '100%',
+    minWidth: 700,
   },
   title: {
     margin: theme.spacing.unit * 3,
@@ -50,6 +52,27 @@ const styles = theme => ({
   },
 });
 
+const EditableTableCell = ({ row, fieldName, onCellValueChange }) => {
+  // disable-es-lint
+  const handleChange = e => {
+    onCellValueChange({
+      fieldValue: e.target.value,
+      fieldName,
+    });
+  };
+
+  return (
+    <TableCell>
+      <TextField
+        onChange={handleChange}
+        id={fieldName}
+        defaultValue={row[fieldName]}
+        margin="normal"
+      />
+    </TableCell>
+  );
+};
+
 class GradesList extends Component {
   constructor(props) {
     super(props);
@@ -68,16 +91,7 @@ class GradesList extends Component {
 
   createTable = () => {
     const tableRows = [];
-    const tableColumns = [
-      {
-        displayName: 'Nome',
-        name: 'name',
-      },
-      {
-        displayName: 'Email',
-        name: 'email',
-      },
-    ];
+    const tableColumns = [];
 
     const evaluationNames = new Set();
     for (let i = 0; i < this.props.studentSubjects.length; i += 1) {
@@ -109,6 +123,15 @@ class GradesList extends Component {
       columns: tableColumns,
       rows: tableRows,
     };
+  };
+
+  handleChangeOnGrades = (_, change) => {
+    const value = change.fieldValue;
+    if (!Number.isNaN(Number(value)) && Number(value) >= 0 && Number(value) <= 10) {
+      // TODO: update state.
+    } else {
+      // TODO: show error message.
+    }
   };
 
   handleChangePage = (_, page) => {
@@ -150,7 +173,13 @@ class GradesList extends Component {
           <Table className={classes.table}>
             <TableHead>
               <TableRow>
-                {[...tableColumns].map(column => (
+                <TableCell variant="head" className={classes.middleColumns}>
+                  Nome
+                </TableCell>
+                <TableCell variant="head" className={classes.middleColumns}>
+                  Email
+                </TableCell>
+                {tableColumns.map(column => (
                   <TableCell variant="head" className={classes.middleColumns}>
                     {column.displayName}
                   </TableCell>
@@ -163,13 +192,18 @@ class GradesList extends Component {
             <TableBody>
               {tableRows
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map(userRow => (
+                .map((userRow, index) => (
                   // change key
                   <TableRow key={userRow.name}>
-                    {[...tableColumns].map(column => (
-                      <TableCell className={classes.middleColumns}>
-                        {userRow[column.name]}
-                      </TableCell>
+                    <TableCell className={classes.middleColumns}>{userRow.name}</TableCell>
+                    <TableCell className={classes.middleColumns}>{userRow.email}</TableCell>
+                    {tableColumns.map(column => (
+                      <EditableTableCell
+                        className={classes.middleColumns}
+                        row={userRow}
+                        fieldName={column.name}
+                        onCellValueChange={this.handleChangeOnGrades.bind(this, index)}
+                      />
                     ))}
                     <TableCell>
                       <IconButton

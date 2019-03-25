@@ -43,6 +43,7 @@ const SubjectInfo = ({
   onAddStudentClick,
   onAddTeacherClick,
   onEditSubjectClick,
+  onAddGradeClick,
   history,
   isAdmin,
   canSeeForum,
@@ -86,7 +87,7 @@ const SubjectInfo = ({
         </Button>
       )}
       {canSeeGrades && (
-        <Button color="primary" component={Link} to={`${history.location.pathname}/forum`}>
+        <Button color="primary" onClick={onAddGradeClick}>
           Adicionar nova nota
         </Button>
       )}
@@ -109,6 +110,7 @@ SubjectInfo.propTypes = {
     }).isRequired,
   }).isRequired,
   isAdmin: PropTypes.bool.isRequired,
+  onAddGradeClick: PropTypes.func.isRequired,
   onAddStudentClick: PropTypes.func.isRequired,
   onAddTeacherClick: PropTypes.func.isRequired,
   onEditSubjectClick: PropTypes.func.isRequired,
