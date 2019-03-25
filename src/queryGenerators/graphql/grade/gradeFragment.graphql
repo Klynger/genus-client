@@ -1,4 +1,6 @@
 fragment gradeFields on Grade {
   id
   name
+  qntStudents
+  qntTeachers
 }
