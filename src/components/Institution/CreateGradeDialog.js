@@ -74,7 +74,14 @@ const CreateGradeDialog = ({
           </FormControl>
         </Form>
         <DialogActions>
-          <Button color="primary" disabled={isSubmitting} onClick={handleReset}>
+          <Button
+            color="primary"
+            disabled={isSubmitting}
+            onClick={() => {
+              onClose();
+              handleReset();
+            }}
+          >
             Cancelar
           </Button>
           <Button color="primary" disabled={isSubmitting} onClick={handleSubmit}>
