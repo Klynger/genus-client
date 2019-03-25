@@ -52,7 +52,6 @@ class GradeInfo extends Component {
   constructor(props) {
     super(props);
 
-    this.menuId = 'grade-info__menu';
     this.state = {
       openMenu: false,
     };
@@ -118,15 +117,7 @@ class GradeInfo extends Component {
                 variant="subtitle1"
                 gutterBottom
               >
-                Quantidade de professores: {grade.qntTeachers}
-              </Typography>
-              <Typography
-                className={classes.infoText}
-                component="h3"
-                variant="subtitle1"
-                gutterBottom
-              >
-                Quantidade de alunos: {grade.qntTeachers}
+                35 alunos
               </Typography>
             </div>
           </Paper>
