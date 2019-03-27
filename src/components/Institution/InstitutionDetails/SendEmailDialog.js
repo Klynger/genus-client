@@ -9,10 +9,7 @@ import { requestGraphql } from '../../../utils/HTTPClient';
 import { capitalize } from '@material-ui/core/utils/helpers';
 import { defaultDialogBreakpoints } from '../../../utils/helpers';
 import { DefaultDialogTransition } from '../../shared/SharedComponents';
-import {
-  mutationCreateEntryCode,
-  mutationCreateAdvancedEntryCode,
-} from '../../../queryGenerators/institutionMutations';
+import { sendEmailToAllTeachers, sendEmailToAllStudents } from '../../../actions/email';
 import {
   Zoom,
   Button,
@@ -70,14 +67,12 @@ class SendEmailDialog extends PureComponent {
       handleChange,
       handleSubmit,
     } = this.props;
-    
+
     const emailError =
       Boolean(touched[emailFields[0]] && errors[emailFields[0]]) ||
       Boolean(touched[emailFields[1]] && errors[emailFields[1]]);
 
-    const emailErrorMessage = emailError
-      ? errors[emailFields[0]] || errors[emailFields[1]]
-      : '';
+    const emailErrorMessage = emailError ? errors[emailFields[0]] || errors[emailFields[1]] : '';
 
     return (
       <Dialog
@@ -115,17 +110,17 @@ class SendEmailDialog extends PureComponent {
               ))}
             </CustomTextField>
             <CustomTextField
-                    name="title"
-                    value={values.title}
-                    onChange={handleChange}
-                    helperText={errors.title}
-                    label="Título"
-                    className={classes.advancedOptionField}
-                    id={`send-email-dialog__title`}
-                    OnEnterHelperTextTransition={Zoom}
-                    error={Boolean(touched.title && errors.title)}
-                    showHelperText={emailError}
-                  />
+              name="title"
+              value={values.title}
+              onChange={handleChange}
+              helperText={errors.title}
+              label="Título"
+              className={classes.advancedOptionField}
+              id={'send-email-dialog__title'}
+              OnEnterHelperTextTransition={Zoom}
+              error={Boolean(touched.title && errors.title)}
+              showHelperText={emailError}
+            />
             {/* <InputLabel htmlFor="new-email__title-field">Título</InputLabel>
             <Input
               name="title"
@@ -133,9 +128,9 @@ class SendEmailDialog extends PureComponent {
               onChange={handleChange}
               id="new-email__title-field"
             /> */}
-              <Zoom in>
-                <FormHelperText>{errors.title}</FormHelperText>
-              </Zoom>
+            <Zoom in>
+              <FormHelperText>{errors.title}</FormHelperText>
+            </Zoom>
             <TextField
               rows={10}
               multiline
@@ -191,10 +186,10 @@ SendEmailDialog.defaultProps = {
 SendEmailDialog.propTypes = {
   classes: PropTypes.object.isRequired,
   errors: PropTypes.shape({
-    title: PropTypes.string,
+    content: PropTypes.string,
     institutionId: PropTypes.string,
     role: PropTypes.string,
-    content: PropTypes.string,
+    title: PropTypes.string,
   }).isRequired,
   fullScreen: PropTypes.bool.isRequired,
   handleChange: PropTypes.func.isRequired,
@@ -211,16 +206,16 @@ SendEmailDialog.propTypes = {
     }).isRequired,
   }).isRequired,
   touched: PropTypes.shape({
-    title: PropTypes.bool,
+    content: PropTypes.bool,
     institutionId: PropTypes.bool,
     role: PropTypes.bool,
-    content: PropTypes.bool,
+    title: PropTypes.bool,
   }).isRequired,
   values: PropTypes.shape({
-    title: PropTypes.string,
+    content: PropTypes.string,
     institutionId: PropTypes.string,
     role: PropTypes.oneOf(['', 'TEACHER', 'STUDENT']),
-    content: PropTypes.string,
+    title: PropTypes.string,
   }).isRequired,
   width: PropTypes.string.isRequired,
 };
@@ -245,57 +240,50 @@ export default withMobileDialog({
         };
       },
       validationSchema: Yup.object().shape({
-        title: validateEmail(),
+        content: validateEmail(),
         institutionId: Yup.string().required('Selecione uma instituição.'),
         role: Yup.string()
           .oneOf(['STUDENT', 'TEACHER'], 'Selecione uma opção.')
           .required('Selecione uma opção.'),
-        content: validateEmail(),
+        title: validateEmail(),
       }),
       handleSubmit(values, { resetForm, setSubmitting, setErrors, props }) {
-        if (values.title === '' && values.content === '') {
+        if (values.content !== '' && values.title !== '') {
           const input = {
-            institutionId: values.institutionId,
-            role: values.role,
+            subject: values.title,
+            text: values.content,
           };
-          requestGraphql(mutationCreateEntryCode(input), localStorage.getItem('token')).then(
-            res => {
-              if (res.data.data && res.data.data.createEntryCode) {
-                props.onClose(res.data.data.createEntryCode);
-                resetForm({
-                  institutionId: '',
-                  role: '',
-                  title: '',
-                  content: '',
-                });
-              } else {
-                setErrors({ requestError: res.status.toString() });
-              }
-              setTimeout(() => {
+
+          if (values.role === 'TEACHER') {
+            sendEmailToAllTeachers(input, values.institutionId)
+              .then(({ data }) => {
                 setSubmitting(false);
-              }, props.theme.transitions.duration.leavingScreen);
-            },
-          );
-        } else if (values.content !== '' && values.title !== '') {
-          requestGraphql(
-            mutationCreateAdvancedEntryCode(values),
-            localStorage.getItem('token'),
-          ).then(res => {
-            if (res.data.data && res.data.data.createAdvancedEntryCode) {
-              props.onClose(res.data.data.createAdvancedEntryCode);
-              resetForm({
-                institutionId: '',
-                role: '',
-                title: '',
-                content: '',
+                if (data.data) {
+
+                } else if (data.errors) {
+                  setErrors({ requestError: '404' });
+                }
+              })
+              .catch(({ request }) => {
+                setErrors({ requestError: request.status.toString() });
+                setSubmitting(false);
               });
-            } else {
-              setErrors({ requestError: res.status.toString() });
-            }
-            setTimeout(() => {
-              setSubmitting(false);
-            }, props.theme.transitions.duration.leavingScreen);
-          });
+          } else if (values.role === 'STUDENT') {
+            sendEmailToAllStudents(input, values.institutionId)
+              .then(({ data }) => {
+                setSubmitting(false);
+                if (data.data) {
+
+                } else if (data.errors) {
+                  setErrors({ requestError: '404' });
+                }
+              })
+              .catch(({ request }) => {
+                setErrors({ requestError: request.status.toString() });
+                setSubmitting(false);
+              });
+          }
+
         } else {
           setErrors({ requestError: 'Campo de dias e usos são ambos obrigatórios!' });
           setSubmitting(false);
