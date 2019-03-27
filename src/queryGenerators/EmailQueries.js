@@ -20,7 +20,7 @@ export const sendEmailToGradeStudents = (SendEmailInput, gradeId) => ({
   query: loader('./graphql/user/sendEmailToGradeStudents.graphql').loc.source.body,
   variables: {
     gradeId,
-    SendEmailInput
+    SendEmailInput,
   },
 });
 
@@ -28,7 +28,7 @@ export const sendEmailToSubjectStudents = (SendEmailInput, gradeId) => ({
   query: loader('./graphql/user/sendEmailToSubjectStudents.graphql').loc.source.body,
   variables: {
     gradeId,
-    SendEmailInput
+    SendEmailInput,
   },
 });
 

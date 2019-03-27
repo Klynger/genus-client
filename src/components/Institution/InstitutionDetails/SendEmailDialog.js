@@ -5,7 +5,6 @@ import React, { PureComponent } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import ProgressButton from '../../shared/ProgressButton';
 import CustomTextField from '../../shared/CustomTextField';
-import { requestGraphql } from '../../../utils/HTTPClient';
 import { capitalize } from '@material-ui/core/utils/helpers';
 import { defaultDialogBreakpoints } from '../../../utils/helpers';
 import { DefaultDialogTransition } from '../../shared/SharedComponents';
@@ -14,11 +13,9 @@ import {
   Zoom,
   Button,
   Dialog,
-  Input,
   MenuItem,
   TextField,
   DialogTitle,
-  InputLabel,
   DialogActions,
   DialogContent,
   withMobileDialog,
@@ -259,7 +256,7 @@ export default withMobileDialog({
               .then(({ data }) => {
                 setSubmitting(false);
                 if (data.data) {
-
+                
                 } else if (data.errors) {
                   setErrors({ requestError: '404' });
                 }
@@ -273,7 +270,6 @@ export default withMobileDialog({
               .then(({ data }) => {
                 setSubmitting(false);
                 if (data.data) {
-
                 } else if (data.errors) {
                   setErrors({ requestError: '404' });
                 }
@@ -283,7 +279,6 @@ export default withMobileDialog({
                 setSubmitting(false);
               });
           }
-
         } else {
           setErrors({ requestError: 'Campo de dias e usos são ambos obrigatórios!' });
           setSubmitting(false);
