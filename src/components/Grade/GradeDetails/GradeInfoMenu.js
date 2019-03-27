@@ -16,7 +16,17 @@ const styles = () => ({
   },
 });
 
-const GradeInfoMenu = ({ id, open, classes, onClose, anchorEl, onAddStudents, canAddStudents }) => {
+const GradeInfoMenu = ({
+  id,
+  open,
+  classes,
+  onClose,
+  anchorEl,
+  onAddStudents,
+  canAddStudents,
+  onSendEmailOpen,
+  canSendEmailToGradeStudents,
+}) => {
   return (
     <Popper
       anchorEl={anchorEl}
@@ -47,6 +57,16 @@ const GradeInfoMenu = ({ id, open, classes, onClose, anchorEl, onAddStudents, ca
                     Adicionar estudante
                   </MenuItem>
                 )}
+                {canSendEmailToGradeStudents && (
+                  <MenuItem
+                    onClick={e => {
+                      onSendEmailOpen();
+                      onClose(e);
+                    }}
+                  >
+                    Enviar email
+                  </MenuItem>
+                )}
               </MenuList>
             </ClickAwayListener>
           </Paper>
@@ -63,10 +83,12 @@ GradeInfoMenu.defaultProps = {
 GradeInfoMenu.propTypes = {
   anchorEl: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
   canAddStudents: PropTypes.bool,
+  canSendEmailToGradeStudents: PropTypes.bool,
   classes: PropTypes.object.isRequired,
   id: PropTypes.string.isRequired,
   onAddStudents: PropTypes.func,
   onClose: PropTypes.func.isRequired,
+  onSendEmailOpen: PropTypes.func.isRequired,
   open: PropTypes.bool,
 };
 

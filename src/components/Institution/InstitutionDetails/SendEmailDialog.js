@@ -221,6 +221,7 @@ export default withMobileDialog({
               .then(({ data }) => {
                 setSubmitting(false);
                 if (data) {
+                  props.onClose();
                   resetForm({
                     institutionId: '',
                     role: '',
@@ -240,6 +241,7 @@ export default withMobileDialog({
               .then(({ data }) => {
                 setSubmitting(false);
                 if (data) {
+                  props.onClose();
                   resetForm({
                     institutionId: '',
                     role: '',
