@@ -125,9 +125,6 @@ class SendEmailDialog extends PureComponent {
               onChange={handleChange}
               id="new-email__title-field"
             /> */}
-            <Zoom in>
-              <FormHelperText>{errors.title}</FormHelperText>
-            </Zoom>
             <TextField
               rows={10}
               multiline
@@ -237,12 +234,10 @@ export default withMobileDialog({
         };
       },
       validationSchema: Yup.object().shape({
-        content: validateEmail(),
         institutionId: Yup.string().required('Selecione uma instituição.'),
         role: Yup.string()
           .oneOf(['STUDENT', 'TEACHER'], 'Selecione uma opção.')
           .required('Selecione uma opção.'),
-        title: validateEmail(),
       }),
       handleSubmit(values, { resetForm, setSubmitting, setErrors, props }) {
         if (values.content !== '' && values.title !== '') {
