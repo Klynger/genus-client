@@ -1,0 +1,3 @@
+  query sendEmailToGradeStudents($input: SendEmailInput!, $gradeId: ID!) {
+      sendEmailToGradeStudents(input: $input, gradeId: $gradeId)
+  }

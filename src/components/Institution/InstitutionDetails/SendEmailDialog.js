@@ -33,22 +33,7 @@ const styles = theme => ({
 
 const emailFields = ['title', 'content'];
 
-const convertFieldToLabel = field => {
-  switch (field) {
-    case emailFields[0]:
-      return 'Título';
-    case emailFields[1]:
-      return 'Email';
-    default:
-      return '';
-  }
-};
-
 class SendEmailDialog extends PureComponent {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const {
       open,
@@ -68,8 +53,6 @@ class SendEmailDialog extends PureComponent {
     const emailError =
       Boolean(touched[emailFields[0]] && errors[emailFields[0]]) ||
       Boolean(touched[emailFields[1]] && errors[emailFields[1]]);
-
-    const emailErrorMessage = emailError ? errors[emailFields[0]] || errors[emailFields[1]] : '';
 
     return (
       <Dialog
@@ -118,13 +101,6 @@ class SendEmailDialog extends PureComponent {
               error={Boolean(touched.title && errors.title)}
               showHelperText={emailError}
             />
-            {/* <InputLabel htmlFor="new-email__title-field">Título</InputLabel>
-            <Input
-              name="title"
-              value={values.title}
-              onChange={handleChange}
-              id="new-email__title-field"
-            /> */}
             <TextField
               rows={10}
               multiline
@@ -214,12 +190,6 @@ SendEmailDialog.propTypes = {
   width: PropTypes.string.isRequired,
 };
 
-function validateEmail() {
-  return Yup.string().matches(/\d+/, {
-    message: 'Campo Obrigatório!.',
-  });
-}
-
 export default withMobileDialog({
   breakpoint: 'xs',
 })(
@@ -250,32 +220,43 @@ export default withMobileDialog({
             sendEmailToAllTeachers(input, values.institutionId)
               .then(({ data }) => {
                 setSubmitting(false);
-                if (data.data) {
-                
+                if (data) {
+                  resetForm({
+                    institutionId: '',
+                    role: '',
+                    text: '',
+                    content: '',
+                  });
                 } else if (data.errors) {
                   setErrors({ requestError: '404' });
                 }
               })
-              .catch(({ request }) => {
-                setErrors({ requestError: request.status.toString() });
+              .catch(({ requestMessage }) => {
+                setErrors({ requestError: requestMessage });
                 setSubmitting(false);
               });
           } else if (values.role === 'STUDENT') {
             sendEmailToAllStudents(input, values.institutionId)
               .then(({ data }) => {
                 setSubmitting(false);
-                if (data.data) {
+                if (data) {
+                  resetForm({
+                    institutionId: '',
+                    role: '',
+                    text: '',
+                    content: '',
+                  });
                 } else if (data.errors) {
                   setErrors({ requestError: '404' });
                 }
               })
-              .catch(({ request }) => {
-                setErrors({ requestError: request.status.toString() });
+              .catch(({ requestMessage }) => {
+                setErrors({ requestError: requestMessage });
                 setSubmitting(false);
               });
           }
         } else {
-          setErrors({ requestError: 'Campo de dias e usos são ambos obrigatórios!' });
+          setErrors({ requestError: 'Campo de título e email são ambos obrigatórios!' });
           setSubmitting(false);
         }
       },
