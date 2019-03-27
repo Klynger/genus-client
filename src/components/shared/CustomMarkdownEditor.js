@@ -3,12 +3,28 @@ import Commands from './commands';
 import PropTypes from 'prop-types';
 import * as Showdown from 'showdown';
 import React, { useState } from 'react';
+import classNames from 'classnames/bind';
 import { withStyles } from '@material-ui/core';
 import 'react-mde/lib/styles/css/react-mde-all.css';
 
 const styles = () => ({
   editor: {
-    overflow: 'hidden',
+    paddingBottom: '10px',
+    '& .mde-preview': {
+      overflowX: 'auto',
+    },
+    '& .mde-preview .mde-preview-content': {
+      padding: '0px',
+      margin: '10px',
+    },
+    '&:first-child': {
+      background: '#f9f9f9',
+    },
+  },
+  preview: {
+    '&:first-child': {
+      background: 'white',
+    },
   },
 });
 
@@ -21,6 +37,7 @@ const converter = new Showdown.Converter({
 
 const CustomMarkdownEditor = ({ classes, name, onChange, content }) => {
   const [tab, handleChangeTab] = useState('write');
+  const editorClasses = classNames.bind(classes);
   return (
     <ReactMde
       name={name}
@@ -31,7 +48,7 @@ const CustomMarkdownEditor = ({ classes, name, onChange, content }) => {
       generateMarkdownPreview={markdown => Promise.resolve(converter.makeHtml(markdown))}
       commands={Commands.listCommands}
       readOnly={tab === 'preview'}
-      className={classes.editor}
+      className={editorClasses('editor', { preview: tab === 'preview' })}
       getIcon={Commands.getIcon}
       l18n={{ write: 'Editar', preview: 'Visualizar' }}
     />
