@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import GradesList from './GradesList';
+import GradesInfo from './GradesInfo';
 import SubjectInfo from './SubjectInfo';
 import { Fade } from '@material-ui/core';
 import AddGradeDialog from './AddGradeDialog';
@@ -57,7 +58,7 @@ class SubjectDetailsPage extends Component {
   };
 
   render() {
-    const { subject } = this.props;
+    const { subject, isStudent, user } = this.props;
     const { openAddStudent, openAddTeacher, openEditSubject, openAddGrade } = this.state;
 
     // TODO: remove this when grades is integrated with
@@ -103,46 +104,78 @@ class SubjectDetailsPage extends Component {
       },
     ];
 
+    // TODO: remove this when grade is integrated with backend.
+    const userStudentSubjects = [
+      {
+        user: {
+          name: 'aluno 1',
+          id: 1,
+          email: 'alu1@gmail.com',
+        },
+        evaluations: [
+          {
+            name: 'Prova 1',
+            result: 10,
+            weight: 0.4,
+          },
+          {
+            name: 'Prova 2',
+            result: 8,
+            weight: 0.6,
+          },
+        ],
+      },
+    ];
+
     let toRender;
 
     if (subject) {
-      toRender = (
-        <Fragment>
-          <AddteacherDialog
-            subject={subject}
-            open={openAddTeacher}
-            onClose={this.handleAddTeacherClick}
-          />
-          <AddStudentDialog
-            subject={subject}
-            open={openAddStudent}
-            onClose={this.handleCloseAddStudent}
-          />
-          <AddGradeDialog
-            subject={subject}
-            open={openAddGrade}
-            openAddTeacheropenAddTeacher
-            onClose={this.handleCloseAddGrade}
-          />
-          <EditSubjectDialog
-            subjectId={subject.id}
-            open={openEditSubject}
-            onClose={this.handleEditSubjectClick}
-          />
-          <SubjectInfo
-            subject={subject}
-            onAddTeacherClick={this.handleAddTeacherClick}
-            onAddStudentClick={this.handleOpenAddStudent}
-            onEditSubjectClick={this.handleEditSubjectClick}
-            onAddGradeClick={this.handleOpenAddGrade}
-          />
-          <GradesList
-            users={subject.students}
-            studentSubjects={studentSubjects}
-            headTitle="Alunos"
-          />
-        </Fragment>
-      );
+      if (isStudent) {
+        toRender = (
+          <Fragment>
+            <SubjectInfo subject={subject} />
+            <GradesInfo user={user} studentSubjects={userStudentSubjects} />
+          </Fragment>
+        );
+      } else {
+        toRender = (
+          <Fragment>
+            <AddteacherDialog
+              subject={subject}
+              open={openAddTeacher}
+              onClose={this.handleAddTeacherClick}
+            />
+            <AddStudentDialog
+              subject={subject}
+              open={openAddStudent}
+              onClose={this.handleCloseAddStudent}
+            />
+            <AddGradeDialog
+              subject={subject}
+              open={openAddGrade}
+              openAddTeacheropenAddTeacher
+              onClose={this.handleCloseAddGrade}
+            />
+            <EditSubjectDialog
+              subjectId={subject.id}
+              open={openEditSubject}
+              onClose={this.handleEditSubjectClick}
+            />
+            <SubjectInfo
+              subject={subject}
+              onAddTeacherClick={this.handleAddTeacherClick}
+              onAddStudentClick={this.handleOpenAddStudent}
+              onEditSubjectClick={this.handleEditSubjectClick}
+              onAddGradeClick={this.handleOpenAddGrade}
+            />
+            <GradesList
+              users={subject.students}
+              studentSubjects={studentSubjects}
+              headTitle="Alunos"
+            />
+          </Fragment>
+        );
+      }
     } else {
       toRender = null;
     }
@@ -156,6 +189,7 @@ class SubjectDetailsPage extends Component {
 }
 
 SubjectDetailsPage.propTypes = {
+  isStudent: PropTypes.bool,
   subject: PropTypes.shape({
     id: PropTypes.string.isRequired,
     students: PropTypes.arrayOf(
@@ -175,6 +209,7 @@ SubjectDetailsPage.propTypes = {
       }),
     ).isRequired,
   }),
+  user: PropTypes.object,
 };
 
 function mapToProps(
@@ -187,7 +222,9 @@ function mapToProps(
 ) {
   const sub = subject.byId[subjectId];
   if (sub) {
+    const isStudent = sub.students.some(_user => _user.id === user.loggedUserId).length > 0;
     return {
+      isStudent,
       subject: {
         ...sub,
         teachers: sub.teachers.filter(id => user.byId[id]).map(id => user.byId[id]),
