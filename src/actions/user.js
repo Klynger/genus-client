@@ -9,6 +9,7 @@ import {
 
 export const fetchLoggedUser = () => dispatch =>
   requestGraphql(findLoggedUserQuery(), localStorage.getItem('token')).then(res => {
+    console.log('res', res, findLoggedUserQuery());
     if (res.data.data && res.data.data.findLoggedUser) {
       dispatch({
         type: SAVE_USER,

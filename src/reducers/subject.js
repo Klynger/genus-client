@@ -7,6 +7,7 @@ import {
   ADD_STUDENT_TO_SUBJECT,
   ADD_STUDENT_TO_SUBJECTS,
   ADD_DISCUSSION_TO_SUBJECT,
+  ADD_STUDENT_SUBJECT_TO_SUBJECT,
 } from '../actions/actionTypes';
 
 const DEFAULT_STATE = {
@@ -90,6 +91,21 @@ function subject(state = DEFAULT_STATE, action) {
             forum: concatIdIfNotContain(
               state.byId[action.payload.subjectId].forum,
               action.payload.discussionId,
+            ),
+          },
+        },
+      };
+
+    case ADD_STUDENT_SUBJECT_TO_SUBJECT:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.payload.subjectId]: {
+            ...state.byId[action.payload.subjectId],
+            studentSubjects: concatIdIfNotContain(
+              state.byId[action.payload.subjectId].studentSubjects,
+              action.payload.studentSubjectId,
             ),
           },
         },
