@@ -4,24 +4,19 @@ import { connect } from 'react-redux';
 import { Form, withFormik } from 'formik';
 import React, { Component, Fragment } from 'react';
 import AddTeacherEmptyView from './AddTeacherEmptyView';
+import SingleSearchField from '../../shared/SearchFields';
 import { capitalize } from '@material-ui/core/utils/helpers';
 import { addTeacherToSubject } from '../../../actions/subject';
 import { defaultDialogBreakpoints } from '../../../utils/helpers';
 import { DefaultDialogTransition } from '../../shared/SharedComponents';
 import {
-  Zoom,
-  Input,
   Dialog,
   Button,
-  Select,
-  MenuItem,
-  InputLabel,
   withStyles,
   DialogTitle,
   FormControl,
   DialogActions,
   DialogContent,
-  FormHelperText,
   withMobileDialog,
 } from '@material-ui/core';
 
@@ -31,11 +26,20 @@ const styles = () => ({
     display: 'flex',
     flexDirection: 'column',
     marginTop: 20,
+    minHeight: '150px',
+    overflow: 'hidden',
   },
 });
 
 class AddTeacherDialog extends Component {
-  static NO_TEACHER_SELECTED = '-1';
+  buildOptionsForSearchField = () => {
+    const options = [];
+    for (let i = 0; i < this.props.teachers.length; i += 1) {
+      const teacher = this.props.teachers[i];
+      options.push({ value: teacher.id, label: teacher.username });
+    }
+    return options;
+  };
 
   render() {
     const {
@@ -49,9 +53,13 @@ class AddTeacherDialog extends Component {
       touched,
       teachers,
       fullScreen,
-      handleChange,
+      setFieldValue,
+      setFieldTouched,
       handleSubmit,
     } = this.props;
+
+    const options = this.buildOptionsForSearchField();
+
     return (
       <Dialog
         open={open}
@@ -73,26 +81,16 @@ class AddTeacherDialog extends Component {
                   className={classes.formControl}
                   error={touched.teacherId && errors.teacherId !== undefined}
                 >
-                  <InputLabel htmlFor="add-teacher-dialog__teacher-id-field">Professor</InputLabel>
-                  <Select
+                  <SingleSearchField
+                    name="teacherId"
+                    onBlur={setFieldTouched}
+                    onChange={setFieldValue}
+                    options={options}
                     value={values.teacherId}
-                    onChange={handleChange}
-                    input={<Input name="teacherId" id="add-teacher-dialog__teacher-id-field" />}
-                  >
-                    <MenuItem value={AddTeacherDialog.NO_TEACHER_SELECTED} disabled>
-                      Selecione um professor
-                    </MenuItem>
-                    {teachers.map(({ id, name, username }) => (
-                      <MenuItem key={id} value={id}>
-                        {name || username}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  {touched.teacherId && errors.teacherId && (
-                    <Zoom in>
-                      <FormHelperText>{errors.teacherId}</FormHelperText>
-                    </Zoom>
-                  )}
+                    error={errors.teacherId}
+                    touched={touched.teacherId}
+                    placeholder="Selecione um professor"
+                  />
                 </FormControl>
               </Form>
             </DialogContent>
@@ -124,10 +122,11 @@ AddTeacherDialog.propTypes = {
     teacherId: PropTypes.string,
   }).isRequired,
   fullScreen: PropTypes.bool.isRequired,
-  handleChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool,
+  setFieldTouched: PropTypes.func,
+  setFieldValue: PropTypes.func,
   subject: PropTypes.object.isRequired,
   teachers: PropTypes.array,
   touched: PropTypes.shape({
@@ -172,14 +171,10 @@ export default connect(
         teacherId: AddTeacherDialog.NO_TEACHER_SELECTED,
       };
     },
-    validationSchema: () => {
-      return Yup.object().shape({
-        teacherId: Yup.string().matches(
-          new RegExp(`[^${AddTeacherDialog.NO_TEACHER_SELECTED}]`),
-          'Selecione um professor.',
-        ),
-      });
-    },
+    validationSchema: () =>
+      Yup.object().shape({
+        teacherId: Yup.string().required('Selecione um professor.'),
+      }),
     handleSubmit(values, { props }) {
       props
         .addTeacher(values)

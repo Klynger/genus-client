@@ -10,19 +10,10 @@ const styles = () => ({
     display: 'flex',
     padding: 0,
   },
-  select: {
-    '&:before': {
-      borderColor: 'red',
-    },
-    '&:after': {
-      borderColor: 'green',
-    },
-  },
 });
 
 const customTheme = theme => ({
   ...theme,
-  borderRadius: 0,
   colors: {
     ...theme.colors,
     primary: '#ff5722', // orange
@@ -51,7 +42,6 @@ class SingleSearchField extends Component {
         <Select
           isClearable
           isSearchable
-          classes={this.props.classes.select}
           arrowRenderer={null}
           theme={customTheme}
           openMenuOnFocus={false}
@@ -77,7 +67,6 @@ class SingleSearchField extends Component {
 }
 
 SingleSearchField.propTypes = {
-  classes: PropTypes.object.isRequired,
   error: PropTypes.string,
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func,

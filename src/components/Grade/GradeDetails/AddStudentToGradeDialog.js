@@ -25,6 +25,7 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'column',
     minHeight: '150px',
+    overflow: 'hidden',
   },
   gradeName: {
     color: theme.palette.primary.main,

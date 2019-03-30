@@ -5,17 +5,14 @@ import React, { Fragment } from 'react';
 import { Form, withFormik } from 'formik';
 import AddTeacherEmptyView from './AddTeacherEmptyView';
 import ProgressButton from '../../shared/ProgressButton';
+import SingleSearchField from '../../shared/SearchFields';
 import { capitalize } from '@material-ui/core/utils/helpers';
 import { addStudentToSubject } from '../../../actions/subject';
 import { defaultDialogBreakpoints } from '../../../utils/helpers';
 import { DefaultDialogTransition } from '../../shared/SharedComponents';
 import {
-  Zoom,
-  Input,
   Button,
   Dialog,
-  Select,
-  MenuItem,
   withStyles,
   InputLabel,
   DialogTitle,
@@ -32,26 +29,38 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     marginTop: 20,
+    minHeight: '150px',
+    overflow: 'hidden',
   },
 };
 
-const NO_STUDENT_SELECTED = '-1';
+function buildOptionsForSearchField(students) {
+  const options = [];
+  for (let i = 0; i < students.length; i += 1) {
+    const student = students[i];
+    options.push({ value: student.id, label: student.username });
+  }
+  return options;
+}
 
 const AddStudentDialog = ({
   classes,
   errors,
   fullScreen,
-  handleChange,
   handleSubmit,
   isSubmitting,
   onClose,
   open,
   students,
+  setFieldValue,
+  setFieldTouched,
   subject,
   touched,
   values,
   width,
 }) => {
+  const options = buildOptionsForSearchField(students);
+
   return (
     <Dialog
       open={open}
@@ -69,25 +78,16 @@ const AddStudentDialog = ({
             <Form className={classes.form}>
               <FormControl error={touched.studentId && Boolean(errors.studentId)}>
                 <InputLabel htmlFor="add-student-dialog__student-id-field">Aluno</InputLabel>
-                <Select
+                <SingleSearchField
+                  name="studentId"
+                  onBlur={setFieldTouched}
+                  onChange={setFieldValue}
+                  options={options}
                   value={values.studentId}
-                  onChange={handleChange}
-                  input={<Input name="studentId" id="add-student-dialog__student-id-field" />}
-                >
-                  <MenuItem value={NO_STUDENT_SELECTED} disabled>
-                    Selecione um Aluno
-                  </MenuItem>
-                  {students.map(({ id, name, username }) => (
-                    <MenuItem key={id} value={id}>
-                      {name || username}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {touched.studentId && Boolean(errors.studentId) && (
-                  <Zoom in>
-                    <FormHelperText>{errors.studentId}</FormHelperText>
-                  </Zoom>
-                )}
+                  error={errors.studentId}
+                  touched={touched.studentId}
+                  placeholder="Selecione um estudante"
+                />
               </FormControl>
             </Form>
             {errors.requestError && (
@@ -119,11 +119,12 @@ AddStudentDialog.propTypes = {
     studentId: PropTypes.string,
   }).isRequired,
   fullScreen: PropTypes.bool.isRequired,
-  handleChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   isSubmitting: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
+  setFieldTouched: PropTypes.func,
+  setFieldValue: PropTypes.func,
   students: PropTypes.array,
   subject: PropTypes.object.isRequired,
   theme: PropTypes.shape({
@@ -174,16 +175,13 @@ export default connect(
       withFormik({
         mapPropsToValues({ subject: { id } }) {
           return {
-            studentId: NO_STUDENT_SELECTED,
+            studentId: '',
             subjectId: id,
           };
         },
         validationSchema: () => {
           return Yup.object().shape({
-            studentId: Yup.string().matches(
-              new RegExp(`[^${NO_STUDENT_SELECTED}]`),
-              'Selecione um aluno.',
-            ),
+            studentId: Yup.string().required('Selecione um estudante.'),
           });
         },
         handleSubmit(values, { props, resetForm, setErrors, setSubmitting }) {
@@ -200,7 +198,7 @@ export default connect(
               setTimeout(() => {
                 if (callResetForm) {
                   resetForm({
-                    studentId: NO_STUDENT_SELECTED,
+                    studentId: '',
                     subjectId: props.subject.id,
                   });
                 }
