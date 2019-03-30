@@ -28,7 +28,14 @@ const InstitutionInfoMenu = ({
   onUpdateInstitutionOpen,
 }) => {
   return (
-    <Popper anchorEl={anchorEl} className={classes.popper} open={open} transition disablePortal>
+    <Popper
+      placement="bottom-end"
+      anchorEl={anchorEl}
+      className={classes.popper}
+      open={open}
+      transition
+      disablePortal
+    >
       {({ TransitionProps, placement }) => (
         <Grow
           id={id}
