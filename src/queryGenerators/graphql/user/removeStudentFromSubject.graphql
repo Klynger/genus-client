@@ -1,0 +1,3 @@
+mutation removeStudentFromSubject($subjectId: ID!, $studentId: ID!) {
+  removeStudentFromSubject(subjectId: $subjectId, studentId: $studentId)
+}

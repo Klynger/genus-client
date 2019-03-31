@@ -82,7 +82,16 @@ class UserList extends Component {
   };
 
   render() {
-    const { ableToRemove, classes, headTitle, loggedUser, selectedInstitution, users } = this.props;
+    const {
+      ableToRemove,
+      classes,
+      headTitle,
+      loggedUser,
+      removeUserAction,
+      selectedInstitution,
+      subjectId,
+      users,
+    } = this.props;
     const { page, openDialog, rowsPerPage, userId, rowsPerPageOptions } = this.state;
 
     return (
@@ -98,9 +107,11 @@ class UserList extends Component {
                 <TableCell variant="head" className={classes.middleColumns}>
                   Email
                 </TableCell>
-                <TableCell variant="head" className={classes.deleteIcon}>
-                  Remover
-                </TableCell>
+                {ableToRemove && (
+                  <TableCell variant="head" className={classes.deleteIcon}>
+                    Remover
+                  </TableCell>
+                )}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -109,15 +120,17 @@ class UserList extends Component {
                 <TableRow key={user.username}>
                   <TableCell>{user.username}</TableCell>
                   <TableCell className={classes.middleColumns}>{user.email}</TableCell>
-                  <TableCell>
-                    <IconButton
-                      className={classes.deleteIcon}
-                      onClick={() => this.openRemoveUserDialog(user.id)}
-                      disabled={user.id === loggedUser || !ableToRemove}
-                    >
-                      <DeleteForever />
-                    </IconButton>
-                  </TableCell>
+                  {ableToRemove && (
+                    <TableCell>
+                      <IconButton
+                        className={classes.deleteIcon}
+                        onClick={() => this.openRemoveUserDialog(user.id)}
+                        disabled={user.id === loggedUser}
+                      >
+                        <DeleteForever />
+                      </IconButton>
+                    </TableCell>
+                  )}
                 </TableRow>
               ))}
             </TableBody>
@@ -152,6 +165,8 @@ class UserList extends Component {
             onClose={this.handleRemoveUserDialogToggle}
             open={openDialog}
             userId={userId}
+            removeUserAction={removeUserAction}
+            subjectId={subjectId}
           />
         )}
       </Paper>
@@ -168,7 +183,9 @@ UserList.propTypes = {
   classes: PropTypes.object.isRequired,
   headTitle: PropTypes.string.isRequired,
   loggedUser: PropTypes.string.isRequired,
+  removeUserAction: PropTypes.func,
   selectedInstitution: PropTypes.string,
+  subjectId: PropTypes.string,
   users: PropTypes.arrayOf(
     PropTypes.shape({
       email: PropTypes.string.isRequired,
