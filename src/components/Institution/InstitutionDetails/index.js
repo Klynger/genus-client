@@ -10,6 +10,7 @@ import EditInstitutionDialog from './EditInstitutionDialog';
 import DisplayCodeDialog from '../EntryCode/DisplayCodeDialog';
 import GenerateCodeDialog from '../EntryCode/GenerateCodeDialog';
 import DefaultContainerRoute from '../../shared/DefaultContainerRoute';
+import { emailType } from '../../../utils/constants';
 
 class InstitutionDetails extends Component {
   constructor(props) {
@@ -95,8 +96,9 @@ class InstitutionDetails extends Component {
           )}
           {loggedUserIsAdmin && (
             <SendEmailDialog
+              sendEmailType={emailType.TO_ALL_TEACHERS}
               open={sendEmailOpen}
-              institutionId={institution.id}
+              id={institution.id}
               onClose={this.handleSendEmailClose}
             />
           )}

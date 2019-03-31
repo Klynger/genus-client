@@ -1,48 +1,13 @@
 import { requestGraphql } from '../utils/HTTPClient';
-import { sendEmailToTeachers, sendEmailToStudents } from '../queryGenerators/EmailQueries';
+import { sendEmail } from '../queryGenerators/EmailQueries';
 
-export const sendEmailToAllTeachers = (SendEmailInput, institutionId) => {
-  return requestGraphql(
-    sendEmailToTeachers(SendEmailInput, institutionId),
-    localStorage.getItem('token'),
-  ).then(res => {
-    if (res.data && res.data.data && res.data.data.sendEmailToTeachers) {
-      return res.data.data.sendEmailToTeachers;
-    }
-    return res.request.status.toString();
-  });
-};
-
-export const sendEmailToAllStudents = (SendEmailInput, intitutionId) =>
+export const sendEmailTo = (SendEmailInput, id, EmailType) =>
   requestGraphql(
-    sendEmailToStudents(SendEmailInput, intitutionId),
+    sendEmail(SendEmailInput, id, EmailType),
     localStorage.getItem('token'),
   ).then(res => {
-    if (res.data && res.data.data && res.data.data.sendEmailToStudents) {
+    if (res.data && res.data.data && res.data.data.sendEmail) {
       return res;
-    }
-    return res.request.status.toString();
-  });
-
-export const sendEmailToGradeStudents = (SendEmailInput, gradeId) => {
-  return requestGraphql(
-    sendEmailToTeachers(SendEmailInput, gradeId),
-    localStorage.getItem('token'),
-  ).then(res => {
-    if (res.data && res.data.data && res.data.data.sendEmailToGradeStudents) {
-      return res.data.data.sendEmailToGradeStudents;
-    }
-    return res.request.status.toString();
-  });
-};
-
-export const sendEmailToSubjectStudents = (SendEmailInput, subjectId) =>
-  requestGraphql(
-    sendEmailToStudents(SendEmailInput, subjectId),
-    localStorage.getItem('token'),
-  ).then(res => {
-    if (res.data && res.data.data && res.data.data.sendEmailToSubjectStudents) {
-      return res.data.data.sendEmailToSubjectStudents;
     }
     return res.request.status.toString();
   });

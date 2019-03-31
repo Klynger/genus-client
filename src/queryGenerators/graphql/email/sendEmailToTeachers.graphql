@@ -1,3 +1,0 @@
-  query sendEmailToTeachers($input: SendEmailInput!, $institutionId: ID!) {
-      sendEmailToTeachers(input: $input, institutionId: $institutionId)
-  }

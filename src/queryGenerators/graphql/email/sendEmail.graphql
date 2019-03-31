@@ -1,0 +1,3 @@
+  query sendEmail($input: SendEmailInput!, $id: ID!, $type: EmailType!) {
+      sendEmail(input: $input, id: $id, type: $type)
+  }

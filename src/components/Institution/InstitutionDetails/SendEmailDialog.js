@@ -8,7 +8,8 @@ import CustomTextField from '../../shared/CustomTextField';
 import { capitalize } from '@material-ui/core/utils/helpers';
 import { defaultDialogBreakpoints } from '../../../utils/helpers';
 import { DefaultDialogTransition } from '../../shared/SharedComponents';
-import { sendEmailToAllTeachers, sendEmailToAllStudents } from '../../../actions/email';
+import { sendEmailTo } from '../../../actions/email';
+import { emailType } from '../../../utils/constants';
 import {
   Zoom,
   Button,
@@ -157,9 +158,10 @@ SendEmailDialog.propTypes = {
   classes: PropTypes.object.isRequired,
   errors: PropTypes.shape({
     content: PropTypes.string,
-    institutionId: PropTypes.string,
+    id: PropTypes.string,
     role: PropTypes.string,
     title: PropTypes.string,
+    sendEmailType: PropTypes.string,
   }).isRequired,
   fullScreen: PropTypes.bool.isRequired,
   handleChange: PropTypes.func.isRequired,
@@ -177,15 +179,17 @@ SendEmailDialog.propTypes = {
   }).isRequired,
   touched: PropTypes.shape({
     content: PropTypes.bool,
-    institutionId: PropTypes.bool,
+    id: PropTypes.bool,
     role: PropTypes.bool,
     title: PropTypes.bool,
+    sendEmailType: PropTypes.bool,
   }).isRequired,
   values: PropTypes.shape({
     content: PropTypes.string,
-    institutionId: PropTypes.string,
+    id: PropTypes.string,
     role: PropTypes.oneOf(['', 'TEACHER', 'STUDENT']),
     title: PropTypes.string,
+    sendEmailType: PropTypes.string,
   }).isRequired,
   width: PropTypes.string.isRequired,
 };
@@ -195,16 +199,18 @@ export default withMobileDialog({
 })(
   withStyles(styles, { withTheme: true })(
     withFormik({
-      mapPropsToValues({ institutionId }) {
+      mapPropsToValues({ id, sendEmailType }) {
         return {
-          institutionId: institutionId || '',
+          id: id || '',
+          sendEmailType: sendEmailType || '',
           role: '',
           title: '',
           content: '',
         };
       },
       validationSchema: Yup.object().shape({
-        institutionId: Yup.string().required('Selecione uma instituição.'),
+        id: Yup.string().required('Selecione uma instituição.'),
+        sendEmailType: Yup.string().required('Selecione para quem enviar o email.'),
         role: Yup.string()
           .oneOf(['STUDENT', 'TEACHER'], 'Selecione uma opção.')
           .required('Selecione uma opção.'),
@@ -215,48 +221,40 @@ export default withMobileDialog({
             subject: values.title,
             text: values.content,
           };
+          let type;
 
-          if (values.role === 'TEACHER') {
-            sendEmailToAllTeachers(input, values.institutionId)
-              .then(({ data }) => {
-                setSubmitting(false);
-                if (data) {
-                  props.onClose();
-                  resetForm({
-                    institutionId: '',
-                    role: '',
-                    text: '',
-                    content: '',
-                  });
-                } else if (data.errors) {
-                  setErrors({ requestError: '404' });
-                }
-              })
-              .catch(({ requestMessage }) => {
-                setErrors({ requestError: requestMessage });
-                setSubmitting(false);
-              });
-          } else if (values.role === 'STUDENT') {
-            sendEmailToAllStudents(input, values.institutionId)
-              .then(({ data }) => {
-                setSubmitting(false);
-                if (data) {
-                  props.onClose();
-                  resetForm({
-                    institutionId: '',
-                    role: '',
-                    text: '',
-                    content: '',
-                  });
-                } else if (data.errors) {
-                  setErrors({ requestError: '404' });
-                }
-              })
-              .catch(({ requestMessage }) => {
-                setErrors({ requestError: requestMessage });
-                setSubmitting(false);
-              });
+          if (values.sendEmailType === emailType.TO_ALL_TEACHERS ||
+              values.sendEmailType === emailType.TO_ALL_STUDENTS) {
+            if (values.role === 'TEACHER') {
+              type = emailType.TO_ALL_TEACHERS;
+            } else {
+              type = emailType.TO_ALL_STUDENTS;
+            }
+          } else if (values.sendEmailType === emailType.TO_ALL_GRADE_STUDENTS) {
+            type = emailType.TO_ALL_GRADE_STUDENTS;
+          } else {
+            type = emailType.TO_ALL_SUBJECT_STUDENTS;
           }
+          sendEmailTo(input, values.id, type)
+            .then(({ data }) => {
+              setSubmitting(false);
+              if (data) {
+                props.onClose();
+                resetForm({
+                  id: '',
+                  sendEmailType: '',
+                  role: '',
+                  text: '',
+                  content: '',
+                });
+              } else if (data.errors) {
+                setErrors({ requestError: '404' });
+              }
+            })
+            .catch(({ requestMessage }) => {
+              setErrors({ requestError: requestMessage });
+              setSubmitting(false);
+            });
         } else {
           setErrors({ requestError: 'Campo de título e email são ambos obrigatórios!' });
           setSubmitting(false);
