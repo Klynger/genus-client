@@ -15,6 +15,7 @@ import {
   withStyles,
   DialogTitle,
   DialogActions,
+  Button,
   DialogContent,
   withMobileDialog,
 } from '@material-ui/core';
@@ -89,6 +90,9 @@ const AddStudentToGradeDialog = ({
             </Form>
           </DialogContent>
           <DialogActions>
+            <Button color="primary" onClick={onClose}>
+              Cancelar
+            </Button>
             <ProgressButton showProgress={isSubmitting} onClick={handleSubmit}>
               Adicionar
             </ProgressButton>
