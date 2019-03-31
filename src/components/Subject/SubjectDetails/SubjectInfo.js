@@ -14,7 +14,6 @@ const styles = theme => ({
     width: PHOTO_DIMENSION,
   },
   root: {
-    borderRadius: 0,
     display: 'flex',
     flexDirection: 'column',
     marginTop: theme.spacing.unit * 3,
