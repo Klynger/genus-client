@@ -6,7 +6,6 @@ import AddStudentDialog from './AddStudentDialog';
 import AddteacherDialog from './AddTeacherDialog';
 import React, { Component, Fragment } from 'react';
 import EditSubjectDialog from './EditSubjectDialog';
-import { removeStudentFromSubjectId } from '../../../actions/user';
 import UserList from '../../Institution/InstitutionDetails/UserList';
 import DefaultContainerRoute from '../../shared/DefaultContainerRoute';
 
@@ -80,8 +79,9 @@ class SubjectDetailsPage extends Component {
           <UserList
             users={subject.students}
             headTitle="Alunos"
-            removeUserAction={removeStudentFromSubjectId}
+            removeStudentFromSubject
             subjectId={subject.id}
+            subjectName={subject.name}
           />
         </Fragment>
       );

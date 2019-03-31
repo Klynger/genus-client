@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { Form, withFormik } from 'formik';
 import { capitalize } from '@material-ui/core/utils/helpers';
 import { defaultDialogBreakpoints } from '../../../utils/helpers';
-import { removeUserOfInstitutionId } from '../../../actions/user';
+import { removeStudentFromSubjectId } from '../../../actions/user';
 import { DefaultDialogTransition } from '../../shared/SharedComponents';
 import {
   Button,
@@ -41,7 +41,7 @@ const styles = () => ({
   },
 });
 
-const RemoveUserDialog = ({
+const RemoveStudentDialog = ({
   open,
   width,
   errors,
@@ -49,12 +49,12 @@ const RemoveUserDialog = ({
   classes,
   onClose,
   touched,
+  subjectName,
   userName,
   fullScreen,
   handleChange,
   handleSubmit,
   isSubmitting,
-  selectedInstitutionName,
 }) => (
   <Dialog
     fullScreen={fullScreen}
@@ -71,22 +71,10 @@ const RemoveUserDialog = ({
     <DialogContent>
       <DangerText>Cuidado, esta ação não pode ser desfeita! </DangerText>
       <DialogContentText>
-        Tem certeza que deseja remover o usuário <DangerText>{userName}</DangerText>? Digite o nome
-        da instituição (<DangerText>{selectedInstitutionName}</DangerText>) e senha para que a
-        operação possa ser realizada!
+        Tem certeza que deseja remover o estudante <DangerText>{userName}</DangerText>
+        da disciplina <DangerText>{subjectName}</DangerText>? Se sim confirme sua senha.
       </DialogContentText>
       <Form className={classes.form}>
-        <FormControl error={touched.institutionName && errors.institutionName !== undefined}>
-          <InputLabel htmlFor="institutionName">Nome da Instituição:</InputLabel>
-          <Input name="institutionName" value={values.institutionName} onChange={handleChange} />
-          {touched.institutionName && errors.institutionName && (
-            <Zoom in>
-              <FormHelperText id="institution-name-error-text">
-                {errors.institutionName}
-              </FormHelperText>
-            </Zoom>
-          )}
-        </FormControl>
         <FormControl error={touched.password && errors.password !== undefined}>
           <InputLabel htmlFor="password">Senha:</InputLabel>
           <Input name="password" type="password" value={values.password} onChange={handleChange} />
@@ -114,10 +102,9 @@ const RemoveUserDialog = ({
   </Dialog>
 );
 
-RemoveUserDialog.propTypes = {
+RemoveStudentDialog.propTypes = {
   classes: PropTypes.object.isRequired,
   errors: PropTypes.shape({
-    institutionName: PropTypes.string,
     password: PropTypes.string,
     requestError: PropTypes.string,
   }).isRequired,
@@ -127,16 +114,15 @@ RemoveUserDialog.propTypes = {
   isSubmitting: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  selectedInstitution: PropTypes.string, // eslint-disable-line
-  selectedInstitutionName: PropTypes.string, // eslint-disable-line
+  studentId: PropTypes.string, // eslint-disable-line
+  subjectId: PropTypes.string, // eslint-disable-line
+  subjectName: PropTypes.string,
   touched: PropTypes.shape({
-    institutionName: PropTypes.bool,
     password: PropTypes.bool,
   }).isRequired,
   userId: PropTypes.string.isRequired, // eslint-disable-line
   userName: PropTypes.string,
   values: PropTypes.shape({
-    institutionName: PropTypes.string.isRequired,
     password: PropTypes.string.isRequired,
   }),
   width: PropTypes.string.isRequired,
@@ -156,7 +142,7 @@ function mapStateToProps({ institution, user }, { userId }) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    removeUser: input => dispatch(removeUserOfInstitutionId(input)),
+    removeUser: input => dispatch(removeStudentFromSubjectId(input)),
   };
 }
 
@@ -170,51 +156,43 @@ export default connect(
         breakpoint: 'xs',
       })(
         withFormik({
-          mapPropsToValues({ institutionName }) {
+          mapPropsToValues() {
             return {
-              institutionName: institutionName || '',
               password: '',
             };
           },
           validationSchema: Yup.object().shape({
-            institutionName: Yup.string().required('Nome da instituição é obrigatório.'),
             password: Yup.string()
               .min(6, 'A senha deve ter pelo menos 6 caracteres.')
               .max(30, 'Senha não pode ter mais que 30 caracteres.')
               .required('Senha obrigatória.'),
           }),
           handleSubmit(values, { props, resetForm, setErrors, setSubmitting }) {
-            if (values.institutionName === props.selectedInstitutionName) {
-              const input = {
-                institutionName: values.institutionName,
-                institutionId: props.selectedInstitution,
-                password: values.password,
-                toBeRemovedId: props.userId,
-              };
-              props
-                .removeUser(input)
-                .then(res => {
-                  if (res.data.data.removeUserFromInstitution) {
-                    resetForm({
-                      institutionName: '',
-                      password: '',
-                    });
-                    props.onClose();
-                  } else {
-                    setErrors({ requestError: 'Usuário não removido! Tente novamente' });
-                  }
-                  setSubmitting(false);
-                })
-                .catch(() => {
-                  setSubmitting(false);
-                });
-            } else {
-              setErrors({ requestError: 'Nome de instituição inválido! Digite novamente' });
-              setSubmitting(false);
-            }
+            const input = {
+              subjectId: props.subjectId,
+              subjectName: props.subjectName,
+              studentId: props.userId,
+              password: values.password,
+            };
+            props
+              .removeUser(input)
+              .then(res => {
+                if (res.data.data.removeStudentFromSubject) {
+                  resetForm({
+                    password: '',
+                  });
+                  props.onClose();
+                } else {
+                  setErrors({ requestError: 'Estudante não removido! Tente novamente' });
+                }
+                setSubmitting(false);
+              })
+              .catch(() => {
+                setSubmitting(false);
+              });
           },
           enableReinitialize: true,
-        })(RemoveUserDialog),
+        })(RemoveStudentDialog),
       ),
     ),
   ),

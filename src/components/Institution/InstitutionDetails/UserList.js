@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import RemoveUserDialog from './RemoveUserDialog';
 import { DeleteForever } from '@material-ui/icons';
 import { NO_INSTUTION_SELECTED } from '../../../reducers/institution';
+import RemoveStudentDialog from '../../Subject/SubjectDetails/RemoveStudentDialog';
 import {
   Paper,
   withStyles,
@@ -87,9 +88,10 @@ class UserList extends Component {
       classes,
       headTitle,
       loggedUser,
-      removeUserAction,
+      removeStudentFromSubject,
       selectedInstitution,
       subjectId,
+      subjectName,
       users,
     } = this.props;
     const { page, openDialog, rowsPerPage, userId, rowsPerPageOptions } = this.state;
@@ -160,13 +162,20 @@ class UserList extends Component {
             A instituição não possui {headTitle.toLowerCase()}
           </Typography>
         )}
-        {selectedInstitution !== NO_INSTUTION_SELECTED && (
+        {selectedInstitution !== NO_INSTUTION_SELECTED && !removeStudentFromSubject && (
           <RemoveUserDialog
             onClose={this.handleRemoveUserDialogToggle}
             open={openDialog}
             userId={userId}
-            removeUserAction={removeUserAction}
+          />
+        )}
+        {selectedInstitution !== NO_INSTUTION_SELECTED && removeStudentFromSubject && (
+          <RemoveStudentDialog
+            onClose={this.handleRemoveUserDialogToggle}
+            open={openDialog}
+            userId={userId}
             subjectId={subjectId}
+            subjectName={subjectName}
           />
         )}
       </Paper>
@@ -183,9 +192,10 @@ UserList.propTypes = {
   classes: PropTypes.object.isRequired,
   headTitle: PropTypes.string.isRequired,
   loggedUser: PropTypes.string.isRequired,
-  removeUserAction: PropTypes.func,
+  removeStudentFromSubject: PropTypes.bool,
   selectedInstitution: PropTypes.string,
   subjectId: PropTypes.string,
+  subjectName: PropTypes.string,
   users: PropTypes.arrayOf(
     PropTypes.shape({
       email: PropTypes.string.isRequired,
