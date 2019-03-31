@@ -14,7 +14,7 @@ function evaluation(state = DEFAULT_STATE, action) {
         byId: {
           ...state.byId,
           [action.evaluation.id]: {
-            ...(state.byId[action.evalution.id] ? state.byId[action.evalution.id] : {}),
+            ...(state.byId[action.evaluation.id] ? state.byId[action.evaluation.id] : {}),
             ...action.evaluation,
           },
         },
