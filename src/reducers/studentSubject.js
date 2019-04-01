@@ -26,11 +26,11 @@ function studentSubject(state = DEFAULT_STATE, action) {
         ...state,
         byId: {
           ...state.byId,
-          [action.studentSubjectId]: {
-            ...state.byId[action.studentSubjectId],
+          [action.payload.studentSubjectId]: {
+            ...state.byId[action.payload.studentSubjectId],
             evaluations: concatIdIfNotContain(
-              state.byId[action.studentSubjectId].evaluations,
-              action.evaluationId,
+              state.byId[action.payload.studentSubjectId].evaluations,
+              action.payload.evaluationId,
             ),
           },
         },

@@ -1,16 +1,15 @@
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import React, { Component } from 'react';
 import {
-  Paper,
-  withStyles,
   Table,
-  TableHead,
-  Typography,
   TableRow,
+  TableHead,
   TableCell,
   TableBody,
   TextField,
+  Typography,
+  withStyles,
 } from '@material-ui/core';
 
 const styles = theme => ({
@@ -47,120 +46,72 @@ const styles = theme => ({
   },
 });
 
-const EditableTableCell = ({ row, fieldName, onCellValueChange }) => {
-  const handleChange = e => {
-    onCellValueChange({
-      fieldValue: e.target.value,
-      fieldName,
-    });
-  };
-
+const NewGradesList = props => {
+  const { classes, headTitle, studentsData, onEvaluationChange } = props;
   return (
-    <TableCell>
-      <TextField
-        onChange={handleChange}
-        id={fieldName}
-        defaultValue={row[fieldName]}
-        margin="normal"
-      />
-    </TableCell>
+    <div className={classes.root}>
+      <Typography className={classes.title} component="span">
+        Notas da prova
+      </Typography>
+      {studentsData.length > 0 && (
+        <Table className={classes.table}>
+          <TableHead>
+            <TableRow>
+              <TableCell variant="head" className={classes.middleColumns}>
+                Nome
+              </TableCell>
+              <TableCell variant="head" className={classes.middleColumns}>
+                Nota
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {studentsData.map(student => (
+              <TableRow key={student.id}>
+                <TableCell className={classes.middleColumns}>{student.username}</TableCell>
+                <TableCell>
+                  <TextField
+                    id={`new-evaluation-result-field__${student.id}`}
+                    value={student.result}
+                    onChange={e => onEvaluationChange(e.target.value, student.id)}
+                    error={student.error}
+                    type="number"
+                    helperText={student.error && 'A nota deve ser um valor entre 0 e 10.'}
+                    margin="normal"
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
+      {studentsData.length === 0 && (
+        <Typography className={classes.emptyView} variant="subtitle1">
+          Essa disciplina não possue {headTitle.toLowerCase()}
+        </Typography>
+      )}
+    </div>
   );
 };
 
-class NewGradesList extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      userId: '',
-    };
-  }
-
-  handleChangeOnGrades = (_, change) => {
-    const value = change.fieldValue;
-    if (!Number.isNaN(Number(value)) && Number(value) >= 0 && Number(value) <= 10) {
-      // TODO: update state.
-    } else {
-      // TODO: show error message.
-    }
-  };
-
-  render() {
-    const { classes, headTitle, users } = this.props;
-
-    return (
-      <Paper className={classes.root}>
-        <Typography className={classes.title} component="span">
-          Notas da prova
-        </Typography>
-        {users.length > 0 && (
-          <Table className={classes.table}>
-            <TableHead>
-              <TableRow>
-                <TableCell variant="head" className={classes.middleColumns}>
-                  Nome
-                </TableCell>
-                <TableCell variant="head" className={classes.middleColumns}>
-                  Nota
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {users.map((user, index) => (
-                // change key
-                <TableRow key={user.username}>
-                  <TableCell className={classes.middleColumns}>{user.username}</TableCell>
-                  <EditableTableCell
-                    className={classes.middleColumns}
-                    row={user}
-                    fieldName="nota"
-                    onCellValueChange={this.handleChangeOnGrades.bind(this, index)}
-                  />
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        )}
-        {users.length === 0 && (
-          <Typography className={classes.emptyView} variant="subtitle1">
-            A instituição não possui {headTitle.toLowerCase()}
-          </Typography>
-        )}
-      </Paper>
-    );
-  }
-}
-
-NewGradesList.defaultProps = {
-  users: [],
-};
-
 NewGradesList.propTypes = {
-  ableToRemove: PropTypes.bool,
   classes: PropTypes.object.isRequired,
   headTitle: PropTypes.string.isRequired,
-  loggedUser: PropTypes.string.isRequired,
-  selectedInstitution: PropTypes.string,
-  users: PropTypes.arrayOf(
+  onEvaluationChange: PropTypes.func.isRequired,
+  studentsData: PropTypes.arrayOf(
     PropTypes.shape({
-      email: PropTypes.string.isRequired,
+      id: PropTypes.string.isRequired,
+      result: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       username: PropTypes.string.isRequired,
     }),
-  ),
+  ).isRequired,
 };
 
-function mapStateToProps({ institution, user }) {
-  const { selectedInstitution } = institution;
-  let ableToRemove = false;
-  if (institution.byId[selectedInstitution]) {
-    ableToRemove = institution.byId[selectedInstitution].admins.includes(user.loggedUserId);
-  }
-
-  return {
-    ableToRemove,
-    loggedUser: user.loggedUserId,
-    selectedInstitution,
-  };
+function mapDispatchToProps() {
+  return {};
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(NewGradesList));
+export default connect(
+  null,
+  mapDispatchToProps,
+)(withStyles(styles)(NewGradesList));
