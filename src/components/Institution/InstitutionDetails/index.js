@@ -6,11 +6,11 @@ import { Fade } from '@material-ui/core';
 import React, { Component } from 'react';
 import InstitutionInfo from './InstitutionInfo';
 import SendEmailDialog from './SendEmailDialog';
+import { emailType } from '../../../utils/constants';
 import EditInstitutionDialog from './EditInstitutionDialog';
 import DisplayCodeDialog from '../EntryCode/DisplayCodeDialog';
 import GenerateCodeDialog from '../EntryCode/GenerateCodeDialog';
 import DefaultContainerRoute from '../../shared/DefaultContainerRoute';
-import { emailType } from '../../../utils/constants';
 
 class InstitutionDetails extends Component {
   constructor(props) {

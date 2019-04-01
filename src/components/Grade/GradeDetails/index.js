@@ -9,6 +9,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AddStudentToGradeDialog from './AddStudentToGradeDialog';
 import DefaultContainerRoute from '../../shared/DefaultContainerRoute';
 import SendEmailDialog from '../../Institution/InstitutionDetails/SendEmailDialog';
+import { emailType } from '../../../utils/constants';
 
 const styles = theme => ({
   emptyGradeDetails: {
@@ -89,7 +90,8 @@ class GradeDetails extends Component {
           {canSendEmailToGradeStudents && (
             <SendEmailDialog
               open={sendEmailOpen}
-              institutionId={gradeId}
+              sendEmailType={emailType.TO_ALL_GRADE_STUDENTS}
+              id={gradeId}
               onClose={this.handleSendEmailClose}
             />
           )}

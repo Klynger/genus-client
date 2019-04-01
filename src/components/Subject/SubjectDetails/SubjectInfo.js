@@ -40,12 +40,14 @@ const styles = theme => ({
 const SubjectInfo = ({
   classes,
   subject,
+  onSendEmailOpen,
   onAddStudentClick,
   onAddTeacherClick,
   onEditSubjectClick,
   history,
   isAdmin,
   canSeeForum,
+  canSendEmailToSubjectStudents,
 }) => (
   <Paper className={classes.root}>
     <div className={classes.contentContainer}>
@@ -77,6 +79,11 @@ const SubjectInfo = ({
           <Button color="primary" onClick={onAddStudentClick}>
             Vincular aluno
           </Button>
+          {canSendEmailToSubjectStudents && (
+            <Button color="primary" onClick={onSendEmailOpen}>
+              Email
+            </Button>
+          )}
         </span>
       )}
       {canSeeForum && (
@@ -89,6 +96,7 @@ const SubjectInfo = ({
 );
 
 SubjectInfo.propTypes = {
+  canSendEmailToSubjectStudents: PropTypes.bool.isRequired,
   canSeeForum: PropTypes.bool.isRequired,
   classes: PropTypes.object.isRequired,
   history: PropTypes.shape({
@@ -97,6 +105,7 @@ SubjectInfo.propTypes = {
     }).isRequired,
   }).isRequired,
   isAdmin: PropTypes.bool.isRequired,
+  onSendEmailOpen: PropTypes.func.isRequired,
   onAddStudentClick: PropTypes.func.isRequired,
   onAddTeacherClick: PropTypes.func.isRequired,
   onEditSubjectClick: PropTypes.func.isRequired,
@@ -122,10 +131,14 @@ function mapStateToProps(
       subject.teachers.some(user => user.id === loggedUserId) ||
       subject.students.some(user => user.id === loggedUserId);
   }
+  const canSendEmailToSubjectStudents =
+    isAdmin || subject.teachers.some(user => user.id === loggedUserId);
+
 
   return {
     isAdmin,
     canSeeForum,
+    canSendEmailToSubjectStudents,
   };
 }
 

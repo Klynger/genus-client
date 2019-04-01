@@ -2,14 +2,14 @@ import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { withFormik, Form } from 'formik';
 import React, { PureComponent } from 'react';
+import { sendEmailTo } from '../../../actions/email';
+import { emailType } from '../../../utils/constants';
 import { withStyles } from '@material-ui/core/styles';
 import ProgressButton from '../../shared/ProgressButton';
 import CustomTextField from '../../shared/CustomTextField';
 import { capitalize } from '@material-ui/core/utils/helpers';
 import { defaultDialogBreakpoints } from '../../../utils/helpers';
 import { DefaultDialogTransition } from '../../shared/SharedComponents';
-import { sendEmailTo } from '../../../actions/email';
-import { emailType } from '../../../utils/constants';
 import {
   Zoom,
   Button,
@@ -160,8 +160,8 @@ SendEmailDialog.propTypes = {
     content: PropTypes.string,
     id: PropTypes.string,
     role: PropTypes.string,
-    title: PropTypes.string,
     sendEmailType: PropTypes.string,
+    title: PropTypes.string,
   }).isRequired,
   fullScreen: PropTypes.bool.isRequired,
   handleChange: PropTypes.func.isRequired,
@@ -181,15 +181,15 @@ SendEmailDialog.propTypes = {
     content: PropTypes.bool,
     id: PropTypes.bool,
     role: PropTypes.bool,
-    title: PropTypes.bool,
     sendEmailType: PropTypes.bool,
+    title: PropTypes.bool,
   }).isRequired,
   values: PropTypes.shape({
     content: PropTypes.string,
     id: PropTypes.string,
     role: PropTypes.oneOf(['', 'TEACHER', 'STUDENT']),
-    title: PropTypes.string,
     sendEmailType: PropTypes.string,
+    title: PropTypes.string,
   }).isRequired,
   width: PropTypes.string.isRequired,
 };
@@ -210,10 +210,10 @@ export default withMobileDialog({
       },
       validationSchema: Yup.object().shape({
         id: Yup.string().required('Selecione uma instituição.'),
-        sendEmailType: Yup.string().required('Selecione para quem enviar o email.'),
         role: Yup.string()
           .oneOf(['STUDENT', 'TEACHER'], 'Selecione uma opção.')
           .required('Selecione uma opção.'),
+        sendEmailType: Yup.string().required('Selecione para quem enviar o email.'),
       }),
       handleSubmit(values, { resetForm, setSubmitting, setErrors, props }) {
         if (values.content !== '' && values.title !== '') {
@@ -223,8 +223,10 @@ export default withMobileDialog({
           };
           let type;
 
-          if (values.sendEmailType === emailType.TO_ALL_TEACHERS ||
-              values.sendEmailType === emailType.TO_ALL_STUDENTS) {
+          if (
+            values.sendEmailType === emailType.TO_ALL_TEACHERS ||
+            values.sendEmailType === emailType.TO_ALL_STUDENTS
+          ) {
             if (values.role === 'TEACHER') {
               type = emailType.TO_ALL_TEACHERS;
             } else {

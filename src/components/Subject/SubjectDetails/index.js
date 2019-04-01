@@ -8,6 +8,8 @@ import React, { Component, Fragment } from 'react';
 import EditSubjectDialog from './EditSubjectDialog';
 import UserList from '../../Institution/InstitutionDetails/UserList';
 import DefaultContainerRoute from '../../shared/DefaultContainerRoute';
+import SendEmailDialog from '../../Institution/InstitutionDetails/SendEmailDialog';
+import { emailType } from '../../../utils/constants';
 
 /*
  * This component needs data that is fetched by other
@@ -23,6 +25,7 @@ class SubjectDetailsPage extends Component {
       openAddStudent: false,
       openAddTeacher: false,
       openEditSubject: false,
+      sendEmailOpen: false,
     };
   }
 
@@ -46,9 +49,17 @@ class SubjectDetailsPage extends Component {
     this.setState({ openAddStudent: false });
   };
 
+  handleSendEmailOpen = () => {
+    this.setState({ sendEmailOpen: true });
+  };
+
+  handleSendEmailClose = () => {
+    this.setState({ sendEmailOpen: false });
+  };
+
   render() {
-    const { subject } = this.props;
-    const { openAddStudent, openAddTeacher, openEditSubject } = this.state;
+    const { subject, canSendEmailToSubjectStudents } = this.props;
+    const { openAddStudent, openAddTeacher, openEditSubject, sendEmailOpen } = this.state;
 
     let toRender;
 
@@ -70,6 +81,14 @@ class SubjectDetailsPage extends Component {
             open={openEditSubject}
             onClose={this.handleEditSubjectClick}
           />
+          {canSendEmailToSubjectStudents && (
+            <SendEmailDialog
+              open={sendEmailOpen}
+              sendEmailType={emailType.TO_ALL_SUBJECT_STUDENTS}
+              id={subject.id}
+              onClose={this.handleSendEmailClose}
+            />
+          )}
           <SubjectInfo
             subject={subject}
             onAddTeacherClick={this.handleAddTeacherClick}
@@ -92,6 +111,7 @@ class SubjectDetailsPage extends Component {
 }
 
 SubjectDetailsPage.propTypes = {
+  canSendEmailToSubjectStudents: PropTypes.bool,
   subject: PropTypes.shape({
     id: PropTypes.string.isRequired,
     students: PropTypes.arrayOf(
@@ -129,6 +149,7 @@ function mapToProps(
         teachers: sub.teachers.filter(id => user.byId[id]).map(id => user.byId[id]),
         students: sub.students.filter(id => user.byId[id]).map(id => user.byId[id]),
       },
+      canSendEmailToSubjectStudents: sub.teachers.filter(id => user.byId[id]).map(id => user.byId[id]),
     };
   }
 
