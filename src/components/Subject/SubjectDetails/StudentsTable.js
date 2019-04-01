@@ -3,6 +3,7 @@ import React, { Component, Fragment } from 'react';
 import {
   Paper,
   Table,
+  Button,
   TableRow,
   TableBody,
   TableCell,
@@ -42,6 +43,7 @@ class StudentsTable extends Component {
       page: 0,
       rowsPerPage: 5,
       rowsPerPageOptions: [5, 10, 15, 30, 60],
+      selectedEvaluation: null,
     };
   }
 
@@ -53,9 +55,22 @@ class StudentsTable extends Component {
     this.setState({ rowsPerPage: e.target.value });
   };
 
+  handleEvaluationClick = evaluation => {
+    this.setState({
+      openEditEvaluation: true,
+      selectedEvaluation: evaluation,
+    });
+  };
+
   render() {
     const { classes, userRole, studentsData, evaluationHeaders } = this.props;
-    const { page, rowsPerPage, rowsPerPageOptions } = this.state;
+    const {
+      page,
+      rowsPerPage,
+      rowsPerPageOptions, // eslint-disable-next-line
+      selectedEvaluation, // eslint-disable-next-line
+      openEditEvaluation,
+    } = this.state;
 
     return (
       <Paper className={classes.root}>
@@ -85,7 +100,15 @@ class StudentsTable extends Component {
                       <TableCell>{student.username}</TableCell>
                       <TableCell>{student.email}</TableCell>
                       {student.evaluations.map(evaluation => (
-                        <TableCell key={evaluation.id}>{evaluation.result}</TableCell>
+                        <TableCell key={evaluation.id}>
+                          {userRole === 'TEACHER' ? (
+                            <Button onClick={() => this.handleEvaluationClick(evaluation)}>
+                              {evaluation.result}
+                            </Button>
+                          ) : (
+                            evaluation.result
+                          )}
+                        </TableCell>
                       ))}
                     </TableRow>
                   ))}
