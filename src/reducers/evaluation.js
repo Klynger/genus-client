@@ -1,10 +1,37 @@
 import { concatIdIfNotContain } from '../utils/helpers';
-import { SAVE_EVALUATION } from '../actions/actionTypes';
+import { SAVE_EVALUATION, SAVE_ALL_EVALUATIONS } from '../actions/actionTypes';
 
 const DEFAULT_STATE = {
   byId: {},
   allIds: [],
 };
+
+function saveAllEvaluationsHelper(state, evaluations) {
+  const allIds = state.allIds;
+  const byId = evaluations.reduce((acc, curEvaluation) => {
+    concatIdIfNotContain(allIds, curEvaluation.id);
+    if (acc[curEvaluation.id]) {
+      acc[curEvaluation.id] = {
+        ...acc[curEvaluation.id],
+        ...curEvaluation,
+      };
+    } else {
+      acc[curEvaluation.id] = curEvaluation;
+    }
+
+    return acc;
+  }, state.byId);
+
+  const newState = {
+    ...state,
+    byId: {
+      ...byId,
+    },
+    allIds,
+  };
+
+  return newState;
+}
 
 function evaluation(state = DEFAULT_STATE, action) {
   switch (action.type) {
@@ -20,6 +47,8 @@ function evaluation(state = DEFAULT_STATE, action) {
         },
         allIds: concatIdIfNotContain(state.allIds, action.evaluation.id),
       };
+    case SAVE_ALL_EVALUATIONS:
+      return saveAllEvaluationsHelper(state, action.payload);
     default:
       return state;
   }

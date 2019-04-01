@@ -5,19 +5,17 @@ import React, { Fragment, Component } from 'react';
 import AddTeacherEmptyView from './AddTeacherEmptyView';
 import ProgressButton from '../../shared/ProgressButton';
 import { capitalize } from '@material-ui/core/utils/helpers';
+import { createEvaluations } from '../../../actions/evaluation';
 import { defaultDialogBreakpoints } from '../../../utils/helpers';
 import { DefaultDialogTransition } from '../../shared/SharedComponents';
 import {
-  Input,
   Button,
   Dialog,
+  TextField,
   withStyles,
-  InputLabel,
   DialogTitle,
-  FormControl,
   DialogActions,
   DialogContent,
-  FormHelperText,
   withMobileDialog,
 } from '@material-ui/core';
 
@@ -46,7 +44,7 @@ class AddGradeDialog extends Component {
         return output;
       }),
       hasError: false,
-      name: '',
+      evaluationName: '',
       isSubmitting: false,
     };
   }
@@ -71,12 +69,31 @@ class AddGradeDialog extends Component {
   };
 
   handleNameChange = e => {
-    this.setState({ name: e.target.true });
+    this.setState({ evaluationName: e.target.value });
   };
 
   handleSubmit = e => {
+    const { hasError, evaluationName } = this.state;
+
     e.preventDefault();
-    // this.setState({ isSubmitting: true });
+
+    if (!hasError && evaluationName && evaluationName.length > 0) {
+      const { studentsData } = this.state;
+      const { subject, createNewEvaluations } = this.props;
+
+      const evaluationInputs = studentsData.map(({ id, result }) => ({
+        subjectId: subject.id,
+        name: evaluationName,
+        userId: id,
+        weight: 1,
+        result: Number(result),
+      }));
+
+      this.setState({ isSubmitting: true });
+      createNewEvaluations(evaluationInputs).then(() => {
+        window.location.reload();
+      });
+    }
   };
 
   render() {
@@ -89,7 +106,8 @@ class AddGradeDialog extends Component {
       fullScreen,
     } = this.props;
 
-    const { studentsData, hasError, name, isSubmitting } = this.state;
+    const { studentsData, hasError, evaluationName, isSubmitting } = this.state;
+    const evaluationNameError = !evaluationName || evaluationName.length === 0;
 
     return (
       <Dialog
@@ -106,15 +124,14 @@ class AddGradeDialog extends Component {
           <Fragment>
             <DialogContent>
               <form className={classes.form} onSubmit={this.handleSubmit}>
-                <FormControl className={classes.formControl} error>
-                  <InputLabel htmlFor="name">Nome da Avaliação</InputLabel>
-                  <Input name="name" onChange={this.handleNameChange} />
-                  {(!name || name.length === 0) && (
-                    <FormHelperText id="subject__name-error-text">
-                      Uma avaliação deve ter um nome.
-                    </FormHelperText>
-                  )}
-                </FormControl>
+                <TextField
+                  value={evaluationName}
+                  label="Nome da Avaliação"
+                  className={classes.formControl}
+                  onChange={this.handleNameChange}
+                  error={!evaluationName || evaluationName.length === 0}
+                  helperText={evaluationNameError && 'Uma avaliação deve ter um nome.'}
+                />
               </form>
               <NewGradesList
                 headTitle="Alunos"
@@ -128,7 +145,7 @@ class AddGradeDialog extends Component {
               </Button>
               <ProgressButton
                 color="primary"
-                disabled={hasError || !name || name.length === 0}
+                disabled={hasError || !evaluationName || evaluationName.length === 0}
                 onClick={this.handleSubmit}
                 showProgress={isSubmitting}
               >
@@ -146,22 +163,18 @@ class AddGradeDialog extends Component {
 
 AddGradeDialog.propTypes = {
   classes: PropTypes.object.isRequired,
+  createNewEvaluations: PropTypes.func.isRequired,
   fullScreen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   subject: PropTypes.object.isRequired,
-  theme: PropTypes.shape({
-    transitions: PropTypes.shape({
-      duration: PropTypes.shape({
-        leavingScreen: PropTypes.number.isRequired,
-      }).isRequired,
-    }).isRequired,
-  }).isRequired,
   width: PropTypes.string.isRequired,
 };
 
-function mapDispatchToProps() {
-  return {};
+function mapDispatchToProps(dispatch) {
+  return {
+    createNewEvaluations: evaluationInput => dispatch(createEvaluations(evaluationInput)),
+  };
 }
 
 export default connect(
@@ -170,5 +183,5 @@ export default connect(
 )(
   withMobileDialog({
     breakpoint: 'xs',
-  })(withStyles(styles, { withTheme: true })(AddGradeDialog)),
+  })(withStyles(styles)(AddGradeDialog)),
 );

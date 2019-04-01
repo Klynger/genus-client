@@ -241,7 +241,6 @@ function mapToProps(
 
       student.studentSubject = studentSubArr[0];
     });
-
     return {
       isStudent,
       userRole,
