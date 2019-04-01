@@ -23,11 +23,15 @@ class SubjectDetailsPage extends Component {
       const { students } = nextProps.subject;
       let evaluationHeaders = [];
       const studentsData = students.map(student => {
+        const { studentSubject } = student;
+        const evaluations =
+          studentSubject && studentSubject.evaluations ? studentSubject.evaluations : [];
+
         const output = {
           id: student.id,
           username: student.username,
           email: student.email,
-          evaluations: student.studentSubject.evaluations,
+          evaluations,
         };
         return output;
       });
