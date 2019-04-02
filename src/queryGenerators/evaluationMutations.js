@@ -7,4 +7,9 @@ export const mutationCreateEvaluation = input => ({
   },
 });
 
-export default {};
+export const mutationEditEvaluation = input => ({
+  query: loader('./graphql/evaluation/editEvaluation.graphql').loc.source.body,
+  variables: {
+    input,
+  },
+});

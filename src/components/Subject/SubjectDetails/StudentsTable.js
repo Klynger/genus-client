@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component, Fragment } from 'react';
+import EditEvaluationDialog from './EditEvaluationDialog';
 import {
   Paper,
   Table,
@@ -44,6 +45,7 @@ class StudentsTable extends Component {
       rowsPerPage: 5,
       rowsPerPageOptions: [5, 10, 15, 30, 60],
       selectedEvaluation: null,
+      selectedStudent: null,
     };
   }
 
@@ -55,11 +57,16 @@ class StudentsTable extends Component {
     this.setState({ rowsPerPage: e.target.value });
   };
 
-  handleEvaluationClick = evaluation => {
+  handleOpenEditEvaluation = (evaluation, student) => {
     this.setState({
       openEditEvaluation: true,
       selectedEvaluation: evaluation,
+      selectedStudent: student,
     });
+  };
+
+  handleCloseEditEvaluation = () => {
+    this.setState({ openEditEvaluation: false });
   };
 
   render() {
@@ -67,77 +74,90 @@ class StudentsTable extends Component {
     const {
       page,
       rowsPerPage,
-      rowsPerPageOptions, // eslint-disable-next-line
-      selectedEvaluation, // eslint-disable-next-line
+      rowsPerPageOptions,
+      selectedEvaluation,
+      selectedStudent,
       openEditEvaluation,
     } = this.state;
 
     return (
-      <Paper className={classes.root}>
-        <Typography className={classes.title} variant="h6">
-          Alunos
-        </Typography>
-        {studentsData.length > 0 ? (
-          <Fragment>
-            <Table className={classes.table}>
-              <TableHead>
-                <TableRow>
-                  <TableCell variant="head">Nome</TableCell>
-                  <TableCell variant="head">Email</TableCell>
-                  {(userRole === 'TEACHER' || userRole === 'ADMIN') &&
-                    evaluationHeaders.map(header => (
-                      <TableCell key={header} variant="head" className={classes.middleColumns}>
-                        {header}
-                      </TableCell>
-                    ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {studentsData
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map(student => (
-                    <TableRow key={student.id}>
-                      <TableCell>{student.username}</TableCell>
-                      <TableCell>{student.email}</TableCell>
-                      {student.evaluations.map(evaluation => (
-                        <TableCell key={evaluation.id}>
-                          {userRole === 'TEACHER' ? (
-                            <Button onClick={() => this.handleEvaluationClick(evaluation)}>
-                              {evaluation.result}
-                            </Button>
-                          ) : (
-                            evaluation.result
-                          )}
+      <Fragment>
+        <Paper className={classes.root}>
+          <Typography className={classes.title} variant="h6">
+            Alunos
+          </Typography>
+          {studentsData.length > 0 ? (
+            <Fragment>
+              <Table className={classes.table}>
+                <TableHead>
+                  <TableRow>
+                    <TableCell variant="head">Nome</TableCell>
+                    <TableCell variant="head">Email</TableCell>
+                    {(userRole === 'TEACHER' || userRole === 'ADMIN') &&
+                      evaluationHeaders.map(header => (
+                        <TableCell key={header} variant="head" className={classes.middleColumns}>
+                          {header}
                         </TableCell>
                       ))}
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-            <TablePagination
-              component="div"
-              count={studentsData.length}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
-              labelRowsPerPage="Linhas por página:"
-              rowsPerPageOptions={rowsPerPageOptions}
-              onChangeRowsPerPage={this.handleRowsPerPageChange}
-              backIconButtonProps={{
-                'aria-label': 'Previous Page',
-              }}
-              nextIconButtonProps={{
-                'aria-label': 'Next Page',
-              }}
-              onChangePage={this.handlePageChange}
-            />
-          </Fragment>
-        ) : (
-          <Typography className={classes.emptyView} variant="subtitle1">
-            Não há estudantes
-          </Typography>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {studentsData
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map(student => (
+                      <TableRow key={student.id}>
+                        <TableCell>{student.username}</TableCell>
+                        <TableCell>{student.email}</TableCell>
+                        {student.evaluations.map(evaluation => (
+                          <TableCell key={evaluation.id}>
+                            {userRole === 'TEACHER' ? (
+                              <Button
+                                onClick={() => this.handleOpenEditEvaluation(evaluation, student)}
+                              >
+                                {evaluation.result}
+                              </Button>
+                            ) : (
+                              evaluation.result
+                            )}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+              <TablePagination
+                component="div"
+                count={studentsData.length}
+                page={page}
+                rowsPerPage={rowsPerPage}
+                labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
+                labelRowsPerPage="Linhas por página:"
+                rowsPerPageOptions={rowsPerPageOptions}
+                onChangeRowsPerPage={this.handleRowsPerPageChange}
+                backIconButtonProps={{
+                  'aria-label': 'Previous Page',
+                }}
+                nextIconButtonProps={{
+                  'aria-label': 'Next Page',
+                }}
+                onChangePage={this.handlePageChange}
+              />
+            </Fragment>
+          ) : (
+            <Typography className={classes.emptyView} variant="subtitle1">
+              Não há estudantes
+            </Typography>
+          )}
+        </Paper>
+        {selectedEvaluation && selectedStudent && (
+          <EditEvaluationDialog
+            open={openEditEvaluation}
+            evaluation={selectedEvaluation}
+            onClose={this.handleCloseEditEvaluation}
+            student={selectedStudent}
+          />
         )}
-      </Paper>
+      </Fragment>
     );
   }
 }

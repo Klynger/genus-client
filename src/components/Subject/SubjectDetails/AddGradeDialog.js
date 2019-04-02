@@ -52,7 +52,7 @@ class AddGradeDialog extends Component {
   handleChangeEvaluationValue = (value, userId) => {
     let error = false;
     let hasError = false;
-    if (value < 0 || value > 10 || value === '') {
+    if (Number(value) < 0 || Number(value) > 10 || value === '') {
       error = true;
       hasError = true;
     }
