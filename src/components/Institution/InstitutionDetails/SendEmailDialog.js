@@ -69,28 +69,28 @@ class SendEmailDialog extends PureComponent {
         <DialogContent>
           <Form>
             {values.showSelectRole && (
-            <CustomTextField
-              select
-              name="role"
-              value={values.role}
-              onChange={handleChange}
-              helperText={errors.role}
-              label="Enviar email para"
-              className={classes.formControl}
-              id="send-email-dialog__role"
-              OnEnterHelperTextTransition={Zoom}
-              error={Boolean(touched.role && errors.role)}
-              showHelperText={Boolean(touched.role && errors.role)}
-            >
-              <MenuItem key="-1" value="-1" disabled>
-                Escolha uma opção
-              </MenuItem>
-              {roles.map(({ value, label }) => (
-                <MenuItem key={value} value={value}>
-                  {label}
+              <CustomTextField
+                select
+                name="role"
+                value={values.role}
+                onChange={handleChange}
+                helperText={errors.role}
+                label="Enviar email para"
+                className={classes.formControl}
+                id="send-email-dialog__role"
+                OnEnterHelperTextTransition={Zoom}
+                error={Boolean(touched.role && errors.role)}
+                showHelperText={Boolean(touched.role && errors.role)}
+              >
+                <MenuItem key="-1" value="-1" disabled>
+                  Escolha uma opção
                 </MenuItem>
-              ))}
-            </CustomTextField>
+                {roles.map(({ value, label }) => (
+                  <MenuItem key={value} value={value}>
+                    {label}
+                  </MenuItem>
+                ))}
+              </CustomTextField>
             )}
             <CustomTextField
               name="title"
@@ -191,8 +191,8 @@ SendEmailDialog.propTypes = {
     id: PropTypes.string,
     role: PropTypes.oneOf(['', 'TEACHER', 'STUDENT']),
     sendEmailType: PropTypes.string,
-    title: PropTypes.string,
     showSelectRole: PropTypes.bool,
+    title: PropTypes.string,
   }).isRequired,
   width: PropTypes.string.isRequired,
 };
@@ -209,14 +209,14 @@ export default withMobileDialog({
           role: '',
           title: '',
           content: '',
-          showSelectRole: showSelectRole || true,
+          showSelectRole: showSelectRole || false,
         };
       },
       validationSchema: Yup.object().shape({
         id: Yup.string().required('Selecione uma instituição.'),
-        role: Yup.string()
-          .oneOf(['STUDENT', 'TEACHER'], 'Selecione uma opção.')
-          .required('Selecione uma opção.'),
+        role: Yup.string(),
+        // .oneOf(['STUDENT', 'TEACHER'], 'Selecione uma opção.')
+        // .required('Selecione uma opção.'),
         sendEmailType: Yup.string().required('Selecione para quem enviar o email.'),
       }),
       handleSubmit(values, { resetForm, setSubmitting, setErrors, props }) {

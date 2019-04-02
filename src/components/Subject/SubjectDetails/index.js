@@ -152,9 +152,7 @@ function mapToProps(
         teachers: sub.teachers.filter(id => user.byId[id]).map(id => user.byId[id]),
         students: sub.students.filter(id => user.byId[id]).map(id => user.byId[id]),
       },
-      canSendEmailToSubjectStudents: sub.teachers
-        .filter(id => user.byId[id])
-        .map(id => user.byId[id]),
+      canSendEmailToSubjectStudents: sub.teachers.some(id => id === user.loggedUserId),
     };
   }
 
