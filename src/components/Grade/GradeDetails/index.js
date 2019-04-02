@@ -5,11 +5,11 @@ import React, { Component } from 'react';
 import { Fade } from '@material-ui/core';
 import SubjectsGrid from './SubjectsGrid';
 import { fetchGrade } from '../../../actions/grade';
+import { emailType } from '../../../utils/constants';
 import { withStyles } from '@material-ui/core/styles';
 import AddStudentToGradeDialog from './AddStudentToGradeDialog';
 import DefaultContainerRoute from '../../shared/DefaultContainerRoute';
 import SendEmailDialog from '../../Institution/InstitutionDetails/SendEmailDialog';
-import { emailType } from '../../../utils/constants';
 
 const styles = theme => ({
   emptyGradeDetails: {
@@ -93,6 +93,7 @@ class GradeDetails extends Component {
               sendEmailType={emailType.TO_ALL_GRADE_STUDENTS}
               id={gradeId}
               onClose={this.handleSendEmailClose}
+              showSelectRole={false}
             />
           )}
         </DefaultContainerRoute>
@@ -106,6 +107,7 @@ class GradeDetails extends Component {
 
 GradeDetails.defalutProps = {
   canAddStudents: false,
+  sendEmailOpen: false,
   canSendEmailToGradeStudents: false,
   students: [],
 };
@@ -113,6 +115,7 @@ GradeDetails.defalutProps = {
 GradeDetails.propTypes = {
   canAddStudents: PropTypes.bool,
   canSendEmailToGradeStudents: PropTypes.bool,
+  sendEmailOpen: PropTypes.bool.isRequired,
   classes: PropTypes.object.isRequired,
   fetchGradeById: PropTypes.func.isRequired,
   grade: PropTypes.object,

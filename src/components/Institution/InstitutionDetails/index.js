@@ -100,6 +100,7 @@ class InstitutionDetails extends Component {
               open={sendEmailOpen}
               id={institution.id}
               onClose={this.handleSendEmailClose}
+              showSelectRole={true}
             />
           )}
           <InstitutionInfo

@@ -96,8 +96,8 @@ const SubjectInfo = ({
 );
 
 SubjectInfo.propTypes = {
-  canSendEmailToSubjectStudents: PropTypes.bool.isRequired,
   canSeeForum: PropTypes.bool.isRequired,
+  canSendEmailToSubjectStudents: PropTypes.bool.isRequired,
   classes: PropTypes.object.isRequired,
   history: PropTypes.shape({
     location: PropTypes.shape({
@@ -105,10 +105,10 @@ SubjectInfo.propTypes = {
     }).isRequired,
   }).isRequired,
   isAdmin: PropTypes.bool.isRequired,
-  onSendEmailOpen: PropTypes.func.isRequired,
   onAddStudentClick: PropTypes.func.isRequired,
   onAddTeacherClick: PropTypes.func.isRequired,
   onEditSubjectClick: PropTypes.func.isRequired,
+  onSendEmailOpen: PropTypes.func.isRequired,
   subject: PropTypes.shape({
     name: PropTypes.string.isRequired,
     photo: PropTypes.string,
@@ -133,7 +133,6 @@ function mapStateToProps(
   }
   const canSendEmailToSubjectStudents =
     isAdmin || subject.teachers.some(user => user.id === loggedUserId);
-
 
   return {
     isAdmin,

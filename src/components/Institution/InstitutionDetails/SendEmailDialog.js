@@ -68,6 +68,7 @@ class SendEmailDialog extends PureComponent {
         <DialogTitle>Enviar Email</DialogTitle>
         <DialogContent>
           <Form>
+            {values.showSelectRole && (
             <CustomTextField
               select
               name="role"
@@ -90,6 +91,7 @@ class SendEmailDialog extends PureComponent {
                 </MenuItem>
               ))}
             </CustomTextField>
+            )}
             <CustomTextField
               name="title"
               value={values.title}
@@ -190,6 +192,7 @@ SendEmailDialog.propTypes = {
     role: PropTypes.oneOf(['', 'TEACHER', 'STUDENT']),
     sendEmailType: PropTypes.string,
     title: PropTypes.string,
+    showSelectRole: PropTypes.bool,
   }).isRequired,
   width: PropTypes.string.isRequired,
 };
@@ -199,13 +202,14 @@ export default withMobileDialog({
 })(
   withStyles(styles, { withTheme: true })(
     withFormik({
-      mapPropsToValues({ id, sendEmailType }) {
+      mapPropsToValues({ id, sendEmailType, showSelectRole }) {
         return {
           id: id || '',
           sendEmailType: sendEmailType || '',
           role: '',
           title: '',
           content: '',
+          showSelectRole: showSelectRole || true,
         };
       },
       validationSchema: Yup.object().shape({

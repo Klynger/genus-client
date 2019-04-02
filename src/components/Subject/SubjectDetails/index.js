@@ -6,10 +6,10 @@ import AddStudentDialog from './AddStudentDialog';
 import AddteacherDialog from './AddTeacherDialog';
 import React, { Component, Fragment } from 'react';
 import EditSubjectDialog from './EditSubjectDialog';
+import { emailType } from '../../../utils/constants';
 import UserList from '../../Institution/InstitutionDetails/UserList';
 import DefaultContainerRoute from '../../shared/DefaultContainerRoute';
 import SendEmailDialog from '../../Institution/InstitutionDetails/SendEmailDialog';
-import { emailType } from '../../../utils/constants';
 
 /*
  * This component needs data that is fetched by other
@@ -87,6 +87,7 @@ class SubjectDetailsPage extends Component {
               sendEmailType={emailType.TO_ALL_SUBJECT_STUDENTS}
               id={subject.id}
               onClose={this.handleSendEmailClose}
+              showSelectRole={false}
             />
           )}
           <SubjectInfo
@@ -94,6 +95,8 @@ class SubjectDetailsPage extends Component {
             onAddTeacherClick={this.handleAddTeacherClick}
             onAddStudentClick={this.handleOpenAddStudent}
             onEditSubjectClick={this.handleEditSubjectClick}
+            onSendEmailOpen={this.handleSendEmailOpen}
+            showSelectRole={false}
           />
           <UserList users={subject.students} headTitle="Alunos" />
         </Fragment>
@@ -149,7 +152,9 @@ function mapToProps(
         teachers: sub.teachers.filter(id => user.byId[id]).map(id => user.byId[id]),
         students: sub.students.filter(id => user.byId[id]).map(id => user.byId[id]),
       },
-      canSendEmailToSubjectStudents: sub.teachers.filter(id => user.byId[id]).map(id => user.byId[id]),
+      canSendEmailToSubjectStudents: sub.teachers
+        .filter(id => user.byId[id])
+        .map(id => user.byId[id]),
     };
   }
 
