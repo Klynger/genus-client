@@ -79,12 +79,12 @@ const SubjectInfo = ({
           <Button color="primary" onClick={onAddStudentClick}>
             Vincular aluno
           </Button>
-          {canSendEmailToSubjectStudents && (
-            <Button color="primary" onClick={onSendEmailOpen}>
-              Email
-            </Button>
-          )}
         </span>
+      )}
+      {canSendEmailToSubjectStudents && (
+        <Button color="primary" onClick={onSendEmailOpen}>
+          Enviar Email
+        </Button>
       )}
       {canSeeForum && (
         <Button color="primary" component={Link} to={`${history.location.pathname}/forum`}>
