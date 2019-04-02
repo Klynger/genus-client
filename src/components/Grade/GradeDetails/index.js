@@ -47,7 +47,7 @@ class GradeDetails extends Component {
   };
 
   render() {
-    const { classes, grade } = this.props;
+    const { classes, grade, userRole } = this.props;
     let toRender;
     if (grade) {
       const {
@@ -72,7 +72,7 @@ class GradeDetails extends Component {
             canAddStudents={canAddStudents}
             onAddStudents={this.handleAddStudentsOpen}
           />
-          <SubjectsGrid gradeId={gradeId} subjects={grade.subjects} />
+          <SubjectsGrid gradeId={gradeId} subjects={grade.subjects} userRole={userRole} />
         </DefaultContainerRoute>
       );
     } else {
@@ -104,6 +104,7 @@ GradeDetails.propTypes = {
       username: PropTypes.string,
     }),
   ),
+  userRole: PropTypes.string.isRequired,
 };
 
 function mapToProps({ institution, grade, subject, user }, ownProps) {
@@ -113,10 +114,16 @@ function mapToProps({ institution, grade, subject, user }, ownProps) {
     },
   } = ownProps;
 
+  const { loggedUserId } = user;
+  let userRole = 'NO_ROLE';
   const selectedInstitution = institution.byId[institution.selectedInstitution];
   const propGrade = grade.byId[gradeId];
   if (propGrade && selectedInstitution) {
+    userRole = selectedInstitution.admins.some(adminId => adminId === loggedUserId)
+      ? 'ADMIN'
+      : 'NO_ROLE';
     return {
+      userRole,
       grade: {
         ...propGrade,
         subjects: propGrade.subjects
@@ -127,7 +134,7 @@ function mapToProps({ institution, grade, subject, user }, ownProps) {
       canAddStudents: selectedInstitution.admins.some(id => id === user.loggedUserId),
     };
   }
-  return {};
+  return { userRole };
 }
 
 function mapDispatchToProps(dispatch) {

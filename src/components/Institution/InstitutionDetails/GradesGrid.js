@@ -38,8 +38,9 @@ class GradesGrid extends Component {
   };
 
   render() {
-    const { grades } = this.props;
+    const { grades, userRole } = this.props;
     const { createGradeOpen } = this.state;
+
     return (
       <Container>
         <ResponsiveSubTitle>Séries</ResponsiveSubTitle>
@@ -52,7 +53,9 @@ class GradesGrid extends Component {
               <CardLine>Quantidade de alunos: {qntStudents}</CardLine>
             </GridCard>
           ))}
-          <GridButton key="-1" Icon={AddCircleIcon} onClick={this.handleCreateGradeOpen} />
+          {userRole === 'ADMIN' && (
+            <GridButton key="-1" Icon={AddCircleIcon} onClick={this.handleCreateGradeOpen} />
+          )}
         </GridContainer>
       </Container>
     );
@@ -64,26 +67,33 @@ GradesGrid.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+  userRole: PropTypes.string.isRequired,
 };
 
 GradesGrid.defaultProps = {
   grades: [],
 };
 
-function mapStateToProps({ institution, grade }) {
+function mapStateToProps({ institution, grade, user }) {
   const { selectedInstitution } = institution;
-
+  const { loggedUserId } = user;
+  let userRole = 'NO_ROLE';
   if (
     selectedInstitution !== NO_INSTUTION_SELECTED &&
     institution.byId[selectedInstitution].grades
   ) {
     const { grades } = institution.byId[selectedInstitution];
+    const isAdmin = institution.byId[selectedInstitution].admins.some(
+      adminId => adminId === loggedUserId,
+    );
+    userRole = isAdmin ? 'ADMIN' : 'NO_ROLE';
     return {
       grades: grades.map(id => grade.byId[id]),
+      userRole,
     };
   }
 
-  return {};
+  return { userRole };
 }
 
 export default connect(mapStateToProps)(withRouter(GradesGrid));
