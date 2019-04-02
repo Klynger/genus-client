@@ -96,7 +96,7 @@ const AssociateDialog = ({
       </Button>
       <div className={classes.associateDialogButtonWrapper}>
         <Button type="submit" color="primary" onClick={handleSubmit} disabled={isSubmitting}>
-          Vicular
+          Vincular
         </Button>
         {isSubmitting && <CircularProgress size={24} className={classes.associateDialogProgress} />}
       </div>

@@ -1,0 +1,20 @@
+#import "./subjectFragment.graphql"
+#import "../user/userFragment.graphql"
+
+query findSubjectById($input: ID!) {
+  findSubjectById(input: $input) {
+    ...subjectFields
+    teachers {
+      ...userFields
+    }
+    students {
+      ...userFields
+    }
+    forum {
+      id
+    }
+    grade {
+      id
+    }
+  }
+}

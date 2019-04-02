@@ -97,7 +97,9 @@ const RemoveUserDialog = ({
           )}
         </FormControl>
         {errors.requestError && (
-          <FormHelperText error={errors.requestError}>{errors.requestError}</FormHelperText>
+          <FormHelperText error={Boolean(errors.requestError)}>
+            {errors.requestError}
+          </FormHelperText>
         )}
         <DialogActions>
           <Button color="secondary" disabled={isSubmitting} onClick={onClose}>
@@ -127,6 +129,8 @@ RemoveUserDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   selectedInstitution: PropTypes.string, // eslint-disable-line
   selectedInstitutionName: PropTypes.string, // eslint-disable-line
+  studentId: PropTypes.string, // eslint-disable-line
+  subjectId: PropTypes.string, // eslint-disable-line
   touched: PropTypes.shape({
     institutionName: PropTypes.bool,
     password: PropTypes.bool,
@@ -152,9 +156,10 @@ function mapStateToProps({ institution, user }, { userId }) {
   return {};
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, { removeUserAction }) {
+  const removeUser = removeUserAction || removeUserOfInstitutionId;
   return {
-    removeUser: input => dispatch(removeUserOfInstitutionId(input)),
+    removeUser: input => dispatch(removeUser(input)),
   };
 }
 
@@ -175,7 +180,7 @@ export default connect(
             };
           },
           validationSchema: Yup.object().shape({
-            institutionName: Yup.string().required('Nome da instituição é obrigatório'),
+            institutionName: Yup.string().required('Nome da instituição é obrigatório.'),
             password: Yup.string()
               .min(6, 'A senha deve ter pelo menos 6 caracteres.')
               .max(30, 'Senha não pode ter mais que 30 caracteres.')
@@ -183,16 +188,29 @@ export default connect(
           }),
           handleSubmit(values, { props, resetForm, setErrors, setSubmitting }) {
             if (values.institutionName === props.selectedInstitutionName) {
-              const input = {
-                institutionName: values.institutionName,
-                institutionId: props.selectedInstitution,
-                password: values.password,
-                toBeRemovedId: props.userId,
-              };
+              let input = {};
+
+              if (props.removeUserAction && props.subjectId) {
+                input = {
+                  subjectId: props.subjectId,
+                  studentId: props.userId,
+                  password: values.password,
+                };
+              } else {
+                input = {
+                  institutionName: values.institutionName,
+                  institutionId: props.selectedInstitution,
+                  password: values.password,
+                  toBeRemovedId: props.userId,
+                };
+              }
               props
                 .removeUser(input)
                 .then(res => {
-                  if (res.data.data.removeUserFromInstitution) {
+                  if (
+                    res.data.data.removeUserFromInstitution ||
+                    res.data.data.removeStudentFromSubject
+                  ) {
                     resetForm({
                       institutionName: '',
                       password: '',

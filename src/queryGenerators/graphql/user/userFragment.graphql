@@ -2,4 +2,25 @@ fragment userFields on User {
   id
   username
   email
+  studentSubjects {
+    id
+  }
+  teacherSubjects {
+    id
+  }
+  studentSubjectRelations {
+    user {
+      id
+    }
+    subject {
+      id
+    }
+    avarage
+    evaluations {
+      id
+      name
+      result
+      weight
+    }
+  }
 }

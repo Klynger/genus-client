@@ -74,7 +74,14 @@ const CreateGradeDialog = ({
           </FormControl>
         </Form>
         <DialogActions>
-          <Button color="primary" disabled={isSubmitting} onClick={handleReset}>
+          <Button
+            color="primary"
+            disabled={isSubmitting}
+            onClick={() => {
+              onClose();
+              handleReset();
+            }}
+          >
             Cancelar
           </Button>
           <Button color="primary" disabled={isSubmitting} onClick={handleSubmit}>
@@ -148,7 +155,7 @@ export default connect(
               };
             },
             validationSchema: Yup.object().shape({
-              name: Yup.string().required('Nome da disciplina é obrigatorio'),
+              name: Yup.string().required('Nome da disciplina é obrigatorio.'),
             }),
             handleSubmit(values, { resetForm, setSubmitting, props }) {
               // TODO

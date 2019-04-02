@@ -1,0 +1,12 @@
+fragment studentSubjectFields on StudentSubject {
+  avarage
+  user {
+    id
+  }
+  subject {
+    id
+  }
+  evaluations {
+    ...evaluationFields
+  }
+}

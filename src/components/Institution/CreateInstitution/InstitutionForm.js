@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { Form, withFormik } from 'formik';
 import { withRouter } from 'react-router-dom';
 import { Paper, Zoom } from '@material-ui/core';
+import { phoneRegExp } from '../../../utils/helpers';
 import { withStyles } from '@material-ui/core/styles';
 import ProgressButton from '../../shared/ProgressButton';
 import CustomTextField from '../../shared/CustomTextField';
@@ -141,20 +142,21 @@ export default withStyles(styles)(
         validationSchema: () =>
           Yup.object().shape({
             address: Yup.string()
-              .min(6, 'The address must have at least 6 numbers.')
-              .max(50, 'The adress cannot have more than 50 characters.')
-              .required('Address is required.'),
+              .min(6, 'Endereço deve ter pelo menos 6 caracteres.')
+              .max(50, 'Endereço deve ter no máximo 50 caracteres.')
+              .required('Endereço é obrigatório.'),
             email: Yup.string()
-              .email('You must pass a valid email')
-              .required('Email is required'),
+              .email('Email inválido.')
+              .required('Email é obrigatório.'),
             name: Yup.string()
-              .min(6, "The institution's name must have at least 6 characters.")
-              .max(50, "The institution's name cannot exceed 50 characters.")
-              .required('Name is required'),
+              .min(6, 'Nome da instituição deve ter pelo menos 6 caracteres.')
+              .max(50, 'Nome da instituição deve ter no máximo 50 caracteres.')
+              .required('Nome da instituição é obrigatório.'),
             phone: Yup.string()
-              .min(6, 'The phone must have at least 6 numbers.')
-              .max(50, 'The phone cannot have more than 50 characters.')
-              .required('Phone is required.'),
+              .min(6, 'Telefone deve ter pelo menos 6 caracteres.')
+              .max(50, 'Telefone deve ter no máximo 50 caracteres.')
+              .matches(phoneRegExp, 'Telefone inválido.')
+              .required('Número de telefone é obrigatório.'),
           }),
         handleSubmit(values, { setSubmitting, props }) {
           props

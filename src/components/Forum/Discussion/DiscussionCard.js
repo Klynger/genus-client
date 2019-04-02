@@ -34,6 +34,9 @@ const styles = {
     display: 'flex',
     justifyContent: 'flex-end',
   },
+  content: {
+    overflowX: 'auto',
+  },
 };
 
 const DiscussionActionButtons = ({ classes, onReply }) => (
@@ -74,7 +77,7 @@ const DiscussionCard = ({ classes, discussion, onReply }) => (
       subheader={discussion.createdAt}
     />
     <Divider light />
-    <CardContent>
+    <CardContent className={classes.content}>
       <ReactMarkdown escapeHtml source={discussion.content} />
     </CardContent>
     <DiscussionActionButtons classes={classes} onReply={onReply} />

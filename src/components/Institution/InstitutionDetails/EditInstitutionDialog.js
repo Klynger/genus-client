@@ -6,9 +6,9 @@ import { Form, withFormik } from 'formik';
 import ProgressButton from '../../shared/ProgressButton';
 import { capitalize } from '@material-ui/core/utils/helpers';
 import { updateInstitution } from '../../../actions/institution';
-import { defaultDialogBreakpoints } from '../../../utils/helpers';
 import { NO_INSTUTION_SELECTED } from '../../../reducers/institution';
 import { DefaultDialogTransition } from '../../shared/SharedComponents';
+import { defaultDialogBreakpoints, phoneRegExp } from '../../../utils/helpers';
 import {
   Button,
   Dialog,
@@ -220,6 +220,7 @@ export default connect(
               .required('Nome é obrigatório'),
             phone: Yup.string()
               .min(6, 'Telefone deve conter no mínimo 6 digitos.')
+              .matches(phoneRegExp, 'Telefone inválido.')
               .max(50, 'Telefone deve conter no máximo 50 digitos.')
               .required('Telefone é obrigatório.'),
           }),
