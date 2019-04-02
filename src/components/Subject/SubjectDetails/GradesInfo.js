@@ -18,7 +18,6 @@ import {
 const styles = theme => ({
   root: {
     marginTop: theme.spacing.unit * 2,
-    borderRadius: 0,
   },
   title: {
     margin: theme.spacing.unit * 3,

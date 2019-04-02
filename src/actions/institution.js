@@ -53,6 +53,14 @@ export const fetchInstitutionsByOwner = () => (dispatch, getState) => {
   return requestGraphql(queryFindInstitutionsByOwner(), localStorage.getItem('token')).then(res => {
     let requestResult;
     if (res.data.data && res.data.data.getInstitutionsFromLoggedUser) {
+      res.data.data.getInstitutionsFromLoggedUser.forEach(institution => {
+        institution.students.forEach(student => {
+          student.studentSubjectRelations.forEach(obj => {
+            obj.id = obj.user.id + obj.subject.id;
+          });
+        });
+      });
+
       dispatchEntities(res.data.data.getInstitutionsFromLoggedUser, dispatch, [institutionSchema]);
 
       const state = getState();

@@ -1,4 +1,6 @@
+import { dispatchEntities } from '../utils/helpers';
 import { requestGraphql } from '../utils/HTTPClient';
+import { studentSubjectSchema } from '../models/schema';
 import { SAVE_USER, SET_LOGGED_USER, REMOVE_USER_FROM_INSTITUION } from './actionTypes';
 import { findUserById, findLoggedUserQuery, loginQuery } from '../queryGenerators/userQueries';
 import {
@@ -19,6 +21,14 @@ export const fetchLoggedUser = () => dispatch =>
         type: SET_LOGGED_USER,
         id: res.data.data.findLoggedUser.id,
       });
+
+      res.data.data.findLoggedUser.studentSubjectRelations.forEach(obj => {
+        obj.id = obj.user.id + obj.subject.id;
+      });
+
+      dispatchEntities(res.data.data.findLoggedUser.studentSubjectRelations, dispatch, [
+        studentSubjectSchema,
+      ]);
 
       return res;
     }
