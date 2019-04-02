@@ -47,57 +47,60 @@ const SubjectInfo = ({
   isAdmin,
   canSeeForum,
   canSeeGrades,
-}) => (
-  <Paper className={classes.root}>
-    <div className={classes.contentContainer}>
-      <img
-        alt={subject.name}
-        className={classes.photo}
-        src={subject.photo || DEFAULT_PHOTO_CLASS_SRC}
-      />
-      <div className={classes.infoContainer}>
-        <Typography component="h2" variant="h6" gutterBottom>
-          {subject.name}
-        </Typography>
-        <Typography component="span" variant="subtitle1" gutterBottom>
-          {subject.teachers.length > 0
-            ? `Professores: ${subject.teachers.map(({ username }) => username).join(', ')}`
-            : 'Nenhum professor vinculado a essa disciplina'}
-        </Typography>
+  userRole,
+}) => {
+  return (
+    <Paper className={classes.root}>
+      <div className={classes.contentContainer}>
+        <img
+          alt={subject.name}
+          className={classes.photo}
+          src={subject.photo || DEFAULT_PHOTO_CLASS_SRC}
+        />
+        <div className={classes.infoContainer}>
+          <Typography component="h2" variant="h6" gutterBottom>
+            {subject.name}
+          </Typography>
+          <Typography component="span" variant="subtitle1" gutterBottom>
+            {subject.teachers.length > 0
+              ? `Professores: ${subject.teachers.map(({ username }) => username).join(', ')}`
+              : 'Nenhum professor vinculado a essa disciplina'}
+          </Typography>
+        </div>
       </div>
-    </div>
-    <ActionsContainer>
-      {isAdmin && (
-        <span>
-          <Button color="primary" onClick={onEditSubjectClick}>
-            Atualizar Informações
+      <ActionsContainer>
+        {isAdmin && (
+          <span>
+            <Button color="primary" onClick={onEditSubjectClick}>
+              Atualizar Informações
+            </Button>
+            <Button color="primary" onClick={onAddTeacherClick}>
+              Vincular professor
+            </Button>
+            <Button color="primary" onClick={onAddStudentClick}>
+              Vincular aluno
+            </Button>
+          </span>
+        )}
+        {canSeeForum && (
+          <Button color="primary" component={Link} to={`${history.location.pathname}/forum`}>
+            Forum
           </Button>
-          <Button color="primary" onClick={onAddTeacherClick}>
-            Vincular professor
+        )}
+        {userRole === 'TEACHER' && (
+          <Button color="primary" onClick={onAddGradeClick}>
+            Adicionar nova nota
           </Button>
-          <Button color="primary" onClick={onAddStudentClick}>
-            Vincular aluno
+        )}
+        {canSeeGrades && (
+          <Button color="primary" component={Link} to={`${history.location.pathname}/forum`}>
+            Mandar email para turma
           </Button>
-        </span>
-      )}
-      {canSeeForum && (
-        <Button color="primary" component={Link} to={`${history.location.pathname}/forum`}>
-          Forum
-        </Button>
-      )}
-      {canSeeGrades && (
-        <Button color="primary" onClick={onAddGradeClick}>
-          Adicionar nova nota
-        </Button>
-      )}
-      {canSeeGrades && (
-        <Button color="primary" component={Link} to={`${history.location.pathname}/forum`}>
-          Mandar email para turma
-        </Button>
-      )}
-    </ActionsContainer>
-  </Paper>
-);
+        )}
+      </ActionsContainer>
+    </Paper>
+  );
+};
 
 SubjectInfo.propTypes = {
   canSeeForum: PropTypes.bool.isRequired,
@@ -118,16 +121,16 @@ SubjectInfo.propTypes = {
     photo: PropTypes.string,
     teachers: PropTypes.arrayOf(PropTypes.object).isRequired,
   }),
+  userRole: PropTypes.string.isRequired,
 };
 
 function mapStateToProps(
   { user: { loggedUserId }, institution: { byId, selectedInstitution } },
   { subject },
 ) {
-  const isAdmin =
-    selectedInstitution && byId[selectedInstitution]
-      ? byId[selectedInstitution].admins.includes(loggedUserId)
-      : false;
+  const isAdmin = byId[selectedInstitution]
+    ? byId[selectedInstitution].admins.includes(loggedUserId)
+    : false;
   let canSeeForum = isAdmin;
   if (subject) {
     canSeeForum =
@@ -136,9 +139,19 @@ function mapStateToProps(
       subject.students.some(user => user.id === loggedUserId);
   }
 
+  let userRole = 'NO_ROLE';
+  if (isAdmin) {
+    userRole = 'ADMIN';
+  } else if (subject.teachers.some(user => user.id === loggedUserId)) {
+    userRole = 'TEACHER';
+  } else if (subject.students.some(user => user.id === loggedUserId)) {
+    userRole = 'STUDENT';
+  }
+
   const canSeeGrades = isAdmin || subject.teachers.some(user => user.id === loggedUserId);
 
   return {
+    userRole,
     isAdmin,
     canSeeForum,
     canSeeGrades,

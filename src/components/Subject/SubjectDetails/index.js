@@ -57,6 +57,10 @@ class SubjectDetailsPage extends Component {
     };
   }
 
+  componentDidMount() {
+    this.forceUpdate();
+  }
+
   handleAddTeacherClick = () => {
     this.setState(({ openAddTeacher }) => ({
       openAddTeacher: !openAddTeacher,
@@ -115,9 +119,7 @@ class SubjectDetailsPage extends Component {
     let toRender;
 
     if (subject) {
-      const { studentsData, evaluationHeaders } = this.state;
       const { userRole } = this.props;
-
       if (isStudent) {
         toRender = (
           <Fragment>
@@ -126,6 +128,7 @@ class SubjectDetailsPage extends Component {
           </Fragment>
         );
       } else {
+        const { studentsData, evaluationHeaders } = this.state;
         toRender = (
           <Fragment>
             <AddteacherDialog
@@ -202,7 +205,7 @@ SubjectDetailsPage.propTypes = {
 };
 
 function mapToProps(
-  { subject, user, studentSubject, evaluation },
+  { subject, user, studentSubject, evaluation, institution },
   {
     match: {
       params: { subjectId },
@@ -211,15 +214,20 @@ function mapToProps(
 ) {
   const sub = subject.byId[subjectId];
   if (sub) {
+    const { selectedInstitution } = institution;
+    const { loggedUserId } = user;
     const students = sub.students.filter(id => user.byId[id]).map(id => user.byId[id]);
     const isStudent = sub.students.some(userId => userId === user.loggedUserId);
     const isTeacher = sub.teachers.some(userId => userId === user.loggedUserId);
+    const isAdmin = institution.byId[selectedInstitution].admins.includes(loggedUserId);
     let userRole = 'NO_ROLE';
 
     if (isStudent) {
       userRole = 'STUDENT';
     } else if (isTeacher) {
       userRole = 'TEACHER';
+    } else if (isAdmin) {
+      userRole = 'ADMIN';
     }
 
     students.forEach(student => {

@@ -18,6 +18,9 @@ query findGrade($id: ID!) {
       teachers {
         ...userFields
       }
+      students {
+        ...userFields
+      }
       forum {
         ...discussionFields
         replies(page: 0, size: 10) {
