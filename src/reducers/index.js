@@ -6,7 +6,7 @@ import discussion from './discussion';
 import evaluation from './evaluation';
 import institution from './institution';
 import { combineReducers } from 'redux';
-import studentSubject from './studentSubject';
+import evaluationResult from './evaluationResult';
 
 export default combineReducers({
   user,
@@ -16,5 +16,5 @@ export default combineReducers({
   discussion,
   evaluation,
   institution,
-  studentSubject,
+  evaluationResult,
 });

@@ -18,7 +18,7 @@ import {
 export const fetchLoggedUser = () => dispatch =>
   requestGraphql(findLoggedUserQuery(), localStorage.getItem('token')).then(res => {
     if (res.data.data && res.data.data.findLoggedUser) {
-      dispatchEntities(res.data.data.findLoggeduser, dispatch, userSchema);
+      dispatchEntities(res.data.data.findLoggedUser, dispatch, userSchema);
       dispatch({
         type: SET_LOGGED_USER,
         id: res.data.data.findLoggedUser.id,

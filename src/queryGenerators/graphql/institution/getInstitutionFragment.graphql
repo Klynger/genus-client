@@ -47,11 +47,32 @@ fragment getInstitutionFields on Institution {
   }
   admins {
     ...userFields
+    evaluationResults {
+      id
+    }
+    studentSubjects {
+      id
+    }
   }
   teachers {
     ...userFields
+    evaluationResults {
+      id
+    }
+    teacherSubjects {
+      id
+    }
   }
   students {
     ...userFields
+    studentSubjects {
+      id
+    }
+    evaluationResults {
+      ...evaluationResultFields
+      evaluation {
+        ...evaluationFields
+      }
+    }
   }
 }

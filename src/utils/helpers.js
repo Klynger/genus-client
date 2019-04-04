@@ -99,3 +99,17 @@ export function dispatchEntities(denormalizedData, dispatch, schema) {
     dispatchById(entities[entityName], dispatch, entityName);
   });
 }
+
+// ----------------------------------------------------------------------
+
+export function getUserRole(studentList, adminList, teacherList, userId) {
+  let role = 'NO_ROLE';
+  if (studentList.some(id => id === userId)) {
+    role = 'STUDENT';
+  } else if (adminList.some(id => id === userId)) {
+    role = 'ADMIN';
+  } else if (teacherList.some(id => id === userId)) {
+    role = 'TEACHER';
+  }
+  return role;
+}

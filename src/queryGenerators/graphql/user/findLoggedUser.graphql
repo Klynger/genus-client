@@ -18,8 +18,8 @@ query {
     evaluationResults {
       ...evaluationResultFields
       evaluation {
-        id
+        ...evaluationFields
       }
-    }    
+    }
   }
 }
