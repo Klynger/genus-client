@@ -1,5 +1,9 @@
 import { concatIdIfNotContain } from '../utils/helpers';
-import { SAVE_EVALUATION, SAVE_ALL_EVALUATIONS } from '../actions/actionTypes';
+import {
+  SAVE_EVALUATION,
+  SAVE_ALL_EVALUATIONS,
+  REMOVE_ALL_EVALUATIONS,
+} from '../actions/actionTypes';
 
 const DEFAULT_STATE = {
   byId: {},
@@ -23,7 +27,6 @@ function saveAllEvaluationsHelper(state, evaluations) {
   }, state.byId);
 
   const newState = {
-    ...state,
     byId: {
       ...byId,
     },
@@ -37,7 +40,6 @@ function evaluation(state = DEFAULT_STATE, action) {
   switch (action.type) {
     case SAVE_EVALUATION:
       return {
-        ...state,
         byId: {
           ...state.byId,
           [action.evaluation.id]: {
@@ -49,6 +51,8 @@ function evaluation(state = DEFAULT_STATE, action) {
       };
     case SAVE_ALL_EVALUATIONS:
       return saveAllEvaluationsHelper(state, action.payload);
+    case REMOVE_ALL_EVALUATIONS:
+      return DEFAULT_STATE;
     default:
       return state;
   }

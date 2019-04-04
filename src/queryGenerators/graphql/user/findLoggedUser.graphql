@@ -1,7 +1,7 @@
-#import "../notification/notificationFragment.graphql"
 #import "./userFragment.graphql"
 #import "../evaluation/evaluationFragment.graphql"
-#import "../studentSubject/studentSubjectFragment.graphql"
+#import "../notification/notificationFragment.graphql"
+#import "../evaluationResult/evaluationResultFragment.graphql"
 
 query {
   findLoggedUser {
@@ -15,8 +15,11 @@ query {
     studentSubjects {
       id
     }
-    studentSubjectRelations {
-      ...studentSubjectFields
-    }
+    evaluationResults {
+      ...evaluationResultFields
+      evaluation {
+        id
+      }
+    }    
   }
 }

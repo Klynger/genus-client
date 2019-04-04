@@ -21,7 +21,6 @@ export const findSubjectById = subjectId => dispatch => {
   return requestGraphql(queryFindSubjectById(subjectId), localStorage.getItem('token')).then(
     res => {
       if (res.data.data && res.data.data.findSubjectById) {
-        // TODO studentSubject
         dispatchEntities(res.data.data.findSubjectById, dispatch, subjectSchema);
       }
       return res;

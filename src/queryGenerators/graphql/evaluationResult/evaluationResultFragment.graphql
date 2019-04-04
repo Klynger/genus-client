@@ -1,0 +1,4 @@
+fragment evaluationResultFields on EvaluationResult {
+  id
+  result
+}

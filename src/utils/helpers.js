@@ -73,32 +73,29 @@ function getSaveAction(entityName) {
   return `SAVE_${entityName.toUpperCase()}`;
 }
 
-function getSaveAllAction(entityName) {
-  return `SAVE_ALL_${entityName.toUpperCase()}`;
-}
+// function getSaveAllAction(entityName) {
+//   return `SAVE_ALL_${entityName.toUpperCase()}`;
+// }
 
-function dispatchById(objects, dispatch, entityName, saveAll) {
-  if (saveAll) {
-    const actionType = getSaveAllAction(entityName);
-    const payload = Object.keys(objects).map(id => objects[id]);
+function dispatchById(objects, dispatch, entityName) {
+  const actionType = getSaveAction(entityName);
+  Object.keys(objects).forEach(id => {
     dispatch({
       type: actionType,
-      payload,
+      [entityName]: objects[id],
     });
-  } else {
-    const actionType = getSaveAction(entityName);
-    Object.keys(objects).forEach(id => {
-      dispatch({
-        type: actionType,
-        [entityName]: objects[id],
-      });
-    });
-  }
+  });
+  // const actionType = getSaveAllAction(entityName);
+  // const payload = Object.keys(objects).map(id => objects[id]);
+  // dispatch({
+  //   type: actionType,
+  //   payload,
+  // });
 }
 
-export function dispatchEntities(denormalizedData, dispatch, schema, saveAll = false) {
+export function dispatchEntities(denormalizedData, dispatch, schema) {
   const { entities } = normalize(denormalizedData, schema);
   Object.keys(entities).forEach(entityName => {
-    dispatchById(entities[entityName], dispatch, entityName, saveAll);
+    dispatchById(entities[entityName], dispatch, entityName);
   });
 }
