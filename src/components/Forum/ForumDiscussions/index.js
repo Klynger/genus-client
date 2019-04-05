@@ -15,6 +15,7 @@ const styles = theme => ({
 
 const ForumDiscussions = props => {
   const {
+    canCreateDiscussion,
     classes,
     discussions,
     match: { url },
@@ -26,9 +27,11 @@ const ForumDiscussions = props => {
       <DefaultContainerRoute>
         <ResponsiveTitle>Forum {subject && `- ${subject.name}`}</ResponsiveTitle>
         <ActionsContainer className={classes.actionsContainer}>
-          <Button component={Link} to={`${url}/new-discussion`} color="primary">
-            Criar uma discussão
-          </Button>
+          {canCreateDiscussion && (
+            <Button component={Link} to={`${url}/new-discussion`} color="primary">
+              Criar uma discussão
+            </Button>
+          )}
         </ActionsContainer>
         <DiscussionsList discussions={discussions} />
       </DefaultContainerRoute>
@@ -41,6 +44,7 @@ ForumDiscussions.defaultProps = {
 };
 
 ForumDiscussions.propTypes = {
+  canCreateDiscussion: PropTypes.bool.isRequired,
   classes: PropTypes.object.isRequired,
   discussions: PropTypes.arrayOf(PropTypes.object),
   history: PropTypes.shape({}).isRequired,
@@ -76,7 +80,14 @@ function mapToProps(
     };
   }
 
-  return {};
+  const { loggedUserId } = user;
+  const canCreateDiscussion =
+    subject.teachers.some(_user => _user.id === loggedUserId) ||
+    subject.students.some(_user => _user.id === loggedUserId);
+
+  return {
+    canCreateDiscussion,
+  };
 }
 
 export default connect(mapToProps)(withStyles(styles)(ForumDiscussions));
