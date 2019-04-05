@@ -1,7 +1,6 @@
 #import "./userFragment.graphql"
 #import "../subject/subjectFragment.graphql"
 #import "../evaluation/evaluationFragment.graphql"
-#import "../studentSubject/studentSubjectFragment.graphql
 
 query findUser($id: ID!) {
   findUser(id: $id) {
@@ -12,14 +11,14 @@ query findUser($id: ID!) {
     studentSubjects {
       id
     }
-    studentSubjectRelations {
-      ...studentSubjectFields
-    }
     teacherSubjects {
-      ...subjectFragment
+      ...subjectFields
     }
     studentSubjects {
-      ...subjectFragment
+      ...subjectFields
+    }
+    evaluationResults {
+      id
     }
   }
 }
