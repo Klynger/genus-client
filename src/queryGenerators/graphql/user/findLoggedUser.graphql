@@ -17,8 +17,14 @@ query {
     }
     evaluationResults {
       ...evaluationResultFields
+      user {
+        id
+      }
       evaluation {
         ...evaluationFields
+        subject {
+          id
+        }
       }
     }
   }

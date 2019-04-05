@@ -69,28 +69,41 @@ export const defaultDialogBreakpoints = () => ({
 
 // ----------------------------------------------------------------------
 
-function getSaveAction(entityName) {
-  return `SAVE_${entityName.toUpperCase()}`;
+export function saveAllHelper(payload, state) {
+  const ids = Object.keys(payload);
+
+  const partialById = ids.reduce(
+    (acc, curId) => ({
+      ...acc,
+      [curId]: {
+        ...state.byId[curId],
+        ...payload[curId],
+      },
+    }),
+    {},
+  );
+
+  const newState = {
+    ...state,
+    byId: {
+      ...state.byId,
+      ...partialById,
+    },
+    allIds: concatIdIfNotContain(state.allIds, ids),
+  };
+  return newState;
 }
 
-// function getSaveAllAction(entityName) {
-//   return `SAVE_ALL_${entityName.toUpperCase()}`;
-// }
+function getSaveAllAction(entityName) {
+  return `SAVE_ALL_${entityName.toUpperCase()}`;
+}
 
-function dispatchById(objects, dispatch, entityName) {
-  const actionType = getSaveAction(entityName);
-  Object.keys(objects).forEach(id => {
-    dispatch({
-      type: actionType,
-      [entityName]: objects[id],
-    });
+function dispatchById(payload, dispatch, entityName) {
+  const actionType = getSaveAllAction(entityName);
+  dispatch({
+    type: actionType,
+    payload,
   });
-  // const actionType = getSaveAllAction(entityName);
-  // const payload = Object.keys(objects).map(id => objects[id]);
-  // dispatch({
-  //   type: actionType,
-  //   payload,
-  // });
 }
 
 export function dispatchEntities(denormalizedData, dispatch, schema) {

@@ -1,7 +1,8 @@
-import { concatIdIfNotContain } from '../utils/helpers';
+import { concatIdIfNotContain, saveAllHelper } from '../utils/helpers';
 import {
   SAVE_SUBJECT,
   UPDATE_SUBJECT,
+  SAVE_ALL_SUBJECTS,
   REMOVE_ALL_SUBJECTS,
   ADD_TEACHER_TO_SUBJECT,
   ADD_STUDENT_TO_SUBJECT,
@@ -138,6 +139,8 @@ function subject(state = DEFAULT_STATE, action) {
         },
       };
 
+    case SAVE_ALL_SUBJECTS:
+      return saveAllHelper(action.payload, state);
     case REMOVE_ALL_SUBJECTS:
       return DEFAULT_STATE;
     default:

@@ -1,6 +1,7 @@
-import { concatIdIfNotContain } from '../utils/helpers';
+import { concatIdIfNotContain, saveAllHelper } from '../utils/helpers';
 import {
   SAVE_DISCUSSION,
+  SAVE_ALL_DISCUSSIONS,
   REMOVE_ALL_DISCUSSIONS,
   ADD_REPLY_TO_DISCUSSION,
 } from '../actions/actionTypes';
@@ -38,6 +39,8 @@ function discussion(state = DEFAULT_STATE, action) {
           },
         },
       };
+    case SAVE_ALL_DISCUSSIONS:
+      return saveAllHelper(action.payload, state);
     case REMOVE_ALL_DISCUSSIONS:
       return DEFAULT_STATE;
     default:

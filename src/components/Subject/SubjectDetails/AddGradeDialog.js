@@ -52,7 +52,6 @@ class AddGradeDialog extends Component {
         weight: false,
       },
       hasError: false,
-      evaluationName: '',
       isSubmitting: false,
     };
   }
@@ -60,7 +59,7 @@ class AddGradeDialog extends Component {
   handleChangeEvaluationValue = (value, userId) => {
     let error = false;
     let hasError = false;
-    if (Number(value) < 0 || Number(value) > 10 || value === '') {
+    if (!value || Number(value) < 0 || Number(value) > 10) {
       error = true;
       hasError = true;
     }
@@ -81,7 +80,7 @@ class AddGradeDialog extends Component {
     this.setState(({ errors, evaluation }) => ({
       evaluation: {
         ...evaluation,
-        name: e.target.value,
+        name: value,
       },
       errors: {
         ...errors,
@@ -91,13 +90,13 @@ class AddGradeDialog extends Component {
   };
 
   handleSubmit = e => {
-    const { hasError, evaluation } = this.state;
+    const { hasError, evaluation, errors } = this.state;
 
     e.preventDefault();
 
-    if (!hasError && evaluation.name) {
+    if (!hasError && !errors.name) {
       const { studentsData } = this.state;
-      const { createNewEvaluations } = this.props;
+      const { createNewEvaluations, subject } = this.props;
 
       const resultInputs = studentsData.map(({ id, result }) => ({
         studentId: id,
@@ -107,11 +106,11 @@ class AddGradeDialog extends Component {
       const evaluationInput = {
         ...evaluation,
         resultInputs,
+        subjectId: subject.id,
       };
-
       this.setState({ isSubmitting: true });
       createNewEvaluations(evaluationInput).then(() => {
-        window.location.reload();
+        this.setState({ isSubmitting: false });
       });
     }
   };
@@ -126,8 +125,7 @@ class AddGradeDialog extends Component {
       fullScreen,
     } = this.props;
 
-    const { studentsData, hasError, evaluation, evaluationName, isSubmitting, errors } = this.state;
-    const evaluationNameError = !evaluationName || evaluationName.length === 0;
+    const { studentsData, hasError, evaluation, isSubmitting, errors } = this.state;
 
     return (
       <Dialog
@@ -150,7 +148,7 @@ class AddGradeDialog extends Component {
                   className={classes.formControl}
                   onChange={this.handleNameChange}
                   error={errors.name}
-                  helperText={evaluationNameError && 'Uma avaliação deve ter um nome.'}
+                  helperText={errors.name && 'Uma avaliação deve ter um nome.'}
                 />
               </form>
               <NewGradesList
@@ -165,7 +163,7 @@ class AddGradeDialog extends Component {
               </Button>
               <ProgressButton
                 color="primary"
-                disabled={hasError || !evaluationName || evaluationName.length === 0}
+                disabled={hasError || errors.name}
                 onClick={this.handleSubmit}
                 showProgress={isSubmitting}
               >

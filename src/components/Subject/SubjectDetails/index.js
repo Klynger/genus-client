@@ -187,7 +187,12 @@ SubjectDetailsPage.propTypes = {
   studentsData: PropTypes.arrayOf(
     PropTypes.shape({
       email: PropTypes.string.isRequired,
-      evaluations: PropTypes.arrayOf(PropTypes.number).isRequired,
+      evaluations: PropTypes.arrayOf(
+        PropTypes.shape({
+          id: PropTypes.string.isRequired,
+          result: PropTypes.number.isRequired,
+        }),
+      ).isRequired,
       id: PropTypes.string.isRequired,
       username: PropTypes.string.isRequired,
     }),
@@ -250,7 +255,6 @@ function mapToProps(
         .filter(id => evaluationResult.byId[id])
         .map(id => evaluationResult.byId[id]);
     });
-
     const studentsData = students.map(student => {
       const studentData = {
         id: student.id,

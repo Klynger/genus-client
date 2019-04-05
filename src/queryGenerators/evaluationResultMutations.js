@@ -1,12 +1,6 @@
 import { loader } from 'graphql.macro';
 
-export const mutationCreateEvaluationResults = input => ({
-  query: loader('./graphql/evaluationResult/createEvaluationResults.graphql').loc.source.body,
-  variables: {
-    input,
-  },
-});
-
+// eslint-disable-next-line import/prefer-default-export
 export const mutationEditEvaluationResult = input => ({
   query: loader('./graphql/evaluationResult/editEvaluationResult.graphql').loc.source.body,
   variables: {

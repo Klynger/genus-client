@@ -1,7 +1,7 @@
 #import "./evaluationFragment.graphql"
 
 mutation editEvaluation($input: EvaluationEditInput!) {
-    editEvaluation(input: $input) {
-        ...evaluationFields
-    }
+  editEvaluation(input: $input) {
+    ...evaluationFields
+  }
 }
