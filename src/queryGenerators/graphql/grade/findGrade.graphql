@@ -3,6 +3,8 @@
 #import "../reply/replyFragment.graphql"
 #import "../subject/subjectFragment.graphql"
 #import "../discussion/discussionFragment.graphql"
+#import "../evaluation/evaluationFragment.graphql"
+#import "../evaluationResult/evaluationResultFragment.graphql"
 
 query findGrade($id: ID!) {
   findGrade(input: $id) {
@@ -10,10 +12,28 @@ query findGrade($id: ID!) {
     institution {
       id
     }
+    teachers {
+      id
+    }
+    students {
+      id
+    }
     subjects {
       ...subjectFields
       grade {
         id
+      }
+      evaluations {
+        ...evaluationFields
+        evaluationResults {
+          ...evaluationResultFields
+          user {
+            id
+          }
+          evaluation {
+            id
+          }
+        }
       }
       teachers {
         ...userFields

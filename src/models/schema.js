@@ -7,19 +7,21 @@ const institution = new schema.Entity('institution');
 const discussion = new schema.Entity('discussion');
 const reply = new schema.Entity('reply');
 const evaluation = new schema.Entity('evaluation');
-const studentSubject = new schema.Entity('studentSubject');
+const evaluationResult = new schema.Entity('evaluationResult');
 
 subject.define({
+  grade,
   teachers: [user],
   students: [user],
   forum: [discussion],
-  studentSubjects: [studentSubject],
-  grade,
+  evaluations: [evaluation],
 });
 
 grade.define({
-  subjects: [subject],
   institution,
+  students: [user],
+  teachers: [user],
+  subjects: [subject],
 });
 
 institution.define({
@@ -42,16 +44,10 @@ reply.define({
   parent: reply,
 });
 
-studentSubject.define({
-  user,
-  subject,
-  evaluations: [evaluation],
-});
-
 user.define({
   teacherSubjects: [subject],
   studentSubjects: [subject],
-  studentSubjectRelations: [studentSubject],
+  evaluationResults: [evaluationResult],
 });
 
 export const userSchema = user;
@@ -61,4 +57,4 @@ export const subjectSchema = subject;
 export const discussionSchema = discussion;
 export const evaluationSchema = evaluation;
 export const institutionSchema = institution;
-export const studentSubjectSchema = studentSubject;
+export const evaluationResultSchema = evaluationResult;

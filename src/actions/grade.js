@@ -29,13 +29,6 @@ export const fetchGrade = id => dispatch => {
   return requestGraphql(queryFindGrade(id), localStorage.getItem('token')).then(res => {
     let result;
     if (res.data.data && res.data.data.findGrade) {
-      res.data.data.findGrade.subjects.forEach(subject => {
-        subject.students.forEach(student => {
-          student.studentSubjectRelations.forEach(ss => {
-            ss.id = ss.user.id + ss.subject.id;
-          });
-        });
-      });
       dispatchEntities(res.data.data.findGrade, dispatch, gradeSchema);
       result = res;
     } else {

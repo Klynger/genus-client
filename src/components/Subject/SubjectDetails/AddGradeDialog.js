@@ -5,7 +5,7 @@ import React, { Fragment, Component } from 'react';
 import AddTeacherEmptyView from './AddTeacherEmptyView';
 import ProgressButton from '../../shared/ProgressButton';
 import { capitalize } from '@material-ui/core/utils/helpers';
-import { createEvaluations } from '../../../actions/evaluation';
+import { createEvaluation } from '../../../actions/evaluation';
 import { defaultDialogBreakpoints } from '../../../utils/helpers';
 import { DefaultDialogTransition } from '../../shared/SharedComponents';
 import {
@@ -43,6 +43,14 @@ class AddGradeDialog extends Component {
 
         return output;
       }),
+      evaluation: {
+        name: '',
+        weight: 1,
+      },
+      errors: {
+        name: true,
+        weight: false,
+      },
       hasError: false,
       evaluationName: '',
       isSubmitting: false,
@@ -69,28 +77,40 @@ class AddGradeDialog extends Component {
   };
 
   handleNameChange = e => {
-    this.setState({ evaluationName: e.target.value });
+    const { value } = e.target;
+    this.setState(({ errors, evaluation }) => ({
+      evaluation: {
+        ...evaluation,
+        name: e.target.value,
+      },
+      errors: {
+        ...errors,
+        name: !value,
+      },
+    }));
   };
 
   handleSubmit = e => {
-    const { hasError, evaluationName } = this.state;
+    const { hasError, evaluation } = this.state;
 
     e.preventDefault();
 
-    if (!hasError && evaluationName && evaluationName.length > 0) {
+    if (!hasError && evaluation.name) {
       const { studentsData } = this.state;
-      const { subject, createNewEvaluations } = this.props;
+      const { createNewEvaluations } = this.props;
 
-      const evaluationInputs = studentsData.map(({ id, result }) => ({
-        subjectId: subject.id,
-        name: evaluationName,
-        userId: id,
-        weight: 1,
+      const resultInputs = studentsData.map(({ id, result }) => ({
+        studentId: id,
         result: Number(result),
       }));
 
+      const evaluationInput = {
+        ...evaluation,
+        resultInputs,
+      };
+
       this.setState({ isSubmitting: true });
-      createNewEvaluations(evaluationInputs).then(() => {
+      createNewEvaluations(evaluationInput).then(() => {
         window.location.reload();
       });
     }
@@ -106,7 +126,7 @@ class AddGradeDialog extends Component {
       fullScreen,
     } = this.props;
 
-    const { studentsData, hasError, evaluationName, isSubmitting } = this.state;
+    const { studentsData, hasError, evaluation, evaluationName, isSubmitting, errors } = this.state;
     const evaluationNameError = !evaluationName || evaluationName.length === 0;
 
     return (
@@ -125,11 +145,11 @@ class AddGradeDialog extends Component {
             <DialogContent>
               <form className={classes.form} onSubmit={this.handleSubmit}>
                 <TextField
-                  value={evaluationName}
+                  value={evaluation.name}
                   label="Nome da Avaliação"
                   className={classes.formControl}
                   onChange={this.handleNameChange}
-                  error={!evaluationName || evaluationName.length === 0}
+                  error={errors.name}
                   helperText={evaluationNameError && 'Uma avaliação deve ter um nome.'}
                 />
               </form>
@@ -173,7 +193,7 @@ AddGradeDialog.propTypes = {
 
 function mapDispatchToProps(dispatch) {
   return {
-    createNewEvaluations: evaluationInput => dispatch(createEvaluations(evaluationInput)),
+    createNewEvaluations: evaluationInput => dispatch(createEvaluation(evaluationInput)),
   };
 }
 

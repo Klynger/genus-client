@@ -5,7 +5,9 @@
 #import "./getInstitutionFragment.graphql"
 #import "../reply/getReplyFragment.graphql"
 #import "../subject/subjectFragment.graphql"
+#import "../evaluation/evaluationFragment.graphql"
 #import "../discussion/discussionFragment.graphql"
+#import "../evaluationResult/evaluationResultFragment.graphql"
 
 query {
   getInstitutionsFromLoggedUser {
