@@ -69,7 +69,7 @@ class GradeDetails extends Component {
           />
           <GradeInfo
             grade={grade}
-            canAddStudents={canAddStudents}
+            canAddStudents={canAddStudents && grade.subjects.length > 0}
             onAddStudents={this.handleAddStudentsOpen}
           />
           <SubjectsGrid gradeId={gradeId} subjects={grade.subjects} userRole={userRole} />
