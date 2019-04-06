@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React, { Fragment } from 'react';
 import { Form, withFormik } from 'formik';
+import SearchField from '../../shared/SearchFields';
 import AddTeacherEmptyView from './AddTeacherEmptyView';
 import ProgressButton from '../../shared/ProgressButton';
-import SingleSearchField from '../../shared/SearchFields';
 import { capitalize } from '@material-ui/core/utils/helpers';
-import { addStudentToSubject } from '../../../actions/subject';
+import { addStudentsToSubject } from '../../../actions/subject';
 import { defaultDialogBreakpoints } from '../../../utils/helpers';
 import { DefaultDialogTransition } from '../../shared/SharedComponents';
 import {
@@ -76,16 +76,17 @@ const AddStudentDialog = ({
         <Fragment>
           <DialogContent>
             <Form className={classes.form}>
-              <FormControl error={touched.studentId && Boolean(errors.studentId)}>
+              <FormControl error={touched.studentsIds && Boolean(errors.studentsIds)}>
                 <InputLabel htmlFor="add-student-dialog__student-id-field">Aluno</InputLabel>
-                <SingleSearchField
-                  name="studentId"
+                <SearchField
+                  isMulti
+                  name="studentsIds"
                   onBlur={setFieldTouched}
                   onChange={setFieldValue}
                   options={options}
-                  value={values.studentId}
-                  error={errors.studentId}
-                  touched={touched.studentId}
+                  value={values.studentsIds}
+                  error={errors.studentsIds}
+                  touched={touched.studentsIds}
                   placeholder="Selecione um estudante"
                 />
               </FormControl>
@@ -116,7 +117,7 @@ AddStudentDialog.propTypes = {
   classes: PropTypes.object.isRequired,
   errors: PropTypes.shape({
     requestError: PropTypes.string,
-    studentId: PropTypes.string,
+    studentsIds: PropTypes.string,
   }).isRequired,
   fullScreen: PropTypes.bool.isRequired,
   handleSubmit: PropTypes.func.isRequired,
@@ -135,10 +136,10 @@ AddStudentDialog.propTypes = {
     }).isRequired,
   }).isRequired,
   touched: PropTypes.shape({
-    studentId: PropTypes.bool,
+    studentsIds: PropTypes.bool,
   }).isRequired,
   values: PropTypes.shape({
-    studentId: PropTypes.string.isRequired,
+    studentsIds: PropTypes.array.isRequired,
     subjectId: PropTypes.string.isRequired,
   }).isRequired,
   width: PropTypes.string.isRequired,
@@ -160,7 +161,7 @@ function mapStateToProps({ institution, user }) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    addStudent: input => dispatch(addStudentToSubject(input)),
+    addStudents: input => dispatch(addStudentsToSubject(input)),
   };
 }
 
@@ -175,21 +176,21 @@ export default connect(
       withFormik({
         mapPropsToValues({ subject: { id } }) {
           return {
-            studentId: '',
+            studentsIds: [],
             subjectId: id,
           };
         },
         validationSchema: () => {
           return Yup.object().shape({
-            studentId: Yup.string().required('Selecione um estudante.'),
+            studentsIds: Yup.array().required('Selecione um estudante.'),
           });
         },
         handleSubmit(values, { props, resetForm, setErrors, setSubmitting }) {
           props
-            .addStudent(values)
+            .addStudents(values)
             .then(res => {
               let callResetForm = false;
-              if (res.data.data && res.data.data.addStudentToSubject) {
+              if (res.data.data && res.data.data.addStudentsToSubject) {
                 props.onClose();
                 callResetForm = true;
               } else {
@@ -198,7 +199,7 @@ export default connect(
               setTimeout(() => {
                 if (callResetForm) {
                   resetForm({
-                    studentId: '',
+                    studentsIds: [],
                     subjectId: props.subject.id,
                   });
                 }

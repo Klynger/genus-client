@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Form, withFormik } from 'formik';
 import React, { Component, Fragment } from 'react';
+import SearchField from '../../shared/SearchFields';
 import AddTeacherEmptyView from './AddTeacherEmptyView';
-import SingleSearchField from '../../shared/SearchFields';
 import { capitalize } from '@material-ui/core/utils/helpers';
 import { addTeacherToSubject } from '../../../actions/subject';
 import { defaultDialogBreakpoints } from '../../../utils/helpers';
@@ -81,7 +81,7 @@ class AddTeacherDialog extends Component {
                   className={classes.formControl}
                   error={touched.teacherId && errors.teacherId !== undefined}
                 >
-                  <SingleSearchField
+                  <SearchField
                     name="teacherId"
                     onBlur={setFieldTouched}
                     onChange={setFieldValue}
