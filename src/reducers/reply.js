@@ -1,5 +1,10 @@
-import { concatIdIfNotContain } from '../utils/helpers';
-import { SAVE_REPLY, ADD_REPLY_TO_REPLY, REMOVE_ALL_REPLIES } from '../actions/actionTypes';
+import { concatIdIfNotContain, saveAllHelper } from '../utils/helpers';
+import {
+  SAVE_REPLY,
+  SAVE_ALL_REPLIES,
+  ADD_REPLY_TO_REPLY,
+  REMOVE_ALL_REPLIES,
+} from '../actions/actionTypes';
 
 const DEFAULT_STATE = {
   byId: {},
@@ -34,6 +39,8 @@ function reply(state = DEFAULT_STATE, action) {
           },
         },
       };
+    case SAVE_ALL_REPLIES:
+      return saveAllHelper(action.payload, state);
     case REMOVE_ALL_REPLIES:
       return DEFAULT_STATE;
 

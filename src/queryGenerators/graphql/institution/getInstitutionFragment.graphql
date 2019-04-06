@@ -18,6 +18,9 @@ fragment getInstitutionFields on Institution {
       }
       evaluations {
         ...evaluationFields
+        subject {
+          id
+        }
         evaluationResults {
           ...evaluationResultFields
           user {

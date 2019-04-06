@@ -200,9 +200,7 @@ StudentsTable.propTypes = {
       evaluations: PropTypes.arrayOf(
         PropTypes.shape({
           id: PropTypes.string.isRequired,
-          name: PropTypes.string.isRequired,
           result: PropTypes.number.isRequired,
-          weight: PropTypes.number.isRequired,
         }),
       ).isRequired,
       id: PropTypes.string.isRequired,
