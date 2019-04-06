@@ -1,5 +1,14 @@
 mutation createUser($userInput: CreateUserInput!) {
   createUser(input: $userInput) {
     id
+    teacherSubjects {
+      id
+    }
+    studentSubjects {
+      id
+    }
+    evaluationResults {
+      id
+    }
   }
 }

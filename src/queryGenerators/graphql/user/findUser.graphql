@@ -1,7 +1,24 @@
 #import "./userFragment.graphql"
+#import "../subject/subjectFragment.graphql"
+#import "../evaluation/evaluationFragment.graphql"
 
 query findUser($id: ID!) {
   findUser(id: $id) {
     ...userFields
+    teacherSubjects {
+      id
+    }
+    studentSubjects {
+      id
+    }
+    teacherSubjects {
+      ...subjectFields
+    }
+    studentSubjects {
+      ...subjectFields
+    }
+    evaluationResults {
+      id
+    }
   }
 }

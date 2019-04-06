@@ -38,14 +38,23 @@ class Home extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { openDrawer: false };
+    this.state = {
+      openDrawer: false,
+      userHasInstitutions: null,
+    };
   }
 
   componentDidMount() {
     const { getLoggedUser, getInstitutions } = this.props;
 
     getLoggedUser().then(() => {
-      getInstitutions();
+      getInstitutions().then(res => {
+        if (res.data.data.getInstitutionsFromLoggedUser.length === 0) {
+          this.setState({ userHasInstitutions: 'NO' });
+        } else {
+          this.setState({ userHasInstitutions: 'YES' });
+        }
+      });
     });
   }
 
@@ -58,12 +67,14 @@ class Home extends Component {
   };
 
   render() {
-    const { openDrawer } = this.state;
+    const { openDrawer, userHasInstitutions } = this.state;
     const { selectedInstitution, userId, classes } = this.props;
 
     let userRole = null;
     if (selectedInstitution && userId) {
       userRole = getRoleFromInstitution(userId, selectedInstitution);
+    } else if (userHasInstitutions && userHasInstitutions === 'NO') {
+      userRole = 'NO_ROLE';
     }
 
     return (

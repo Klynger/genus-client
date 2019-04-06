@@ -14,6 +14,13 @@ export const removerUserFromInstitution = input => ({
   },
 });
 
+export const removeStudentFromSubject = input => ({
+  query: loader('./graphql/user/removeStudentFromSubject.graphql').loc.source.body,
+  variables: {
+    ...input,
+  },
+});
+
 export const mutationUpdateUser = input => ({
   query: loader('./graphql/user/updateUser.graphql').loc.source.body,
   variables: {

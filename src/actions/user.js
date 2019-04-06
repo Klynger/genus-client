@@ -1,20 +1,24 @@
+import { userSchema } from '../models/schema';
+import { dispatchEntities } from '../utils/helpers';
 import { requestGraphql } from '../utils/HTTPClient';
-import { SAVE_USER, SET_LOGGED_USER, REMOVE_USER_FROM_INSTITUION } from './actionTypes';
 import { findUserById, findLoggedUserQuery, loginQuery } from '../queryGenerators/userQueries';
 import {
+  SAVE_USER,
+  SET_LOGGED_USER,
+  REMOVE_USER_FROM_INSTITUION,
+  REMOVE_STUDENT_FROM_SUBJECT,
+} from './actionTypes';
+import {
   mutationUpdateUser,
-  removerUserFromInstitution,
   mutationCreateUser,
+  removeStudentFromSubject,
+  removerUserFromInstitution,
 } from '../queryGenerators/userMutations';
 
 export const fetchLoggedUser = () => dispatch =>
   requestGraphql(findLoggedUserQuery(), localStorage.getItem('token')).then(res => {
     if (res.data.data && res.data.data.findLoggedUser) {
-      dispatch({
-        type: SAVE_USER,
-        user: res.data.data.findLoggedUser,
-      });
-
+      dispatchEntities(res.data.data.findLoggedUser, dispatch, userSchema);
       dispatch({
         type: SET_LOGGED_USER,
         id: res.data.data.findLoggedUser.id,
@@ -54,6 +58,18 @@ export const removeUserOfInstitutionId = input => dispatch =>
         toBeRemovedId: input.toBeRemovedId,
       });
     }
+    return res;
+  });
+
+export const removeStudentFromSubjectId = input => dispatch =>
+  requestGraphql(removeStudentFromSubject(input), localStorage.getItem('token')).then(res => {
+    if (res.data.data && res.data.data.removeStudentFromSubject) {
+      dispatch({
+        type: REMOVE_STUDENT_FROM_SUBJECT,
+        toRemove: input,
+      });
+    }
+
     return res;
   });
 

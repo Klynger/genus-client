@@ -3,11 +3,17 @@ import { userRoles } from './constants';
 
 export const DEFAULT_PHOTO_CLASS_SRC = '/static/images/grade-default-img.jpg';
 
-export const concatIdIfNotContain = (allIds, id) => {
-  if (allIds.includes(id)) {
-    return allIds;
+export const concatIdIfNotContain = (allIds = [], idsOrId) => {
+  if (Array.isArray(idsOrId)) {
+    idsOrId.forEach(id => {
+      if (!allIds.includes(id)) {
+        allIds.push(id);
+      }
+    });
+  } else if (!allIds.includes(idsOrId)) {
+    allIds.push(idsOrId);
   }
-  return allIds.concat([id]);
+  return allIds;
 };
 
 export const phoneRegExp = /^(?:(?:\+|00)?(55)\s?)?(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})\-?(\d{4}))$/; // eslint-disable-line
@@ -67,6 +73,10 @@ function getSaveAction(entityName) {
   return `SAVE_${entityName.toUpperCase()}`;
 }
 
+// function getSaveAllAction(entityName) {
+//   return `SAVE_ALL_${entityName.toUpperCase()}`;
+// }
+
 function dispatchById(objects, dispatch, entityName) {
   const actionType = getSaveAction(entityName);
   Object.keys(objects).forEach(id => {
@@ -75,6 +85,12 @@ function dispatchById(objects, dispatch, entityName) {
       [entityName]: objects[id],
     });
   });
+  // const actionType = getSaveAllAction(entityName);
+  // const payload = Object.keys(objects).map(id => objects[id]);
+  // dispatch({
+  //   type: actionType,
+  //   payload,
+  // });
 }
 
 export function dispatchEntities(denormalizedData, dispatch, schema) {
@@ -82,4 +98,18 @@ export function dispatchEntities(denormalizedData, dispatch, schema) {
   Object.keys(entities).forEach(entityName => {
     dispatchById(entities[entityName], dispatch, entityName);
   });
+}
+
+// ----------------------------------------------------------------------
+
+export function getUserRole(studentList, adminList, teacherList, userId) {
+  let role = 'NO_ROLE';
+  if (studentList.some(id => id === userId)) {
+    role = 'STUDENT';
+  } else if (adminList.some(id => id === userId)) {
+    role = 'ADMIN';
+  } else if (teacherList.some(id => id === userId)) {
+    role = 'TEACHER';
+  }
+  return role;
 }

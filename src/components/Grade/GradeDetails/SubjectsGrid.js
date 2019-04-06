@@ -39,7 +39,7 @@ class SubjectsGrid extends Component {
   }
 
   render() {
-    const { gradeId, subjects } = this.props;
+    const { gradeId, subjects, userRole } = this.props;
     const { subjectDialogOpen } = this.state;
 
     return (
@@ -54,7 +54,9 @@ class SubjectsGrid extends Component {
           {subjects.map(({ id, name }) => (
             <GridCard key={id} title={name} onClick={() => this.goToSubject(id)} />
           ))}
-          <GridButton key="-10" Icon={AddCircleIcon} onClick={this.handleSubjectDialogToggle} />
+          {userRole === 'ADMIN' && (
+            <GridButton key="-10" Icon={AddCircleIcon} onClick={this.handleSubjectDialogToggle} />
+          )}
         </GridContainer>
       </Container>
     );
@@ -70,6 +72,7 @@ SubjectsGrid.propTypes = {
     push: PropTypes.func.isRequired,
   }).isRequired,
   subjects: PropTypes.arrayOf(PropTypes.object),
+  userRole: PropTypes.string.isRequired,
 };
 
 SubjectsGrid.subjects = {

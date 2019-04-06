@@ -14,7 +14,6 @@ const styles = theme => ({
     width: PHOTO_DIMENSION,
   },
   root: {
-    borderRadius: 0,
     display: 'flex',
     flexDirection: 'column',
     marginTop: theme.spacing.unit * 3,
@@ -44,59 +43,75 @@ const SubjectInfo = ({
   onAddStudentClick,
   onAddTeacherClick,
   onEditSubjectClick,
+  onAddGradeClick,
   history,
   isAdmin,
   canSeeForum,
+  canSeeGrades,
+  userRole,
   canSendEmailToSubjectStudents,
-}) => (
-  <Paper className={classes.root}>
-    <div className={classes.contentContainer}>
-      <img
-        alt={subject.name}
-        className={classes.photo}
-        src={subject.photo || DEFAULT_PHOTO_CLASS_SRC}
-      />
-      <div className={classes.infoContainer}>
-        <Typography component="h2" variant="h6" gutterBottom>
-          {subject.name}
-        </Typography>
-        <Typography component="span" variant="subtitle1" gutterBottom>
-          {subject.teachers.length > 0
-            ? `Professores: ${subject.teachers.map(({ username }) => username).join(', ')}`
-            : 'Nenhum professor vinculado a essa disciplina'}
-        </Typography>
+}) => {
+  return (
+    <Paper className={classes.root}>
+      <div className={classes.contentContainer}>
+        <img
+          alt={subject.name}
+          className={classes.photo}
+          src={subject.photo || DEFAULT_PHOTO_CLASS_SRC}
+        />
+        <div className={classes.infoContainer}>
+          <Typography component="h2" variant="h6" gutterBottom>
+            {subject.name}
+          </Typography>
+          <Typography component="span" variant="subtitle1" gutterBottom>
+            {subject.teachers.length > 0
+              ? `Professores: ${subject.teachers.map(({ username }) => username).join(', ')}`
+              : 'Nenhum professor vinculado a essa disciplina'}
+          </Typography>
+        </div>
       </div>
-    </div>
-    <ActionsContainer>
-      {isAdmin && (
-        <span>
-          <Button color="primary" onClick={onEditSubjectClick}>
-            Atualizar Informações
+      <ActionsContainer>
+        {isAdmin && (
+          <span>
+            <Button color="primary" onClick={onEditSubjectClick}>
+              Atualizar Informações
+            </Button>
+            <Button color="primary" onClick={onAddTeacherClick}>
+              Vincular professor
+            </Button>
+            <Button color="primary" onClick={onAddStudentClick}>
+              Vincular aluno
+            </Button>
+          </span>
+        )}
+        {canSeeForum && (
+          <Button color="primary" component={Link} to={`${history.location.pathname}/forum`}>
+            Forum
           </Button>
-          <Button color="primary" onClick={onAddTeacherClick}>
-            Vincular professor
+        )}
+        {userRole === 'TEACHER' && (
+          <Button color="primary" onClick={onAddGradeClick}>
+            Adicionar nova nota
           </Button>
-          <Button color="primary" onClick={onAddStudentClick}>
-            Vincular aluno
+        )}
+        {canSeeGrades && (
+          <Button color="primary" component={Link} to={`${history.location.pathname}/forum`}>
+            Mandar email para turma
           </Button>
-        </span>
-      )}
-      {canSendEmailToSubjectStudents && (
-        <Button color="primary" onClick={onSendEmailOpen}>
-          Enviar Email
-        </Button>
-      )}
-      {canSeeForum && (
-        <Button color="primary" component={Link} to={`${history.location.pathname}/forum`}>
-          Forum
-        </Button>
-      )}
-    </ActionsContainer>
-  </Paper>
-);
+        )}
+        {canSendEmailToSubjectStudents && (
+          <Button color="primary" onClick={onSendEmailOpen}>
+            Enviar Email
+          </Button>
+        )}
+      </ActionsContainer>
+    </Paper>
+  );
+};
 
 SubjectInfo.propTypes = {
   canSeeForum: PropTypes.bool.isRequired,
+  canSeeGrades: PropTypes.bool.isRequired,
   canSendEmailToSubjectStudents: PropTypes.bool.isRequired,
   classes: PropTypes.object.isRequired,
   history: PropTypes.shape({
@@ -105,6 +120,7 @@ SubjectInfo.propTypes = {
     }).isRequired,
   }).isRequired,
   isAdmin: PropTypes.bool.isRequired,
+  onAddGradeClick: PropTypes.func.isRequired,
   onAddStudentClick: PropTypes.func.isRequired,
   onAddTeacherClick: PropTypes.func.isRequired,
   onEditSubjectClick: PropTypes.func.isRequired,
@@ -114,16 +130,16 @@ SubjectInfo.propTypes = {
     photo: PropTypes.string,
     teachers: PropTypes.arrayOf(PropTypes.object).isRequired,
   }),
+  userRole: PropTypes.string.isRequired,
 };
 
 function mapStateToProps(
   { user: { loggedUserId }, institution: { byId, selectedInstitution } },
   { subject },
 ) {
-  const isAdmin =
-    selectedInstitution && byId[selectedInstitution]
-      ? byId[selectedInstitution].admins.includes(loggedUserId)
-      : false;
+  const isAdmin = byId[selectedInstitution]
+    ? byId[selectedInstitution].admins.includes(loggedUserId)
+    : false;
   let canSeeForum = isAdmin;
   if (subject) {
     canSeeForum =
@@ -134,10 +150,23 @@ function mapStateToProps(
   const canSendEmailToSubjectStudents =
     isAdmin || subject.teachers.some(user => user.id === loggedUserId);
 
+  let userRole = 'NO_ROLE';
+  if (isAdmin) {
+    userRole = 'ADMIN';
+  } else if (subject.teachers.some(user => user.id === loggedUserId)) {
+    userRole = 'TEACHER';
+  } else if (subject.students.some(user => user.id === loggedUserId)) {
+    userRole = 'STUDENT';
+  }
+
+  const canSeeGrades = isAdmin || subject.teachers.some(user => user.id === loggedUserId);
+
   return {
+    userRole,
     isAdmin,
     canSeeForum,
     canSendEmailToSubjectStudents,
+    canSeeGrades,
   };
 }
 

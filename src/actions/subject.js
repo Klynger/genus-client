@@ -1,6 +1,7 @@
 import { subjectSchema } from '../models/schema';
 import { dispatchEntities } from '../utils/helpers';
 import { requestGraphql } from '../utils/HTTPClient';
+import { queryFindSubjectById } from '../queryGenerators/subjectQueries';
 import {
   UPDATE_SUBJECT,
   SAVE_SUBJECT_TO_GRADE,
@@ -15,6 +16,17 @@ import {
   mutationAddStudentToSubject,
   mutationAddStudentToSubjectsInGrade,
 } from '../queryGenerators/SubjectMutations';
+
+export const findSubjectById = subjectId => dispatch => {
+  return requestGraphql(queryFindSubjectById(subjectId), localStorage.getItem('token')).then(
+    res => {
+      if (res.data.data && res.data.data.findSubjectById) {
+        dispatchEntities(res.data.data.findSubjectById, dispatch, subjectSchema);
+      }
+      return res;
+    },
+  );
+};
 
 export const saveSubject = subjectInput => dispatch =>
   requestGraphql(mutationCreateSubject(subjectInput), localStorage.getItem('token')).then(res => {

@@ -7,6 +7,8 @@ import {
   ADD_STUDENT_TO_SUBJECT,
   ADD_STUDENT_TO_SUBJECTS,
   ADD_DISCUSSION_TO_SUBJECT,
+  REMOVE_STUDENT_FROM_SUBJECT,
+  ADD_STUDENT_SUBJECT_TO_SUBJECT,
 } from '../actions/actionTypes';
 
 const DEFAULT_STATE = {
@@ -95,6 +97,21 @@ function subject(state = DEFAULT_STATE, action) {
         },
       };
 
+    case ADD_STUDENT_SUBJECT_TO_SUBJECT:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.payload.subjectId]: {
+            ...state.byId[action.payload.subjectId],
+            studentSubjects: concatIdIfNotContain(
+              state.byId[action.payload.subjectId].studentSubjects,
+              action.payload.studentSubjectId,
+            ),
+          },
+        },
+      };
+
     case UPDATE_SUBJECT:
       return {
         ...state,
@@ -103,6 +120,20 @@ function subject(state = DEFAULT_STATE, action) {
           [action.payload.subjectId]: {
             ...state.byId[action.payload.subjectId],
             name: action.payload.name,
+          },
+        },
+      };
+
+    case REMOVE_STUDENT_FROM_SUBJECT:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.toRemove.subjectId]: {
+            ...state.byId[action.toRemove.subjectId],
+            students: state.byId[action.toRemove.subjectId].students.filter(
+              student => student !== action.toRemove.studentId,
+            ),
           },
         },
       };

@@ -1,10 +1,25 @@
-#import "../notification/notificationFragment.graphql"
 #import "./userFragment.graphql"
+#import "../evaluation/evaluationFragment.graphql"
+#import "../notification/notificationFragment.graphql"
+#import "../evaluationResult/evaluationResultFragment.graphql"
+
 query {
   findLoggedUser {
     ...userFields
     notifications {
       ...notificationFields
+    }
+    teacherSubjects {
+      id
+    }
+    studentSubjects {
+      id
+    }
+    evaluationResults {
+      ...evaluationResultFields
+      evaluation {
+        ...evaluationFields
+      }
     }
   }
 }

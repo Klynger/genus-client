@@ -51,6 +51,8 @@ const styles = theme => ({
 class GradeInfo extends Component {
   constructor(props) {
     super(props);
+
+    this.menuId = 'grade-info__menu';
     this.state = {
       openMenu: false,
     };
@@ -124,7 +126,15 @@ class GradeInfo extends Component {
                 variant="subtitle1"
                 gutterBottom
               >
-                35 alunos
+                Quantidade de professores: {grade.qntTeachers}
+              </Typography>
+              <Typography
+                className={classes.infoText}
+                component="h3"
+                variant="subtitle1"
+                gutterBottom
+              >
+                Quantidade de alunos: {grade.qntStudents}
               </Typography>
             </div>
           </Paper>
@@ -145,6 +155,8 @@ GradeInfo.propTypes = {
   classes: PropTypes.object.isRequired,
   grade: PropTypes.shape({
     name: PropTypes.string,
+    qntStudents: PropTypes.number,
+    qntTeachers: PropTypes.number,
   }),
   onAddStudents: PropTypes.func.isRequired,
   onSendEmailOpen: PropTypes.func.isRequired,

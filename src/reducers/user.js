@@ -5,6 +5,7 @@ import {
   REMOVE_USER,
   REMOVE_ALL_USERS,
   READ_NOTIFICATION,
+  ADD_STUDENT_SUBJECT_TO_USER,
 } from '../actions/actionTypes';
 
 export const NO_USER_LOGGED = '-333';
@@ -47,6 +48,21 @@ function user(state = DEFAULT_STATE, action) {
       return {
         ...state,
         loggedUserId: action.id,
+      };
+
+    case ADD_STUDENT_SUBJECT_TO_USER:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.userId]: {
+            ...state.byId[action.userId],
+            studentSubjectRelations: concatIdIfNotContain(
+              state.byId[action.userId].studentSubjectRelations,
+              action.studentSubjectId,
+            ),
+          },
+        },
       };
 
     case READ_NOTIFICATION:

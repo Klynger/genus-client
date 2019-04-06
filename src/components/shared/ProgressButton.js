@@ -16,9 +16,9 @@ const styles = () => ({
   },
 });
 
-const ProgressButton = ({ classes, children, showProgress, ...buttonProps }) => (
+const ProgressButton = ({ classes, children, showProgress, disabled, ...buttonProps }) => (
   <div className={classes.wrapper}>
-    <Button {...buttonProps} disabled={showProgress}>
+    <Button {...buttonProps} disabled={showProgress || disabled}>
       {children}
     </Button>
     {showProgress && <CircularProgress size={24} className={classes.spinner} />}
@@ -28,12 +28,14 @@ const ProgressButton = ({ classes, children, showProgress, ...buttonProps }) => 
 ProgressButton.defaultProps = {
   color: 'primary',
   showProgress: false,
+  disabled: false,
 };
 
 ProgressButton.propTypes = {
   children: PropTypes.node.isRequired,
   classes: PropTypes.object.isRequired,
   color: PropTypes.oneOf(['default', 'inherit', 'primary', 'secondary']),
+  disabled: PropTypes.bool,
   showProgress: PropTypes.bool,
 };
 

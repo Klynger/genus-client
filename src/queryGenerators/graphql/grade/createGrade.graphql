@@ -6,6 +6,12 @@ mutation createGrade($input: GradeCreationInput!) {
     institution {
       id
     }
+    teachers {
+      id
+    }
+    students {
+      id
+    }
     subjects {
       id
     }

@@ -1,0 +1,10 @@
+#import "./evaluationFragment.graphql"
+
+mutation createEvaluation($input: EvaluationCreationInput!) {
+  createEvaluation(input: $input) {
+    ...evaluationFields
+    evaluationResults {
+      id
+    }
+  }
+}
