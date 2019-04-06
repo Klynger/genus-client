@@ -175,6 +175,7 @@ export default connect(
         .then(res => {
           if (res.data.data && res.data.data.addStudentsToSubjectsInGrade) {
             props.onClose();
+            window.location.reload();
           }
           setSubmitting(false);
           resetForm();
