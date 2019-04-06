@@ -1,3 +1,5 @@
+import { userSchema } from '../models/schema';
+import { dispatchEntities } from '../utils/helpers';
 import { requestGraphql } from '../utils/HTTPClient';
 import { findUserById, findLoggedUserQuery, loginQuery } from '../queryGenerators/userQueries';
 import {
@@ -8,19 +10,15 @@ import {
 } from './actionTypes';
 import {
   mutationUpdateUser,
-  removerUserFromInstitution,
   mutationCreateUser,
   removeStudentFromSubject,
+  removerUserFromInstitution,
 } from '../queryGenerators/userMutations';
 
 export const fetchLoggedUser = () => dispatch =>
   requestGraphql(findLoggedUserQuery(), localStorage.getItem('token')).then(res => {
     if (res.data.data && res.data.data.findLoggedUser) {
-      dispatch({
-        type: SAVE_USER,
-        user: res.data.data.findLoggedUser,
-      });
-
+      dispatchEntities(res.data.data.findLoggedUser, dispatch, userSchema);
       dispatch({
         type: SET_LOGGED_USER,
         id: res.data.data.findLoggedUser.id,

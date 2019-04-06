@@ -1,5 +1,10 @@
-import { concatIdIfNotContain } from '../utils/helpers';
-import { SAVE_GRADE, REMOVE_ALL_GRADES, SAVE_SUBJECT_TO_GRADE } from '../actions/actionTypes';
+import { concatIdIfNotContain, saveAllHelper } from '../utils/helpers';
+import {
+  SAVE_GRADE,
+  SAVE_ALL_GRADES,
+  REMOVE_ALL_GRADES,
+  SAVE_SUBJECT_TO_GRADE,
+} from '../actions/actionTypes';
 
 const DEFAULT_STATE = {
   byId: {},
@@ -36,6 +41,8 @@ function grade(state = DEFAULT_STATE, action) {
         },
         allIds: state.allIds,
       };
+    case SAVE_ALL_GRADES:
+      return saveAllHelper(action.payload, state);
     case REMOVE_ALL_GRADES:
       return DEFAULT_STATE;
 

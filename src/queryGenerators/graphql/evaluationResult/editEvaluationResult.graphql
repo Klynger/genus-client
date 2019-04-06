@@ -1,0 +1,7 @@
+#import "./evaluationFragment.graphql"
+
+mutation editEvaluationResult($resultId: ID!, $newResult: Float!) {
+  editEvaluationResult(resultId: $resultId, newResult: $newResult) {
+    ...evaluationResultFields
+  }
+}

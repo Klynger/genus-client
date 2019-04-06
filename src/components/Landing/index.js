@@ -50,7 +50,8 @@ class Landing extends Component {
           snackBarOptions.snackBarMsg = 'Houve algum problema na conexão.';
           break;
         default:
-          snackBarOptions.snackBarMsg = 'Algo errado aconteceu.';
+          snackBarOptions.snackBarMsg =
+            'Algo errado aconteceu. Tente novamente em alguns instantes.';
       }
     }
     this.setState(snackBarOptions);

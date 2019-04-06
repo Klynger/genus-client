@@ -1,0 +1,5 @@
+fragment evaluationFields on Evaluation {
+  id
+  name
+  weight
+}

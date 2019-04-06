@@ -1,8 +1,9 @@
-import { concatIdIfNotContain } from '../utils/helpers';
+import { concatIdIfNotContain, saveAllHelper } from '../utils/helpers';
 import {
   SAVE_INSTITUTION,
   SELECT_INSTITUTION,
   UPDATE_INSTITUTION,
+  SAVE_ALL_INSTITUTIONS,
   REMOVE_ALL_INSTITUTIONS,
   SAVE_GRADE_TO_INSTITUTION,
   REMOVE_USER_FROM_INSTITUION,
@@ -84,6 +85,8 @@ function institution(state = DEFAULT_STATE, action) {
         allIds: state.allIds,
       };
 
+    case SAVE_ALL_INSTITUTIONS:
+      return saveAllHelper(action.payload, state);
     case REMOVE_ALL_INSTITUTIONS:
       return DEFAULT_STATE;
 
