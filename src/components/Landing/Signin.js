@@ -50,9 +50,9 @@ function getErrorMessage(errorStatus) {
     case '0':
       return 'Houve algum problema na conexão.';
     case '404':
-      return 'Login ou senha estão incorretos';
+      return 'Usuário ou senha estão incorretos.';
     default:
-      return 'Algo de errado aconteceu.';
+      return 'Algo de errado aconteceu. Tente novamente em alguns instantes.';
   }
 }
 
