@@ -244,11 +244,12 @@ function mapToProps(
     let teachers = sub.teachers.filter(id => user.byId[id]);
     const admins = institution.byId[selectedInstitution].admins.filter(id => user.byId[id]);
     let evaluations = sub.evaluations.filter(id => evaluation.byId[id]);
-    const userRole = getUserRole(students, teachers, admins, loggedUserId);
+    const userRole = getUserRole(students, admins, teachers, loggedUserId);
     students = students.map(id => user.byId[id]);
     teachers = teachers.map(id => user.byId[id]);
     evaluations = evaluations.map(id => evaluation.byId[id]);
     const evaluationHeaders = [];
+
     evaluations.forEach(ev => {
       evaluationHeaders.push(ev.name);
       ev.evaluationResults = ev.evaluationResults

@@ -1,5 +1,9 @@
 #import "./userFragment.graphql"
+#import "../reply/replyFragment.graphql"
+#import "../reply/getReplyFragment.graphql"
+#import "../subject/subjectFragment.graphql"
 #import "../evaluation/evaluationFragment.graphql"
+#import "../discussion/discussionFragment.graphql"
 #import "../notification/notificationFragment.graphql"
 #import "../evaluationResult/evaluationResultFragment.graphql"
 
@@ -10,10 +14,76 @@ query {
       ...notificationFields
     }
     teacherSubjects {
-      id
+      ...subjectFields
+      grade {
+        id
+      }
+      evaluations {
+        ...evaluationFields
+        subject {
+          id
+        }
+        evaluationResults {
+          ...evaluationResultFields
+          user {
+            id
+          }
+          evaluation {
+            id
+          }
+        }
+      }
+      teachers {
+        id
+      }
+      students {
+        id
+      }
+      forum {
+        ...discussionFields
+        replies(page: 0, size: 10) {
+          ...getReplyFields
+        }
+        creator {
+          id
+        }
+      }
     }
     studentSubjects {
-      id
+      ...subjectFields
+      grade {
+        id
+      }
+      evaluations {
+        ...evaluationFields
+        subject {
+          id
+        }
+        evaluationResults {
+          ...evaluationResultFields
+          user {
+            id
+          }
+          evaluation {
+            id
+          }
+        }
+      }
+      teachers {
+        id
+      }
+      students {
+        id
+      }
+      forum {
+        ...discussionFields
+        replies(page: 0, size: 10) {
+          ...getReplyFields
+        }
+        creator {
+          id
+        }
+      }
     }
     evaluationResults {
       ...evaluationResultFields

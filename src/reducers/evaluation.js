@@ -25,7 +25,7 @@ function evaluation(state = DEFAULT_STATE, action) {
         allIds: concatIdIfNotContain(state.allIds, action.evaluation.id),
       };
     case SAVE_ALL_EVALUATIONS:
-      return saveAllHelper(action.payload, state);
+      return saveAllHelper(action.payload, state, true);
     case REMOVE_ALL_EVALUATIONS:
       return DEFAULT_STATE;
     default:

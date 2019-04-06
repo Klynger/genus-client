@@ -7,11 +7,11 @@ export const concatIdIfNotContain = (allIds = [], idsOrId) => {
   if (Array.isArray(idsOrId)) {
     idsOrId.forEach(id => {
       if (!allIds.includes(id)) {
-        allIds.push(id);
+        allIds = allIds.concat([id]);
       }
     });
   } else if (!allIds.includes(idsOrId)) {
-    allIds.push(idsOrId);
+    allIds = allIds.concat([idsOrId]);
   }
   return allIds;
 };

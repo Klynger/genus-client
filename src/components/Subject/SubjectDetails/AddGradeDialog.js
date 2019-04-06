@@ -110,7 +110,7 @@ class AddGradeDialog extends Component {
       };
       this.setState({ isSubmitting: true });
       createNewEvaluations(evaluationInput).then(() => {
-        this.setState({ isSubmitting: false });
+        window.location.reload();
       });
     }
   };
