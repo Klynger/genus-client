@@ -1,0 +1,19 @@
+#import "./subjectFragment.graphql"
+
+mutation addStudentsToSubject($subjectId: ID!, $studentsIds: [ID!]!) {
+  addStudentsToSubject(subjectId: $subjectId, studentsIds: $studentsIds) {
+    ...subjectFields
+    teachers {
+      id
+    }
+    students {
+      id
+    }
+    forum {
+      id
+    }
+    evaluations {
+      id
+    }
+  }
+}

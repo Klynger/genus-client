@@ -3,20 +3,19 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React, { Fragment } from 'react';
 import { Form, withFormik } from 'formik';
+import SearchField from '../../shared/SearchFields';
 import ProgressButton from '../../shared/ProgressButton';
-import CustomTextField from '../../shared/CustomTextField';
 import { capitalize } from '@material-ui/core/utils/helpers';
 import { defaultDialogBreakpoints } from '../../../utils/helpers';
-import { addStudentToSubjectsInGrade } from '../../../actions/subject';
+import { addStudentsToSubjectsInGrade } from '../../../actions/subject';
 import { DefaultDialogTransition } from '../../shared/SharedComponents';
 import AddUserDialogEmptyView from '../../shared/AddUserDialogEmptyView';
 import {
-  Zoom,
   Dialog,
-  MenuItem,
   withStyles,
   DialogTitle,
   DialogActions,
+  Button,
   DialogContent,
   withMobileDialog,
 } from '@material-ui/core';
@@ -26,13 +25,22 @@ const styles = theme => ({
   form: {
     display: 'flex',
     flexDirection: 'column',
+    minHeight: '150px',
+    overflow: 'hidden',
   },
   gradeName: {
     color: theme.palette.primary.main,
   },
 });
 
-const NO_STUDENT_SELECTED = '-1';
+function buildOptionsForSearchField(students) {
+  const options = [];
+  for (let i = 0; i < students.length; i += 1) {
+    const student = students[i];
+    options.push({ value: student.id, label: student.username });
+  }
+  return options;
+}
 
 const AddStudentToGradeDialog = ({
   open,
@@ -43,12 +51,15 @@ const AddStudentToGradeDialog = ({
   values,
   onClose,
   isSubmitting,
-  handleChange,
   handleSubmit,
   students,
+  setFieldValue,
+  setFieldTouched,
   grade,
   touched,
 }) => {
+  const options = buildOptionsForSearchField(students);
+
   return (
     <Dialog
       open={open}
@@ -66,31 +77,23 @@ const AddStudentToGradeDialog = ({
         <Fragment>
           <DialogContent>
             <Form className={classes.form}>
-              <CustomTextField
-                select
-                name="studentId"
-                label="Selecione um estudante"
-                id="add-student-to-grade-dialog__student"
-                className={classes.select}
-                onChange={handleChange}
-                value={values.studentId}
-                helperText={errors.studentId}
-                OnEnterHelperTextTransition={Zoom}
-                error={Boolean(touched.studentId && errors.studentId)}
-                showHelperText={Boolean(touched.studentId && errors.studentId)}
-              >
-                <MenuItem key={NO_STUDENT_SELECTED} value={NO_STUDENT_SELECTED}>
-                  Escolha uma opção
-                </MenuItem>
-                {students.map(({ id, name, username }) => (
-                  <MenuItem key={id} value={id}>
-                    {name || username}
-                  </MenuItem>
-                ))}
-              </CustomTextField>
+              <SearchField
+                isMulti
+                name="studentsIds"
+                onBlur={setFieldTouched}
+                onChange={setFieldValue}
+                options={options}
+                value={values.studentsIds}
+                error={errors.studentsIds}
+                touched={touched.studentsIds}
+                placeholder="Selecione um estudante"
+              />
             </Form>
           </DialogContent>
           <DialogActions>
+            <Button color="primary" onClick={onClose}>
+              Cancelar
+            </Button>
             <ProgressButton showProgress={isSubmitting} onClick={handleSubmit}>
               Adicionar
             </ProgressButton>
@@ -114,18 +117,19 @@ AddStudentToGradeDialog.propTypes = {
   classes: PropTypes.object.isRequired,
   errors: PropTypes.shape({
     gradeId: PropTypes.string,
-    studentId: PropTypes.string,
+    studentsIds: PropTypes.string,
   }).isRequired,
   fullScreen: PropTypes.bool.isRequired,
   grade: PropTypes.shape({
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
   }).isRequired,
-  handleChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   isSubmitting: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool,
+  setFieldTouched: PropTypes.func,
+  setFieldValue: PropTypes.func,
   students: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
@@ -135,18 +139,18 @@ AddStudentToGradeDialog.propTypes = {
   ),
   touched: PropTypes.shape({
     gradeId: PropTypes.bool,
-    studentId: PropTypes.bool,
+    studentsIds: PropTypes.bool,
   }).isRequired,
   values: PropTypes.shape({
     gradeId: PropTypes.string.isRequired,
-    studentId: PropTypes.string.isRequired,
+    studentsIds: PropTypes.string.isRequired,
   }).isRequired,
   width: PropTypes.string.isRequired,
 };
 
 function mapDispatchToProps(dispatch) {
   return {
-    addStudent: input => dispatch(addStudentToSubjectsInGrade(input)),
+    addStudent: input => dispatch(addStudentsToSubjectsInGrade(input)),
   };
 }
 
@@ -157,24 +161,24 @@ export default connect(
   withFormik({
     mapPropsToValues({ grade: { id: gradeId } }) {
       return {
-        studentId: '',
+        studentsIds: [],
         gradeId,
       };
     },
     validationSchema: () =>
       Yup.object().shape({
-        studentId: Yup.string()
-          .required('Selecione um estudante.')
-          .matches(new RegExp(`[^${NO_STUDENT_SELECTED}]`), 'Selecione um estudante.'),
+        studentsIds: Yup.array().required('Selecione um estudante.'),
       }),
-    handleSubmit(values, { props, setSubmitting }) {
+    handleSubmit(values, { props, setSubmitting, resetForm }) {
       props
         .addStudent(values)
         .then(res => {
-          if (res.data.data && res.data.data.addStudentToSubjectsInGrade) {
+          if (res.data.data && res.data.data.addStudentsToSubjectsInGrade) {
             props.onClose();
+            window.location.reload();
           }
           setSubmitting(false);
+          resetForm();
         })
         .catch(() => {
           // TODO
