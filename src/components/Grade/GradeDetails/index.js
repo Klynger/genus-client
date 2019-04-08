@@ -92,7 +92,6 @@ class GradeDetails extends Component {
               sendEmailType={emailType.TO_ALL_GRADE_STUDENTS}
               id={gradeId}
               onClose={this.handleSendEmailClose}
-              showSelectRole={false}
             />
           )}
           <SubjectsGrid gradeId={gradeId} subjects={grade.subjects} userRole={userRole} />
@@ -158,7 +157,7 @@ function mapToProps({ institution, grade, subject, user }, ownProps) {
       students: selectedInstitution.students.filter(id => user.byId[id]).map(id => user.byId[id]),
       canAddStudents: selectedInstitution.admins.some(id => id === user.loggedUserId),
       canSendEmailToGradeStudents:
-        selectedInstitution.teachers.some(id => id === user.loggedUserId) ||
+        propGrade.teachers.some(id => id === user.loggedUserId) ||
         selectedInstitution.admins.some(id => id === user.loggedUserId),
     };
   }

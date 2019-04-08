@@ -68,7 +68,8 @@ class SendEmailDialog extends PureComponent {
         <DialogTitle>Enviar Email</DialogTitle>
         <DialogContent>
           <Form>
-            {values.showSelectRole && (
+            {(values.sendEmailType === emailType.TO_ALL_TEACHERS ||
+              values.sendEmailType === emailType.TO_ALL_STUDENTS) && (
               <CustomTextField
                 select
                 name="role"
@@ -248,7 +249,6 @@ export default withMobileDialog({
                 props.onClose();
                 resetForm({
                   id: '',
-                  sendEmailType: '',
                   role: '',
                   text: '',
                   content: '',

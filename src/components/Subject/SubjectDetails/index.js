@@ -145,7 +145,6 @@ class SubjectDetailsPage extends Component {
                 sendEmailType={emailType.TO_ALL_SUBJECT_STUDENTS}
                 id={subject.id}
                 onClose={this.handleSendEmailClose}
-                showSelectRole={false}
               />
             )}
             <AddStudentDialog
@@ -170,7 +169,8 @@ class SubjectDetailsPage extends Component {
               onAddStudentClick={this.handleOpenAddStudent}
               onEditSubjectClick={this.handleEditSubjectClick}
               onAddGradeClick={this.handleOpenAddGrade}
-            />
+              onSendEmailOpen={this.handleSendEmailOpen}
+              />
             <RemoveStudentFromSubjectDialog
               open={openRemoveStudent}
               isSubmitting={waitingForRemoveStudent}
@@ -300,7 +300,9 @@ function mapToProps(
         students,
         evaluations,
       },
-      canSendEmailToSubjectStudents: sub.teachers.some(id => id === user.loggedUserId),
+      canSendEmailToSubjectStudents: 
+        teachers.some(id => id === user.loggedUserId) ||
+        admins.some(id => id === user.loggedUserId),
     };
   }
 

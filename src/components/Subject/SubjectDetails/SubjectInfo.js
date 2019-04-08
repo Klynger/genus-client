@@ -94,12 +94,7 @@ const SubjectInfo = ({
             Adicionar nova nota
           </Button>
         )}
-        {canSeeGrades && (
-          <Button color="primary" component={Link} to={`${history.location.pathname}/forum`}>
-            Mandar email para turma
-          </Button>
-        )}
-        {canSendEmailToSubjectStudents && (
+        {(userRole === 'TEACHER' || userRole === 'ADMIN') && (
           <Button color="primary" onClick={onSendEmailOpen}>
             Enviar Email
           </Button>

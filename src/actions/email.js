@@ -10,3 +10,5 @@ export const sendEmailTo = (SendEmailInput, id, EmailType) =>
       return res.request.status.toString();
     },
   );
+
+export default {};
