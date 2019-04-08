@@ -1,0 +1,7 @@
+#import "./evaluationResultFragment.graphql"
+
+mutation updateEvaluationResults($inputs: [UpdateEvaluationResult!]!) {
+  updateEvaluationResults(inputs: $inputs) {
+    ...evaluationResultFields
+  }
+}
