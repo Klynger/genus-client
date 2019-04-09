@@ -174,7 +174,7 @@ class StudentsTable extends Component {
         {selectedEvaluation && selectedStudent && (
           <EditEvaluationDialog
             open={openEditEvaluation}
-            evaluation={selectedEvaluation}
+            evaluationResult={selectedEvaluation}
             onClose={this.handleCloseEditEvaluation}
             student={selectedStudent}
           />
