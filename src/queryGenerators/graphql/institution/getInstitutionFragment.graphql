@@ -2,10 +2,34 @@ fragment getInstitutionFields on Institution {
   ...institutionFields
   grades {
     ...gradeFields
+    institution {
+      id
+    }
+    students {
+      id
+    }
+    teachers {
+      id
+    }
     subjects {
       ...subjectFields
       grade {
         id
+      }
+      evaluations {
+        ...evaluationFields
+        subject {
+          id
+        }
+        evaluationResults {
+          ...evaluationResultFields
+          user {
+            id
+          }
+          evaluation {
+            id
+          }
+        }
       }
       teachers {
         id
@@ -26,11 +50,32 @@ fragment getInstitutionFields on Institution {
   }
   admins {
     ...userFields
+    evaluationResults {
+      id
+    }
+    studentSubjects {
+      id
+    }
   }
   teachers {
     ...userFields
+    evaluationResults {
+      id
+    }
+    teacherSubjects {
+      id
+    }
   }
   students {
     ...userFields
+    studentSubjects {
+      id
+    }
+    evaluationResults {
+      ...evaluationResultFields
+      evaluation {
+        ...evaluationFields
+      }
+    }
   }
 }

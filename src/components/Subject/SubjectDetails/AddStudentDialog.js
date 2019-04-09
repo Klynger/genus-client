@@ -3,19 +3,16 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React, { Fragment } from 'react';
 import { Form, withFormik } from 'formik';
+import SearchField from '../../shared/SearchFields';
 import AddTeacherEmptyView from './AddTeacherEmptyView';
 import ProgressButton from '../../shared/ProgressButton';
 import { capitalize } from '@material-ui/core/utils/helpers';
-import { addStudentToSubject } from '../../../actions/subject';
+import { addStudentsToSubject } from '../../../actions/subject';
 import { defaultDialogBreakpoints } from '../../../utils/helpers';
 import { DefaultDialogTransition } from '../../shared/SharedComponents';
 import {
-  Zoom,
-  Input,
   Button,
   Dialog,
-  Select,
-  MenuItem,
   withStyles,
   InputLabel,
   DialogTitle,
@@ -32,26 +29,38 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     marginTop: 20,
+    minHeight: '150px',
+    overflow: 'hidden',
   },
 };
 
-const NO_STUDENT_SELECTED = '-1';
+function buildOptionsForSearchField(students) {
+  const options = [];
+  for (let i = 0; i < students.length; i += 1) {
+    const student = students[i];
+    options.push({ value: student.id, label: student.username });
+  }
+  return options;
+}
 
 const AddStudentDialog = ({
   classes,
   errors,
   fullScreen,
-  handleChange,
   handleSubmit,
   isSubmitting,
   onClose,
   open,
   students,
+  setFieldValue,
+  setFieldTouched,
   subject,
   touched,
   values,
   width,
 }) => {
+  const options = buildOptionsForSearchField(students);
+
   return (
     <Dialog
       open={open}
@@ -67,27 +76,19 @@ const AddStudentDialog = ({
         <Fragment>
           <DialogContent>
             <Form className={classes.form}>
-              <FormControl error={touched.studentId && Boolean(errors.studentId)}>
+              <FormControl error={touched.studentsIds && Boolean(errors.studentsIds)}>
                 <InputLabel htmlFor="add-student-dialog__student-id-field">Aluno</InputLabel>
-                <Select
-                  value={values.studentId}
-                  onChange={handleChange}
-                  input={<Input name="studentId" id="add-student-dialog__student-id-field" />}
-                >
-                  <MenuItem value={NO_STUDENT_SELECTED} disabled>
-                    Selecione um Aluno
-                  </MenuItem>
-                  {students.map(({ id, name, username }) => (
-                    <MenuItem key={id} value={id}>
-                      {name || username}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {touched.studentId && Boolean(errors.studentId) && (
-                  <Zoom in>
-                    <FormHelperText>{errors.studentId}</FormHelperText>
-                  </Zoom>
-                )}
+                <SearchField
+                  isMulti
+                  name="studentsIds"
+                  onBlur={setFieldTouched}
+                  onChange={setFieldValue}
+                  options={options}
+                  value={values.studentsIds}
+                  error={errors.studentsIds}
+                  touched={touched.studentsIds}
+                  placeholder="Selecione um estudante"
+                />
               </FormControl>
             </Form>
             {errors.requestError && (
@@ -116,14 +117,15 @@ AddStudentDialog.propTypes = {
   classes: PropTypes.object.isRequired,
   errors: PropTypes.shape({
     requestError: PropTypes.string,
-    studentId: PropTypes.string,
+    studentsIds: PropTypes.string,
   }).isRequired,
   fullScreen: PropTypes.bool.isRequired,
-  handleChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   isSubmitting: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
+  setFieldTouched: PropTypes.func,
+  setFieldValue: PropTypes.func,
   students: PropTypes.array,
   subject: PropTypes.object.isRequired,
   theme: PropTypes.shape({
@@ -134,10 +136,10 @@ AddStudentDialog.propTypes = {
     }).isRequired,
   }).isRequired,
   touched: PropTypes.shape({
-    studentId: PropTypes.bool,
+    studentsIds: PropTypes.bool,
   }).isRequired,
   values: PropTypes.shape({
-    studentId: PropTypes.string.isRequired,
+    studentsIds: PropTypes.array.isRequired,
     subjectId: PropTypes.string.isRequired,
   }).isRequired,
   width: PropTypes.string.isRequired,
@@ -159,7 +161,7 @@ function mapStateToProps({ institution, user }) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    addStudent: input => dispatch(addStudentToSubject(input)),
+    addStudents: input => dispatch(addStudentsToSubject(input)),
   };
 }
 
@@ -174,33 +176,31 @@ export default connect(
       withFormik({
         mapPropsToValues({ subject: { id } }) {
           return {
-            studentId: NO_STUDENT_SELECTED,
+            studentsIds: [],
             subjectId: id,
           };
         },
         validationSchema: () => {
           return Yup.object().shape({
-            studentId: Yup.string().matches(
-              new RegExp(`[^${NO_STUDENT_SELECTED}]`),
-              'Selecione um aluno.',
-            ),
+            studentsIds: Yup.array().required('Selecione um estudante.'),
           });
         },
         handleSubmit(values, { props, resetForm, setErrors, setSubmitting }) {
           props
-            .addStudent(values)
+            .addStudents(values)
             .then(res => {
               let callResetForm = false;
-              if (res.data.data && res.data.data.addStudentToSubject) {
+              if (res.data.data && res.data.data.addStudentsToSubject) {
                 props.onClose();
                 callResetForm = true;
+                window.location.reload();
               } else {
                 setErrors({ requestError: 'Algo de errado aconteceu. Tente Novamente' });
               }
               setTimeout(() => {
                 if (callResetForm) {
                   resetForm({
-                    studentId: NO_STUDENT_SELECTED,
+                    studentsIds: [],
                     subjectId: props.subject.id,
                   });
                 }

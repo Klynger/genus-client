@@ -1,11 +1,13 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import EditUserDialog from './EditUserDialog';
+import CardDetailsList from './CardDetailsList';
 import React, { Component, Fragment } from 'react';
+import { userRoles } from '../../../utils/constants';
 import EditPasswordDialog from './EditPasswordDialog';
 import ImageUploader from '../../shared/ImageUploader';
 import deepOrange from '@material-ui/core/colors/deepOrange';
-import { getFirstInitialsCapitalized } from '../../../utils/helpers';
+import { getFirstInitialsCapitalized, getRoleFromInstitution } from '../../../utils/helpers';
 import { Card, Button, withStyles, Typography, CardContent, CardActions } from '@material-ui/core';
 
 const styles = theme => ({
@@ -32,6 +34,9 @@ const styles = theme => ({
   actions: {
     display: 'flex',
     justifyContent: 'flex-end',
+  },
+  lastChild: {
+    marginBottom: theme.spacing.unit * 3,
   },
 });
 
@@ -66,7 +71,7 @@ class UserInfo extends Component {
   };
 
   render() {
-    const { classes, loggedUserId, user } = this.props;
+    const { classes, gradeList, loggedUserId, subjectList, user } = this.props;
     const { editUserOpen, editPasswordOpen } = this.state;
 
     return (
@@ -100,6 +105,16 @@ class UserInfo extends Component {
             </CardActions>
           )}
         </Card>
+        {gradeList && (
+          <CardDetailsList className={classes.cardDetails} contentList={gradeList} label="Séries" />
+        )}
+        {subjectList && (
+          <CardDetailsList
+            className={classes.lastChild}
+            contentList={subjectList}
+            label="Disciplinas"
+          />
+        )}
       </Fragment>
     );
   }
@@ -107,14 +122,49 @@ class UserInfo extends Component {
 
 UserInfo.propTypes = {
   classes: PropTypes.object.isRequired,
+  gradeList: PropTypes.array,
   loggedUserId: PropTypes.string.isRequired,
+  subjectList: PropTypes.array,
   user: PropTypes.object.isRequired,
 };
 
-function mapToProps({ user: { loggedUserId } }) {
-  return {
-    loggedUserId,
+const getSubjectListByRole = (user, selectedUser) => {
+  if (selectedUser.role === userRoles.STUDENT) {
+    return user.byId[selectedUser.loggedUserId].studentSubjects;
+  }
+  return user.byId[selectedUser.loggedUserId].teacherSubjects;
+};
+
+function mapToProps({ user, institution, subject, grade }) {
+  const result = {
+    loggedUserId: user.loggedUserId,
   };
+
+  if (institution.byId[institution.selectedInstitution]) {
+    result.role = getRoleFromInstitution(
+      result.loggedUserId,
+      institution.byId[institution.selectedInstitution],
+    );
+    const hasSubjectList = result.role === userRoles.STUDENT || result.role === userRoles.TEACHER;
+    if (user.byId[result.loggedUserId] && hasSubjectList) {
+      const userSubjectIdList = getSubjectListByRole(user, result, grade, subject);
+      result.subjectList = userSubjectIdList.map(id => {
+        const selectedSubject = subject.byId[id];
+        if (selectedSubject) {
+          selectedSubject.gradeName = grade.byId[selectedSubject.grade].name;
+        }
+        return selectedSubject;
+      });
+
+      if (result.role === userRoles.TEACHER) {
+        result.gradeList = userSubjectIdList
+          .map(id => grade.byId[subject.byId[id].grade])
+          .reduce((prev, curr) => (!prev.includes(curr) ? [...prev, curr] : prev), []);
+      }
+    }
+  }
+
+  return result;
 }
 
 export default connect(mapToProps)(withStyles(styles)(UserInfo));

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import GradesInfo from './GradesInfo';
+// import GradesInfo from './GradesInfo';
 import SubjectInfo from './SubjectInfo';
 import StudentsTable from './StudentsTable';
 import AddGradeDialog from './AddGradeDialog';
@@ -9,45 +9,12 @@ import AddteacherDialog from './AddTeacherDialog';
 import React, { Component, Fragment } from 'react';
 import { Fade, withTheme } from '@material-ui/core';
 import EditSubjectDialog from './EditSubjectDialog';
+import { getUserRole } from '../../../utils/helpers';
 import { removeStudentFromSubjectId } from '../../../actions/user';
 import DefaultContainerRoute from '../../shared/DefaultContainerRoute';
 import RemoveStudentFromSubjectDialog from './RemoveStudentFromSubjectDialog';
 
-/*
- * This component needs data that is fetched by other
- * component, it needs to change.
- * TODO add apollo-graphql and me this component get its
- * own data.
- */
 class SubjectDetailsPage extends Component {
-  static getDerivedStateFromProps(nextProps) {
-    if (nextProps.subject && nextProps.subject.students) {
-      const { students } = nextProps.subject;
-      let evaluationHeaders = [];
-      const studentsData = students.map(student => {
-        const { studentSubject } = student;
-        const evaluations =
-          studentSubject && studentSubject.evaluations ? studentSubject.evaluations : [];
-
-        const output = {
-          id: student.id,
-          username: student.username,
-          email: student.email,
-          evaluations,
-        };
-        return output;
-      });
-
-      if (studentsData.length > 0) {
-        evaluationHeaders = studentsData[0].evaluations.map(ev => ev.name);
-      }
-
-      return { studentsData, evaluationHeaders };
-    }
-
-    return null;
-  }
-
   constructor(props) {
     super(props);
 
@@ -131,7 +98,7 @@ class SubjectDetailsPage extends Component {
   };
 
   render() {
-    const { subject, isStudent, user, loggedUserId } = this.props;
+    const { subject, loggedUserId } = this.props;
     const {
       openAddGrade,
       openAddStudent,
@@ -141,42 +108,19 @@ class SubjectDetailsPage extends Component {
       waitingForRemoveStudent,
     } = this.state;
 
-    // TODO: remove this when grade is integrated with backend.
-    const userStudentSubjects = [
-      {
-        user: {
-          name: 'aluno 1',
-          id: 1,
-          email: 'alu1@gmail.com',
-        },
-        evaluations: [
-          {
-            name: 'Prova 1',
-            result: 10,
-            weight: 0.4,
-          },
-          {
-            name: 'Prova 2',
-            result: 8,
-            weight: 0.6,
-          },
-        ],
-      },
-    ];
-
     let toRender;
 
     if (subject) {
       const { userRole } = this.props;
-      if (isStudent) {
+      if (userRole === 'STUDENT') {
         toRender = (
           <Fragment>
             <SubjectInfo subject={subject} />
-            <GradesInfo user={user} studentSubjects={userStudentSubjects} />
+            {/* <GradesInfo user={user} studentSubjects={userStudentSubjects} /> */}
           </Fragment>
         );
       } else {
-        const { studentsData, evaluationHeaders } = this.state;
+        const { studentsData, evaluationHeaders } = this.props;
         toRender = (
           <Fragment>
             <AddteacherDialog
@@ -237,9 +181,22 @@ class SubjectDetailsPage extends Component {
 }
 
 SubjectDetailsPage.propTypes = {
-  isStudent: PropTypes.bool,
+  evaluationHeaders: PropTypes.arrayOf(PropTypes.string).isRequired,
   loggedUserId: PropTypes.string.isRequired,
   removeStudentFromSubject: PropTypes.func.isRequired,
+  studentsData: PropTypes.arrayOf(
+    PropTypes.shape({
+      email: PropTypes.string.isRequired,
+      evaluations: PropTypes.arrayOf(
+        PropTypes.shape({
+          id: PropTypes.string.isRequired,
+          result: PropTypes.number.isRequired,
+        }),
+      ).isRequired,
+      id: PropTypes.string.isRequired,
+      username: PropTypes.string.isRequired,
+    }),
+  ),
   subject: PropTypes.shape({
     id: PropTypes.string.isRequired,
     students: PropTypes.arrayOf(
@@ -266,12 +223,12 @@ SubjectDetailsPage.propTypes = {
   //     }).isRequired,
   //   }).isRequired,
   // }).isRequired,
-  user: PropTypes.object,
+  // user: PropTypes.object,
   userRole: PropTypes.string.isRequired,
 };
 
 function mapToProps(
-  { subject, user, studentSubject, evaluation, institution },
+  { subject, user, evaluation, institution, evaluationResult },
   {
     match: {
       params: { subjectId },
@@ -283,47 +240,49 @@ function mapToProps(
   let result = { loggedUserId };
   if (sub) {
     const { selectedInstitution } = institution;
-    const students = sub.students.filter(id => user.byId[id]).map(id => user.byId[id]);
-    const isStudent = sub.students.some(userId => userId === loggedUserId);
-    const isTeacher = sub.teachers.some(userId => userId === loggedUserId);
-    const isAdmin = institution.byId[selectedInstitution].admins.includes(loggedUserId);
-    let userRole = 'NO_ROLE';
+    let students = sub.students.filter(id => user.byId[id]);
+    let teachers = sub.teachers.filter(id => user.byId[id]);
+    const admins = institution.byId[selectedInstitution].admins.filter(id => user.byId[id]);
+    let evaluations = sub.evaluations.filter(id => evaluation.byId[id]);
+    const userRole = getUserRole(students, admins, teachers, loggedUserId);
+    students = students.map(id => user.byId[id]);
+    teachers = teachers.map(id => user.byId[id]);
+    evaluations = evaluations.map(id => evaluation.byId[id]);
+    const evaluationHeaders = [];
 
-    if (isStudent) {
-      userRole = 'STUDENT';
-    } else if (isTeacher) {
-      userRole = 'TEACHER';
-    } else if (isAdmin) {
-      userRole = 'ADMIN';
-    }
-
-    students.forEach(student => {
-      const studentSubArr = student.studentSubjectRelations
-        .filter(id => {
-          const studentSub = studentSubject.byId[id];
-          if (studentSub && studentSub.subject === sub.id) {
-            return true;
-          }
-          return false;
-        })
-        .map(id => {
-          const ss = studentSubject.byId[id];
-          ss.evaluations = ss.evaluations
-            .filter(evId => evaluation.byId[evId])
-            .map(evId => evaluation.byId[evId]);
-          return ss;
-        });
-
-      student.studentSubject = studentSubArr[0];
+    evaluations.forEach(ev => {
+      evaluationHeaders.push(ev.name);
+      ev.evaluationResults = ev.evaluationResults
+        .filter(id => evaluationResult.byId[id])
+        .map(id => evaluationResult.byId[id]);
     });
+    const studentsData = students.map(student => {
+      const studentData = {
+        id: student.id,
+        username: student.username,
+        email: student.email,
+        evaluations: evaluations.map(ev => {
+          const evResult = ev.evaluationResults.filter(re => re.user === student.id);
+          if (evResult.length === 1) {
+            return evResult[0];
+          }
+          return 0;
+        }),
+      };
+
+      return studentData;
+    });
+
     result = {
-      isStudent,
       userRole,
+      studentsData,
+      evaluationHeaders,
       loggedUserId,
       subject: {
         ...sub,
-        teachers: sub.teachers.filter(id => user.byId[id]).map(id => user.byId[id]),
+        teachers,
         students,
+        evaluations,
       },
     };
   }

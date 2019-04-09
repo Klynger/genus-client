@@ -106,7 +106,7 @@ const EditPasswordDialog = ({
           error={Boolean(errors.passwordConfirm) && touched.passwordConfirm}
         >
           <InputLabel htmlFor="edit-password-dialog__password-confirm-field">
-            Confirmação de senha
+            Confirmação da nova senha
           </InputLabel>
           <Input
             type="password"

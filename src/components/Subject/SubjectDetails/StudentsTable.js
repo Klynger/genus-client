@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import React, { Component, Fragment } from 'react';
 import { DeleteForever } from '@material-ui/icons';
 import EditEvaluationDialog from './EditEvaluationDialog';
@@ -31,6 +32,9 @@ const styles = theme => ({
     [theme.breakpoints.down('xs')]: {
       display: 'none',
     },
+  },
+  centerColumn: {
+    textAlign: 'center',
   },
   emptyView: {
     marginLeft: theme.spacing.unit * 3,
@@ -105,7 +109,11 @@ class StudentsTable extends Component {
                     <TableCell variant="head">Email</TableCell>
                     {(userRole === 'TEACHER' || userRole === 'ADMIN') &&
                       evaluationHeaders.map(header => (
-                        <TableCell key={header} variant="head" className={classes.middleColumns}>
+                        <TableCell
+                          key={header}
+                          variant="head"
+                          className={classNames(classes.middleColumns, classes.centerColumn)}
+                        >
                           {header}
                         </TableCell>
                       ))}
@@ -120,7 +128,7 @@ class StudentsTable extends Component {
                         <TableCell>{student.username}</TableCell>
                         <TableCell>{student.email}</TableCell>
                         {student.evaluations.map(evaluation => (
-                          <TableCell key={evaluation.id}>
+                          <TableCell key={evaluation.id} className={classes.centerColumn}>
                             {userRole === 'TEACHER' ? (
                               <Button
                                 onClick={() => this.handleOpenEditEvaluation(evaluation, student)}
@@ -174,7 +182,7 @@ class StudentsTable extends Component {
         {selectedEvaluation && selectedStudent && (
           <EditEvaluationDialog
             open={openEditEvaluation}
-            evaluation={selectedEvaluation}
+            evaluationResult={selectedEvaluation}
             onClose={this.handleCloseEditEvaluation}
             student={selectedStudent}
           />
@@ -200,9 +208,7 @@ StudentsTable.propTypes = {
       evaluations: PropTypes.arrayOf(
         PropTypes.shape({
           id: PropTypes.string.isRequired,
-          name: PropTypes.string.isRequired,
           result: PropTypes.number.isRequired,
-          weight: PropTypes.number.isRequired,
         }),
       ).isRequired,
       id: PropTypes.string.isRequired,

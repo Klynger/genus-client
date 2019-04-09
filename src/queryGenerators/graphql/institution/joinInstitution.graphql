@@ -2,10 +2,12 @@
 #import "./institutionFragment.graphql"
 #import "../grade/gradeFragment.graphql"
 #import "../reply/replyFragment.graphql"
-#import ./getInstitutionFragment.graphql"
+#import "./getInstitutionFragment.graphql"
 #import "../reply/getReplyFragment.graphql"
 #import "../subject/subjectFragment.graphql"
+#import "../evaluation/evaluationFragment.graphql"
 #import "../discussion/discussionFragment.graphql"
+#import "../evaluationResult/evaluationResultFragment.graphql"
 
 mutation joinNewInstitution($code: String!) {
   joinInstitution(code: $code) {

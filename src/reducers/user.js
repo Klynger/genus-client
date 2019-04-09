@@ -1,8 +1,9 @@
-import { concatIdIfNotContain } from '../utils/helpers';
+import { concatIdIfNotContain, saveAllHelper } from '../utils/helpers';
 import {
   SAVE_USER,
-  SET_LOGGED_USER,
   REMOVE_USER,
+  SAVE_ALL_USERS,
+  SET_LOGGED_USER,
   REMOVE_ALL_USERS,
   READ_NOTIFICATION,
   ADD_STUDENT_SUBJECT_TO_USER,
@@ -65,6 +66,8 @@ function user(state = DEFAULT_STATE, action) {
         },
       };
 
+    case SAVE_ALL_USERS:
+      return saveAllHelper(action.payload, state);
     case READ_NOTIFICATION:
       return {
         ...state,

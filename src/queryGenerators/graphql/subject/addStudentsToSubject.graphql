@@ -1,7 +1,7 @@
 #import "./subjectFragment.graphql"
 
-mutation addStudentToSubject($subjectId: ID!, $studentId: ID!) {
-  addStudentToSubject(subjectId: $subjectId, studentId: $studentId) {
+mutation addStudentsToSubject($subjectId: ID!, $studentsIds: [ID!]!) {
+  addStudentsToSubject(subjectId: $subjectId, studentsIds: $studentsIds) {
     ...subjectFields
     teachers {
       id

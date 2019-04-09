@@ -1,8 +1,11 @@
-import { dispatchEntities } from '../utils/helpers';
+import { normalize } from 'normalizr';
 import { evaluationSchema } from '../models/schema';
 import { requestGraphql } from '../utils/HTTPClient';
-import { mutationCreateEvaluation } from '../queryGenerators/evaluationMutations';
-import { ADD_EVALUATION_TO_STUDENT_SUBJECT, SAVE_EVALUATION } from './actionTypes';
+import { SAVE_EVALUATION, SAVE_ALL_EVALUATION_RESULTS, SAVE_ALL_EVALUATIONS } from './actionTypes';
+import {
+  mutationCreateEvaluation,
+  mutationEditEvaluation,
+} from '../queryGenerators/evaluationMutations';
 
 export const createEvaluation = newEvaluation => dispatch => {
   return requestGraphql(
@@ -10,13 +13,14 @@ export const createEvaluation = newEvaluation => dispatch => {
     localStorage.getItem('token'),
   ).then(res => {
     if (res.data.data && res.data.data.createEvaluation) {
-      dispatchEntities(res.data.data.createEvaluation, dispatch, evaluationSchema);
+      const { entities } = normalize(res.data.data.createEvaluation, evaluationSchema);
       dispatch({
-        type: ADD_EVALUATION_TO_STUDENT_SUBJECT,
-        payload: {
-          studentSubjectId: newEvaluation.userId + newEvaluation.subjectId,
-          evaluationId: res.data.data.createEvaluation.id,
-        },
+        type: SAVE_ALL_EVALUATION_RESULTS,
+        payload: entities.evaluationResult,
+      });
+      dispatch({
+        type: SAVE_ALL_EVALUATIONS,
+        payload: entities.evaluation,
       });
     } else {
       // TODO
@@ -25,40 +29,15 @@ export const createEvaluation = newEvaluation => dispatch => {
   });
 };
 
-export const createEvaluations = evaluationInputs => dispatch => {
-  return Promise.all(
-    evaluationInputs.map(evaluationInput => {
-      return requestGraphql(
-        mutationCreateEvaluation(evaluationInput),
-        localStorage.getItem('token'),
-      );
-    }),
-  ).then(responses => {
-    responses.map((res, i) => {
-      if (res.data.data.createEvaluation) {
-        const evaluationInput = evaluationInputs[i];
-        dispatch({
-          type: SAVE_EVALUATION,
-          evaluation: res.data.data.createEvaluation,
-        });
-        dispatch({
-          type: ADD_EVALUATION_TO_STUDENT_SUBJECT,
-          payload: {
-            studentSubjectId: evaluationInput.userId + evaluationInput.subjectId,
-            evaluationId: res.data.data.createEvaluation.id,
-          },
-        });
-        return res.data.data.createEvaluation;
-      }
-      // TODO treat errors
-      return {
-        id: '-1',
-        result: 1,
-        name: 'Error Evaluation',
-      };
-    });
-    return responses;
+export const editEvaluation = input => dispatch => {
+  return requestGraphql(mutationEditEvaluation(input), localStorage.getItem('token')).then(res => {
+    if (res.data.data && res.data.data.editEvaluation) {
+      dispatch({
+        type: SAVE_EVALUATION,
+        evaluation: res.data.data.editEvaluation,
+      });
+    } else {
+      // TODO
+    }
   });
 };
-
-export default {};

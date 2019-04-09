@@ -1,9 +1,31 @@
 #import "./subjectFragment.graphql"
 #import "../user/userFragment.graphql"
+#import "../reply/replyFragment.graphql"
+#import "../discussion/discussionFragment.graphql"
+#import "../evaluation/evaluationFragment.graphql"
+#import "../evaluationResult/evaluationResultFragment.graphql"
 
 query findSubjectById($input: ID!) {
   findSubjectById(input: $input) {
     ...subjectFields
+    grade {
+      id
+    }
+    evaluations {
+      ...evaluationFields
+      subject {
+        id
+      }
+      evaluationResults {
+        ...evaluationResultFields
+        user {
+          id
+        }
+        evaluation {
+          id
+        }
+      }
+    }
     teachers {
       ...userFields
     }
@@ -11,10 +33,16 @@ query findSubjectById($input: ID!) {
       ...userFields
     }
     forum {
-      id
-    }
-    grade {
-      id
+      ...discussionFields
+      replies(page: 0, size: 10) {
+        ...replyFields
+        creator {
+          ...userFields
+        }
+      }
+      creator {
+        ...userFields
+      }
     }
   }
 }
