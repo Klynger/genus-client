@@ -193,6 +193,7 @@ export default connect(
               if (res.data.data && res.data.data.addStudentsToSubject) {
                 props.onClose();
                 callResetForm = true;
+                window.location.reload();
               } else {
                 setErrors({ requestError: 'Algo de errado aconteceu. Tente Novamente' });
               }
