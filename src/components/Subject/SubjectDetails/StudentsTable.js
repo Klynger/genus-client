@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import React, { Component, Fragment } from 'react';
 import { DeleteForever } from '@material-ui/icons';
 import EditEvaluationDialog from './EditEvaluationDialog';
@@ -111,7 +112,7 @@ class StudentsTable extends Component {
                         <TableCell
                           key={header}
                           variant="head"
-                          className={[classes.middleColumns, classes.centerColumn].join(' ')}
+                          className={classNames(classes.middleColumns, classes.centerColumn)}
                         >
                           {header}
                         </TableCell>
