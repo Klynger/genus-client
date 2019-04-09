@@ -32,6 +32,9 @@ const styles = theme => ({
       display: 'none',
     },
   },
+  centerColumn: {
+    textAlign: 'center',
+  },
   emptyView: {
     marginLeft: theme.spacing.unit * 3,
     marginBottom: theme.spacing.unit * 2,
@@ -105,7 +108,11 @@ class StudentsTable extends Component {
                     <TableCell variant="head">Email</TableCell>
                     {(userRole === 'TEACHER' || userRole === 'ADMIN') &&
                       evaluationHeaders.map(header => (
-                        <TableCell key={header} variant="head" className={classes.middleColumns}>
+                        <TableCell
+                          key={header}
+                          variant="head"
+                          className={[classes.middleColumns, classes.centerColumn].join(' ')}
+                        >
                           {header}
                         </TableCell>
                       ))}
@@ -120,7 +127,7 @@ class StudentsTable extends Component {
                         <TableCell>{student.username}</TableCell>
                         <TableCell>{student.email}</TableCell>
                         {student.evaluations.map(evaluation => (
-                          <TableCell key={evaluation.id}>
+                          <TableCell key={evaluation.id} className={classes.centerColumn}>
                             {userRole === 'TEACHER' ? (
                               <Button
                                 onClick={() => this.handleOpenEditEvaluation(evaluation, student)}
