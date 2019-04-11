@@ -7,11 +7,11 @@ export const concatIdIfNotContain = (allIds = [], idsOrId) => {
   if (Array.isArray(idsOrId)) {
     idsOrId.forEach(id => {
       if (!allIds.includes(id)) {
-        allIds.push(id);
+        allIds = allIds.concat([id]);
       }
     });
   } else if (!allIds.includes(idsOrId)) {
-    allIds.push(idsOrId);
+    allIds = allIds.concat([idsOrId]);
   }
   return allIds;
 };
@@ -69,28 +69,41 @@ export const defaultDialogBreakpoints = () => ({
 
 // ----------------------------------------------------------------------
 
-function getSaveAction(entityName) {
-  return `SAVE_${entityName.toUpperCase()}`;
+export function saveAllHelper(payload, state) {
+  const ids = Object.keys(payload);
+
+  const partialById = ids.reduce(
+    (acc, curId) => ({
+      ...acc,
+      [curId]: {
+        ...state.byId[curId],
+        ...payload[curId],
+      },
+    }),
+    {},
+  );
+
+  const newState = {
+    ...state,
+    byId: {
+      ...state.byId,
+      ...partialById,
+    },
+    allIds: concatIdIfNotContain(state.allIds, ids),
+  };
+  return newState;
 }
 
-// function getSaveAllAction(entityName) {
-//   return `SAVE_ALL_${entityName.toUpperCase()}`;
-// }
+function getSaveAllAction(entityName) {
+  return `SAVE_ALL_${entityName.toUpperCase()}`;
+}
 
-function dispatchById(objects, dispatch, entityName) {
-  const actionType = getSaveAction(entityName);
-  Object.keys(objects).forEach(id => {
-    dispatch({
-      type: actionType,
-      [entityName]: objects[id],
-    });
+function dispatchById(payload, dispatch, entityName) {
+  const actionType = getSaveAllAction(entityName);
+  dispatch({
+    type: actionType,
+    payload,
   });
-  // const actionType = getSaveAllAction(entityName);
-  // const payload = Object.keys(objects).map(id => objects[id]);
-  // dispatch({
-  //   type: actionType,
-  //   payload,
-  // });
 }
 
 export function dispatchEntities(denormalizedData, dispatch, schema) {
@@ -113,3 +126,25 @@ export function getUserRole(studentList, adminList, teacherList, userId) {
   }
   return role;
 }
+
+// ------------------------------------------------------------------------
+
+export const stringToColor = string => {
+  let hash = 0;
+  let i;
+
+  /* eslint-disable no-bitwise */
+  for (i = 0; i < string.length; i += 1) {
+    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  let color = '#';
+
+  for (i = 0; i < 3; i += 1) {
+    const value = (hash >> (i * 8)) & 0xff;
+    color += `00${value.toString(16)}`.substr(-2);
+  }
+  /* eslint-enable no-bitwise */
+
+  return color;
+};

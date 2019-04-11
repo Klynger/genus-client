@@ -13,6 +13,9 @@ query findSubjectById($input: ID!) {
     }
     evaluations {
       ...evaluationFields
+      subject {
+        id
+      }
       evaluationResults {
         ...evaluationResultFields
         user {

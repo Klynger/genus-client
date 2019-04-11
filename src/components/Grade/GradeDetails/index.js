@@ -81,7 +81,7 @@ class GradeDetails extends Component {
           />
           <GradeInfo
             grade={grade}
-            canAddStudents={canAddStudents}
+            canAddStudents={canAddStudents && grade.subjects.length > 0}
             canSendEmailToGradeStudents={canSendEmailToGradeStudents}
             onAddStudents={this.handleAddStudentsOpen}
             onSendEmailOpen={this.handleSendEmailOpen}

@@ -1,11 +1,14 @@
-import { concatIdIfNotContain } from '../utils/helpers';
+import { concatIdIfNotContain, saveAllHelper } from '../utils/helpers';
 import {
   SAVE_SUBJECT,
   UPDATE_SUBJECT,
+  SAVE_ALL_SUBJECTS,
   REMOVE_ALL_SUBJECTS,
   ADD_TEACHER_TO_SUBJECT,
   ADD_STUDENT_TO_SUBJECT,
+  ADD_STUDENTS_TO_SUBJECT,
   ADD_STUDENT_TO_SUBJECTS,
+  ADD_STUDENTS_TO_SUBJECTS,
   ADD_DISCUSSION_TO_SUBJECT,
   REMOVE_STUDENT_FROM_SUBJECT,
   ADD_STUDENT_SUBJECT_TO_SUBJECT,
@@ -61,6 +64,21 @@ function subject(state = DEFAULT_STATE, action) {
         },
       };
 
+    case ADD_STUDENTS_TO_SUBJECT:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.payload.subjectId]: {
+            ...state.byId[action.payload.subjectId],
+            students: concatIdIfNotContain(
+              state.byId[action.payload.subjectId].students,
+              action.payload.studentsIds,
+            ),
+          },
+        },
+      };
+
     case ADD_STUDENT_TO_SUBJECTS:
       return {
         ...state,
@@ -79,6 +97,14 @@ function subject(state = DEFAULT_STATE, action) {
             }),
             {},
           ),
+        },
+      };
+
+    case ADD_STUDENTS_TO_SUBJECTS:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
         },
       };
 
@@ -138,6 +164,8 @@ function subject(state = DEFAULT_STATE, action) {
         },
       };
 
+    case SAVE_ALL_SUBJECTS:
+      return saveAllHelper(action.payload, state);
     case REMOVE_ALL_SUBJECTS:
       return DEFAULT_STATE;
     default:

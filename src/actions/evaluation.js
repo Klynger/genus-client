@@ -1,7 +1,7 @@
-import { SAVE_EVALUATION } from './actionTypes';
-import { dispatchEntities } from '../utils/helpers';
+import { normalize } from 'normalizr';
 import { evaluationSchema } from '../models/schema';
 import { requestGraphql } from '../utils/HTTPClient';
+import { SAVE_EVALUATION, SAVE_ALL_EVALUATION_RESULTS, SAVE_ALL_EVALUATIONS } from './actionTypes';
 import {
   mutationCreateEvaluation,
   mutationEditEvaluation,
@@ -13,7 +13,15 @@ export const createEvaluation = newEvaluation => dispatch => {
     localStorage.getItem('token'),
   ).then(res => {
     if (res.data.data && res.data.data.createEvaluation) {
-      dispatchEntities(res.data.data.createEvaluation, dispatch, evaluationSchema);
+      const { entities } = normalize(res.data.data.createEvaluation, evaluationSchema);
+      dispatch({
+        type: SAVE_ALL_EVALUATION_RESULTS,
+        payload: entities.evaluationResult,
+      });
+      dispatch({
+        type: SAVE_ALL_EVALUATIONS,
+        payload: entities.evaluation,
+      });
     } else {
       // TODO
     }

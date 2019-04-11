@@ -50,6 +50,16 @@ user.define({
   evaluationResults: [evaluationResult],
 });
 
+evaluation.define({
+  subject,
+  evaluationResults: [evaluationResult],
+});
+
+evaluationResult.define({
+  user,
+  evaluation,
+});
+
 export const userSchema = user;
 export const gradeSchema = grade;
 export const replySchema = reply;

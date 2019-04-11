@@ -8,13 +8,17 @@ import {
   ADD_TEACHER_TO_SUBJECT,
   ADD_STUDENT_TO_SUBJECT,
   ADD_STUDENT_TO_SUBJECTS,
+  ADD_STUDENTS_TO_SUBJECT,
+  ADD_STUDENTS_TO_SUBJECTS,
 } from './actionTypes';
 import {
   mutationCreateSubject,
   mutationUpdateSubject,
   mutationAddTeacherToSubject,
   mutationAddStudentToSubject,
+  mutationAddStudentsToSubject,
   mutationAddStudentToSubjectsInGrade,
+  mutationAddStudentsToSubjectsInGrade,
 } from '../queryGenerators/SubjectMutations';
 
 export const findSubjectById = subjectId => dispatch => {
@@ -78,6 +82,17 @@ export const addStudentToSubject = payload => dispatch =>
     return res;
   });
 
+export const addStudentsToSubject = payload => dispatch =>
+  requestGraphql(mutationAddStudentsToSubject(payload), localStorage.getItem('token')).then(res => {
+    if (res.data.data && res.data.data.addStudentsToSubject) {
+      dispatch({
+        type: ADD_STUDENTS_TO_SUBJECT,
+        payload,
+      });
+    }
+    return res;
+  });
+
 export const addStudentToSubjectsInGrade = input => dispatch =>
   requestGraphql(mutationAddStudentToSubjectsInGrade(input), localStorage.getItem('token')).then(
     res => {
@@ -88,6 +103,23 @@ export const addStudentToSubjectsInGrade = input => dispatch =>
           payload: {
             subjects,
             studentId: input.studentId,
+          },
+        });
+      }
+      return res;
+    },
+  );
+
+export const addStudentsToSubjectsInGrade = input => dispatch =>
+  requestGraphql(mutationAddStudentsToSubjectsInGrade(input), localStorage.getItem('token')).then(
+    res => {
+      if (res.data.data && res.data.data.addStudentsToSubjectsInGrade) {
+        const gradeId = res.data.data.addStudentsToSubjectsInGrade.id;
+        dispatch({
+          type: ADD_STUDENTS_TO_SUBJECTS,
+          payload: {
+            gradeId,
+            studentIds: input.studentsIds,
           },
         });
       }
