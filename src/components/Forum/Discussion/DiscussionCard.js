@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import ReactMarkdown from 'react-markdown';
+import { MoreVert, Reply } from '@material-ui/icons';
 import ImageUploader from '../../shared/ImageUploader';
 import deepOrange from '@material-ui/core/colors/deepOrange';
-import { Edit, Delete, MoreVert, Reply } from '@material-ui/icons';
-import { getFirstInitialsCapitalized } from '../../../utils/helpers';
+import { getFirstInitialsCapitalized, isInstitutionAdmin } from '../../../utils/helpers';
 import {
   Card,
   Divider,
@@ -39,26 +40,34 @@ const styles = {
   },
 };
 
-const DiscussionActionButtons = ({ classes, onReply }) => (
-  <CardActions disableActionSpacing className={classes.actions}>
+const DiscussionActionButtons = ({ classes, onReply, isAdmin }) => (
+  /*
+    TODO: add these options
+
     <IconButton aria-label="delete">
       <Delete />
     </IconButton>
+
     <IconButton aria-label="edit">
       <Edit />
     </IconButton>
-    <IconButton aria-label="reply" onClick={onReply}>
-      <Reply />
-    </IconButton>
+   */
+  <CardActions disableActionSpacing className={classes.actions}>
+    {!isAdmin && (
+      <IconButton aria-label="reply" onClick={onReply}>
+        <Reply />
+      </IconButton>
+    )}
   </CardActions>
 );
 
 DiscussionActionButtons.propTypes = {
   classes: PropTypes.object.isRequired,
+  isAdmin: PropTypes.bool,
   onReply: PropTypes.func.isRequired,
 };
 
-const DiscussionCard = ({ classes, discussion, onReply }) => (
+const DiscussionCard = ({ classes, discussion, onReply, isAdmin }) => (
   <Card className={classes.discussionCard}>
     <CardHeader
       avatar={
@@ -80,7 +89,7 @@ const DiscussionCard = ({ classes, discussion, onReply }) => (
     <CardContent className={classes.content}>
       <ReactMarkdown escapeHtml source={discussion.content} />
     </CardContent>
-    <DiscussionActionButtons classes={classes} onReply={onReply} />
+    <DiscussionActionButtons classes={classes} onReply={onReply} isAdmin={isAdmin} />
   </Card>
 );
 
@@ -104,7 +113,16 @@ DiscussionCard.propTypes = {
     ).isRequired,
     title: PropTypes.string,
   }).isRequired,
+  isAdmin: PropTypes.bool,
   onReply: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(DiscussionCard);
+function mapStateToProps({ institution, user }) {
+  const { loggedUserId } = user;
+  const { selectedInstitution } = institution;
+  const currentInstitution = institution.byId[selectedInstitution];
+  const isAdmin = isInstitutionAdmin(loggedUserId, currentInstitution);
+  return { isAdmin };
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(DiscussionCard));

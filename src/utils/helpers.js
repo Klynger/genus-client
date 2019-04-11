@@ -30,6 +30,10 @@ export function getRoleFromInstitution(id, institution) {
   return role;
 }
 
+export function isInstitutionAdmin(id, institution) {
+  return getRoleFromInstitution(id, institution) === userRoles.ADMIN;
+}
+
 export const getFirstInitialsCapitalized = (fullName = '', amountOfInitials = 2) => {
   const names = fullName
     .replace(/\s\s+/g, ' ')
