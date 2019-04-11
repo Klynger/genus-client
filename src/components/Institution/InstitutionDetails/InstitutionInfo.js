@@ -87,7 +87,9 @@ class InstitutionInfo extends Component {
       institution,
       canUpdateInfo,
       canGenerateCode,
+      canSendEmail,
       onGenerateCodeOpen,
+      onSendEmailOpen,
       onUpdateInstitutionOpen,
     } = this.props;
 
@@ -104,7 +106,9 @@ class InstitutionInfo extends Component {
           canUpdateInfo={canUpdateInfo}
           onClose={this.handleMenuClose}
           canGenerateCode={canGenerateCode}
+          canSendEmail={canSendEmail}
           onGenerateCodeOpen={onGenerateCodeOpen}
+          onSendEmailOpen={onSendEmailOpen}
           onUpdateInstitutionOpen={onUpdateInstitutionOpen}
         />
         <Paper className={classes.root}>
@@ -150,11 +154,13 @@ class InstitutionInfo extends Component {
 
 InstitutionInfo.defaultProps = {
   canGenerateCode: false,
+  canSendEmail: false,
   canUpdateInfo: false,
 };
 
 InstitutionInfo.propTypes = {
   canGenerateCode: PropTypes.bool,
+  canSendEmail: PropTypes.bool,
   canUpdateInfo: PropTypes.bool,
   classes: PropTypes.object.isRequired,
   institution: PropTypes.shape({
@@ -164,6 +170,7 @@ InstitutionInfo.propTypes = {
     phone: PropTypes.string.isRequired,
   }).isRequired,
   onGenerateCodeOpen: PropTypes.func.isRequired,
+  onSendEmailOpen: PropTypes.func.isRequired,
   onUpdateInstitutionOpen: PropTypes.func.isRequired,
 };
 

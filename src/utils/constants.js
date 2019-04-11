@@ -4,4 +4,11 @@ export const userRoles = {
   ADMIN: 'ADMIN',
 };
 
+export const emailType = {
+  TO_ALL_STUDENTS: 'TO_ALL_STUDENTS',
+  TO_ALL_TEACHERS: 'TO_ALL_TEACHERS',
+  TO_ALL_GRADE_STUDENTS: 'TO_ALL_GRADE_STUDENTS',
+  TO_ALL_SUBJECT_STUDENTS: 'TO_ALL_SUBJECT_STUDENTS',
+};
+
 export default {};

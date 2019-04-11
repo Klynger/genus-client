@@ -39,6 +39,7 @@ const styles = theme => ({
 const SubjectInfo = ({
   classes,
   subject,
+  onSendEmailOpen,
   onAddStudentClick,
   onAddTeacherClick,
   onEditSubjectClick,
@@ -48,6 +49,7 @@ const SubjectInfo = ({
   canSeeForum,
   canSeeGrades,
   userRole,
+  canSendEmailToSubjectStudents,
 }) => {
   return (
     <Paper className={classes.root}>
@@ -92,9 +94,9 @@ const SubjectInfo = ({
             Adicionar nova nota
           </Button>
         )}
-        {canSeeGrades && (
-          <Button color="primary" component={Link} to={`${history.location.pathname}/forum`}>
-            Mandar email para turma
+        {(userRole === 'TEACHER' || userRole === 'ADMIN') && (
+          <Button color="primary" onClick={onSendEmailOpen}>
+            Enviar Email
           </Button>
         )}
       </ActionsContainer>
@@ -105,6 +107,7 @@ const SubjectInfo = ({
 SubjectInfo.propTypes = {
   canSeeForum: PropTypes.bool.isRequired,
   canSeeGrades: PropTypes.bool.isRequired,
+  canSendEmailToSubjectStudents: PropTypes.bool.isRequired,
   classes: PropTypes.object.isRequired,
   history: PropTypes.shape({
     location: PropTypes.shape({
@@ -116,6 +119,7 @@ SubjectInfo.propTypes = {
   onAddStudentClick: PropTypes.func.isRequired,
   onAddTeacherClick: PropTypes.func.isRequired,
   onEditSubjectClick: PropTypes.func.isRequired,
+  onSendEmailOpen: PropTypes.func.isRequired,
   subject: PropTypes.shape({
     name: PropTypes.string.isRequired,
     photo: PropTypes.string,
@@ -138,6 +142,8 @@ function mapStateToProps(
       subject.teachers.some(user => user.id === loggedUserId) ||
       subject.students.some(user => user.id === loggedUserId);
   }
+  const canSendEmailToSubjectStudents =
+    isAdmin || subject.teachers.some(user => user.id === loggedUserId);
 
   let userRole = 'NO_ROLE';
   if (isAdmin) {
@@ -154,6 +160,7 @@ function mapStateToProps(
     userRole,
     isAdmin,
     canSeeForum,
+    canSendEmailToSubjectStudents,
     canSeeGrades,
   };
 }

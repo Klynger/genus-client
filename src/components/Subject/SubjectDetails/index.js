@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-// import GradesInfo from './GradesInfo';
 import SubjectInfo from './SubjectInfo';
 import StudentsTable from './StudentsTable';
 import AddGradeDialog from './AddGradeDialog';
@@ -9,10 +8,12 @@ import AddteacherDialog from './AddTeacherDialog';
 import React, { Component, Fragment } from 'react';
 import { Fade, withTheme } from '@material-ui/core';
 import EditSubjectDialog from './EditSubjectDialog';
+import { emailType } from '../../../utils/constants';
 import { getUserRole } from '../../../utils/helpers';
 import { removeStudentFromSubjectId } from '../../../actions/user';
 import DefaultContainerRoute from '../../shared/DefaultContainerRoute';
 import RemoveStudentFromSubjectDialog from './RemoveStudentFromSubjectDialog';
+import SendEmailDialog from '../../Institution/InstitutionDetails/SendEmailDialog';
 
 class SubjectDetailsPage extends Component {
   constructor(props) {
@@ -23,6 +24,7 @@ class SubjectDetailsPage extends Component {
       openAddTeacher: false,
       openAddGrade: false,
       openEditSubject: false,
+      sendEmailOpen: false,
       openRemoveStudent: false,
       selectedStudent: null,
       waitingForRemoveStudent: false,
@@ -76,6 +78,14 @@ class SubjectDetailsPage extends Component {
     this.setState({ openRemoveStudent: true, selectedStudent });
   };
 
+  handleSendEmailOpen = () => {
+    this.setState({ sendEmailOpen: true });
+  };
+
+  handleSendEmailClose = () => {
+    this.setState({ sendEmailOpen: false });
+  };
+
   handleCloseRemoveStudentDialog = () => {
     this.setState({ openRemoveStudent: false });
   };
@@ -98,7 +108,7 @@ class SubjectDetailsPage extends Component {
   };
 
   render() {
-    const { subject, loggedUserId } = this.props;
+    const { subject, loggedUserId, canSendEmailToSubjectStudents } = this.props;
     const {
       openAddGrade,
       openAddStudent,
@@ -106,6 +116,7 @@ class SubjectDetailsPage extends Component {
       openEditSubject,
       openRemoveStudent,
       waitingForRemoveStudent,
+      sendEmailOpen,
     } = this.state;
 
     let toRender;
@@ -128,6 +139,14 @@ class SubjectDetailsPage extends Component {
               open={openAddTeacher}
               onClose={this.handleAddTeacherClick}
             />
+            {canSendEmailToSubjectStudents && (
+              <SendEmailDialog
+                open={sendEmailOpen}
+                sendEmailType={emailType.TO_ALL_SUBJECT_STUDENTS}
+                id={subject.id}
+                onClose={this.handleSendEmailClose}
+              />
+            )}
             <AddStudentDialog
               subject={subject}
               open={openAddStudent}
@@ -150,7 +169,8 @@ class SubjectDetailsPage extends Component {
               onAddStudentClick={this.handleOpenAddStudent}
               onEditSubjectClick={this.handleEditSubjectClick}
               onAddGradeClick={this.handleOpenAddGrade}
-            />
+              onSendEmailOpen={this.handleSendEmailOpen}
+              />
             <RemoveStudentFromSubjectDialog
               open={openRemoveStudent}
               isSubmitting={waitingForRemoveStudent}
@@ -181,6 +201,7 @@ class SubjectDetailsPage extends Component {
 }
 
 SubjectDetailsPage.propTypes = {
+  canSendEmailToSubjectStudents: PropTypes.bool,
   evaluationHeaders: PropTypes.arrayOf(PropTypes.string).isRequired,
   loggedUserId: PropTypes.string.isRequired,
   removeStudentFromSubject: PropTypes.func.isRequired,
@@ -284,6 +305,9 @@ function mapToProps(
         students,
         evaluations,
       },
+      canSendEmailToSubjectStudents: 
+        teachers.some(id => id === user.loggedUserId) ||
+        admins.some(id => id === user.loggedUserId),
     };
   }
 

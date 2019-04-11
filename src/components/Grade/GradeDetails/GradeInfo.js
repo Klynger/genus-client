@@ -74,11 +74,17 @@ class GradeInfo extends Component {
     const { grade } = this.props;
 
     if (grade) {
-      const { classes, canAddStudents, onAddStudents } = this.props;
+      const {
+        classes,
+        canAddStudents,
+        onAddStudents,
+        canSendEmailToGradeStudents,
+        onSendEmailOpen,
+      } = this.props;
       const { openMenu } = this.state;
 
       const showMenuButton = canAddStudents;
-
+      const showEmailButton = canSendEmailToGradeStudents;
       return (
         <Fragment>
           <GradeInfoMenu
@@ -88,9 +94,11 @@ class GradeInfo extends Component {
             onClose={this.handleMenuClose}
             canAddStudents={canAddStudents}
             onAddStudents={onAddStudents}
+            onSendEmailOpen={onSendEmailOpen}
+            canSendEmailToGradeStudents={canSendEmailToGradeStudents}
           />
           <Paper className={classes.root}>
-            {showMenuButton && (
+            {(showMenuButton || showEmailButton) && (
               <IconButton
                 aria-haspopup="true"
                 className={classes.menuIcon}
@@ -143,6 +151,7 @@ GradeInfo.defaultProps = {
 
 GradeInfo.propTypes = {
   canAddStudents: PropTypes.bool,
+  canSendEmailToGradeStudents: PropTypes.bool,
   classes: PropTypes.object.isRequired,
   grade: PropTypes.shape({
     name: PropTypes.string,
@@ -150,6 +159,7 @@ GradeInfo.propTypes = {
     qntTeachers: PropTypes.number,
   }),
   onAddStudents: PropTypes.func.isRequired,
+  onSendEmailOpen: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(GradeInfo);
