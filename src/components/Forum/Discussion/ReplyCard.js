@@ -1,12 +1,13 @@
 import AddReply from './AddReply';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import { connect } from 'react-redux';
 import ReactMarkdown from 'react-markdown';
 import React, { Component, Fragment } from 'react';
+import { MoreVert, Reply } from '@material-ui/icons';
 import ImageUploader from '../../shared/ImageUploader';
 import deepOrange from '@material-ui/core/colors/deepOrange';
-import { Edit, Delete, MoreVert, Reply } from '@material-ui/icons';
-import { getFirstInitialsCapitalized } from '../../../utils/helpers';
+import { isInstitutionAdmin, getFirstInitialsCapitalized } from '../../../utils/helpers';
 import {
   Card,
   Divider,
@@ -17,22 +18,30 @@ import {
   CardContent,
 } from '@material-ui/core';
 
-const ReplyCardActions = ({ classes, onReplyClick }) => (
-  <CardActions disableActionSpacing className={classes.actions}>
+const ReplyCardActions = ({ classes, onReplyClick, isAdmin }) => (
+  /*
+    TODO: add these options
+
     <IconButton aria-label="delete">
       <Delete />
     </IconButton>
+
     <IconButton aria-label="edit">
       <Edit />
     </IconButton>
-    <IconButton aria-label="reply" onClick={onReplyClick}>
-      <Reply />
-    </IconButton>
+   */
+  <CardActions disableActionSpacing className={classes.actions}>
+    {!isAdmin && (
+      <IconButton aria-label="reply" onClick={onReplyClick}>
+        <Reply />
+      </IconButton>
+    )}
   </CardActions>
 );
 
 ReplyCardActions.propTypes = {
   classes: PropTypes.object.isRequired,
+  isAdmin: PropTypes.bool,
   onReplyClick: PropTypes.func.isRequired,
 };
 
@@ -70,7 +79,7 @@ class ReplyCard extends Component {
   };
 
   render() {
-    const { classes, className, reply } = this.props;
+    const { classes, className, reply, isAdmin } = this.props;
     const { openAddReply } = this.state;
 
     let contentReplied;
@@ -106,7 +115,11 @@ class ReplyCard extends Component {
             )}
             <ReactMarkdown escapeHtml source={reply.content} />
           </CardContent>
-          <ReplyCardActions classes={classes} onReplyClick={this.handleToggleAddReply} />
+          <ReplyCardActions
+            classes={classes}
+            onReplyClick={this.handleToggleAddReply}
+            isAdmin={isAdmin}
+          />
         </Card>
         {openAddReply && (
           <AddReply
@@ -126,6 +139,7 @@ class ReplyCard extends Component {
 ReplyCard.propTypes = {
   classes: PropTypes.object.isRequired,
   className: PropTypes.string,
+  isAdmin: PropTypes.bool,
   reply: PropTypes.shape({
     content: PropTypes.string,
     creator: PropTypes.shape({
@@ -135,4 +149,12 @@ ReplyCard.propTypes = {
   }).isRequired,
 };
 
-export default withStyles(styles)(ReplyCard);
+function mapStateToProps({ institution, user }) {
+  const { loggedUserId } = user;
+  const { selectedInstitution } = institution;
+  const currentInstitution = institution.byId[selectedInstitution];
+  const isAdmin = isInstitutionAdmin(loggedUserId, currentInstitution);
+  return { isAdmin };
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(ReplyCard));

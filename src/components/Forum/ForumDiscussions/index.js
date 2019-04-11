@@ -44,7 +44,7 @@ ForumDiscussions.defaultProps = {
 };
 
 ForumDiscussions.propTypes = {
-  canCreateDiscussion: PropTypes.bool.isRequired,
+  canCreateDiscussion: PropTypes.bool,
   classes: PropTypes.object.isRequired,
   discussions: PropTypes.arrayOf(PropTypes.object),
   history: PropTypes.shape({}).isRequired,
@@ -66,6 +66,11 @@ function mapToProps(
   },
 ) {
   if (subject.byId[subjectId]) {
+    const fullSubject = subject.byId[subjectId];
+    const { loggedUserId } = user;
+    const canCreateDiscussion =
+      fullSubject.teachers.some(_user => _user === loggedUserId) ||
+      fullSubject.students.some(_user => _user === loggedUserId);
     return {
       discussions: subject.byId[subjectId].forum.map(id => {
         const disc = discussion.byId[id];
@@ -76,18 +81,12 @@ function mapToProps(
           },
         };
       }),
-      subject: subject.byId[subjectId],
+      subject: fullSubject,
+      canCreateDiscussion,
     };
   }
 
-  const { loggedUserId } = user;
-  const canCreateDiscussion =
-    subject.teachers.some(_user => _user.id === loggedUserId) ||
-    subject.students.some(_user => _user.id === loggedUserId);
-
-  return {
-    canCreateDiscussion,
-  };
+  return {};
 }
 
 export default connect(mapToProps)(withStyles(styles)(ForumDiscussions));
