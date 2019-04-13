@@ -1,12 +1,13 @@
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Image from '../../shared/Image';
 import React, { Component } from 'react';
 import { Form, withFormik } from 'formik';
 import { updateUser } from '../../../actions/user';
+import { separateBase64 } from '../../../utils/helpers';
 import ProgressButton from '../../shared/ProgressButton';
-import { capitalize } from '@material-ui/core/utils/helpers';
-import { defaultDialogBreakpoints } from '../../../utils/helpers';
+import { defaultImagesPaths } from '../../../utils/constants';
 import { DefaultDialogTransition } from '../../shared/SharedComponents';
 import {
   Zoom,
@@ -20,17 +21,28 @@ import {
   DialogActions,
   DialogContent,
   FormHelperText,
-  withMobileDialog,
 } from '@material-ui/core';
 
 const styles = theme => ({
-  ...defaultDialogBreakpoints(),
+  dialog: {
+    minWidth: 300,
+  },
   form: {
     display: 'flex',
     flexDirection: 'column',
   },
   formControl: {
     marginBottom: theme.spacing.unit,
+  },
+  imageWrapper: {
+    height: 140,
+    width: 140,
+  },
+  imageContainer: {
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+    width: '100%',
   },
 });
 
@@ -58,32 +70,35 @@ class EditUserDialog extends Component {
   render() {
     const {
       open,
-      width,
       classes,
       values,
       errors,
       touched,
       handleSubmit,
-      fullScreen,
       handleChange,
       isSubmitting,
+      setFieldValue,
     } = this.props;
 
-    // if more attributes get added to this dialog
-    // the prop disableBackdropClick of Dialog should be true
     return (
       <Dialog
         open={open}
-        fullScreen={fullScreen}
+        disableBackdropClick
         onClose={this.handleClose}
+        classes={{ paper: classes.dialog }}
         TransitionComponent={DefaultDialogTransition}
-        classes={{
-          paper: classes[`dialogRoot${capitalize(width)}`],
-        }}
       >
         <DialogTitle>Editar</DialogTitle>
         <DialogContent>
           <Form className={classes.form}>
+            <div className={classes.imageContainer}>
+              <span className={classes.imageWrapper}>
+                <Image
+                  onImageChange={base64 => setFieldValue('image', base64)}
+                  src={values.image ? values.image : defaultImagesPaths.USER}
+                />
+              </span>
+            </div>
             <FormControl
               className={classes.formControl}
               error={errors.username !== undefined && touched.username}
@@ -125,13 +140,13 @@ EditUserDialog.propTypes = {
   errors: PropTypes.shape({
     username: PropTypes.string,
   }).isRequired,
-  fullScreen: PropTypes.bool.isRequired,
   handleChange: PropTypes.func.isRequired,
   handleReset: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   isSubmitting: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool,
+  setFieldValue: PropTypes.func.isRequired,
   setSubmitting: PropTypes.func.isRequired,
   theme: PropTypes.shape({
     transitions: PropTypes.shape({
@@ -147,7 +162,6 @@ EditUserDialog.propTypes = {
   values: PropTypes.shape({
     username: PropTypes.string.isRequired,
   }).isRequired,
-  width: PropTypes.string.isRequired,
 };
 
 function mapDispatchToProps(dispatch) {
@@ -163,8 +177,13 @@ export default connect(
   withFormik({
     enableReinitialize: true,
     mapPropsToValues({ user }) {
+      let image;
+      if (user.mimeType && user.photo) {
+        image = `${user.mimeType},${user.photo}`;
+      }
       return {
         username: user.username || '',
+        image,
       };
     },
     validationSchema: () =>
@@ -175,8 +194,14 @@ export default connect(
           .required('Nome obrigatório'),
       }),
     handleSubmit(values, { props, setSubmitting }) {
+      const { image, ...restValues } = values;
+      const separatedImage = separateBase64(image);
+      const userData = {
+        ...restValues,
+        ...separatedImage,
+      };
       props
-        .updateUser(values)
+        .updateUser(userData)
         .then(() => {
           props.onClose();
           setSubmitting(false);
@@ -185,9 +210,5 @@ export default connect(
           setSubmitting(false);
         });
     },
-  })(
-    withMobileDialog({
-      breakpoint: 'xs',
-    })(withStyles(styles, { withTheme: true })(EditUserDialog)),
-  ),
+  })(withStyles(styles, { withTheme: true })(EditUserDialog)),
 );
