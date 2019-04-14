@@ -11,4 +11,6 @@ export const emailType = {
   TO_ALL_SUBJECT_STUDENTS: 'TO_ALL_SUBJECT_STUDENTS',
 };
 
-export default {};
+export const defaultImagesPaths = {
+  USER: '/static/images/default_user_image.png',
+};

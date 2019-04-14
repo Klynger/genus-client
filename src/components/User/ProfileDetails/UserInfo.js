@@ -1,12 +1,11 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Image from '../../shared/Image';
 import EditUserDialog from './EditUserDialog';
 import CardDetailsList from './CardDetailsList';
 import React, { Component, Fragment } from 'react';
-import { userRoles } from '../../../utils/constants';
 import EditPasswordDialog from './EditPasswordDialog';
-import ImageUploader from '../../shared/ImageUploader';
-import deepOrange from '@material-ui/core/colors/deepOrange';
+import { userRoles, defaultImagesPaths } from '../../../utils/constants';
 import { getFirstInitialsCapitalized, getRoleFromInstitution } from '../../../utils/helpers';
 import { Card, Button, withStyles, Typography, CardContent, CardActions } from '@material-ui/core';
 
@@ -16,15 +15,17 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 3,
     width: '100%',
   },
+  imageWrapper: {
+    height: 140,
+    width: 140,
+  },
   imageContainer: {
+    alignItems: 'center',
+    display: 'flex',
     padding: theme.spacing.unit * 2,
     paddingTop: 0,
-  },
-  imageUploader: {
-    backgroundColor: deepOrange.A400,
-    fontSize: '4.25rem',
-    minHeight: 140,
-    minWidth: 140,
+    justifyContent: 'center',
+    width: '100%',
   },
   content: {
     alignItems: 'center',
@@ -74,6 +75,11 @@ class UserInfo extends Component {
     const { classes, gradeList, loggedUserId, subjectList, user } = this.props;
     const { editUserOpen, editPasswordOpen } = this.state;
 
+    let userImage;
+    if (user.mimeType && user.photo) {
+      userImage = `${user.mimeType},${user.photo}`;
+    }
+
     return (
       <Fragment>
         <EditUserDialog user={user} open={editUserOpen} onClose={this.handleEditUserClose} />
@@ -81,11 +87,9 @@ class UserInfo extends Component {
         <Card className={classes.card}>
           <CardContent className={classes.content}>
             <div className={classes.imageContainer}>
-              <ImageUploader
-                alt={this.userInitials}
-                initials={this.userInitials}
-                className={classes.imageUploader}
-              />
+              <span className={classes.imageWrapper}>
+                <Image editable={false} src={userImage || defaultImagesPaths.USER} />
+              </span>
             </div>
             <Typography variant="h5" component="h2">
               {user.username}

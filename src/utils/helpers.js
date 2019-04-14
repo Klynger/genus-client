@@ -152,3 +152,18 @@ export const stringToColor = string => {
 
   return color;
 };
+
+export function separateBase64(fullBase64) {
+  let i = 0;
+  if (!fullBase64) {
+    return undefined;
+  }
+  while (fullBase64[i] !== ',') {
+    i += 1;
+  }
+
+  const mimeType = fullBase64.substr(0, i);
+  const photo = fullBase64.substr(i + 1);
+
+  return { mimeType, photo };
+}
