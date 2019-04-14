@@ -170,7 +170,7 @@ class SubjectDetailsPage extends Component {
               onEditSubjectClick={this.handleEditSubjectClick}
               onAddGradeClick={this.handleOpenAddGrade}
               onSendEmailOpen={this.handleSendEmailOpen}
-              />
+            />
             <RemoveStudentFromSubjectDialog
               open={openRemoveStudent}
               isSubmitting={waitingForRemoveStudent}
@@ -305,7 +305,7 @@ function mapToProps(
         students,
         evaluations,
       },
-      canSendEmailToSubjectStudents: 
+      canSendEmailToSubjectStudents:
         teachers.some(id => id === user.loggedUserId) ||
         admins.some(id => id === user.loggedUserId),
     };
