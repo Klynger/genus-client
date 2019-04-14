@@ -81,7 +81,11 @@ class Home extends Component {
       <div className={classes.wrapper}>
         <ApplicationBar onDrawerToggle={this.handleActiveDrawerToggle} />
         <div className={classes.contentContainer}>
-          <MenuDrawer onDrawerToggle={this.handleActiveDrawerToggle} open={openDrawer} />
+          <MenuDrawer
+            userRole={userRole}
+            onDrawerToggle={this.handleActiveDrawerToggle}
+            open={openDrawer}
+          />
           <main className={classes.mainContainer}>
             <HomeRoutes userRole={userRole} />
           </main>
