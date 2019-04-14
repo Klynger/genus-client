@@ -47,9 +47,7 @@ const SubjectInfo = ({
   history,
   isAdmin,
   canSeeForum,
-  canSeeGrades,
   userRole,
-  canSendEmailToSubjectStudents,
 }) => {
   return (
     <Paper className={classes.root}>
@@ -106,8 +104,6 @@ const SubjectInfo = ({
 
 SubjectInfo.propTypes = {
   canSeeForum: PropTypes.bool.isRequired,
-  canSeeGrades: PropTypes.bool.isRequired,
-  canSendEmailToSubjectStudents: PropTypes.bool.isRequired,
   classes: PropTypes.object.isRequired,
   history: PropTypes.shape({
     location: PropTypes.shape({
