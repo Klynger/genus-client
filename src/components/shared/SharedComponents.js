@@ -62,7 +62,7 @@ const styles = theme => ({
   title: {
     margin: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
     color: 'gray',
-    fontSize: '30px',
+    fontSize: 30,
     paddingTop: '2%',
     paddingBottom: '2%',
   },

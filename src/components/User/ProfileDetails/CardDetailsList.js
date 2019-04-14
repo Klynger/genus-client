@@ -8,7 +8,7 @@ const styles = theme => ({
   title: {
     marginTop: theme.spacing.unit * 2,
     color: 'gray',
-    fontSize: '30px',
+    fontSize: 30,
   },
   cardDetailsList: {
     display: 'grid',
