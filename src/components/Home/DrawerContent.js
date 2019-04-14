@@ -33,18 +33,16 @@ class DrawerContent extends Component {
           </ListItemIcon>
           <ListItemText primary="Página Inicial" />
         </ListItem>
-        {userRole === 'ADMIN' && (
-          <ListItem
-            className={classes.item}
-            button
-            onClick={() => this.handleGoToPath('/institution/details')}
-          >
-            <ListItemIcon>
-              <School />
-            </ListItemIcon>
-            <ListItemText primary="Instituição" />
-          </ListItem>
-        )}
+        <ListItem
+          className={classes.item}
+          button
+          onClick={() => this.handleGoToPath('/institution/details')}
+        >
+          <ListItemIcon>
+            <School />
+          </ListItemIcon>
+          <ListItemText primary="Instituição" />
+        </ListItem>
         {userRole === 'ADMIN' && (
           <ListItem
             className={classes.item}

@@ -73,6 +73,7 @@ class InstitutionDetails extends Component {
 
     if (institution) {
       const loggedUserIsAdmin = institution.admins.some(({ id }) => id === loggedUserId);
+      const loggedUserIsStudent = institution.students.some(({ id }) => id === loggedUserId);
 
       toRender = (
         <DefaultContainerRoute>
@@ -112,10 +113,10 @@ class InstitutionDetails extends Component {
             onSendEmailOpen={this.handleSendEmailOpen}
             onUpdateInstitutionOpen={this.handleUpdateInstitutionOpen}
           />
-          <GradesGrid />
+          {loggedUserIsAdmin && <GradesGrid />}
           <UserList users={institution.teachers} headTitle="Professores" />
           <UserList users={institution.admins} headTitle="Administradores" />
-          <UserList users={institution.students} headTitle="Alunos" />
+          {!loggedUserIsStudent && <UserList users={institution.students} headTitle="Alunos" />}
         </DefaultContainerRoute>
       );
     } else {
