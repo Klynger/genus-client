@@ -7,6 +7,8 @@ import { Typography, withStyles } from '@material-ui/core';
 const styles = theme => ({
   title: {
     marginTop: theme.spacing.unit * 2,
+    color: 'gray',
+    fontSize: '30px',
   },
   cardDetailsList: {
     display: 'grid',

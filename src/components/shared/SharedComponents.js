@@ -61,6 +61,10 @@ export const GridContainer = styled.div`
 const styles = theme => ({
   title: {
     margin: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
+    color: 'gray',
+    fontSize: '30px',
+    paddingTop: '2%',
+    paddingBottom: '2%',
   },
 });
 
