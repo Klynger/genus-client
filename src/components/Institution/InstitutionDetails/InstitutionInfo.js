@@ -134,7 +134,11 @@ class InstitutionInfo extends Component {
           )}
           <div className={classes.detailsPageContentContainer}>
             <span className={classes.imageContainer}>
-              <Image editable={false} src={institutionImage || defaultImagesPaths.INSTITUTION} />
+              <Image
+                rounded={false}
+                editable={false}
+                src={institutionImage || defaultImagesPaths.INSTITUTION}
+              />
             </span>
             <div className={classes.informationsContainer}>
               <Typography component="h2" variant="h6" gutterBottom>
