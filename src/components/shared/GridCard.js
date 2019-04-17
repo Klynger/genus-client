@@ -67,14 +67,13 @@ const GridCard = ({ classes, children, imgAlt, imgSrc, onClick, title }) => {
 GridCard.propTypes = {
   children: PropTypes.arrayOf(PropTypes.node),
   classes: PropTypes.object.isRequired,
-  imgAlt: PropTypes.string,
-  imgSrc: PropTypes.string,
+  imgAlt: PropTypes.string.isRequired,
+  imgSrc: PropTypes.string.isRequired,
   onClick: PropTypes.func,
   title: PropTypes.string,
 };
 
 GridCard.defaultProps = {
-  imgSrc: '/static/images/grade-default-img.jpg',
   onClick: () => undefined,
 };
 

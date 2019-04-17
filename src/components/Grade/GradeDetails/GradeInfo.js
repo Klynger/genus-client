@@ -1,17 +1,18 @@
 import PropTypes from 'prop-types';
+import Image from '../../shared/Image';
 import GradeInfoMenu from './GradeInfoMenu';
 import { MoreVert } from '@material-ui/icons';
 import React, { Component, Fragment } from 'react';
-import { DEFAULT_PHOTO_CLASS_SRC } from '../../../utils/helpers';
+import { defaultImagesPaths } from '../../../utils/constants';
 import { Paper, Typography, withStyles, IconButton } from '@material-ui/core';
 
 const PHOTO_DIMENSION = 250;
 
 const styles = theme => ({
-  photo: {
+  imageContainer: {
     borderTopLeftRadius: theme.shape.borderRadius,
     height: '100%',
-    minHeight: 123,
+    minHeight: 150,
     width: PHOTO_DIMENSION,
     [theme.breakpoints.down('xs')]: {
       borderTopRightRadius: theme.shape.borderRadius,
@@ -85,6 +86,12 @@ class GradeInfo extends Component {
 
       const showMenuButton = canAddStudents;
       const showEmailButton = canSendEmailToGradeStudents;
+
+      let image = null;
+      if (grade.mimeType && grade.photo) {
+        image = `${grade.mimeType},${grade.photo}`;
+      }
+
       return (
         <Fragment>
           <GradeInfoMenu
@@ -111,11 +118,14 @@ class GradeInfo extends Component {
                 <MoreVert />
               </IconButton>
             )}
-            <img
-              className={classes.photo}
-              alt={`Foto da turma ${grade.name}`}
-              src={grade.photo || DEFAULT_PHOTO_CLASS_SRC}
-            />
+            <div className={classes.imageContainer}>
+              <Image
+                rounded={false}
+                alt={grade.name}
+                editable={false}
+                src={image || defaultImagesPaths.GRADE}
+              />
+            </div>
             <div className={classes.infoContainer}>
               <Typography className={classes.infoText} component="h2" variant="h6" gutterBottom>
                 {grade.name}
