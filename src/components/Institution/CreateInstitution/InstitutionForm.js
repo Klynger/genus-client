@@ -2,16 +2,17 @@ import React from 'react';
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-// import Image from '../../shared/Image';
+import Image from '../../shared/Image';
 import { Form, withFormik } from 'formik';
 import { withRouter } from 'react-router-dom';
 import { Paper, Zoom } from '@material-ui/core';
-import { phoneRegExp } from '../../../utils/helpers';
 import { withStyles } from '@material-ui/core/styles';
 import ProgressButton from '../../shared/ProgressButton';
 import CustomTextField from '../../shared/CustomTextField';
+import { defaultImagesPaths } from '../../../utils/constants';
 import { addInstitution } from '../../../actions/institution';
 import { ActionsContainer } from '../../shared/SharedComponents';
+import { phoneRegExp, separateBase64 } from '../../../utils/helpers';
 
 const styles = theme => ({
   form: {
@@ -21,18 +22,17 @@ const styles = theme => ({
   formControl: {
     marginBottom: theme.spacing.unit,
   },
-  // imageWrapper: {
-  //   height: 120,
-  //   width: 120,
-  // },
-  // imageContainer: {
-  //   alignItems: 'center',
-  //   display: 'flex',
-  //   justifyContent: 'center',
-  //   width: '100%',
-  // },
+  imageWrapper: {
+    height: 250,
+    width: 250,
+  },
+  imageContainer: {
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+    width: '100%',
+  },
   root: {
-    borderRadius: 0,
     padding: theme.spacing.unit * 2,
   },
 });
@@ -62,21 +62,21 @@ const InstitutionForm = props => {
     handleChange,
     handleSubmit,
     isSubmitting,
-    // setFieldValue,
+    setFieldValue,
   } = props;
 
   return (
     <Paper className={classes.root}>
       <Form className={classes.form}>
-        {/* <div className={classes.imageContainer}>
+        <div className={classes.imageContainer}>
           <span className={classes.imageWrapper}>
             <Image
               rounded={false}
-              src={values.image}
+              src={values.image || defaultImagesPaths.INSTITUTION}
               onImageChange={base64 => setFieldValue('image', base64)}
             />
           </span>
-        </div> */}
+        </div>
         {formFields.map(field => (
           <CustomTextField
             key={field}
@@ -119,7 +119,7 @@ InstitutionForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   institution: PropTypes.object, // eslint-disable-line
   isSubmitting: PropTypes.bool.isRequired,
-  // setFieldValue: PropTypes.func.isRequired,
+  setFieldValue: PropTypes.func.isRequired,
   touched: PropTypes.shape({
     address: PropTypes.bool,
     email: PropTypes.bool,
@@ -149,12 +149,17 @@ export default withStyles(styles)(
       withFormik({
         mapPropsToValues({ institution }) {
           if (institution) {
-            const { name, email, phone, address } = institution;
+            const { name, email, phone, address, mimeType, photo } = institution;
+            let image = null;
+            if (mimeType && photo) {
+              image = `${mimeType},${photo}`;
+            }
             return {
               name,
               email,
               phone,
               address,
+              image,
             };
           }
 
@@ -163,6 +168,7 @@ export default withStyles(styles)(
             email: '',
             name: '',
             phone: '',
+            image: null,
           };
         },
         validationSchema: () =>
@@ -186,15 +192,15 @@ export default withStyles(styles)(
               .required('Número de telefone é obrigatório.'),
           }),
         handleSubmit(values, { setSubmitting, props }) {
-          // const { image, ...restValues } = values;
-          // const separatedImage = separateBase64(image);
-          // const institutionData = { institution with photo
-          //   ...restValues,
-          //   ...separatedImage,
-          // };
+          const { image, ...restValues } = values;
+          const separatedImage = separateBase64(image);
+          const institutionData = {
+            ...restValues,
+            ...separatedImage,
+          };
 
           props
-            .addNewInstitution(values)
+            .addNewInstitution(institutionData)
             .then(() => {
               setSubmitting(false);
               props.history.push('/institution/details');

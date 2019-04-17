@@ -32,8 +32,8 @@ const styles = () => ({
     flexDirection: 'column',
   },
   imageWrapper: {
-    height: 140,
-    width: 140,
+    height: 180,
+    width: 180,
   },
   imageContainer: {
     alignItems: 'center',
