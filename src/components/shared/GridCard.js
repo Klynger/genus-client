@@ -35,7 +35,6 @@ CardLine.propTypes = {
 
 const styles = () => ({
   subjectCardRoot: {
-    borderRadius: 0,
     height: '100%',
     width: '100%',
   },
