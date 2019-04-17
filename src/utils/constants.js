@@ -13,4 +13,5 @@ export const emailType = {
 
 export const defaultImagesPaths = {
   USER: '/static/images/default_user_image.png',
+  INSTITUTION: '/static/images/default_institution_image.png',
 };

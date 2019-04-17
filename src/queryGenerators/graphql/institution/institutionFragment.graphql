@@ -4,4 +4,6 @@ fragment institutionFields on Institution {
   email
   phone
   address
+  mimeType
+  photo
 }
