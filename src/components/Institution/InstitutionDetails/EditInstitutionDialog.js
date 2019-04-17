@@ -94,13 +94,13 @@ class EditInstitutionDialog extends Component {
         <DialogContent>
           <Form className={classes.form}>
             <div className={classes.imageContainer}>
-              <span className={classes.imageWrapper}>
+              <div className={classes.imageWrapper}>
                 <Image
                   rounded={false}
                   onImageChange={base64 => setFieldValue('image', base64)}
                   src={values.image ? values.image : defaultImagesPaths.INSTITUTION}
                 />
-              </span>
+              </div>
             </div>
             <FormControl error={touched.name && errors.name !== undefined}>
               <InputLabel htmlFor="update-institution__name-field">Nome</InputLabel>

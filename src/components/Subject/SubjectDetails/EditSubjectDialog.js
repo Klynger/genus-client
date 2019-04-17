@@ -1,12 +1,13 @@
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Image from '../../shared/Image';
 import React, { Component } from 'react';
 import { Form, withFormik } from 'formik';
+import { separateBase64 } from '../../../utils/helpers';
 import ProgressButton from '../../shared/ProgressButton';
 import { updateSubject } from '../../../actions/subject';
-import { capitalize } from '@material-ui/core/utils/helpers';
-import { defaultDialogBreakpoints } from '../../../utils/helpers';
+import { defaultImagesPaths } from '../../../utils/constants';
 import { DefaultDialogTransition } from '../../shared/SharedComponents';
 import {
   Input,
@@ -22,11 +23,24 @@ import {
   withMobileDialog,
 } from '@material-ui/core';
 
-const styles = () => ({
-  ...defaultDialogBreakpoints(),
+const styles = ({ spacing }) => ({
+  paper: {
+    minWidth: 300,
+  },
   form: {
     display: 'flex',
     flexDirection: 'column',
+  },
+  imageWrapper: {
+    height: 140,
+    width: 140,
+  },
+  imageContainer: {
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+    marginBottom: spacing.unit * 5,
+    width: '100%',
   },
 });
 
@@ -62,7 +76,7 @@ class EditSubjectDialog extends Component {
       open,
       touched,
       values,
-      width,
+      setFieldValue,
     } = this.props;
 
     return (
@@ -73,12 +87,21 @@ class EditSubjectDialog extends Component {
         onClose={this.handleClose}
         TransitionComponent={DefaultDialogTransition}
         classes={{
-          paper: classes[`dialogRoot${capitalize(width)}`],
+          paper: classes.paper,
         }}
       >
         <DialogTitle>Atualização de Disciplina</DialogTitle>
         <DialogContent>
           <Form className={classes.form}>
+            <div className={classes.imageContainer}>
+              <div className={classes.imageWrapper}>
+                <Image
+                  rounded={false}
+                  src={values.image || defaultImagesPaths.SUBJECT}
+                  onImageChange={base64 => setFieldValue('image', base64)}
+                />
+              </div>
+            </div>
             <FormControl error={touched.name && errors.name !== undefined}>
               <InputLabel htmlFor="update-subject__name-field">Nome</InputLabel>
               <Input
@@ -120,9 +143,14 @@ EditSubjectDialog.propTypes = {
   isSubmitting: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
+  setFieldValue: PropTypes.func.isRequired,
   setSubmitting: PropTypes.func.isRequired,
-  subjectId: PropTypes.string.isRequired, // eslint-disable-line
-  subjectName: PropTypes.string.isRequired, // eslint-disable-line
+  subject: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    mimeType: PropTypes.string,
+    name: PropTypes.string.isRequired,
+    photo: PropTypes.string,
+  }).isRequired,
   submitUpdate: PropTypes.func.isRequired, // eslint-disable-line
   theme: PropTypes.shape({
     transitions: PropTypes.shape({
@@ -137,14 +165,7 @@ EditSubjectDialog.propTypes = {
   values: PropTypes.shape({
     name: PropTypes.string,
   }),
-  width: PropTypes.string.isRequired,
 };
-
-function mapStateToProps({ subject }, { subjectId }) {
-  return {
-    subjectName: subject.byId[subjectId].name,
-  };
-}
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -153,16 +174,21 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps,
 )(
   withMobileDialog({
     breakpoint: 'xs',
   })(
     withFormik({
-      mapPropsToValues({ subjectName }) {
+      mapPropsToValues({ subject }) {
+        let image = null;
+        if (subject.mimeType && subject.photo) {
+          image = `${subject.mimeType},${subject.photo}`;
+        }
         return {
-          name: subjectName || '',
+          name: subject.name || '',
+          image,
         };
       },
       validationSchema: () =>
@@ -173,20 +199,23 @@ export default connect(
             .required('Nome é obrigatório'),
         }),
       handleSubmit(values, { handleReset, props, setSubmitting, setErrors }) {
-        const input = {
-          ...values,
-          subjectId: props.subjectId,
+        const { image, ...restValues } = values;
+        const separatedImage = separateBase64(image);
+        const subjectData = {
+          ...restValues,
+          ...separatedImage,
+          subjectId: props.subject.id,
         };
 
         props
-          .submitUpdate(input)
+          .submitUpdate(subjectData)
           .then(res => {
             setSubmitting(false);
             if (res.data.data.updateSubject) {
               props.onClose();
               handleReset();
             } else {
-              setErrors({ requestError: 'Algo de errado aconteceu. Tente Novamente' });
+              setErrors({ requestError: 'Algo de errado aconteceu. Tente Novamente.' });
             }
           })
           .catch(() => {

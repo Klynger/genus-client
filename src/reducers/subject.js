@@ -1,7 +1,6 @@
 import { concatIdIfNotContain, saveAllHelper } from '../utils/helpers';
 import {
   SAVE_SUBJECT,
-  UPDATE_SUBJECT,
   SAVE_ALL_SUBJECTS,
   REMOVE_ALL_SUBJECTS,
   ADD_TEACHER_TO_SUBJECT,
@@ -134,18 +133,6 @@ function subject(state = DEFAULT_STATE, action) {
               state.byId[action.payload.subjectId].studentSubjects,
               action.payload.studentSubjectId,
             ),
-          },
-        },
-      };
-
-    case UPDATE_SUBJECT:
-      return {
-        ...state,
-        byId: {
-          ...state.byId,
-          [action.payload.subjectId]: {
-            ...state.byId[action.payload.subjectId],
-            name: action.payload.name,
           },
         },
       };
