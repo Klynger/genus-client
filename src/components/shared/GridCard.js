@@ -44,23 +44,25 @@ const styles = () => ({
   },
 });
 
-const GridCard = ({ classes, children, imgAlt, imgSrc, onClick, title }) => (
-  <div>
-    <Fade in>
-      <StyledCard className={classes.subjectCardRoot}>
-        <CardActionArea className={classes.subjectCardActionArea} onClick={onClick}>
-          <StyledCardMedia title={imgAlt} image={imgSrc} />
-          <CardContent>
-            <UnderlinedTypo variant="h5" component="h3">
-              {title}
-            </UnderlinedTypo>
-            {children}
-          </CardContent>
-        </CardActionArea>
-      </StyledCard>
-    </Fade>
-  </div>
-);
+const GridCard = ({ classes, children, imgAlt, imgSrc, onClick, title }) => {
+  return (
+    <div>
+      <Fade in>
+        <StyledCard className={classes.subjectCardRoot}>
+          <CardActionArea className={classes.subjectCardActionArea} onClick={onClick}>
+            <StyledCardMedia title={imgAlt} image={imgSrc} />
+            <CardContent>
+              <UnderlinedTypo variant="h5" component="h3">
+                {title}
+              </UnderlinedTypo>
+              {children}
+            </CardContent>
+          </CardActionArea>
+        </StyledCard>
+      </Fade>
+    </div>
+  );
+};
 
 GridCard.propTypes = {
   children: PropTypes.arrayOf(PropTypes.node),
