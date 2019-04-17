@@ -31,6 +31,8 @@ const styles = () => ({
   },
 });
 
+const NO_TEACHER_SELECTED = '-1';
+
 class AddTeacherDialog extends Component {
   buildOptionsForSearchField = () => {
     const options = [];
@@ -168,7 +170,7 @@ export default connect(
     mapPropsToValues({ subject: { id } }) {
       return {
         subjectId: id,
-        teacherId: AddTeacherDialog.NO_TEACHER_SELECTED,
+        teacherId: NO_TEACHER_SELECTED,
       };
     },
     validationSchema: () =>
