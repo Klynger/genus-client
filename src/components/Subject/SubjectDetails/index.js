@@ -271,29 +271,33 @@ function mapToProps(
     evaluations = evaluations.map(id => evaluation.byId[id]);
     const evaluationHeaders = [];
 
-    evaluations.forEach(ev => {
+    evaluations = evaluations.map(ev => {
       evaluationHeaders.push(ev.name);
-      ev.evaluationResults = ev.evaluationResults
-        .filter(id => evaluationResult.byId[id])
-        .map(id => evaluationResult.byId[id]);
+      // AQUI ESTAVA A ATRIBUIÇÃO
+      const newEv = {
+        ...ev,
+        evaluationResults: ev.evaluationResults
+          .filter(id => evaluationResult.byId[id])
+          .map(id => evaluationResult.byId[id]),
+      };
+
+      return newEv;
     });
-    const studentsData = students.map(student => {
+    const studentsData = students.map(({ id, username, email }) => {
       const studentData = {
-        id: student.id,
-        username: student.username,
-        email: student.email,
+        id,
+        username,
+        email,
         evaluations: evaluations.map(ev => {
-          const evResult = ev.evaluationResults.filter(re => re.user === student.id);
-          if (evResult.length === 1) {
+          const evResult = ev.evaluationResults.filter(re => re.user === id);
+          if (evResult.length >= 1) {
             return evResult[0];
           }
           return 0;
         }),
       };
-
       return studentData;
     });
-
     result = {
       userRole,
       studentsData,

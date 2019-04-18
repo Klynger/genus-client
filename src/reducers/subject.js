@@ -4,6 +4,7 @@ import {
   UPDATE_SUBJECT,
   SAVE_ALL_SUBJECTS,
   REMOVE_ALL_SUBJECTS,
+  ADD_GRADE_TO_SUBJECT,
   ADD_TEACHER_TO_SUBJECT,
   ADD_STUDENT_TO_SUBJECT,
   ADD_STUDENTS_TO_SUBJECT,
@@ -163,7 +164,19 @@ function subject(state = DEFAULT_STATE, action) {
           },
         },
       };
-
+    case ADD_GRADE_TO_SUBJECT:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.payload.subjectId]: {
+            ...state.byId[action.payload.subjectId],
+            evaluations: state.byId[action.payload.subjectId].evaluations.concat(
+              action.payload.evaluation,
+            ),
+          },
+        },
+      };
     case SAVE_ALL_SUBJECTS:
       return saveAllHelper(action.payload, state);
     case REMOVE_ALL_SUBJECTS:

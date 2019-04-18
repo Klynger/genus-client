@@ -1,11 +1,16 @@
 import { normalize } from 'normalizr';
 import { evaluationSchema } from '../models/schema';
 import { requestGraphql } from '../utils/HTTPClient';
-import { SAVE_EVALUATION, SAVE_ALL_EVALUATION_RESULTS, SAVE_ALL_EVALUATIONS } from './actionTypes';
 import {
   mutationCreateEvaluation,
   mutationEditEvaluation,
 } from '../queryGenerators/evaluationMutations';
+import {
+  SAVE_EVALUATION,
+  SAVE_ALL_EVALUATION_RESULTS,
+  SAVE_ALL_EVALUATIONS,
+  ADD_GRADE_TO_SUBJECT,
+} from './actionTypes';
 
 export const createEvaluation = newEvaluation => dispatch => {
   return requestGraphql(
@@ -21,6 +26,13 @@ export const createEvaluation = newEvaluation => dispatch => {
       dispatch({
         type: SAVE_ALL_EVALUATIONS,
         payload: entities.evaluation,
+      });
+      dispatch({
+        type: ADD_GRADE_TO_SUBJECT,
+        payload: {
+          subjectId: newEvaluation.subjectId,
+          evaluation: Object.keys(entities.evaluation)[0],
+        },
       });
     } else {
       // TODO
