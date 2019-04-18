@@ -9,7 +9,7 @@ import {
   SAVE_EVALUATION,
   SAVE_ALL_EVALUATION_RESULTS,
   SAVE_ALL_EVALUATIONS,
-  ADD_GRADE_TO_SUBJECT,
+  ADD_EVALUATION_TO_SUBJECT,
 } from './actionTypes';
 
 export const createEvaluation = newEvaluation => dispatch => {
@@ -28,7 +28,7 @@ export const createEvaluation = newEvaluation => dispatch => {
         payload: entities.evaluation,
       });
       dispatch({
-        type: ADD_GRADE_TO_SUBJECT,
+        type: ADD_EVALUATION_TO_SUBJECT,
         payload: {
           subjectId: newEvaluation.subjectId,
           evaluation: Object.keys(entities.evaluation)[0],

@@ -4,13 +4,13 @@ import {
   UPDATE_SUBJECT,
   SAVE_ALL_SUBJECTS,
   REMOVE_ALL_SUBJECTS,
-  ADD_GRADE_TO_SUBJECT,
   ADD_TEACHER_TO_SUBJECT,
   ADD_STUDENT_TO_SUBJECT,
   ADD_STUDENTS_TO_SUBJECT,
   ADD_STUDENT_TO_SUBJECTS,
   ADD_STUDENTS_TO_SUBJECTS,
   ADD_DISCUSSION_TO_SUBJECT,
+  ADD_EVALUATION_TO_SUBJECT,
   REMOVE_STUDENT_FROM_SUBJECT,
   ADD_STUDENT_SUBJECT_TO_SUBJECT,
 } from '../actions/actionTypes';
@@ -164,7 +164,7 @@ function subject(state = DEFAULT_STATE, action) {
           },
         },
       };
-    case ADD_GRADE_TO_SUBJECT:
+    case ADD_EVALUATION_TO_SUBJECT:
       return {
         ...state,
         byId: {
