@@ -1,14 +1,16 @@
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Image from '../../shared/Image';
 import React, { Component } from 'react';
 import { Form, withFormik } from 'formik';
 import ProgressButton from '../../shared/ProgressButton';
 import { capitalize } from '@material-ui/core/utils/helpers';
+import { defaultImagesPaths } from '../../../utils/constants';
 import { updateInstitution } from '../../../actions/institution';
 import { NO_INSTUTION_SELECTED } from '../../../reducers/institution';
 import { DefaultDialogTransition } from '../../shared/SharedComponents';
-import { defaultDialogBreakpoints, phoneRegExp } from '../../../utils/helpers';
+import { defaultDialogBreakpoints, phoneRegExp, separateBase64 } from '../../../utils/helpers';
 import {
   Button,
   Dialog,
@@ -28,6 +30,16 @@ const styles = () => ({
   form: {
     display: 'flex',
     flexDirection: 'column',
+  },
+  imageWrapper: {
+    height: 180,
+    width: 180,
+  },
+  imageContainer: {
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+    width: '100%',
   },
 });
 
@@ -54,17 +66,19 @@ class EditInstitutionDialog extends Component {
 
   render() {
     const {
-      classes,
+      open,
+      width,
+      values,
       errors,
+      classes,
+      touched,
       fullScreen,
       handleChange,
       handleSubmit,
       isSubmitting,
-      open,
-      touched,
-      values,
-      width,
+      setFieldValue,
     } = this.props;
+
     return (
       <Dialog
         disableBackdropClick
@@ -79,6 +93,15 @@ class EditInstitutionDialog extends Component {
         <DialogTitle>Atualização de Instituição</DialogTitle>
         <DialogContent>
           <Form className={classes.form}>
+            <div className={classes.imageContainer}>
+              <div className={classes.imageWrapper}>
+                <Image
+                  rounded={false}
+                  onImageChange={base64 => setFieldValue('image', base64)}
+                  src={values.image ? values.image : defaultImagesPaths.INSTITUTION}
+                />
+              </div>
+            </div>
             <FormControl error={touched.name && errors.name !== undefined}>
               <InputLabel htmlFor="update-institution__name-field">Nome</InputLabel>
               <Input
@@ -149,6 +172,7 @@ EditInstitutionDialog.propTypes = {
   isSubmitting: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
+  setFieldValue: PropTypes.func.isRequired,
   setSubmitting: PropTypes.func.isRequired,
   submitUpdate: PropTypes.func.isRequired, // eslint-disable-line
   theme: PropTypes.shape({
@@ -179,6 +203,8 @@ function mapStateToProps({ institution }) {
         address: institution.byId[selectedInstitution].address,
         name: institution.byId[selectedInstitution].name,
         phone: institution.byId[selectedInstitution].phone,
+        mimeType: institution.byId[selectedInstitution].mimeType,
+        photo: institution.byId[selectedInstitution].photo,
       },
       selectedInstitution,
     };
@@ -202,10 +228,15 @@ export default connect(
     withStyles(styles, { withTheme: true })(
       withFormik({
         mapPropsToValues({ institution }) {
+          let image = null;
+          if (institution.mimeType && institution.photo) {
+            image = `${institution.mimeType},${institution.photo}`;
+          }
           return {
             address: institution.address || '',
             name: institution.name || '',
             phone: institution.phone || '',
+            image,
           };
         },
         validationSchema: () =>
@@ -225,12 +256,15 @@ export default connect(
               .required('Telefone é obrigatório.'),
           }),
         handleSubmit(values, { handleReset, props, setSubmitting, setErrors }) {
-          const input = {
-            ...values,
+          const { image, ...restValues } = values;
+          const separatedImage = separateBase64(image);
+          const institutionData = {
+            ...restValues,
+            ...separatedImage,
             institutionId: props.selectedInstitution,
           };
           props
-            .submitUpdate(input)
+            .submitUpdate(institutionData)
             .then(res => {
               setTimeout(() => {
                 setSubmitting(false);

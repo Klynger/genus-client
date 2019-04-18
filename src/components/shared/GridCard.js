@@ -35,7 +35,6 @@ CardLine.propTypes = {
 
 const styles = () => ({
   subjectCardRoot: {
-    borderRadius: 0,
     height: '100%',
     width: '100%',
   },
@@ -45,35 +44,36 @@ const styles = () => ({
   },
 });
 
-const GridCard = ({ classes, children, imgAlt, imgSrc, onClick, title }) => (
-  <div>
-    <Fade in>
-      <StyledCard className={classes.subjectCardRoot}>
-        <CardActionArea className={classes.subjectCardActionArea} onClick={onClick}>
-          <StyledCardMedia title={imgAlt} image={imgSrc} />
-          <CardContent>
-            <UnderlinedTypo variant="h5" component="h3">
-              {title}
-            </UnderlinedTypo>
-            {children}
-          </CardContent>
-        </CardActionArea>
-      </StyledCard>
-    </Fade>
-  </div>
-);
+const GridCard = ({ classes, children, imgAlt, imgSrc, onClick, title }) => {
+  return (
+    <div>
+      <Fade in>
+        <StyledCard className={classes.subjectCardRoot}>
+          <CardActionArea className={classes.subjectCardActionArea} onClick={onClick}>
+            <StyledCardMedia title={imgAlt} image={imgSrc} />
+            <CardContent>
+              <UnderlinedTypo variant="h5" component="h3">
+                {title}
+              </UnderlinedTypo>
+              {children}
+            </CardContent>
+          </CardActionArea>
+        </StyledCard>
+      </Fade>
+    </div>
+  );
+};
 
 GridCard.propTypes = {
   children: PropTypes.arrayOf(PropTypes.node),
   classes: PropTypes.object.isRequired,
-  imgAlt: PropTypes.string,
-  imgSrc: PropTypes.string,
+  imgAlt: PropTypes.string.isRequired,
+  imgSrc: PropTypes.string.isRequired,
   onClick: PropTypes.func,
   title: PropTypes.string,
 };
 
 GridCard.defaultProps = {
-  imgSrc: '/static/images/grade-default-img.jpg',
   onClick: () => undefined,
 };
 

@@ -3,7 +3,7 @@ import { dispatchEntities } from '../utils/helpers';
 import { requestGraphql } from '../utils/HTTPClient';
 import { queryFindSubjectById } from '../queryGenerators/subjectQueries';
 import {
-  UPDATE_SUBJECT,
+  SAVE_SUBJECT,
   SAVE_SUBJECT_TO_GRADE,
   ADD_TEACHER_TO_SUBJECT,
   ADD_STUDENT_TO_SUBJECT,
@@ -62,10 +62,10 @@ export const addTeacherToSubject = payload => dispatch =>
 
 export const updateSubject = payload => dispatch =>
   requestGraphql(mutationUpdateSubject(payload), localStorage.getItem('token')).then(res => {
-    if (res.data.data.updateSubject) {
+    if (res.data.data && res.data.data.updateSubject) {
       dispatch({
-        type: UPDATE_SUBJECT,
-        payload,
+        type: SAVE_SUBJECT,
+        subject: res.data.data.updateSubject,
       });
     }
     return res;

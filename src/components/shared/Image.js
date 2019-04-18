@@ -24,7 +24,7 @@ const styles = ({ palette, spacing, shape, transitions }) => ({
     width: '100%',
   },
   squaredImg: {
-    borderRadius: 0,
+    borderRadius: shape.borderRadius,
   },
 });
 

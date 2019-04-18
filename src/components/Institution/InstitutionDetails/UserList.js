@@ -21,7 +21,6 @@ const styles = theme => ({
   root: {
     marginTop: theme.spacing.unit * 2,
     overflowX: 'auto',
-    borderRadius: 0,
   },
   table: {
     width: '100%',

@@ -159,7 +159,7 @@ class SubjectDetailsPage extends Component {
               onClose={this.handleCloseAddGrade}
             />
             <EditSubjectDialog
-              subjectId={subject.id}
+              subject={subject}
               open={openEditSubject}
               onClose={this.handleEditSubjectClick}
             />

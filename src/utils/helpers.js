@@ -1,8 +1,6 @@
 import { normalize } from 'normalizr';
 import { userRoles } from './constants';
 
-export const DEFAULT_PHOTO_CLASS_SRC = '/static/images/grade-default-img.jpg';
-
 export const concatIdIfNotContain = (allIds = [], idsOrId) => {
   if (Array.isArray(idsOrId)) {
     idsOrId.forEach(id => {

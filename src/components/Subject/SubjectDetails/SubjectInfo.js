@@ -1,16 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Image from '../../shared/Image';
 import { withRouter, Link } from 'react-router-dom';
+import { defaultImagesPaths } from '../../../utils/constants';
 import { ActionsContainer } from '../../shared/SharedComponents';
-import { DEFAULT_PHOTO_CLASS_SRC } from '../../../utils/helpers';
 import { Button, Paper, Typography, withStyles } from '@material-ui/core';
 
-const PHOTO_DIMENSION = 200;
+const PHOTO_DIMENSION = 150;
 
 const styles = theme => ({
-  photo: {
-    height: '100%',
+  imageContainer: {
+    height: PHOTO_DIMENSION,
     width: PHOTO_DIMENSION,
   },
   root: {
@@ -49,14 +50,17 @@ const SubjectInfo = ({
   canSeeForum,
   userRole,
 }) => {
+  let image = null;
+  if (subject.mimeType && subject.photo) {
+    image = `${subject.mimeType},${subject.photo}`;
+  }
+
   return (
     <Paper className={classes.root}>
       <div className={classes.contentContainer}>
-        <img
-          alt={subject.name}
-          className={classes.photo}
-          src={subject.photo || DEFAULT_PHOTO_CLASS_SRC}
-        />
+        <div className={classes.imageContainer}>
+          <Image rounded={false} editable={false} src={image || defaultImagesPaths.SUBJECT} />
+        </div>
         <div className={classes.infoContainer}>
           <Typography component="h2" variant="h6" gutterBottom>
             {subject.name}
