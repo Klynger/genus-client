@@ -1,8 +1,10 @@
 import React from 'react';
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import Image from '../../shared/Image';
 import { Form, withFormik } from 'formik';
+import { updateGrade } from '../../../actions/grade';
 import { separateBase64 } from '../../../utils/helpers';
 import ProgressButton from '../../shared/ProgressButton';
 import CustomTextField from '../../shared/CustomTextField';
@@ -113,6 +115,8 @@ EditGradeDialog.propTypes = {
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool,
   setFieldValue: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/no-unused-prop-types
+  submitUpdate: PropTypes.func.isRequired,
   touched: PropTypes.shape({
     name: PropTypes.bool,
   }).isRequired,
@@ -121,35 +125,55 @@ EditGradeDialog.propTypes = {
   }).isRequired,
 };
 
-export default withFormik({
-  mapPropsToValues({ grade }) {
-    let image = null;
-    if (grade.mimeType && grade.photo) {
-      image = `${grade.mimeType},${grade.photo}`;
-    }
+function mapDispatchToProps(dispatch) {
+  return {
+    submitUpdate: input => dispatch(updateGrade(input)),
+  };
+}
 
-    return {
-      name: grade.name || '',
-      image,
-    };
-  },
-  validationSchema: () =>
-    Yup.object().shape({
-      name: Yup.string()
-        .min(6, 'Nome da Disciplina deve conter no mínimo 6 caracteres.')
-        .max(50, 'Nome da Disciplina deve conter no máximo 50 caracteres.')
-        .required('Nome é obrigatório'),
-    }),
-  handleSubmit(values, { props }) {
-    const { image, ...restValues } = values;
-    const separatedImage = separateBase64(image);
-    const gradeData = {
-      ...restValues,
-      ...separatedImage,
-      gradeId: props.grade.id,
-    };
+export default connect(
+  null,
+  mapDispatchToProps,
+)(
+  withFormik({
+    mapPropsToValues({ grade }) {
+      let image = null;
+      if (grade.mimeType && grade.photo) {
+        image = `${grade.mimeType},${grade.photo}`;
+      }
 
-    // eslint-disable-next-line no-console
-    console.log('gradeData', gradeData);
-  },
-})(withStyles(styles, { withTheme: true })(EditGradeDialog));
+      return {
+        name: grade.name || '',
+        image,
+      };
+    },
+    validationSchema: () =>
+      Yup.object().shape({
+        name: Yup.string()
+          .min(6, 'Nome da Disciplina deve conter no mínimo 6 caracteres.')
+          .max(50, 'Nome da Disciplina deve conter no máximo 50 caracteres.')
+          .required('Nome é obrigatório'),
+      }),
+    handleSubmit(values, { props, setSubmitting }) {
+      const { image, ...restValues } = values;
+      const separatedImage = separateBase64(image);
+      const gradeData = {
+        ...restValues,
+        ...separatedImage,
+        gradeId: props.grade.id,
+      };
+
+      props
+        .submitUpdate(gradeData)
+        .then(res => {
+          setSubmitting(false);
+          if (res.data.data.updateGrade) {
+            props.onClose();
+          }
+        })
+        .catch(() => {
+          setSubmitting(false);
+        });
+    },
+  })(withStyles(styles, { withTheme: true })(EditGradeDialog)),
+);

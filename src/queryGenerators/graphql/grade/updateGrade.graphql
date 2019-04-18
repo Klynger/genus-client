@@ -1,0 +1,7 @@
+#import "./gradeFragment.graphql"
+
+mutation updateGrade($input: UpdateGradeInput!) {
+  updateGrade(input: $input) {
+    ...gradeFields
+  }
+}

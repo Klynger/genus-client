@@ -11,7 +11,7 @@ const PHOTO_DIMENSION = 250;
 const styles = theme => ({
   imageContainer: {
     borderTopLeftRadius: theme.shape.borderRadius,
-    height: '100%',
+    height: 160,
     minHeight: 150,
     width: PHOTO_DIMENSION,
     [theme.breakpoints.down('xs')]: {
