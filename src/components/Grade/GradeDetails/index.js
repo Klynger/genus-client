@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { Fade } from '@material-ui/core';
 import SubjectsGrid from './SubjectsGrid';
+import EditGradeDialog from './EditGradeDialog';
 import { fetchGrade } from '../../../actions/grade';
 import { emailType } from '../../../utils/constants';
 import { withStyles } from '@material-ui/core/styles';
@@ -27,6 +28,7 @@ class GradeDetails extends Component {
     this.state = {
       sendEmailOpen: false,
       addStudentsOpen: false,
+      editGradeOpen: false,
     };
   }
 
@@ -49,6 +51,14 @@ class GradeDetails extends Component {
     this.setState({ addStudentsOpen: false });
   };
 
+  handleEditGradeOpen = () => {
+    this.setState({ editGradeOpen: true });
+  };
+
+  handleEditGradeClose = () => {
+    this.setState({ editGradeOpen: false });
+  };
+
   handleSendEmailOpen = () => {
     this.setState({ sendEmailOpen: true });
   };
@@ -69,7 +79,7 @@ class GradeDetails extends Component {
           params: { gradeId },
         },
       } = this.props;
-      const { addStudentsOpen, sendEmailOpen } = this.state;
+      const { addStudentsOpen, editGradeOpen, sendEmailOpen } = this.state;
 
       toRender = (
         <DefaultContainerRoute>
@@ -85,6 +95,8 @@ class GradeDetails extends Component {
             canSendEmailToGradeStudents={canSendEmailToGradeStudents}
             onAddStudents={this.handleAddStudentsOpen}
             onSendEmailOpen={this.handleSendEmailOpen}
+            onEditGradeOpen={this.handleEditGradeOpen}
+            userRole={userRole}
           />
           {canSendEmailToGradeStudents && (
             <SendEmailDialog
@@ -92,6 +104,13 @@ class GradeDetails extends Component {
               sendEmailType={emailType.TO_ALL_GRADE_STUDENTS}
               id={gradeId}
               onClose={this.handleSendEmailClose}
+            />
+          )}
+          {userRole === 'ADMIN' && (
+            <EditGradeDialog
+              open={editGradeOpen}
+              grade={grade}
+              onClose={this.handleEditGradeClose}
             />
           )}
           <SubjectsGrid gradeId={gradeId} subjects={grade.subjects} userRole={userRole} />

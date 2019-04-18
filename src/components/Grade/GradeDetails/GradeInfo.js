@@ -77,15 +77,18 @@ class GradeInfo extends Component {
     if (grade) {
       const {
         classes,
-        canAddStudents,
+        userRole,
         onAddStudents,
-        canSendEmailToGradeStudents,
+        canAddStudents,
         onSendEmailOpen,
+        onEditGradeOpen,
+        canSendEmailToGradeStudents,
       } = this.props;
       const { openMenu } = this.state;
 
       const showMenuButton = canAddStudents;
       const showEmailButton = canSendEmailToGradeStudents;
+      const showEditGrade = userRole === 'ADMIN';
 
       let image = null;
       if (grade.mimeType && grade.photo) {
@@ -98,9 +101,11 @@ class GradeInfo extends Component {
             open={openMenu}
             id={this.menuId}
             anchorEl={this.menuAnchorEl}
+            canEditGrade={showEditGrade}
+            onAddStudents={onAddStudents}
             onClose={this.handleMenuClose}
             canAddStudents={canAddStudents}
-            onAddStudents={onAddStudents}
+            onEditGradeOpen={onEditGradeOpen}
             onSendEmailOpen={onSendEmailOpen}
             canSendEmailToGradeStudents={canSendEmailToGradeStudents}
           />
@@ -169,7 +174,9 @@ GradeInfo.propTypes = {
     qntTeachers: PropTypes.number,
   }),
   onAddStudents: PropTypes.func.isRequired,
+  onEditGradeOpen: PropTypes.func.isRequired,
   onSendEmailOpen: PropTypes.func.isRequired,
+  userRole: PropTypes.string.isRequired,
 };
 
 export default withStyles(styles)(GradeInfo);
