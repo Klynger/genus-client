@@ -96,7 +96,7 @@ class AddGradeDialog extends Component {
 
     if (!hasError && !errors.name) {
       const { studentsData } = this.state;
-      const { createNewEvaluations, subject } = this.props;
+      const { createNewEvaluations, subject, onClose } = this.props;
 
       const resultInputs = studentsData.map(({ id, result }) => ({
         studentId: id,
@@ -110,7 +110,8 @@ class AddGradeDialog extends Component {
       };
       this.setState({ isSubmitting: true });
       createNewEvaluations(evaluationInput).then(() => {
-        window.location.reload();
+        onClose();
+        this.setState({ isSubmitting: false });
       });
     }
   };
