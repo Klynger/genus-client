@@ -273,7 +273,6 @@ function mapToProps(
 
     evaluations = evaluations.map(ev => {
       evaluationHeaders.push(ev.name);
-      // AQUI ESTAVA A ATRIBUIÇÃO
       const newEv = {
         ...ev,
         evaluationResults: ev.evaluationResults
