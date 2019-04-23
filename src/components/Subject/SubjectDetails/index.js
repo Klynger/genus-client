@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import GradesInfo from './GradesInfo';
 import SubjectInfo from './SubjectInfo';
 import StudentsTable from './StudentsTable';
 import AddGradeDialog from './AddGradeDialog';
@@ -11,6 +12,7 @@ import EditSubjectDialog from './EditSubjectDialog';
 import { emailType } from '../../../utils/constants';
 import { getUserRole } from '../../../utils/helpers';
 import { removeStudentFromSubjectId } from '../../../actions/user';
+import UserList from '../../Institution/InstitutionDetails/UserList';
 import DefaultContainerRoute from '../../shared/DefaultContainerRoute';
 import RemoveStudentFromSubjectDialog from './RemoveStudentFromSubjectDialog';
 import SendEmailDialog from '../../Institution/InstitutionDetails/SendEmailDialog';
@@ -127,7 +129,8 @@ class SubjectDetailsPage extends Component {
         toRender = (
           <Fragment>
             <SubjectInfo subject={subject} />
-            {/* <GradesInfo user={user} studentSubjects={userStudentSubjects} /> */}
+            <UserList users={subject.teachers} headTitle="Professores" />
+            <GradesInfo studentId={loggedUserId} studentSubject={subject} />
           </Fragment>
         );
       } else {
