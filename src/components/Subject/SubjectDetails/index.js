@@ -310,7 +310,7 @@ function mapToProps(
       },
       canSendEmailToSubjectStudents:
         teachers.some(teacher => teacher.id === user.loggedUserId) ||
-        admins.some(admin => admin.id === user.loggedUserId),
+        admins.some(id => id === user.loggedUserId),
     };
   }
 
