@@ -46,17 +46,23 @@ class GradesInfo extends Component {
   getEvaluations = () => {
     const evaluations = [];
     let average = 0;
-    for (let i = 0; i < this.props.studentSubjects.length; i += 1) {
-      const userEvaluations = this.props.studentSubjects[i].evaluations;
-      for (let j = 0; j < userEvaluations.length; j += 1) {
-        const ev = userEvaluations[j];
-        evaluations.push({
-          name: ev.name,
-          weight: ev.weight,
-          result: ev.result,
-        });
-        average += ev.weight * ev.result;
-      }
+    const userEvaluations = this.props.studentSubject.evaluations;
+    userEvaluations.forEach(ev => {
+      ev.evaluationResults.forEach(result => {
+        if (result.user === this.props.studentId) {
+          evaluations.push({
+            name: ev.name,
+            weight: ev.weight,
+            result: result.result,
+            id: result.id,
+          });
+          average += ev.weight * result.result;
+        }
+      });
+    });
+
+    if (userEvaluations.length > 0) {
+      average /= userEvaluations.length;
     }
     return { evaluations, average };
   };
@@ -91,8 +97,7 @@ class GradesInfo extends Component {
           </TableHead>
           <TableBody>
             {evaluations.map(evaluation => (
-              // change key
-              <TableRow key={evaluation.name}>
+              <TableRow key={evaluation.id}>
                 <TableCell className={classes.middleColumns}>{evaluation.name}</TableCell>
                 <TableCell className={classes.middleColumns}>{evaluation.result}</TableCell>
                 <TableCell className={classes.middleColumns}>{evaluation.weight}</TableCell>
@@ -107,7 +112,8 @@ class GradesInfo extends Component {
 
 GradesInfo.propTypes = {
   classes: PropTypes.object.isRequired,
-  studentSubjects: PropTypes.object.isRequired,
+  studentId: PropTypes.string.isRequired,
+  studentSubject: PropTypes.object.isRequired,
 };
 
 function mapStateToProps() {
