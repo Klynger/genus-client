@@ -62,6 +62,7 @@ const SubjectInfo = ({
   userRole,
 }) => {
   const menuId = 'subject-info__menu';
+  const userIsNotStudent = userRole !== 'STUDENT';
   const [menuState, setMenuState] = useState({ openMenu: false, menuAnchorEl: null });
   let image = null;
   if (subject.mimeType && subject.photo) {
@@ -77,26 +78,30 @@ const SubjectInfo = ({
 
   return (
     <Fragment>
-      <SubjectMenuInfo
-        onClose={handleMenuClose}
-        open={menuState.openMenu}
-        id={menuId}
-        anchorEl={menuState.menuAnchorEl}
-        isAdmin={isAdmin}
-        canSendEmail={userRole === 'TEACHER' || userRole === 'ADMIN'}
-        onEditSubjectOpen={onEditSubjectClick}
-        onAddTeacherOpen={onAddTeacherClick}
-        onAddStudentOpen={onAddStudentClick}
-        onSendEmailOpen={onSendEmailOpen}
-      />
+      {userIsNotStudent && (
+        <SubjectMenuInfo
+          onClose={handleMenuClose}
+          open={menuState.openMenu}
+          id={menuId}
+          anchorEl={menuState.menuAnchorEl}
+          isAdmin={isAdmin}
+          canSendEmail={userRole === 'TEACHER' || userRole === 'ADMIN'}
+          onEditSubjectOpen={onEditSubjectClick}
+          onAddTeacherOpen={onAddTeacherClick}
+          onAddStudentOpen={onAddStudentClick}
+          onSendEmailOpen={onSendEmailOpen}
+        />
+      )}
       <Paper className={classes.root}>
-        <IconButton
-          aria-haspopup="true"
-          className={classes.menuIcon}
-          onClick={evt => setMenuState({ menuAnchorEl: evt.currentTarget, openMenu: true })}
-        >
-          <MoreVert />
-        </IconButton>
+        {userIsNotStudent && (
+          <IconButton
+            aria-haspopup="true"
+            className={classes.menuIcon}
+            onClick={evt => setMenuState({ menuAnchorEl: evt.currentTarget, openMenu: true })}
+          >
+            <MoreVert />
+          </IconButton>
+        )}
         <div className={classes.contentContainer}>
           <div className={classes.imageContainer}>
             <Image rounded={false} editable={false} src={image || defaultImagesPaths.SUBJECT} />
@@ -138,11 +143,11 @@ SubjectInfo.propTypes = {
     }).isRequired,
   }).isRequired,
   isAdmin: PropTypes.bool.isRequired,
-  onAddGradeClick: PropTypes.func.isRequired,
-  onAddStudentClick: PropTypes.func.isRequired,
-  onAddTeacherClick: PropTypes.func.isRequired,
-  onEditSubjectClick: PropTypes.func.isRequired,
-  onSendEmailOpen: PropTypes.func.isRequired,
+  onAddGradeClick: PropTypes.func,
+  onAddStudentClick: PropTypes.func,
+  onAddTeacherClick: PropTypes.func,
+  onEditSubjectClick: PropTypes.func,
+  onSendEmailOpen: PropTypes.func,
   subject: PropTypes.shape({
     name: PropTypes.string.isRequired,
     photo: PropTypes.string,

@@ -143,7 +143,8 @@ AddStudentToGradeDialog.propTypes = {
   }).isRequired,
   values: PropTypes.shape({
     gradeId: PropTypes.string.isRequired,
-    studentsIds: PropTypes.string.isRequired,
+    studentsIds: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)])
+      .isRequired,
   }).isRequired,
   width: PropTypes.string.isRequired,
 };
