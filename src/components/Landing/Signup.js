@@ -1,15 +1,18 @@
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
+// import Image from '../shared/Image';
 import styled from 'styled-components';
 import { Form, withFormik } from 'formik';
 import React, { PureComponent } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Zoom, Paper } from '@material-ui/core';
+import { separateBase64 } from '../../utils/helpers';
 import { withStyles } from '@material-ui/core/styles';
 import ProgressButton from '../shared/ProgressButton';
 import CustomTextField from '../shared/CustomTextField';
 import { createUserAndLogin } from '../../actions/user';
 import { FadeInButton } from '../shared/SharedComponents';
+// import { defaultImagesPaths } from '../../utils/constants';
 
 const DEFAULT_ANIMATION_TIMING = 700;
 
@@ -86,6 +89,16 @@ const styles = theme => ({
       },
     },
   },
+  imageWrapper: {
+    height: 150,
+    width: 150,
+  },
+  imageContainer: {
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+    width: '100%',
+  },
 });
 
 const formFields = ['username', 'email', 'password'];
@@ -114,19 +127,28 @@ class Signup extends PureComponent {
 
   render() {
     const {
-      onSigninClick,
       classes,
-      handleChange,
       values,
       errors,
       touched,
+      handleChange,
       isSubmitting,
       handleSubmit,
+      onSigninClick,
+      // setFieldValue,
     } = this.props;
 
     return (
       <SignupContainer>
         <Form className={classes.form}>
+          {/* <div className={classes.imageContainer}>
+            <span className={classes.imageWrapper}>
+              <Image
+                onImageChange={base64 => setFieldValue('image', base64)}
+                src={values.image ? values.image : defaultImagesPaths.USER}
+              />
+            </span>
+          </div> */}
           {formFields.map(field => (
             <CustomTextField
               key={field}
@@ -179,6 +201,7 @@ Signup.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   isSubmitting: PropTypes.bool.isRequired,
   onSigninClick: PropTypes.func.isRequired,
+  // setFieldValue: PropTypes.func.isRequired,
   touched: PropTypes.shape({
     email: PropTypes.bool,
     password: PropTypes.bool,
@@ -186,6 +209,7 @@ Signup.propTypes = {
   }).isRequired,
   values: PropTypes.shape({
     email: PropTypes.string.isRequired,
+    image: PropTypes.string,
     password: PropTypes.string.isRequired,
     username: PropTypes.string.isRequired,
   }).isRequired,
@@ -197,6 +221,7 @@ export default withRouter(
       return {
         email: '',
         password: '',
+        image: undefined,
         username: '',
       };
     },
@@ -218,7 +243,13 @@ export default withRouter(
           .required('Nome obrigatório'),
       }),
     handleSubmit(values, { setSubmitting, props, setErrors, resetForm }) {
-      createUserAndLogin(values)
+      const { image, ...restValues } = values;
+      const separatedImage = separateBase64(image);
+      const userData = {
+        ...restValues,
+        ...separatedImage,
+      };
+      createUserAndLogin(userData)
         .then(({ data }) => {
           setSubmitting(false);
           if (data.data && data.data.createUser) {

@@ -3,4 +3,6 @@ fragment gradeFields on Grade {
   name
   qntStudents
   qntTeachers
+  mimeType
+  photo
 }

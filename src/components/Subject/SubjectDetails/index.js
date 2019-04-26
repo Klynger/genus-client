@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-// import GradesInfo from './GradesInfo';
+import GradesInfo from './GradesInfo';
 import SubjectInfo from './SubjectInfo';
 import StudentsTable from './StudentsTable';
 import AddGradeDialog from './AddGradeDialog';
@@ -9,10 +9,13 @@ import AddteacherDialog from './AddTeacherDialog';
 import React, { Component, Fragment } from 'react';
 import { Fade, withTheme } from '@material-ui/core';
 import EditSubjectDialog from './EditSubjectDialog';
+import { emailType } from '../../../utils/constants';
 import { getUserRole } from '../../../utils/helpers';
 import { removeStudentFromSubjectId } from '../../../actions/user';
+import UserList from '../../Institution/InstitutionDetails/UserList';
 import DefaultContainerRoute from '../../shared/DefaultContainerRoute';
 import RemoveStudentFromSubjectDialog from './RemoveStudentFromSubjectDialog';
+import SendEmailDialog from '../../Institution/InstitutionDetails/SendEmailDialog';
 
 class SubjectDetailsPage extends Component {
   constructor(props) {
@@ -23,6 +26,7 @@ class SubjectDetailsPage extends Component {
       openAddTeacher: false,
       openAddGrade: false,
       openEditSubject: false,
+      sendEmailOpen: false,
       openRemoveStudent: false,
       selectedStudent: null,
       waitingForRemoveStudent: false,
@@ -76,6 +80,14 @@ class SubjectDetailsPage extends Component {
     this.setState({ openRemoveStudent: true, selectedStudent });
   };
 
+  handleSendEmailOpen = () => {
+    this.setState({ sendEmailOpen: true });
+  };
+
+  handleSendEmailClose = () => {
+    this.setState({ sendEmailOpen: false });
+  };
+
   handleCloseRemoveStudentDialog = () => {
     this.setState({ openRemoveStudent: false });
   };
@@ -98,7 +110,7 @@ class SubjectDetailsPage extends Component {
   };
 
   render() {
-    const { subject, loggedUserId } = this.props;
+    const { subject, loggedUserId, canSendEmailToSubjectStudents } = this.props;
     const {
       openAddGrade,
       openAddStudent,
@@ -106,6 +118,7 @@ class SubjectDetailsPage extends Component {
       openEditSubject,
       openRemoveStudent,
       waitingForRemoveStudent,
+      sendEmailOpen,
     } = this.state;
 
     let toRender;
@@ -116,7 +129,8 @@ class SubjectDetailsPage extends Component {
         toRender = (
           <Fragment>
             <SubjectInfo subject={subject} />
-            {/* <GradesInfo user={user} studentSubjects={userStudentSubjects} /> */}
+            <UserList users={subject.teachers} headTitle="Professores" />
+            <GradesInfo studentId={loggedUserId} studentSubject={subject} />
           </Fragment>
         );
       } else {
@@ -128,6 +142,14 @@ class SubjectDetailsPage extends Component {
               open={openAddTeacher}
               onClose={this.handleAddTeacherClick}
             />
+            {canSendEmailToSubjectStudents && (
+              <SendEmailDialog
+                open={sendEmailOpen}
+                sendEmailType={emailType.TO_ALL_SUBJECT_STUDENTS}
+                id={subject.id}
+                onClose={this.handleSendEmailClose}
+              />
+            )}
             <AddStudentDialog
               subject={subject}
               open={openAddStudent}
@@ -140,7 +162,7 @@ class SubjectDetailsPage extends Component {
               onClose={this.handleCloseAddGrade}
             />
             <EditSubjectDialog
-              subjectId={subject.id}
+              subject={subject}
               open={openEditSubject}
               onClose={this.handleEditSubjectClick}
             />
@@ -150,6 +172,7 @@ class SubjectDetailsPage extends Component {
               onAddStudentClick={this.handleOpenAddStudent}
               onEditSubjectClick={this.handleEditSubjectClick}
               onAddGradeClick={this.handleOpenAddGrade}
+              onSendEmailOpen={this.handleSendEmailOpen}
             />
             <RemoveStudentFromSubjectDialog
               open={openRemoveStudent}
@@ -181,6 +204,7 @@ class SubjectDetailsPage extends Component {
 }
 
 SubjectDetailsPage.propTypes = {
+  canSendEmailToSubjectStudents: PropTypes.bool,
   evaluationHeaders: PropTypes.arrayOf(PropTypes.string).isRequired,
   loggedUserId: PropTypes.string.isRequired,
   removeStudentFromSubject: PropTypes.func.isRequired,
@@ -250,29 +274,32 @@ function mapToProps(
     evaluations = evaluations.map(id => evaluation.byId[id]);
     const evaluationHeaders = [];
 
-    evaluations.forEach(ev => {
+    evaluations = evaluations.map(ev => {
       evaluationHeaders.push(ev.name);
-      ev.evaluationResults = ev.evaluationResults
-        .filter(id => evaluationResult.byId[id])
-        .map(id => evaluationResult.byId[id]);
+      const newEv = {
+        ...ev,
+        evaluationResults: ev.evaluationResults
+          .filter(id => evaluationResult.byId[id])
+          .map(id => evaluationResult.byId[id]),
+      };
+
+      return newEv;
     });
-    const studentsData = students.map(student => {
+    const studentsData = students.map(({ id, username, email }) => {
       const studentData = {
-        id: student.id,
-        username: student.username,
-        email: student.email,
+        id,
+        username,
+        email,
         evaluations: evaluations.map(ev => {
-          const evResult = ev.evaluationResults.filter(re => re.user === student.id);
-          if (evResult.length === 1) {
+          const evResult = ev.evaluationResults.filter(re => re.user === id);
+          if (evResult.length >= 1) {
             return evResult[0];
           }
           return 0;
         }),
       };
-
       return studentData;
     });
-
     result = {
       userRole,
       studentsData,
@@ -284,6 +311,9 @@ function mapToProps(
         students,
         evaluations,
       },
+      canSendEmailToSubjectStudents:
+        teachers.some(teacher => teacher.id === user.loggedUserId) ||
+        admins.some(id => id === user.loggedUserId),
     };
   }
 

@@ -1,8 +1,6 @@
 import { normalize } from 'normalizr';
 import { userRoles } from './constants';
 
-export const DEFAULT_PHOTO_CLASS_SRC = '/static/images/grade-default-img.jpg';
-
 export const concatIdIfNotContain = (allIds = [], idsOrId) => {
   if (Array.isArray(idsOrId)) {
     idsOrId.forEach(id => {
@@ -28,6 +26,10 @@ export function getRoleFromInstitution(id, institution) {
     role = userRoles.TEACHER;
   }
   return role;
+}
+
+export function isInstitutionAdmin(id, institution) {
+  return getRoleFromInstitution(id, institution) === userRoles.ADMIN;
 }
 
 export const getFirstInitialsCapitalized = (fullName = '', amountOfInitials = 2) => {
@@ -148,3 +150,18 @@ export const stringToColor = string => {
 
   return color;
 };
+
+export function separateBase64(fullBase64) {
+  let i = 0;
+  if (!fullBase64) {
+    return undefined;
+  }
+  while (fullBase64[i] !== ',') {
+    i += 1;
+  }
+
+  const mimeType = fullBase64.substr(0, i);
+  const photo = fullBase64.substr(i + 1);
+
+  return { mimeType, photo };
+}

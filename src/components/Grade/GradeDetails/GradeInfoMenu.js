@@ -16,7 +16,19 @@ const styles = () => ({
   },
 });
 
-const GradeInfoMenu = ({ id, open, classes, onClose, anchorEl, onAddStudents, canAddStudents }) => {
+const GradeInfoMenu = ({
+  id,
+  open,
+  classes,
+  onClose,
+  anchorEl,
+  canEditGrade,
+  onAddStudents,
+  canAddStudents,
+  onSendEmailOpen,
+  onEditGradeOpen,
+  canSendEmailToGradeStudents,
+}) => {
   return (
     <Popper
       anchorEl={anchorEl}
@@ -35,6 +47,16 @@ const GradeInfoMenu = ({ id, open, classes, onClose, anchorEl, onAddStudents, ca
           <Paper>
             <ClickAwayListener onClickAway={onClose}>
               <MenuList>
+                {canEditGrade && (
+                  <MenuItem
+                    onClick={e => {
+                      onEditGradeOpen();
+                      onClose(e);
+                    }}
+                  >
+                    Editar informações
+                  </MenuItem>
+                )}
                 {canAddStudents && (
                   <MenuItem
                     onClick={e => {
@@ -45,6 +67,16 @@ const GradeInfoMenu = ({ id, open, classes, onClose, anchorEl, onAddStudents, ca
                     }}
                   >
                     Adicionar estudante
+                  </MenuItem>
+                )}
+                {canSendEmailToGradeStudents && (
+                  <MenuItem
+                    onClick={e => {
+                      onSendEmailOpen();
+                      onClose(e);
+                    }}
+                  >
+                    Enviar email
                   </MenuItem>
                 )}
               </MenuList>
@@ -63,10 +95,14 @@ GradeInfoMenu.defaultProps = {
 GradeInfoMenu.propTypes = {
   anchorEl: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
   canAddStudents: PropTypes.bool,
+  canEditGrade: PropTypes.bool,
+  canSendEmailToGradeStudents: PropTypes.bool,
   classes: PropTypes.object.isRequired,
   id: PropTypes.string.isRequired,
   onAddStudents: PropTypes.func,
   onClose: PropTypes.func.isRequired,
+  onEditGradeOpen: PropTypes.func.isRequired,
+  onSendEmailOpen: PropTypes.func.isRequired,
   open: PropTypes.bool,
 };
 

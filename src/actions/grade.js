@@ -1,9 +1,9 @@
 import { gradeSchema } from '../models/schema';
 import { dispatchEntities } from '../utils/helpers';
 import { requestGraphql } from '../utils/HTTPClient';
-import { SAVE_GRADE_TO_INSTITUTION } from './actionTypes';
 import { queryFindGrade } from '../queryGenerators/GradeQueries';
-import { mutationCreateGrade } from '../queryGenerators/GradeMutations';
+import { SAVE_GRADE_TO_INSTITUTION, SAVE_GRADE } from './actionTypes';
+import { mutationCreateGrade, mutationUpdateGrade } from '../queryGenerators/GradeMutations';
 
 export const createGrade = newGrade => dispatch => {
   return requestGraphql(mutationCreateGrade(newGrade), localStorage.getItem('token')).then(res => {
@@ -22,6 +22,19 @@ export const createGrade = newGrade => dispatch => {
       // result = Promise.reject(new Error('404'));
     }
     return result;
+  });
+};
+
+export const updateGrade = input => dispatch => {
+  return requestGraphql(mutationUpdateGrade(input), localStorage.getItem('token')).then(res => {
+    if (res.data.data && res.data.data.updateGrade) {
+      dispatch({
+        type: SAVE_GRADE,
+        grade: res.data.data.updateGrade,
+      });
+    }
+
+    return res;
   });
 };
 

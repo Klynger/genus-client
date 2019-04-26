@@ -5,6 +5,8 @@ import GradesGrid from './GradesGrid';
 import { Fade } from '@material-ui/core';
 import React, { Component } from 'react';
 import InstitutionInfo from './InstitutionInfo';
+import SendEmailDialog from './SendEmailDialog';
+import { emailType } from '../../../utils/constants';
 import EditInstitutionDialog from './EditInstitutionDialog';
 import DisplayCodeDialog from '../EntryCode/DisplayCodeDialog';
 import GenerateCodeDialog from '../EntryCode/GenerateCodeDialog';
@@ -15,6 +17,7 @@ class InstitutionDetails extends Component {
     super(props);
     this.state = {
       generateCodeOpen: false,
+      sendEmailOpen: false,
       currentGeneratedCode: null,
       displayCodeOpen: false,
       displayUpdateOpen: false,
@@ -41,6 +44,14 @@ class InstitutionDetails extends Component {
     this.setState({ generateCodeOpen: true });
   };
 
+  handleSendEmailOpen = () => {
+    this.setState({ sendEmailOpen: true });
+  };
+
+  handleSendEmailClose = () => {
+    this.setState({ sendEmailOpen: false });
+  };
+
   handleUpdateInstitutionOpen = () => {
     this.setState({ displayUpdateOpen: true });
   };
@@ -55,12 +66,14 @@ class InstitutionDetails extends Component {
       displayCodeOpen,
       displayUpdateOpen,
       generateCodeOpen,
+      sendEmailOpen,
       currentGeneratedCode,
     } = this.state;
     let toRender;
 
     if (institution) {
       const loggedUserIsAdmin = institution.admins.some(({ id }) => id === loggedUserId);
+      const loggedUserIsStudent = institution.students.some(({ id }) => id === loggedUserId);
 
       toRender = (
         <DefaultContainerRoute>
@@ -82,17 +95,28 @@ class InstitutionDetails extends Component {
               onClose={this.handleUpdateInstitutionClose}
             />
           )}
+          {loggedUserIsAdmin && (
+            <SendEmailDialog
+              sendEmailType={emailType.TO_ALL_TEACHERS}
+              open={sendEmailOpen}
+              id={institution.id}
+              onClose={this.handleSendEmailClose}
+              showSelectRole
+            />
+          )}
           <InstitutionInfo
             institution={institution}
             canUpdateInfo={loggedUserIsAdmin}
             canGenerateCode={loggedUserIsAdmin}
+            canSendEmail={loggedUserIsAdmin}
             onGenerateCodeOpen={this.handleGenerateCodeOpen}
+            onSendEmailOpen={this.handleSendEmailOpen}
             onUpdateInstitutionOpen={this.handleUpdateInstitutionOpen}
           />
-          <GradesGrid />
+          {loggedUserIsAdmin && <GradesGrid />}
           <UserList users={institution.teachers} headTitle="Professores" />
           <UserList users={institution.admins} headTitle="Administradores" />
-          <UserList users={institution.students} headTitle="Alunos" />
+          {!loggedUserIsStudent && <UserList users={institution.students} headTitle="Alunos" />}
         </DefaultContainerRoute>
       );
     } else {

@@ -1,18 +1,21 @@
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import React, { Component } from 'react';
 import GridCard from '../../shared/GridCard';
 import { withRouter } from 'react-router-dom';
+import { withStyles } from '@material-ui/core';
 import GridButton from '../../shared/GridButton';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import { defaultImagesPaths } from '../../../utils/constants';
 import CreateSubjectDialog from '../../Institution/CreateSubjectDialog';
 import { GridContainer, ResponsiveSubTitle } from '../../shared/SharedComponents';
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 97%;
-`;
+const styles = () => ({
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '97%',
+  },
+});
 
 class SubjectsGrid extends Component {
   constructor(props) {
@@ -21,7 +24,6 @@ class SubjectsGrid extends Component {
     this.state = {
       subjectDialogOpen: false,
     };
-    this.handleSubjectDialogToggle = this.handleSubjectDialogToggle.bind(this);
   }
 
   goToSubject = id => {
@@ -32,18 +34,18 @@ class SubjectsGrid extends Component {
     push(`${pathname}/subject/${id}`);
   };
 
-  handleSubjectDialogToggle() {
+  handleSubjectDialogToggle = () => {
     this.setState(({ subjectDialogOpen }) => ({
       subjectDialogOpen: !subjectDialogOpen,
     }));
-  }
+  };
 
   render() {
-    const { gradeId, subjects, userRole } = this.props;
+    const { gradeId, subjects, userRole, classes } = this.props;
     const { subjectDialogOpen } = this.state;
 
     return (
-      <Container>
+      <div className={classes.container}>
         <ResponsiveSubTitle>Disciplinas</ResponsiveSubTitle>
         <CreateSubjectDialog
           gradeId={gradeId}
@@ -51,19 +53,26 @@ class SubjectsGrid extends Component {
           onClose={this.handleSubjectDialogToggle}
         />
         <GridContainer>
-          {subjects.map(({ id, name }) => (
-            <GridCard key={id} title={name} onClick={() => this.goToSubject(id)} />
+          {subjects.map(({ id, name, mimeType, photo }) => (
+            <GridCard
+              key={id}
+              title={name}
+              imgAlt={name}
+              onClick={() => this.goToSubject(id)}
+              imgSrc={mimeType && photo ? `${mimeType},${photo}` : defaultImagesPaths.SUBJECT}
+            />
           ))}
           {userRole === 'ADMIN' && (
             <GridButton key="-10" Icon={AddCircleIcon} onClick={this.handleSubjectDialogToggle} />
           )}
         </GridContainer>
-      </Container>
+      </div>
     );
   }
 }
 
 SubjectsGrid.propTypes = {
+  classes: PropTypes.object.isRequired,
   gradeId: PropTypes.string.isRequired,
   history: PropTypes.shape({
     location: PropTypes.shape({
@@ -79,4 +88,4 @@ SubjectsGrid.subjects = {
   subjects: [],
 };
 
-export default withRouter(SubjectsGrid);
+export default withStyles(styles)(withRouter(SubjectsGrid));

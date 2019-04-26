@@ -7,4 +7,9 @@ export const mutationCreateGrade = input => ({
   },
 });
 
-export default {};
+export const mutationUpdateGrade = input => ({
+  query: loader('./graphql/grade/updateGrade.graphql').loc.source.body,
+  variables: {
+    input,
+  },
+});

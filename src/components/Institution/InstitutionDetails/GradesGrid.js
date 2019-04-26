@@ -7,6 +7,7 @@ import GridButton from '../../shared/GridButton';
 import CreateGradeDialog from '../CreateGradeDialog';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import GridCard, { CardLine } from '../../shared/GridCard';
+import { defaultImagesPaths } from '../../../utils/constants';
 import { NO_INSTUTION_SELECTED } from '../../../reducers/institution';
 import { GridContainer, ResponsiveSubTitle } from '../../shared/SharedComponents';
 
@@ -46,8 +47,14 @@ class GradesGrid extends Component {
         <ResponsiveSubTitle>Séries</ResponsiveSubTitle>
         <GridContainer>
           <CreateGradeDialog open={createGradeOpen} onClose={this.handleCreateGradeClose} />
-          {grades.map(({ id, name, subjects, qntStudents, qntTeachers }) => (
-            <GridCard key={id} title={name} onClick={() => this.goToGrade(id)}>
+          {grades.map(({ id, name, subjects, qntStudents, qntTeachers, mimeType, photo }) => (
+            <GridCard
+              key={id}
+              title={name}
+              imgAlt={name}
+              onClick={() => this.goToGrade(id)}
+              imgSrc={mimeType && photo ? `${mimeType},${photo}` : defaultImagesPaths.GRADE}
+            >
               <CardLine>Disciplinas cadastradas: {subjects.length}</CardLine>
               <CardLine>Quantidade de professores: {qntTeachers}</CardLine>
               <CardLine>Quantidade de alunos: {qntStudents}</CardLine>

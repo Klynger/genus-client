@@ -1,16 +1,19 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Image from '../../shared/Image';
+import { MoreVert } from '@material-ui/icons';
+import SubjectMenuInfo from './SubjectInfoMenu';
+import React, { useState, Fragment } from 'react';
 import { withRouter, Link } from 'react-router-dom';
+import { defaultImagesPaths } from '../../../utils/constants';
 import { ActionsContainer } from '../../shared/SharedComponents';
-import { DEFAULT_PHOTO_CLASS_SRC } from '../../../utils/helpers';
-import { Button, Paper, Typography, withStyles } from '@material-ui/core';
+import { Button, Paper, Typography, withStyles, IconButton } from '@material-ui/core';
 
-const PHOTO_DIMENSION = 200;
+const PHOTO_DIMENSION = 150;
 
 const styles = theme => ({
-  photo: {
-    height: '100%',
+  imageContainer: {
+    height: PHOTO_DIMENSION,
     width: PHOTO_DIMENSION,
   },
   root: {
@@ -19,6 +22,7 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 3,
     padding: theme.spacing.unit,
     paddingTop: theme.spacing.unit * 3,
+    position: 'relative',
     width: `calc(100% - ${theme.spacing.unit * 2}px)`,
   },
   contentContainer: {
@@ -34,11 +38,20 @@ const styles = theme => ({
     flexWrap: 'wrap',
     padding: theme.spacing.unit,
   },
+  menuIcon: {
+    margin: theme.spacing.unit,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    height: 48,
+    width: 48,
+  },
 });
 
 const SubjectInfo = ({
   classes,
   subject,
+  onSendEmailOpen,
   onAddStudentClick,
   onAddTeacherClick,
   onEditSubjectClick,
@@ -46,65 +59,83 @@ const SubjectInfo = ({
   history,
   isAdmin,
   canSeeForum,
-  canSeeGrades,
   userRole,
 }) => {
+  const menuId = 'subject-info__menu';
+  const userIsNotStudent = userRole !== 'STUDENT';
+  const [menuState, setMenuState] = useState({ openMenu: false, menuAnchorEl: null });
+  let image = null;
+  if (subject.mimeType && subject.photo) {
+    image = `${subject.mimeType},${subject.photo}`;
+  }
+
+  const handleMenuClose = e => {
+    if (menuState.menuAnchorEl.contains(e.target)) {
+      return;
+    }
+    setMenuState({ openMenu: false, menuAnchorEl: null });
+  };
+
   return (
-    <Paper className={classes.root}>
-      <div className={classes.contentContainer}>
-        <img
-          alt={subject.name}
-          className={classes.photo}
-          src={subject.photo || DEFAULT_PHOTO_CLASS_SRC}
+    <Fragment>
+      {userIsNotStudent && (
+        <SubjectMenuInfo
+          onClose={handleMenuClose}
+          open={menuState.openMenu}
+          id={menuId}
+          anchorEl={menuState.menuAnchorEl}
+          isAdmin={isAdmin}
+          canSendEmail={userRole === 'TEACHER' || userRole === 'ADMIN'}
+          onEditSubjectOpen={onEditSubjectClick}
+          onAddTeacherOpen={onAddTeacherClick}
+          onAddStudentOpen={onAddStudentClick}
+          onSendEmailOpen={onSendEmailOpen}
         />
-        <div className={classes.infoContainer}>
-          <Typography component="h2" variant="h6" gutterBottom>
-            {subject.name}
-          </Typography>
-          <Typography component="span" variant="subtitle1" gutterBottom>
-            {subject.teachers.length > 0
-              ? `Professores: ${subject.teachers.map(({ username }) => username).join(', ')}`
-              : 'Nenhum professor vinculado a essa disciplina'}
-          </Typography>
+      )}
+      <Paper className={classes.root}>
+        {userIsNotStudent && (
+          <IconButton
+            aria-haspopup="true"
+            className={classes.menuIcon}
+            onClick={evt => setMenuState({ menuAnchorEl: evt.currentTarget, openMenu: true })}
+          >
+            <MoreVert />
+          </IconButton>
+        )}
+        <div className={classes.contentContainer}>
+          <div className={classes.imageContainer}>
+            <Image rounded={false} editable={false} src={image || defaultImagesPaths.SUBJECT} />
+          </div>
+          <div className={classes.infoContainer}>
+            <Typography component="h2" variant="h6" gutterBottom>
+              {subject.name}
+            </Typography>
+            <Typography component="span" variant="subtitle1" gutterBottom>
+              {subject.teachers.length > 0
+                ? `Professores: ${subject.teachers.map(({ username }) => username).join(', ')}`
+                : 'Nenhum professor vinculado a essa disciplina'}
+            </Typography>
+          </div>
         </div>
-      </div>
-      <ActionsContainer>
-        {isAdmin && (
-          <span>
-            <Button color="primary" onClick={onEditSubjectClick}>
-              Atualizar Informações
+        <ActionsContainer>
+          {canSeeForum && (
+            <Button color="primary" component={Link} to={`${history.location.pathname}/forum`}>
+              Forum
             </Button>
-            <Button color="primary" onClick={onAddTeacherClick}>
-              Vincular professor
+          )}
+          {userRole === 'TEACHER' && (
+            <Button color="primary" onClick={onAddGradeClick}>
+              Adicionar nova nota
             </Button>
-            <Button color="primary" onClick={onAddStudentClick}>
-              Vincular aluno
-            </Button>
-          </span>
-        )}
-        {canSeeForum && (
-          <Button color="primary" component={Link} to={`${history.location.pathname}/forum`}>
-            Forum
-          </Button>
-        )}
-        {userRole === 'TEACHER' && (
-          <Button color="primary" onClick={onAddGradeClick}>
-            Adicionar nova nota
-          </Button>
-        )}
-        {canSeeGrades && (
-          <Button color="primary" component={Link} to={`${history.location.pathname}/forum`}>
-            Mandar email para turma
-          </Button>
-        )}
-      </ActionsContainer>
-    </Paper>
+          )}
+        </ActionsContainer>
+      </Paper>
+    </Fragment>
   );
 };
 
 SubjectInfo.propTypes = {
   canSeeForum: PropTypes.bool.isRequired,
-  canSeeGrades: PropTypes.bool.isRequired,
   classes: PropTypes.object.isRequired,
   history: PropTypes.shape({
     location: PropTypes.shape({
@@ -112,10 +143,11 @@ SubjectInfo.propTypes = {
     }).isRequired,
   }).isRequired,
   isAdmin: PropTypes.bool.isRequired,
-  onAddGradeClick: PropTypes.func.isRequired,
-  onAddStudentClick: PropTypes.func.isRequired,
-  onAddTeacherClick: PropTypes.func.isRequired,
-  onEditSubjectClick: PropTypes.func.isRequired,
+  onAddGradeClick: PropTypes.func,
+  onAddStudentClick: PropTypes.func,
+  onAddTeacherClick: PropTypes.func,
+  onEditSubjectClick: PropTypes.func,
+  onSendEmailOpen: PropTypes.func,
   subject: PropTypes.shape({
     name: PropTypes.string.isRequired,
     photo: PropTypes.string,
@@ -138,6 +170,8 @@ function mapStateToProps(
       subject.teachers.some(user => user.id === loggedUserId) ||
       subject.students.some(user => user.id === loggedUserId);
   }
+  const canSendEmailToSubjectStudents =
+    isAdmin || subject.teachers.some(user => user.id === loggedUserId);
 
   let userRole = 'NO_ROLE';
   if (isAdmin) {
@@ -154,6 +188,7 @@ function mapStateToProps(
     userRole,
     isAdmin,
     canSeeForum,
+    canSendEmailToSubjectStudents,
     canSeeGrades,
   };
 }

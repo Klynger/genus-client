@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
+import Image from '../../shared/Image';
 import { MoreVert } from '@material-ui/icons';
 import React, { Component, Fragment } from 'react';
 import InstitutionInfoMenu from './InstitutionInfoMenu';
+import { defaultImagesPaths } from '../../../utils/constants';
 import { Paper, Typography, withStyles, IconButton } from '@material-ui/core';
 
 const photoDimension = 140;
@@ -25,7 +27,7 @@ const styles = theme => ({
       width: `calc(100% - ${photoDimension}px - ${theme.spacing.unit * 6}px - 48px)`,
     },
   },
-  photo: {
+  imageContainer: {
     height: photoDimension,
     marginBottom: theme.spacing.unit * 3,
     marginTop: theme.spacing.unit * 3,
@@ -87,13 +89,20 @@ class InstitutionInfo extends Component {
       institution,
       canUpdateInfo,
       canGenerateCode,
+      canSendEmail,
       onGenerateCodeOpen,
+      onSendEmailOpen,
       onUpdateInstitutionOpen,
     } = this.props;
 
     const { openMenu } = this.state;
 
     const showMenuButton = canGenerateCode || canUpdateInfo;
+
+    let institutionImage = null;
+    if (institution.photo && institution.mimeType) {
+      institutionImage = `${institution.mimeType},${institution.photo}`;
+    }
 
     return (
       <Fragment>
@@ -104,7 +113,9 @@ class InstitutionInfo extends Component {
           canUpdateInfo={canUpdateInfo}
           onClose={this.handleMenuClose}
           canGenerateCode={canGenerateCode}
+          canSendEmail={canSendEmail}
           onGenerateCodeOpen={onGenerateCodeOpen}
+          onSendEmailOpen={onSendEmailOpen}
           onUpdateInstitutionOpen={onUpdateInstitutionOpen}
         />
         <Paper className={classes.root}>
@@ -122,11 +133,13 @@ class InstitutionInfo extends Component {
             </IconButton>
           )}
           <div className={classes.detailsPageContentContainer}>
-            <img
-              alt="Institution"
-              className={classes.photo}
-              src="https://s3.amazonaws.com/tinycards/image/f8bda7d1c863b4f42adf2d1e5d72ff14"
-            />
+            <span className={classes.imageContainer}>
+              <Image
+                rounded={false}
+                editable={false}
+                src={institutionImage || defaultImagesPaths.INSTITUTION}
+              />
+            </span>
             <div className={classes.informationsContainer}>
               <Typography component="h2" variant="h6" gutterBottom>
                 {institution.name}
@@ -150,20 +163,25 @@ class InstitutionInfo extends Component {
 
 InstitutionInfo.defaultProps = {
   canGenerateCode: false,
+  canSendEmail: false,
   canUpdateInfo: false,
 };
 
 InstitutionInfo.propTypes = {
   canGenerateCode: PropTypes.bool,
+  canSendEmail: PropTypes.bool,
   canUpdateInfo: PropTypes.bool,
   classes: PropTypes.object.isRequired,
   institution: PropTypes.shape({
     address: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
+    mimeType: PropTypes.string,
     name: PropTypes.string.isRequired,
     phone: PropTypes.string.isRequired,
+    photo: PropTypes.string,
   }).isRequired,
   onGenerateCodeOpen: PropTypes.func.isRequired,
+  onSendEmailOpen: PropTypes.func.isRequired,
   onUpdateInstitutionOpen: PropTypes.func.isRequired,
 };
 

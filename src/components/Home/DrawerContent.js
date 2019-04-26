@@ -24,7 +24,7 @@ class DrawerContent extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, userRole } = this.props;
     return (
       <List>
         <ListItem className={classes.item} button onClick={() => this.handleGoToPath()}>
@@ -43,16 +43,18 @@ class DrawerContent extends Component {
           </ListItemIcon>
           <ListItemText primary="Instituição" />
         </ListItem>
-        <ListItem
-          className={classes.item}
-          button
-          onClick={() => this.handleGoToPath('/institution/new')}
-        >
-          <ListItemIcon>
-            <AddBox />
-          </ListItemIcon>
-          <ListItemText primary="Criar Instituição" />
-        </ListItem>
+        {userRole === 'ADMIN' && (
+          <ListItem
+            className={classes.item}
+            button
+            onClick={() => this.handleGoToPath('/institution/new')}
+          >
+            <ListItemIcon>
+              <AddBox />
+            </ListItemIcon>
+            <ListItemText primary="Criar Instituição" />
+          </ListItem>
+        )}
         {process.env.NODE_ENV === 'development' && (
           <ListItem className={classes.item} button onClick={() => this.handleGoToPath('/testing')}>
             <ListItemIcon>
@@ -70,6 +72,7 @@ DrawerContent.propTypes = {
   classes: PropTypes.object,
   history: PropTypes.object,
   onDrawerToggle: PropTypes.func.isRequired,
+  userRole: PropTypes.string,
 };
 
 export default withStyles(styles, { withTheme: true })(withRouter(DrawerContent));
