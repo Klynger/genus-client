@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
-// import Image from '../shared/Image';
+import Image from '../shared/Image';
 import styled from 'styled-components';
 import { Form, withFormik } from 'formik';
 import React, { PureComponent } from 'react';
@@ -12,7 +12,7 @@ import ProgressButton from '../shared/ProgressButton';
 import CustomTextField from '../shared/CustomTextField';
 import { createUserAndLogin } from '../../actions/user';
 import { FadeInButton } from '../shared/SharedComponents';
-// import { defaultImagesPaths } from '../../utils/constants';
+import { defaultImagesPaths } from '../../utils/constants';
 
 const DEFAULT_ANIMATION_TIMING = 700;
 
@@ -135,20 +135,16 @@ class Signup extends PureComponent {
       isSubmitting,
       handleSubmit,
       onSigninClick,
-      // setFieldValue,
     } = this.props;
 
     return (
       <SignupContainer>
         <Form className={classes.form}>
-          {/* <div className={classes.imageContainer}>
+          <div className={classes.imageContainer}>
             <span className={classes.imageWrapper}>
-              <Image
-                onImageChange={base64 => setFieldValue('image', base64)}
-                src={values.image ? values.image : defaultImagesPaths.USER}
-              />
+              <Image rounded={false} editable={false} src={defaultImagesPaths.LOGO} />
             </span>
-          </div> */}
+          </div>
           {formFields.map(field => (
             <CustomTextField
               key={field}
@@ -201,7 +197,6 @@ Signup.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   isSubmitting: PropTypes.bool.isRequired,
   onSigninClick: PropTypes.func.isRequired,
-  // setFieldValue: PropTypes.func.isRequired,
   touched: PropTypes.shape({
     email: PropTypes.bool,
     password: PropTypes.bool,
